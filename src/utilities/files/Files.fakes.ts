@@ -21,6 +21,10 @@ export function mockFiles(): void {
 	})
 }
 
+export function mockFile(path: string, content: string): void {
+	contentsByPath.set(path, content)
+}
+
 export function mockJsonFile(path: string, content: JsonValue): void {
 	contentsByPath.set(path, content)
 }
