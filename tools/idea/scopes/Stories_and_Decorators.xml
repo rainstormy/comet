@@ -1,3 +1,0 @@
-<component name="DependencyValidationManager">
-  <scope name="Stories and Decorators" pattern="file:*.decorators.ts||file:*.decorators.tsx||file:*.stories.ts||file:*.stories.tsx" />
-</component>

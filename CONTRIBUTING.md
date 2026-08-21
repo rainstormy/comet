@@ -79,6 +79,6 @@ This section describes the necessary steps for you to start coding in this proje
 > For IntelliJ IDEA or WebStorm, you can use the project generator as a starting point:
 > 
 > ```shell
-> ./tools/generate-idea-project.sh && \
+> node ./tools/generate-idea-project.script.ts && \
 > idea .
 > ```
