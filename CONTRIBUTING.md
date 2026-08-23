@@ -9,9 +9,8 @@ Consult `AGENTS.md` for a detailed description of the project.
 | `vpr build`               | Generates production-grade build artefacts of all entrypoints.                        |
 | `vpr check`               | Verifies that the source code is clean, type-safe, and well-formatted.                |
 | `vpr fmt`                 | Applies linting suggestions and reformats the source code.                            |
-| `vpr install`             | Installs dependencies and enables Git hooks.                                          |
+| `vpr install`             | Installs dependencies.                                                                |
 | `vpr test [...filenames]` | Runs the given unit test files or the entire test suite if no arguments are provided. |
-| `vpr yolo`                | Disables the Git hooks temporarily.                                                   |
 
 ## Get started
 
@@ -70,7 +69,8 @@ This section describes the necessary steps for you to start coding in this proje
 1. Install dependencies and enable Git hooks:
 
    ```shell
-   vpr install
+   vpr install && \
+   vp hooks enable
    ```
 
 2. Create a workspace in the IDE of your choice.

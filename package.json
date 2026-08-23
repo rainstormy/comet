@@ -16,7 +16,6 @@
 	"devDependencies": {
 		"@rainstormy/presets-web": "catalog:",
 		"@types/node": "catalog:",
-		"lefthook": "catalog:",
 		"typescript": "catalog:",
 		"vite-plus": "catalog:",
 		"vitest": "catalog:"

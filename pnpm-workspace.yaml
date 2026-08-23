@@ -19,10 +19,6 @@ catalog:
   # https://github.com/webdiscus/ansis
   ansis: 4.3.1
 
-  # Lefthook is a Git hooks manager.
-  # https://lefthook.dev
-  lefthook: 2.1.10
-
   # The official 'tsc' CLI for TypeScript, including the language service (LSP) and Go-powered compiler (tsgo).
   # https://www.typescriptlang.org
   typescript: 7.0.2
@@ -51,10 +47,6 @@ savePrefix: ''
 strictDepBuilds: true
 trustPolicy: no-downgrade
 trustPolicyIgnoreAfter: 4200 # minutes
-
-# Disallow all script execution during package installation.
-allowBuilds:
-  lefthook: false
 
 # Let some packages bypass the minimum release age requirement to allow urgent security upgrades to be installed despite being less than 3 days old.
 # minimumReleaseAgeExclude:

@@ -45,12 +45,8 @@ export default defineConfig({
 			build: { command: "vp pack" },
 			check: { command: "vp check" },
 			fmt: { command: "vp check --fix" },
-			install: {
-				command: ["vp install --frozen-lockfile --ignore-scripts", "lefthook install"],
-				cache: false,
-			},
+			install: { command: "vp install --frozen-lockfile --ignore-scripts", cache: false },
 			test: { command: "vp test" },
-			yolo: { command: "lefthook uninstall", cache: false },
 		},
 	},
 	test: {
