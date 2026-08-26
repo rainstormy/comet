@@ -8,6 +8,7 @@ export default defineConfig({
 	fmt: defineOxfmtConfig({ ignorePatterns: ["dist/**/*", "**/*.md"] }) as UserOxfmtConfig,
 	lint: defineOxlintConfig({
 		ignorePatterns: ["dist/**/*"],
+		options: { typeCheck: false },
 		overrides: [
 			{
 				files: [
@@ -43,7 +44,7 @@ export default defineConfig({
 		// language=sh
 		tasks: {
 			build: { command: "vp pack" },
-			check: { command: "vp check" },
+			check: { command: "vp lint --type-check" },
 			fmt: { command: "vp check --fix" },
 			install: { command: "vp install --frozen-lockfile --ignore-scripts", cache: false },
 			setup: { command: "node tools/setup.script.ts", cache: false },
