@@ -46,6 +46,7 @@ export default defineConfig({
 			check: { command: "vp check" },
 			fmt: { command: "vp check --fix" },
 			install: { command: "vp install --frozen-lockfile --ignore-scripts", cache: false },
+			setup: { command: "node tools/setup.script.ts", cache: false },
 			test: { command: "vp test" },
 		},
 	},

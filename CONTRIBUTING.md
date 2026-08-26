@@ -66,19 +66,22 @@ This section describes the necessary steps for you to start coding in this proje
 
 ### Set up the workspace
 
-1. Install dependencies and enable Git hooks:
+1. Install dependencies, enable Git hooks, and generate local IDE workspaces:
 
    ```shell
-   vpr install && \
-   vp hooks enable
+   vpr setup
    ```
 
-2. Create a workspace in the IDE of your choice.
+2. Open the workspace in the IDE of your choice.
 
-> [!TIP]  
-> For IntelliJ IDEA or WebStorm, you can use the project generator as a starting point:
-> 
-> ```shell
-> node ./tools/generate-idea-project.script.ts && \
-> idea .
-> ```
+   IntelliJ IDEA:
+
+   ```shell
+   idea .
+   ```
+
+   Visual Studio Code:
+
+   ```shell
+   code .
+   ```
