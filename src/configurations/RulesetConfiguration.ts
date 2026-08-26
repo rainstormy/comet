@@ -1,7 +1,6 @@
 import * as v from "valibot"
 import { naturalNumber } from "#types/NaturalNumber.ts"
 import { stringArray } from "#types/StringArray.ts"
-import { type DeepPartial, deepMerge } from "#utilities/Objects.ts"
 
 export type RulesetConfiguration = v.InferOutput<typeof RULESET_CONFIGURATION_SCHEMA>
 
@@ -40,10 +39,3 @@ function ruleConfiguration<Options extends v.ObjectEntries>(options: Options) {
 }
 
 export type RuleKey = keyof RulesetConfiguration
-
-export function mergeRulesetConfigurations(
-	source: RulesetConfiguration,
-	overrides: DeepPartial<RulesetConfiguration>,
-): RulesetConfiguration {
-	return deepMerge(source, overrides)
-}

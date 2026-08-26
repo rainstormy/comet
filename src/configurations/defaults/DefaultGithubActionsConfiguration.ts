@@ -1,12 +1,12 @@
 import { DEFAULT_RULESET_CONFIGURATION } from "#configurations/defaults/DefaultRulesetConfiguration.ts"
 import type { Configuration } from "#configurations/GetConfiguration.ts"
-import { mergeRulesetConfigurations } from "#configurations/RulesetConfiguration.ts"
+import { deepMerge } from "#utilities/Objects.ts"
 
 export const DEFAULT_GITHUB_ACTIONS_CONFIGURATION: Configuration = {
 	tokens: {
 		issueLinks: null,
 	},
-	rules: mergeRulesetConfigurations(DEFAULT_RULESET_CONFIGURATION, {
+	rules: deepMerge(DEFAULT_RULESET_CONFIGURATION, {
 		noRestrictedTrailers: { level: "off" },
 		useAuthorEmailPatterns: { level: "off" },
 		useAuthorNamePatterns: { level: "off" },
