@@ -2,6 +2,7 @@ import { beforeEach, vi } from "vitest"
 import type { JsonValue } from "#types/JsonValue.ts"
 
 vi.mock(import("#utilities/files/Files.ts"), () => ({
+	isReadableFile: vi.fn(async (path) => contentsByPath.has(path)),
 	readJsonFile: vi.fn(async (path) => {
 		const content = contentsByPath.get(path) ?? null
 

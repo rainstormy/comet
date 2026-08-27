@@ -4,8 +4,22 @@ import type { JsonConfigurationDto } from "#configurations/json/dtos/JsonConfigu
 import { getJsonConfiguration } from "#configurations/json/GetJsonConfiguration.ts"
 import type { RuleKey } from "#configurations/RulesetConfiguration.ts"
 import type { JsonObject } from "#types/JsonValue.ts"
-import { mockFile, mockJsonFile } from "#utilities/files/Files.fakes.ts"
+import { mockFile, mockJsonFile, mockNonexistingFile } from "#utilities/files/Files.fakes.ts"
 import type { DeepPartial, DeepRequired } from "#utilities/Objects.ts"
+
+describe("a non-existing configuration file", () => {
+	beforeEach(() => {
+		mockNonexistingFile("./comet.json")
+	})
+
+	it("omits tokens and ruleset", async () => {
+		const configuration = await getJsonConfiguration()
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			tokens: {},
+			rules: {},
+		})
+	})
+})
 
 describe("a configuration file with an empty object", () => {
 	beforeEach(() => {

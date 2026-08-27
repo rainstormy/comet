@@ -5,11 +5,19 @@ import {
 } from "#configurations/json/dtos/JsonConfigurationDto.ts"
 import { isNotNullish } from "#utilities/Arrays.ts"
 import { requireNotNullish } from "#utilities/Assertions.ts"
-import { readJsonFile } from "#utilities/files/Files.ts"
+import { isReadableFile, readJsonFile } from "#utilities/files/Files.ts"
 import { collapseWhitespace, trimPrefix } from "#utilities/Strings.ts"
 import { getDetailedValiIssue } from "#utilities/valibot/ValiIssue.ts"
 
-export async function fetchJsonConfigurationDto(path: string): Promise<JsonConfigurationDto> {
+export async function fetchJsonConfigurationDto(
+	path: string,
+): Promise<JsonConfigurationDto | null> {
+	const exists = await isReadableFile(path)
+
+	if (!exists) {
+		return null
+	}
+
 	const json = await readJsonFile(path)
 
 	try {

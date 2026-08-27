@@ -15,6 +15,10 @@ import type { DeepPartial } from "#utilities/Objects.ts"
 export async function getJsonConfiguration(): Promise<DeepPartial<Configuration>> {
 	const dto = await fetchJsonConfigurationDto("./comet.json")
 
+	if (dto === null) {
+		return { tokens: {}, rules: {} }
+	}
+
 	return {
 		tokens: mapDtoToPartialTokenConfiguration(dto.tokens),
 		rules: mapDtoToPartialRuleConfiguration(dto.rules),
