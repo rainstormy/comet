@@ -2,11 +2,8 @@ import { fakeTokenConfiguration } from "#commits/TokenConfiguration.fakes.ts"
 import type { TokenConfiguration } from "#commits/TokenConfiguration.ts"
 import { DEFAULT_RULESET_CONFIGURATION } from "#configurations/defaults/DefaultRulesetConfiguration.ts"
 import type { Configuration } from "#configurations/GetConfiguration.ts"
-import {
-	type RulesetConfiguration,
-	mergeRulesetConfigurations,
-} from "#configurations/RulesetConfiguration.ts"
-import type { DeepPartial } from "#utilities/Objects.ts"
+import type { RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
+import { type DeepPartial, deepMerge } from "#utilities/Objects.ts"
 
 export function fakeConfiguration(
 	rules?: DeepPartial<RulesetConfiguration>,
@@ -21,7 +18,7 @@ export function fakeConfiguration(
 export function emptyRulesetConfiguration(
 	rules: DeepPartial<RulesetConfiguration> = {},
 ): RulesetConfiguration {
-	return mergeRulesetConfigurations(DEFAULT_RULESET_CONFIGURATION, {
+	return deepMerge(DEFAULT_RULESET_CONFIGURATION, {
 		noBlankSubjectLines: { level: "off" },
 		noExcessiveCommitsPerBranch: { level: "off" },
 		noExcessiveWhitespace: { level: "off" },
@@ -50,7 +47,7 @@ export function emptyRulesetConfiguration(
 export function fakeRulesetConfiguration(
 	rules: DeepPartial<RulesetConfiguration> = {},
 ): RulesetConfiguration {
-	return mergeRulesetConfigurations(DEFAULT_RULESET_CONFIGURATION, {
+	return deepMerge(DEFAULT_RULESET_CONFIGURATION, {
 		noRestrictedTrailers: { options: { restrictedKeys: ["Co-authored-by"] } },
 		useAuthorEmailPatterns: {
 			options: { patterns: [String.raw`\d+\+.+@users\.noreply\.github\.com`] },

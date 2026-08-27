@@ -12,7 +12,11 @@ export type IssueLinkTokenConfiguration = {
 export function issueLinkTokenConfiguration(
 	prefixes: Array<string>,
 	wildcards: Array<string> = [],
-): IssueLinkTokenConfiguration {
+): IssueLinkTokenConfiguration | null {
+	if (prefixes.length + wildcards.length === 0) {
+		return null
+	}
+
 	return {
 		prefixes: uniqueItems(prefixes),
 		wildcards: uniqueItems(wildcards),

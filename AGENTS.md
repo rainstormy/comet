@@ -55,6 +55,8 @@ Read only the relevant skill guides for the task at hand:
 ## Code style
 
 - Write unit tests whenever feasible.
+- Organise large unit tests in `describe` blocks, set up test fixtures and mocks in `beforeEach` blocks, and try to limit `it` blocks to assertions.
+- Prefer `describe.each` or `it.each` blocks for parameterised tests.
 - Use PascalCase for filenames in general with extensions of `.ts` for source files, `.tests.ts` for test files, and `.fakes.ts` for test fixtures and mocks.
 - Use tab indents.
 - Use double quotes for strings unless escaping is required.

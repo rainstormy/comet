@@ -1,13 +1,12 @@
-import { issueLinkTokenConfiguration } from "#commits/TokenConfiguration.ts"
 import { DEFAULT_RULESET_CONFIGURATION } from "#configurations/defaults/DefaultRulesetConfiguration.ts"
 import type { Configuration } from "#configurations/GetConfiguration.ts"
-import { mergeRulesetConfigurations } from "#configurations/RulesetConfiguration.ts"
+import { deepMerge } from "#utilities/Objects.ts"
 
 export const DEFAULT_COMMAND_LINE_CONFIGURATION: Configuration = {
 	tokens: {
-		issueLinks: issueLinkTokenConfiguration(["#", "GH-", "GL-"]),
+		issueLinks: null,
 	},
-	rules: mergeRulesetConfigurations(DEFAULT_RULESET_CONFIGURATION, {
+	rules: deepMerge(DEFAULT_RULESET_CONFIGURATION, {
 		noRepeatedSubjectLines: { level: "off" },
 		noRestrictedTrailers: { level: "off" },
 		noRevertRevertCommits: { level: "off" },

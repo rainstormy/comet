@@ -2,6 +2,12 @@ export type DeepPartial<Source> = Source extends object ? DeepPartialObject<Sour
 
 type DeepPartialObject<Source extends object> = { [Key in keyof Source]?: DeepPartial<Source[Key]> }
 
+export type DeepRequired<Source> = Required<{
+	[Key in keyof Source]: Source[Key] extends Required<Source[Key]>
+		? Source[Key]
+		: DeepRequired<Source[Key]>
+}>
+
 export function deepMerge<Source extends object>(
 	source: Source,
 	overrides: DeepPartialObject<Source>,

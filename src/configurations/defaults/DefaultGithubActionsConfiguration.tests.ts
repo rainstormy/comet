@@ -4,12 +4,8 @@ import type { RuleKey } from "#configurations/RulesetConfiguration.ts"
 
 const configuration = DEFAULT_GITHUB_ACTIONS_CONFIGURATION
 
-it("recognises GitHub- and GitLab-style issue links", () => {
-	expect(configuration.tokens.issueLinks?.prefixes).toEqual(["#", "GH-", "GL-"])
-})
-
-it("has no issue link wildcards", () => {
-	expect(configuration.tokens.issueLinks?.wildcards).toEqual([])
+it("does not tokenise issue links", () => {
+	expect(configuration.tokens.issueLinks).toBeNull()
 })
 
 it.each`
