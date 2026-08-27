@@ -26,7 +26,6 @@ describe("a configuration file with metadata fields only", () => {
 	beforeEach(() => {
 		mockJsonFile<JsonConfigurationDto & { $schema: string }>(path, {
 			$schema: "https://example.com/schema.json",
-			extends: "@rainstormy/comet-config",
 		})
 	})
 
@@ -277,9 +276,8 @@ describe("a configuration file with a mixed ruleset of valid options", () => {
 
 describe("a complete configuration file", () => {
 	beforeEach(() => {
-		mockJsonFile<DeepRequired<JsonConfigurationDto> & { $schema: string }>(path, {
+		mockJsonFile<Omit<DeepRequired<JsonConfigurationDto>, "extends"> & { $schema: string }>(path, {
 			$schema: "https://example.com/schema.json",
-			extends: "@rainstormy/comet-config",
 			rules: {
 				noBlankSubjectLines: "error",
 				noExcessiveCommitsPerBranch: {
@@ -408,6 +406,300 @@ describe("a complete configuration file", () => {
 				issueLinks: {
 					prefixes: ["#", "GH-"],
 					wildcards: ["*", "[incident]"],
+				},
+			},
+		})
+	})
+})
+
+describe("a configuration file that extends another file", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>("base.json", {
+			tokens: {
+				issueLinks: { prefixes: ["BASE-"] },
+			},
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "off",
+					options: { maxCommits: 10 },
+				},
+				noMergeCommits: "off",
+			},
+		})
+		mockJsonFile<JsonConfigurationDto>(path, {
+			extends: "base.json",
+			tokens: {
+				issueLinks: { prefixes: ["CHILD-"] },
+			},
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 5 },
+				},
+			},
+		})
+	})
+
+	it("merges the configurations and makes the nearest configurations take precedence", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 5 },
+				},
+				noMergeCommits: { level: "off" },
+			},
+			tokens: {
+				issueLinks: {
+					prefixes: ["BASE-", "CHILD-"],
+					wildcards: [],
+				},
+			},
+		})
+	})
+})
+
+describe("a configuration file that extends another file that extends a third file", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>("base.json", {
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "off",
+					options: { maxCommits: 10 },
+				},
+				noMergeCommits: "off",
+			},
+		})
+		mockJsonFile<JsonConfigurationDto>("configs/team.json", {
+			extends: "../base.json",
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 5 },
+				},
+				noRepeatedSubjectLines: "error",
+			},
+		})
+		mockJsonFile<JsonConfigurationDto>(path, {
+			extends: "configs/team.json",
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "off",
+					options: { maxCommits: 3 },
+				},
+				noSquashMarkers: "off",
+			},
+		})
+	})
+
+	it("merges the configurations and makes the nearest configurations take precedence", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "off",
+					options: { maxCommits: 3 },
+				},
+				noMergeCommits: { level: "off" },
+				noRepeatedSubjectLines: { level: "error" },
+				noSquashMarkers: { level: "off" },
+			},
+			tokens: {},
+		})
+	})
+})
+
+describe("a large configuration file that extends another large file", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>("base.json", {
+			tokens: {
+				issueLinks: {
+					prefixes: ["#", "BASE-"],
+					wildcards: ["[skip ci]"],
+				},
+			},
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "off",
+					options: { maxCommits: 10 },
+				},
+				noMergeCommits: "off",
+				useAuthorEmailPatterns: {
+					level: "error",
+					options: { patterns: [String.raw`.+@example\.com`] },
+				},
+				useIssueLinks: {
+					level: "error",
+					options: { position: "anywhere" },
+				},
+			},
+		})
+		mockJsonFile<JsonConfigurationDto>(path, {
+			extends: "base.json",
+			tokens: {
+				issueLinks: {
+					prefixes: ["CHILD-"],
+					wildcards: ["*"],
+				},
+			},
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 5 },
+				},
+				noRestrictedTrailers: {
+					level: "error",
+					options: { restrictedKeys: ["Signed-off-by"] },
+				},
+				useAuthorEmailPatterns: {
+					level: "off",
+					options: { patterns: [String.raw`.+@contractors\.example\.com`] },
+				},
+				useIssueLinks: {
+					level: "error",
+					options: { position: "suffix" },
+				},
+			},
+		})
+	})
+
+	it("merges the configurations and makes the nearest configurations take precedence", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 5 },
+				},
+				noMergeCommits: { level: "off" },
+				noRestrictedTrailers: {
+					level: "error",
+					options: { restrictedKeys: ["Signed-off-by"] },
+				},
+				useAuthorEmailPatterns: {
+					level: "off",
+					options: {
+						patterns: [String.raw`.+@example\.com`, String.raw`.+@contractors\.example\.com`],
+					},
+				},
+				useIssueLinks: {
+					level: "error",
+					options: { position: "suffix" },
+				},
+			},
+			tokens: {
+				issueLinks: {
+					prefixes: ["#", "BASE-", "CHILD-"],
+					wildcards: ["[skip ci]", "*"],
+				},
+			},
+		})
+	})
+})
+
+describe("a large configuration file that extends another large file that extends a third large file", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>("base.json", {
+			tokens: {
+				issueLinks: {
+					prefixes: ["#"],
+					wildcards: ["[skip ci]"],
+				},
+			},
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 10 },
+				},
+				noMergeCommits: "off",
+				useAuthorEmailPatterns: {
+					level: "error",
+					options: { patterns: [String.raw`.+@example\.com`] },
+				},
+				useIssueLinks: {
+					level: "error",
+					options: { position: "anywhere" },
+				},
+			},
+		})
+		mockJsonFile<JsonConfigurationDto>("configs/team.json", {
+			extends: "../base.json",
+			tokens: {
+				issueLinks: {
+					prefixes: ["TEAM-"],
+					wildcards: ["[team]"],
+				},
+			},
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 5 },
+				},
+				noRepeatedSubjectLines: "error",
+				useAuthorEmailPatterns: {
+					level: "error",
+					options: { patterns: [String.raw`.+@team\.example\.com`] },
+				},
+				useIssueLinks: {
+					level: "error",
+					options: { position: "suffix" },
+				},
+			},
+		})
+		mockJsonFile<JsonConfigurationDto>(path, {
+			extends: "configs/team.json",
+			tokens: {
+				issueLinks: {
+					prefixes: ["PROJECT-"],
+					wildcards: ["[release]"],
+				},
+			},
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "off",
+					options: { maxCommits: 3 },
+				},
+				noSquashMarkers: "off",
+				useConciseSubjectLines: {
+					level: "error",
+					options: { maxLength: 72 },
+				},
+				useIssueLinks: "off",
+			},
+		})
+	})
+
+	it("merges the configurations and makes the nearest configurations take precedence", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "off",
+					options: { maxCommits: 3 },
+				},
+				noMergeCommits: { level: "off" },
+				noRepeatedSubjectLines: { level: "error" },
+				noSquashMarkers: { level: "off" },
+				useAuthorEmailPatterns: {
+					level: "error",
+					options: {
+						patterns: [String.raw`.+@example\.com`, String.raw`.+@team\.example\.com`],
+					},
+				},
+				useConciseSubjectLines: {
+					level: "error",
+					options: { maxLength: 72 },
+				},
+				useIssueLinks: {
+					level: "off",
+					options: { position: "suffix" },
+				},
+			},
+			tokens: {
+				issueLinks: {
+					prefixes: ["#", "TEAM-", "PROJECT-"],
+					wildcards: ["[skip ci]", "[team]", "[release]"],
 				},
 			},
 		})
@@ -683,6 +975,83 @@ describe("a configuration file with an unknown rule", () => {
 	it("raises an error", async () => {
 		await expect(getConfiguration(path)).rejects.toThrow(
 			"Failed to parse 'comet.json' as a Comet configuration: 'unrecognisedRuleName' is not a valid rule",
+		)
+	})
+})
+
+describe("a configuration file that extends a non-existing file", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, { extends: "base.json" })
+	})
+
+	it("raises an error", async () => {
+		await expect(getConfiguration(path)).rejects.toThrow(
+			"Failed to read 'base.json': File not found",
+		)
+	})
+})
+
+describe("a configuration file that extends another file that extends a non-existing file", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, { extends: "configs/team.json" })
+		mockJsonFile<JsonConfigurationDto>("configs/team.json", { extends: "../base.json" })
+	})
+
+	it("raises an error", async () => {
+		await expect(getConfiguration(path)).rejects.toThrow(
+			"Failed to read 'base.json': File not found",
+		)
+	})
+})
+
+describe("a configuration file that extends another file with an invalid 'extends' field", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, { extends: "base.json" })
+		mockJsonFile("base.json", { extends: true })
+	})
+
+	it("raises an error", async () => {
+		await expect(getConfiguration(path)).rejects.toThrow(
+			"Failed to parse 'base.json' as a Comet configuration: 'extends' must be a string, but it is a boolean: true",
+		)
+	})
+})
+
+describe("a configuration file that extends itself", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, { extends: "./comet.json" })
+	})
+
+	it("raises an error", async () => {
+		await expect(getConfiguration(path)).rejects.toThrow(
+			"Failed to parse 'comet.json' as a Comet configuration: 'extends' has a cyclic dependency in 'comet.json' -> 'comet.json'",
+		)
+	})
+})
+
+describe("two configuration files that extend each other", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, { extends: "base.json" })
+		mockJsonFile<JsonConfigurationDto>("base.json", { extends: "./comet.json" })
+	})
+
+	it("raises an error", async () => {
+		await expect(getConfiguration(path)).rejects.toThrow(
+			"Failed to parse 'comet.json' as a Comet configuration: 'extends' has a cyclic dependency in 'comet.json' -> 'base.json' -> 'comet.json'",
+		)
+	})
+})
+
+describe("three configuration files that extend each other", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, { extends: "configs/team.json" })
+		mockJsonFile<JsonConfigurationDto>("configs/team.json", { extends: "../base.json" })
+		mockJsonFile<JsonConfigurationDto>("base.json", { extends: "./comet.json" })
+	})
+
+	it("raises an error", async () => {
+		await expect(getConfiguration(path)).rejects.toThrow(
+			"Failed to parse 'comet.json' as a Comet configuration: 'extends' has a cyclic dependency in 'comet.json' -> 'configs/team.json' -> 'base.json' -> 'comet.json'",
 		)
 	})
 })
