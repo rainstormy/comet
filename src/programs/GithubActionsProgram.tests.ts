@@ -53,7 +53,7 @@ describe("when the event payload is missing in the file system", () => {
 
 	it("prints the error message raised by the file system", () => {
 		expect(printGithubActionsError).toHaveBeenCalledExactlyOnceWith(
-			`Failed to read ${eventPath}: File not found`,
+			`Failed to read '${eventPath}': File not found`,
 		)
 	})
 })

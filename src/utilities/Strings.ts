@@ -18,8 +18,8 @@ export function indentString(value: string, offset: number): string {
 	return prefixStringLines(value, " ".repeat(offset))
 }
 
-export function pluralise(subject: number, singular: string, plural: string): string {
-	return subject === 1 ? singular : plural
+export function pluralise(subject: number, singular: string, plural?: string): string {
+	return subject === 1 ? singular : (plural ?? `${singular}s`)
 }
 
 export function prefixStringLines(value: string, prefix: string): string {
