@@ -23,7 +23,7 @@ describe("a non-existing configuration file", () => {
 
 describe("a configuration file with an empty object", () => {
 	beforeEach(() => {
-		mockJsonFile("./comet.json", {} satisfies JsonConfigurationDto)
+		mockJsonFile<JsonConfigurationDto>("./comet.json", {})
 	})
 
 	it("omits tokens and ruleset", async () => {
@@ -37,10 +37,10 @@ describe("a configuration file with an empty object", () => {
 
 describe("a configuration file with metadata fields only", () => {
 	beforeEach(() => {
-		mockJsonFile("./comet.json", {
+		mockJsonFile<JsonConfigurationDto & { $schema: string }>("./comet.json", {
 			$schema: "https://example.com/schema.json",
 			extends: "@rainstormy/comet-config",
-		} satisfies JsonConfigurationDto)
+		})
 	})
 
 	it("omits tokens and ruleset", async () => {
@@ -54,13 +54,13 @@ describe("a configuration file with metadata fields only", () => {
 
 describe("a configuration file with GitHub-/GitLab-style issue link tokens", () => {
 	beforeEach(() => {
-		mockJsonFile("./comet.json", {
+		mockJsonFile<JsonConfigurationDto>("./comet.json", {
 			tokens: {
 				issueLinks: {
 					prefixes: ["#", "GH-", "GL-"],
 				},
 			},
-		} satisfies JsonConfigurationDto)
+		})
 	})
 
 	it("returns the configured tokens", async () => {
@@ -79,14 +79,14 @@ describe("a configuration file with GitHub-/GitLab-style issue link tokens", () 
 
 describe("a configuration file with Jira-style issue link tokens", () => {
 	beforeEach(() => {
-		mockJsonFile("./comet.json", {
+		mockJsonFile<JsonConfigurationDto>("./comet.json", {
 			tokens: {
 				issueLinks: {
 					prefixes: ["UNICORN-"],
 					wildcards: ["[incident]", "*"],
 				},
 			},
-		} satisfies JsonConfigurationDto)
+		})
 	})
 
 	it("returns the configured tokens", async () => {
@@ -105,14 +105,14 @@ describe("a configuration file with Jira-style issue link tokens", () => {
 
 describe("a configuration file with some rules configured as 'error'", () => {
 	beforeEach(() => {
-		mockJsonFile("./comet.json", {
+		mockJsonFile<JsonConfigurationDto>("./comet.json", {
 			rules: {
 				noBlankSubjectLines: "error",
 				noMergeCommits: "error",
 				useConciseSubjectLines: "error",
 				useImperativeSubjectLines: "error",
 			},
-		} satisfies JsonConfigurationDto)
+		})
 	})
 
 	it("returns the configured ruleset", async () => {
@@ -131,14 +131,14 @@ describe("a configuration file with some rules configured as 'error'", () => {
 
 describe("a configuration file with some rules configured as 'off'", () => {
 	beforeEach(() => {
-		mockJsonFile("./comet.json", {
+		mockJsonFile<JsonConfigurationDto>("./comet.json", {
 			rules: {
 				noExcessiveCommitsPerBranch: "off",
 				noRepeatedSubjectLines: "off",
 				useCapitalisedSubjectLines: "off",
 				useLineWrapping: "off",
 			},
-		} satisfies JsonConfigurationDto)
+		})
 	})
 
 	it("returns the configured ruleset", async () => {
@@ -157,7 +157,7 @@ describe("a configuration file with some rules configured as 'off'", () => {
 
 describe("a configuration file with some rules configured as objects", () => {
 	beforeEach(() => {
-		mockJsonFile("./comet.json", {
+		mockJsonFile<JsonConfigurationDto>("./comet.json", {
 			rules: {
 				noExcessiveCommitsPerBranch: {
 					level: "error",
@@ -176,7 +176,7 @@ describe("a configuration file with some rules configured as objects", () => {
 					options: {},
 				},
 			},
-		} satisfies JsonConfigurationDto)
+		})
 	})
 
 	it("returns the configured ruleset", async () => {
@@ -223,11 +223,11 @@ describe.each`
 	"a configuration file with valid options of $ruleKey",
 	(props: { ruleKey: RuleKey; options: JsonObject }) => {
 		beforeEach(() => {
-			mockJsonFile("./comet.json", {
+			mockJsonFile<JsonConfigurationDto>("./comet.json", {
 				rules: {
 					[props.ruleKey]: { level: "error", options: props.options },
 				},
-			} satisfies JsonConfigurationDto)
+			})
 		})
 
 		it("returns the configured ruleset", async () => {
@@ -244,7 +244,7 @@ describe.each`
 
 describe("a configuration file with a mixed ruleset of valid options", () => {
 	beforeEach(() => {
-		mockJsonFile("./comet.json", {
+		mockJsonFile<JsonConfigurationDto>("./comet.json", {
 			rules: {
 				noBlankSubjectLines: "off",
 				noExcessiveCommitsPerBranch: {
@@ -261,7 +261,7 @@ describe("a configuration file with a mixed ruleset of valid options", () => {
 					options: {},
 				},
 			},
-		} satisfies JsonConfigurationDto)
+		})
 	})
 
 	it("returns the configured ruleset", async () => {
@@ -290,7 +290,7 @@ describe("a configuration file with a mixed ruleset of valid options", () => {
 
 describe("a complete configuration file", () => {
 	beforeEach(() => {
-		mockJsonFile("./comet.json", {
+		mockJsonFile<DeepRequired<JsonConfigurationDto> & { $schema: string }>("./comet.json", {
 			$schema: "https://example.com/schema.json",
 			extends: "@rainstormy/comet-config",
 			rules: {
@@ -358,7 +358,7 @@ describe("a complete configuration file", () => {
 					wildcards: ["*", "[incident]"],
 				},
 			},
-		} satisfies DeepRequired<JsonConfigurationDto>)
+		})
 	})
 
 	it("returns the configured tokens and ruleset", async () => {

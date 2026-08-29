@@ -11,6 +11,7 @@ import {
 } from "#utilities/github/api/FetchGithubResourceDto.fakes.ts"
 import type { GithubUrlString } from "#utilities/github/api/GithubUrlString.ts"
 import { mockGithubEnv } from "#utilities/github/env/GithubEnv.fakes.ts"
+import type { GithubPullRequestEventDto } from "#utilities/github/event/dtos/GithubPullRequestEventDto.ts"
 import {
 	mockEmptyGithubEventDto,
 	mockGithubPullRequestEventDto,
@@ -63,7 +64,7 @@ describe("when the 'github-token' input parameter is missing", () => {
 
 	beforeEach(async () => {
 		mockGithubEnv({ eventPath, __secretToken__: "" })
-		mockJsonFile(eventPath, { pull_request: { number: 1 } })
+		mockJsonFile<GithubPullRequestEventDto>(eventPath, { pull_request: { number: 1 } })
 		exitCode = await githubActionsProgram()
 	})
 

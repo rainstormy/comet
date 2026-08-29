@@ -5,7 +5,7 @@ import type { JsonConfigurationDto } from "#configurations/json/dtos/JsonConfigu
 import { mockJsonFile } from "#utilities/files/Files.fakes.ts"
 
 it("augments the default configuration with the JSON configuration", async () => {
-	mockJsonFile("./comet.json", {
+	mockJsonFile<JsonConfigurationDto>("./comet.json", {
 		rules: {
 			noExcessiveCommitsPerBranch: "off",
 		},
@@ -14,7 +14,7 @@ it("augments the default configuration with the JSON configuration", async () =>
 				prefixes: ["#"],
 			},
 		},
-	} satisfies JsonConfigurationDto)
+	})
 
 	const configuration = await getConfiguration(DEFAULT_COMMAND_LINE_CONFIGURATION)
 
