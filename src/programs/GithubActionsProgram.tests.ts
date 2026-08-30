@@ -418,7 +418,7 @@ b676d38 fixup! polish the tea set!
 
 describe.each`
 	configuration                  | expectedError
-	${[{ rules: {}, tokens: {} }]} | ${`Failed to parse 'comet.json' as a Comet configuration: The configuration must be a JSON object, but it is an array: [ { "rules": {}, "tokens": {} } ]`}
+	${[{ rules: {}, tokens: {} }]} | ${`Failed to parse 'comet.json' as a Comet configuration: The configuration must be a JSON object, but it is an array: [ { "rules": {}, "tokens": {} …`}
 	${{ rules: 31 }}               | ${"Failed to parse 'comet.json' as a Comet configuration: 'rules' must be an object, but it is a number: 31"}
 	${{ extends: 1000 }}           | ${"Failed to parse 'comet.json' as a Comet configuration: 'extends' must be a string, but it is a number: 1000"}
 `(
@@ -471,7 +471,7 @@ describe.each`
 
 describe.each`
 	configuration                  | expectedError
-	${[{ rules: {}, tokens: {} }]} | ${`Failed to parse 'configs/comet.json' as a Comet configuration: The configuration must be a JSON object, but it is an array: [ { "rules": {}, "tokens": {} } ]`}
+	${[{ rules: {}, tokens: {} }]} | ${`Failed to parse 'configs/comet.json' as a Comet configuration: The configuration must be a JSON object, but it is an array: [ { "rules": {}, "tokens": {} …`}
 	${{ rules: 31 }}               | ${"Failed to parse 'configs/comet.json' as a Comet configuration: 'rules' must be an object, but it is a number: 31"}
 	${{ extends: 1000 }}           | ${"Failed to parse 'configs/comet.json' as a Comet configuration: 'extends' must be a string, but it is a number: 1000"}
 	${{ extends: true }}           | ${"Failed to parse 'configs/comet.json' as a Comet configuration: 'extends' must be a string, but it is a boolean: true"}

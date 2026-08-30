@@ -6,7 +6,7 @@ import {
 import { isNotNullish } from "#utilities/Arrays.ts"
 import { requireNotNullish } from "#utilities/Assertions.ts"
 import { readJsonFile } from "#utilities/files/Files.ts"
-import { collapseWhitespace } from "#utilities/Strings.ts"
+import { collapseWhitespace, truncate } from "#utilities/Strings.ts"
 import { getDetailedValiIssue } from "#utilities/valibot/ValiIssue.ts"
 
 export async function fetchJsonConfigurationDto(path: string): Promise<JsonConfigurationDto> {
@@ -177,7 +177,7 @@ function formatActual(actual: unknown): string {
 			return `an object: ${formatJsonValue(actual)}`
 		}
 		case "string": {
-			return `a string: ${actual}`
+			return `a string: ${truncate(actual, 30)}`
 		}
 		case "bigint":
 		case "function":
@@ -189,5 +189,5 @@ function formatActual(actual: unknown): string {
 }
 
 function formatJsonValue(value: unknown): string {
-	return collapseWhitespace(JSON.stringify(value, undefined, " "))
+	return truncate(collapseWhitespace(JSON.stringify(value, undefined, " ")), 30)
 }

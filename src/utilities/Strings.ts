@@ -29,3 +29,7 @@ export function prefixStringLines(value: string, prefix: string): string {
 export function trimPrefix(value: string, prefix: string): string {
 	return value.startsWith(prefix) ? value.slice(prefix.length) : value
 }
+
+export function truncate(value: string, limit: number): string {
+	return value.length <= limit ? value : `${value.slice(0, limit)}…`
+}

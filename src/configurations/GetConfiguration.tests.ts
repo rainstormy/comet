@@ -688,16 +688,16 @@ describe("a configuration file with an unknown rule", () => {
 })
 
 describe.each`
-	path                               | content                                              | expectedError
-	${"comet.json"}                    | ${JSON.stringify({ rules: 31 })}                     | ${"Failed to parse 'comet.json' as a Comet configuration: 'rules' must be an object, but it is a number: 31"}
-	${".github/comet.json"}            | ${JSON.stringify({ extends: true })}                 | ${"Failed to parse '.github/comet.json' as a Comet configuration: 'extends' must be a string, but it is a boolean: true"}
-	${"comet.local.json"}              | ${JSON.stringify({ extends: ["a.json", "b.json"] })} | ${`Failed to parse 'comet.local.json' as a Comet configuration: 'extends' must be a string, but it is an array: [ "a.json", "b.json" ]`}
-	${"./comet.json"}                  | ${JSON.stringify([{ rules: {}, tokens: {} }])}       | ${`Failed to parse 'comet.json' as a Comet configuration: The configuration must be a JSON object, but it is an array: [ { "rules": {}, "tokens": {} } ]`}
-	${"comet2.jsonc"}                  | ${JSON.stringify("Release the robot butler")}        | ${"Failed to parse 'comet2.jsonc' as a Comet configuration: The configuration must be a JSON object, but it is a string: Release the robot butler"}
-	${"validate-commit-messages.json"} | ${JSON.stringify({ whatIsThis: true })}              | ${"Failed to parse 'validate-commit-messages.json' as a Comet configuration: 'whatIsThis' is not a valid option"}
-	${"temp.txt"}                      | ${""}                                                | ${`Failed to parse 'temp.txt' as JSON: Unexpected end of JSON input`}
-	${"readme.md"}                     | ${"hello"}                                           | ${`Failed to parse 'readme.md' as JSON: Unexpected token 'h', "hello" is not valid JSON`}
-	${"./.github/comet.github.jsonc"}  | ${"// bogus file\n-1"}                               | ${`Failed to parse '.github/comet.github.jsonc' as JSON: Unexpected token '/', "// bogus file\n-1" is not valid JSON`}
+	path                               | content                                               | expectedError
+	${"comet.json"}                    | ${JSON.stringify({ rules: 31 })}                      | ${"Failed to parse 'comet.json' as a Comet configuration: 'rules' must be an object, but it is a number: 31"}
+	${".github/comet.json"}            | ${JSON.stringify({ extends: true })}                  | ${"Failed to parse '.github/comet.json' as a Comet configuration: 'extends' must be a string, but it is a boolean: true"}
+	${"comet.local.json"}              | ${JSON.stringify({ extends: ["a.json", "b.json"] })}  | ${`Failed to parse 'comet.local.json' as a Comet configuration: 'extends' must be a string, but it is an array: [ "a.json", "b.json" ]`}
+	${"./comet.json"}                  | ${JSON.stringify([{ rules: {}, tokens: {} }])}        | ${`Failed to parse 'comet.json' as a Comet configuration: The configuration must be a JSON object, but it is an array: [ { "rules": {}, "tokens": {} …`}
+	${"comet2.jsonc"}                  | ${JSON.stringify("Release the amazing robot butler")} | ${"Failed to parse 'comet2.jsonc' as a Comet configuration: The configuration must be a JSON object, but it is a string: Release the amazing robot butl…"}
+	${"validate-commit-messages.json"} | ${JSON.stringify({ whatIsThis: true })}               | ${"Failed to parse 'validate-commit-messages.json' as a Comet configuration: 'whatIsThis' is not a valid option"}
+	${"temp.txt"}                      | ${""}                                                 | ${`Failed to parse 'temp.txt' as JSON: Unexpected end of JSON input`}
+	${"readme.md"}                     | ${"hello"}                                            | ${`Failed to parse 'readme.md' as JSON: Unexpected token 'h', "hello" is not valid JSON`}
+	${"./.github/comet.github.jsonc"}  | ${"// bogus file\n-1"}                                | ${`Failed to parse '.github/comet.github.jsonc' as JSON: Unexpected token '/', "// bogus file\n-1" is not valid JSON`}
 `(
 	"an invalid configuration file $path",
 	(props: { path: string; content: string; expectedError: string }) => {
