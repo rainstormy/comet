@@ -9,7 +9,7 @@ import type {
 import { fetchJsonConfigurationDto } from "#configurations/json/FetchJsonConfigurationDto.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import { isNotNullishValue } from "#utilities/Arrays.ts"
-import { normalisePath } from "#utilities/files/Files.ts"
+import { isReadableFile, normalisePath } from "#utilities/files/Files.ts"
 import type { DeepPartial } from "#utilities/Objects.ts"
 
 export type Configuration = {
@@ -56,4 +56,13 @@ function mapDtoToPartialRuleConfiguration(
 				typeof ruleDto === "string" ? { level: ruleDto } : ruleDto,
 			]),
 	)
+}
+
+export async function getConfigurationPath(configPath: string | null): Promise<string | null> {
+	return configPath ?? (await getDefaultConfigurationPath())
+}
+
+async function getDefaultConfigurationPath(): Promise<string | null> {
+	const defaultExists = await isReadableFile("comet.json")
+	return defaultExists ? "comet.json" : null
 }

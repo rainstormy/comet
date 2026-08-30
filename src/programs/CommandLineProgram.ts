@@ -1,6 +1,10 @@
 import { getGitBranchCrudeCommits } from "#commits/git/GetGitBranchCrudeCommits.ts"
 import { DEFAULT_COMMAND_LINE_CONFIGURATION } from "#configurations/defaults/DefaultCommandLineConfiguration.ts"
-import { type Configuration, getConfiguration } from "#configurations/GetConfiguration.ts"
+import {
+	type Configuration,
+	getConfiguration,
+	getConfigurationPath,
+} from "#configurations/GetConfiguration.ts"
 import { program } from "#programs/Program.ts"
 import {
 	EXIT_CODE_GENERAL_ERROR,
@@ -10,7 +14,6 @@ import {
 } from "#types/ExitCode.ts"
 import { defineOptions, parseArgs } from "#utilities/Args.ts"
 import { assertError } from "#utilities/Assertions.ts"
-import { isReadableFile } from "#utilities/files/Files.ts"
 import { printCommandLineError, printMessage } from "#utilities/logging/Logger.ts"
 import { deepMerge } from "#utilities/Objects.ts"
 import { getPackageVersion } from "#utilities/package/Package.ts"
@@ -31,11 +34,11 @@ export async function commandLineProgram(args: Array<string>): Promise<ExitCode>
 
 	try {
 		const parsedArgs = parseArgs(OPTION_SCHEMA, args)
-		const config = parsedArgs["--config"]
+		const configPath = parsedArgs["--config"]?.[0] ?? null
 
 		const [crudeCommits, configuration] = await Promise.all([
 			getGitBranchCrudeCommits(),
-			resolveConfiguration(config),
+			resolveConfiguration(configPath),
 		])
 
 		return await program(crudeCommits, configuration)
@@ -50,9 +53,9 @@ export function getHelpText(): string {
 	return "Usage: comet [options]"
 }
 
-async function resolveConfiguration(config: Array<string> | undefined): Promise<Configuration> {
+async function resolveConfiguration(configPath: string | null): Promise<Configuration> {
 	const defaultConfiguration = DEFAULT_COMMAND_LINE_CONFIGURATION
-	const path = await getConfigurationPath(config)
+	const path = await getConfigurationPath(configPath)
 
 	if (path === null) {
 		return defaultConfiguration
@@ -60,13 +63,4 @@ async function resolveConfiguration(config: Array<string> | undefined): Promise<
 
 	const jsonConfiguration = await getConfiguration(path)
 	return deepMerge(defaultConfiguration, jsonConfiguration)
-}
-
-async function getConfigurationPath(config: Array<string> | undefined): Promise<string | null> {
-	return config?.[0] ?? (await getDefaultConfigurationPath())
-}
-
-async function getDefaultConfigurationPath(): Promise<string | null> {
-	const defaultExists = await isReadableFile("comet.json")
-	return defaultExists ? "comet.json" : null
 }
