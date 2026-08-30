@@ -5,19 +5,11 @@ import {
 } from "#configurations/json/dtos/JsonConfigurationDto.ts"
 import { isNotNullish } from "#utilities/Arrays.ts"
 import { requireNotNullish } from "#utilities/Assertions.ts"
-import { isReadableFile, readJsonFile } from "#utilities/files/Files.ts"
-import { collapseWhitespace, trimPrefix } from "#utilities/Strings.ts"
+import { readJsonFile } from "#utilities/files/Files.ts"
+import { collapseWhitespace, truncate } from "#utilities/Strings.ts"
 import { getDetailedValiIssue } from "#utilities/valibot/ValiIssue.ts"
 
-export async function fetchJsonConfigurationDto(
-	path: string,
-): Promise<JsonConfigurationDto | null> {
-	const exists = await isReadableFile(path)
-
-	if (!exists) {
-		return null
-	}
-
+export async function fetchJsonConfigurationDto(path: string): Promise<JsonConfigurationDto> {
 	const json = await readJsonFile(path)
 
 	try {
@@ -25,7 +17,7 @@ export async function fetchJsonConfigurationDto(
 	} catch (error) {
 		if (error instanceof v.ValiError) {
 			throw new TypeError(
-				`'${trimPrefix(path, "./")}' does not declare a valid Comet configuration: ${formatValiError(error.issues[0])}`,
+				`Failed to parse '${path}' as a Comet configuration: ${formatValiError(error.issues[0])}`,
 				{ cause: error },
 			)
 		}
@@ -38,7 +30,7 @@ function formatValiError(firstOriginalIssue: v.GenericIssue): string {
 	const configuration = firstOriginalIssue.path?.[0]?.input ?? firstOriginalIssue.input
 
 	if (configuration === null || typeof configuration !== "object" || Array.isArray(configuration)) {
-		return `The configuration must be an object, but it is ${configuration === "" ? "empty" : formatActual(configuration)}`
+		return `The configuration must be a JSON object, but it is ${configuration === "" ? "empty" : formatActual(configuration)}`
 	}
 
 	const { issue, path } = getDetailedValiIssue(firstOriginalIssue)
@@ -185,7 +177,7 @@ function formatActual(actual: unknown): string {
 			return `an object: ${formatJsonValue(actual)}`
 		}
 		case "string": {
-			return `a string: ${actual}`
+			return `a string: ${truncate(actual, 30)}`
 		}
 		case "bigint":
 		case "function":
@@ -197,5 +189,5 @@ function formatActual(actual: unknown): string {
 }
 
 function formatJsonValue(value: unknown): string {
-	return collapseWhitespace(JSON.stringify(value, undefined, " "))
+	return truncate(collapseWhitespace(JSON.stringify(value, undefined, " ")), 30)
 }

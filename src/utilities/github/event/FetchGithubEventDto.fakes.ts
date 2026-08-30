@@ -20,12 +20,10 @@ export function mockGithubPullRequestEventDto(
 	const pullRequestNumber = Math.trunc(Number(pullRequestId))
 	const apiBaseUrl = `https://api.github.com/repos/${repository}` as const
 
-	const eventPayload: GithubPullRequestEventDto = {
-		pull_request: { number: pullRequestNumber },
-	}
-
 	mockGithubEnv({ apiBaseUrl, eventPath })
-	mockJsonFile(eventPath, eventPayload)
+	mockJsonFile<GithubPullRequestEventDto>(eventPath, {
+		pull_request: { number: pullRequestNumber },
+	})
 
 	return `${apiBaseUrl}/pulls/${pullRequestNumber}/commits`
 }

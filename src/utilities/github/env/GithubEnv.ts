@@ -5,6 +5,7 @@ import type { GithubUrlString } from "#utilities/github/api/GithubUrlString.ts"
 
 export type GithubEnv = {
 	apiBaseUrl: GithubUrlString
+	configPath: string | null
 	eventPath: string
 	__secretToken__: string
 }
@@ -22,6 +23,7 @@ export function githubEnv(): GithubEnv {
 
 	cachedEnv = {
 		apiBaseUrl: `${envHttpUrlString("GITHUB_API_URL")}/repos/${envString("GITHUB_REPOSITORY")}`,
+		configPath: envStringOrNull("INPUT_CONFIG-PATH"),
 		eventPath: envString("GITHUB_EVENT_PATH"),
 		__secretToken__: envString("INPUT_GITHUB-TOKEN"),
 	}
@@ -34,7 +36,7 @@ export function clearCachedGithubEnv(): void {
 }
 
 function envHttpUrlString(key: EnvKey): HttpUrlString {
-	const value = process.env[key]
+	const value = process.env[key]?.trim() ?? null
 	return requireHttpUrlString(
 		value,
 		() => `Expected the environment variable '${key}' to be a URL string, but got '${value}'`,
@@ -42,12 +44,17 @@ function envHttpUrlString(key: EnvKey): HttpUrlString {
 }
 
 function envString(key: EnvKey): string {
-	const value = process.env[key]
+	const value = process.env[key]?.trim() ?? null
 	return requireNotBlankString(value, () =>
 		isInputParameter(key)
 			? `The 'rainstormy/comet' action expects the '${nameOfInputParameter(key)}' input parameter to be set`
 			: `Expected the environment variable '${key}' to be set`,
 	)
+}
+
+function envStringOrNull(key: EnvKey): string | null {
+	const value = process.env[key]?.trim() ?? null
+	return value !== "" ? value : null
 }
 
 type EnvKey = `GITHUB_${string}` | `INPUT_${string}`
