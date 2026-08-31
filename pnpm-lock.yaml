@@ -211,6 +211,9 @@ catalogs:
     '@types/node':
       specifier: 24.13.3
       version: 24.13.3
+    ansis:
+      specifier: 4.3.1
+      version: 4.3.1
     lefthook:
       specifier: 2.1.10
       version: 2.1.10
@@ -231,6 +234,9 @@ importers:
 
   .:
     dependencies:
+      ansis:
+        specifier: 'catalog:'
+        version: 4.3.1
       valibot:
         specifier: 'catalog:'
         version: 1.4.2(typescript@7.0.2)
@@ -1246,6 +1252,10 @@ packages:
   ansi-styles@5.2.0:
     resolution: {integrity: sha512-Cxwpt2SfTzTtXcfOlzGEee8O+c+MmUgGrNiBcXnuWxuFJHe6a5Hz7qwhwe5OgaSYI0IJvkLqWX1ASG+cJOkEiA==}
     engines: {node: '>=10'}
+
+  ansis@4.3.1:
+    resolution: {integrity: sha512-BJ8/l4R5LRE7hW9WdSuGYrLSHi2ynxeFpDFbH0K/CgNeY/tyhk+vO6TYxXC5r5CpUhNVX310xzPsN/H9lCdfOA==}
+    engines: {node: '>=14'}
 
   aria-query@5.3.0:
     resolution: {integrity: sha512-b0P0sZPKtyu8HkeRAfCq0IfURZK+SuwMjY1UXGBU27wpAiTwQAIlq56IbIO+ytk/JjS1fMR14ee5WBBfKi5J6A==}
@@ -2420,6 +2430,8 @@ snapshots:
   ansi-regex@5.0.1: {}
 
   ansi-styles@5.2.0: {}
+
+  ansis@4.3.1: {}
 
   aria-query@5.3.0:
     dependencies:

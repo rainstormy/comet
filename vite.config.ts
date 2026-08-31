@@ -34,8 +34,8 @@ export default defineConfig({
 			entry: "src/main-gha.ts",
 			minify: { compress: true },
 			deps: {
-				alwaysBundle: ["valibot"],
-				onlyBundle: ["valibot"],
+				alwaysBundle: ["ansis", "valibot"],
+				onlyBundle: ["ansis", "valibot"],
 			},
 		},
 	],

@@ -15,6 +15,10 @@ catalog:
   # https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/node
   '@types/node': 24.13.3
 
+  # Ansis formats console output.
+  # https://github.com/webdiscus/ansis
+  ansis: 4.3.1
+
   # Lefthook is a Git hooks manager.
   # https://lefthook.dev
   lefthook: 2.1.10
