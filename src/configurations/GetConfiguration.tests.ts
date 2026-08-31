@@ -416,7 +416,10 @@ describe("a configuration file that extends another file", () => {
 	beforeEach(() => {
 		mockJsonFile<JsonConfigurationDto>("base.json", {
 			tokens: {
-				issueLinks: { prefixes: ["BASE-"] },
+				issueLinks: {
+					prefixes: ["BASE-", "SHARED-"],
+					wildcards: ["[base]", "[shared]"],
+				},
 			},
 			rules: {
 				noExcessiveCommitsPerBranch: {
@@ -429,7 +432,10 @@ describe("a configuration file that extends another file", () => {
 		mockJsonFile<JsonConfigurationDto>(path, {
 			extends: "base.json",
 			tokens: {
-				issueLinks: { prefixes: ["CHILD-"] },
+				issueLinks: {
+					prefixes: ["SHARED-", "CHILD-"],
+					wildcards: ["[shared]", "[child]"],
+				},
 			},
 			rules: {
 				noExcessiveCommitsPerBranch: {
@@ -440,7 +446,7 @@ describe("a configuration file that extends another file", () => {
 		})
 	})
 
-	it("merges the configurations and makes the nearest configurations take precedence", async () => {
+	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
 			rules: {
@@ -452,8 +458,8 @@ describe("a configuration file that extends another file", () => {
 			},
 			tokens: {
 				issueLinks: {
-					prefixes: ["BASE-", "CHILD-"],
-					wildcards: [],
+					prefixes: ["BASE-", "SHARED-", "CHILD-"],
+					wildcards: ["[base]", "[shared]", "[child]"],
 				},
 			},
 		})
@@ -493,7 +499,7 @@ describe("a configuration file that extends another file that extends a third fi
 		})
 	})
 
-	it("merges the configurations and makes the nearest configurations take precedence", async () => {
+	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
 			rules: {
@@ -564,7 +570,7 @@ describe("a large configuration file that extends another large file", () => {
 		})
 	})
 
-	it("merges the configurations and makes the nearest configurations take precedence", async () => {
+	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
 			rules: {
@@ -670,7 +676,7 @@ describe("a large configuration file that extends another large file that extend
 		})
 	})
 
-	it("merges the configurations and makes the nearest configurations take precedence", async () => {
+	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
 			rules: {

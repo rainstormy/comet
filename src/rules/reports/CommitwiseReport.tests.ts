@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { fakeCommitFactory } from "#commits/Commit.fakes.ts"
 import type { Commits } from "#commits/Commit.ts"
-import { issueLinkTokenConfiguration } from "#commits/TokenConfiguration.ts"
 import { fakeConfiguration } from "#configurations/GetConfiguration.fakes.ts"
 import { bodyLineConcern } from "#rules/concerns/BodyLineConcern.ts"
 import { commitConcern } from "#rules/concerns/CommitConcern.ts"
@@ -1373,7 +1372,7 @@ describe("when 'useIssueLinks' with position 'suffix' has a concern about charac
 describe("when 'useIssueLinks' with position 'anywhere' and a wildcard has a concern about characters 0-1 of the subject line", () => {
 	const configuration = fakeConfiguration(
 		{ useIssueLinks: { options: { position: "anywhere" } } },
-		{ issueLinks: issueLinkTokenConfiguration(["#"], ["(no-issue)"]) },
+		{ issueLinks: { prefixes: ["#"], wildcards: ["(no-issue)"] } },
 	)
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -1401,7 +1400,7 @@ ca745a7 attend the acoustic show
 describe("when 'useIssueLinks' with position 'anywhere' and Jira-style issue links has a concern about characters 10-11 of the subject line", () => {
 	const configuration = fakeConfiguration(
 		{ useIssueLinks: { options: { position: "anywhere" } } },
-		{ issueLinks: issueLinkTokenConfiguration(["ABC-"]) },
+		{ issueLinks: { prefixes: ["ABC-"], wildcards: [] } },
 	)
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -1429,7 +1428,7 @@ d0709d2  squash!  made the code so clean that it sparkles
 describe("when 'useIssueLinks' with position 'prefix' and custom-style issue links has a concern about characters 0-1 of the subject line", () => {
 	const configuration = fakeConfiguration(
 		{ useIssueLinks: { options: { position: "prefix" } } },
-		{ issueLinks: issueLinkTokenConfiguration(["test#", "experiment#"], ["[incident]"]) },
+		{ issueLinks: { prefixes: ["test#", "experiment#"], wildcards: ["[incident]"] } },
 	)
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -1457,7 +1456,7 @@ f6fc239 Refactored code, now it’s overpowered
 describe("when 'useIssueLinks' with position 'suffix' and Jira-style issue links has a concern about characters 41-42 of the subject line", () => {
 	const configuration = fakeConfiguration(
 		{ useIssueLinks: { options: { position: "suffix" } } },
-		{ issueLinks: issueLinkTokenConfiguration(["AWESOME-", "UNICORN-", "PROJECT-"]) },
+		{ issueLinks: { prefixes: ["AWESOME-", "UNICORN-", "PROJECT-"], wildcards: [] } },
 	)
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 

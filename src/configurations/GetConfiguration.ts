@@ -1,14 +1,11 @@
-import {
-	type TokenConfiguration,
-	issueLinkTokenConfiguration,
-} from "#commits/TokenConfiguration.ts"
+import type { TokenConfiguration } from "#commits/TokenConfiguration.ts"
 import type {
 	JsonConfigurationRulesDto,
 	JsonConfigurationTokensDto,
 } from "#configurations/json/dtos/JsonConfigurationDto.ts"
 import { fetchJsonConfigurationDto } from "#configurations/json/FetchJsonConfigurationDto.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
-import { isNotNullishValue } from "#utilities/Arrays.ts"
+import { isNotNullishValue, uniqueItems } from "#utilities/Arrays.ts"
 import { isReadableFile, normalisePath } from "#utilities/files/Files.ts"
 import { type DeepPartial, deepMerge } from "#utilities/Objects.ts"
 
@@ -44,7 +41,7 @@ export async function getConfiguration(configPath: string): Promise<DeepPartial<
 		currentPath = dto.extends !== undefined ? normalisePath(dto.extends, currentPath) : null
 	}
 
-	return configuration
+	return sanitiseConfiguration(configuration)
 }
 
 function mapDtoToPartialTokenConfiguration(
@@ -55,10 +52,10 @@ function mapDtoToPartialTokenConfiguration(
 	}
 
 	return {
-		issueLinks: issueLinkTokenConfiguration(
-			dto.issueLinks.prefixes ?? [],
-			dto.issueLinks.wildcards ?? [],
-		),
+		issueLinks: {
+			prefixes: dto.issueLinks.prefixes ?? [],
+			wildcards: dto.issueLinks.wildcards ?? [],
+		},
 	}
 }
 
@@ -77,6 +74,26 @@ function mapDtoToPartialRuleConfiguration(
 				typeof ruleDto === "string" ? { level: ruleDto } : ruleDto,
 			]),
 	)
+}
+
+function sanitiseConfiguration(
+	configuration: DeepPartial<Configuration>,
+): DeepPartial<Configuration> {
+	const issueLinks = configuration.tokens?.issueLinks ?? null
+
+	if (issueLinks === null) {
+		return configuration
+	}
+
+	return {
+		...configuration,
+		tokens: {
+			issueLinks: {
+				prefixes: uniqueItems(issueLinks.prefixes ?? []),
+				wildcards: uniqueItems(issueLinks.wildcards ?? []),
+			},
+		},
+	}
 }
 
 export async function getConfigurationPath(configPath: string | null): Promise<string | null> {

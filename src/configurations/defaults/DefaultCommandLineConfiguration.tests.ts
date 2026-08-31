@@ -5,7 +5,7 @@ import type { RuleKey } from "#configurations/RulesetConfiguration.ts"
 const configuration = DEFAULT_COMMAND_LINE_CONFIGURATION
 
 it("does not tokenise issue links", () => {
-	expect(configuration.tokens.issueLinks).toBeNull()
+	expect(configuration.tokens.issueLinks).toEqual({ prefixes: [], wildcards: [] })
 })
 
 it.each`

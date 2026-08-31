@@ -270,8 +270,8 @@ function subjectLineRuleMessage(
 						? "end with"
 						: "include"
 
-			const prefixes = configuration.tokens.issueLinks?.prefixes ?? []
-			const wildcards = configuration.tokens.issueLinks?.wildcards ?? []
+			const prefixes = configuration.tokens.issueLinks.prefixes
+			const wildcards = configuration.tokens.issueLinks.wildcards
 			const examples = [...prefixes.map((prefix) => `${prefix}123`), ...wildcards]
 			const examplePhrase = pluralise(examples.length, "Example")
 

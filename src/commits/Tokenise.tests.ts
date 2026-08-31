@@ -17,7 +17,6 @@ import {
 	word,
 } from "#commits/Token.ts"
 import { fakeTokenConfiguration } from "#commits/TokenConfiguration.fakes.ts"
-import { issueLinkTokenConfiguration } from "#commits/TokenConfiguration.ts"
 
 const configuration = fakeTokenConfiguration()
 
@@ -624,7 +623,10 @@ describe.each`
 
 describe("when issue link tokenisation accepts GitHub-/GitLab-style prefixes and custom wildcards", () => {
 	const githubIssueLinks = fakeTokenConfiguration({
-		issueLinks: issueLinkTokenConfiguration(["#", "GH-", "GL-"], ["(no-issue)", "[incident]"]),
+		issueLinks: {
+			prefixes: ["#", "GH-", "GL-"],
+			wildcards: ["(no-issue)", "[incident]"],
+		},
 	})
 
 	describe.each`
@@ -702,7 +704,7 @@ describe("when issue link tokenisation accepts GitHub-/GitLab-style prefixes and
 
 describe("when issue link tokenisation accepts Jira-style prefixes and custom wildcards", () => {
 	const jiraIssueLinks = fakeTokenConfiguration({
-		issueLinks: issueLinkTokenConfiguration(["UNICORN-"], ["#SECURITY"]),
+		issueLinks: { prefixes: ["UNICORN-"], wildcards: ["#SECURITY"] },
 	})
 
 	describe.each`
@@ -763,7 +765,7 @@ describe("when issue link tokenisation accepts Jira-style prefixes and custom wi
 
 describe("when issue link tokenisation accepts Jira-style prefixes and no wildcards", () => {
 	const noWildcardIssueLinks = fakeTokenConfiguration({
-		issueLinks: issueLinkTokenConfiguration(["COMET-"]),
+		issueLinks: { prefixes: ["COMET-"], wildcards: [] },
 	})
 
 	describe.each`
@@ -787,7 +789,7 @@ describe("when issue link tokenisation accepts Jira-style prefixes and no wildca
 
 describe("when issue link tokenisation accepts wildcards only", () => {
 	const wildcardOnlyIssueLinks = fakeTokenConfiguration({
-		issueLinks: issueLinkTokenConfiguration([], ["[incident]"]),
+		issueLinks: { prefixes: [], wildcards: ["[incident]"] },
 	})
 
 	describe.each`
@@ -810,7 +812,9 @@ describe("when issue link tokenisation accepts wildcards only", () => {
 })
 
 describe("when issue link tokenisation is disabled", () => {
-	const noIssueLinks = fakeTokenConfiguration({ issueLinks: null })
+	const noIssueLinks = fakeTokenConfiguration({
+		issueLinks: { prefixes: [], wildcards: [] },
+	})
 
 	describe.each`
 		subjectLine

@@ -4,7 +4,7 @@ import { deepMerge } from "#utilities/Objects.ts"
 
 export const DEFAULT_COMMAND_LINE_CONFIGURATION: Configuration = {
 	tokens: {
-		issueLinks: null,
+		issueLinks: { prefixes: [], wildcards: [] },
 	},
 	rules: deepMerge(DEFAULT_RULESET_CONFIGURATION, {
 		noRepeatedSubjectLines: { level: "off" },
