@@ -1,5 +1,5 @@
 import { access, constants, readFile } from "node:fs/promises"
-import { isAbsolute, normalize, resolve } from "node:path"
+import { dirname, isAbsolute, normalize, resolve } from "node:path"
 import process from "node:process"
 import type { JsonValue } from "#types/JsonValue.ts"
 import { assertError } from "#utilities/Assertions.ts"
@@ -13,8 +13,8 @@ export async function isReadableFile(path: string): Promise<boolean> {
 	}
 }
 
-export function normalisePath(path: string): string {
-	return normalize(isAbsolute(path) ? path : resolve(process.cwd(), path))
+export function normalisePath(path: string, relativeTo = process.cwd()): string {
+	return normalize(isAbsolute(path) ? path : resolve(dirname(relativeTo), path))
 }
 
 export async function readJsonFile(path: string): Promise<JsonValue> {

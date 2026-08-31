@@ -1,10 +1,28 @@
 import { beforeEach, vi } from "vitest"
 import type { JsonValue, JsonValueFrom } from "#types/JsonValue.ts"
+import { isNotEmptyString } from "#utilities/Arrays.ts"
 import { trimPrefix } from "#utilities/Strings.ts"
 
 vi.mock(import("#utilities/files/Files.ts"), () => ({
 	isReadableFile: vi.fn(async (path: string): Promise<boolean> => contentsByPath.has(path)),
-	normalisePath: vi.fn((path: string): string => trimPrefix(path, "./")),
+	normalisePath: vi.fn((path: string, relativeTo?: string): string => {
+		const fullPath = `${relativeTo?.split("/").slice(0, -1).join("/") ?? "."}/${path}`
+		const segments = fullPath.split("/").filter(isNotEmptyString)
+
+		const normalisedSegments: Array<string> = []
+
+		for (const segment of segments) {
+			if (segment !== ".") {
+				if (segment !== "..") {
+					normalisedSegments.push(segment)
+				} else {
+					normalisedSegments.pop()
+				}
+			}
+		}
+
+		return normalisedSegments.join("/")
+	}),
 	readJsonFile: vi.fn(async (path: string): Promise<JsonValue> => {
 		const content = contentsByPath.get(path) ?? null
 

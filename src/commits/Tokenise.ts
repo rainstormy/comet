@@ -92,12 +92,12 @@ export type TokeniserPatterns = {
 }
 
 export function issueLinkPattern(configuration: TokenConfiguration): string {
-	if (configuration.issueLinks === null) {
-		return ""
-	}
-
 	const prefixes = regexEnum(configuration.issueLinks.prefixes)
 	const wildcards = regexEnum(configuration.issueLinks.wildcards)
+
+	if (prefixes === "" && wildcards === "") {
+		return ""
+	}
 
 	// Assume all issue links to have a numeric key after the string prefix.
 	// They can be surrounded by whitespace, enclosed in brackets (bracket pair consistency not enforced for simplicity), or followed by a colon.
