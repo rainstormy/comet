@@ -1,3 +1,4 @@
+import { bold, gray as grey, red } from "ansis"
 import { describe, expect, it } from "vitest"
 import { fakeCommitFactory } from "#commits/Commit.fakes.ts"
 import type { Commits } from "#commits/Commit.ts"
@@ -36,10 +37,10 @@ describe("when 'noBlankSubjectLines' has a concern about characters 0-1 of the s
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-52f07a2 
-        ┬
-        ╰─ Subject lines must contain at least one non-whitespace character.
-           (noBlankSubjectLines)
+${grey`52f07a2`} 
+        ${red`┬`}
+        ${red`╰─ Subject lines must contain at least one non-whitespace character.`}
+        ${red`   (noBlankSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -59,10 +60,10 @@ describe("when 'noBlankSubjectLines' has a concern about characters 13-17 of the
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-2ba57d6 amend! Revert " "
-                     ─┬──
-                      ╰─ Subject lines must contain at least one non-whitespace character.
-                         (noBlankSubjectLines)
+${grey`2ba57d6`} amend! Revert " "
+                     ${red`─┬──`}
+                      ${red`╰─ Subject lines must contain at least one non-whitespace character.`}
+                      ${red`   (noBlankSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -84,10 +85,10 @@ describe("when 'noExcessiveCommitsPerBranch' has a concern about an excessive co
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-9a7e6aa invite the parser to brunch
-      ╭────────────────────────────
-      ╰─ Branches must not contain more than 1 commit.
-         (noExcessiveCommitsPerBranch)
+${grey`9a7e6aa`} invite the parser to brunch
+      ${red`╭────────────────────────────`}
+      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
 	})
@@ -109,10 +110,10 @@ describe("when 'noExcessiveCommitsPerBranch' has a concern about an excessive co
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-75bedf8 Refactor the jam queue
-      ╭───────────────────────
-      ╰─ Branches must not contain more than 3 commits.
-         (noExcessiveCommitsPerBranch)
+${grey`75bedf8`} Refactor the jam queue
+      ${red`╭───────────────────────`}
+      ${red`╰─ Branches must not contain more than 3 commits.`}
+      ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
 	})
@@ -134,10 +135,10 @@ describe("when 'noExcessiveCommitsPerBranch' has a concern about an excessive co
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-f753a24 last minute fix
-      ╭────────────────
-      ╰─ Branches must not contain more than 10 commits.
-         (noExcessiveCommitsPerBranch)
+${grey`f753a24`} last minute fix
+      ${red`╭────────────────`}
+      ${red`╰─ Branches must not contain more than 10 commits.`}
+      ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
 	})
@@ -157,10 +158,10 @@ describe("when 'noExcessiveWhitespace' has a concern about characters 0-1 of the
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-47722cd  Recalibrate the espresso machine
-        ┬
-        ╰─ Subject lines must not start with whitespace.
-           (noExcessiveWhitespace)
+${grey`47722cd`}  Recalibrate the espresso machine
+        ${red`┬`}
+        ${red`╰─ Subject lines must not start with whitespace.`}
+        ${red`   (noExcessiveWhitespace)`}
 `.trim(),
 		)
 	})
@@ -180,10 +181,10 @@ describe("when 'noExcessiveWhitespace' has a concern about characters 39-40 of t
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-067ab0c make the office fern require less water 
-                                               ┬
-  Subject lines must not end with whitespace. ─╯
-  (noExcessiveWhitespace)
+${grey`067ab0c`} make the office fern require less water 
+                                               ${red`┬`}
+  ${red`Subject lines must not end with whitespace. ─╯`}
+  ${red`(noExcessiveWhitespace)`}
 `.trim(),
 		)
 	})
@@ -203,10 +204,10 @@ describe("when 'noExcessiveWhitespace' has a concern about characters 18-20 of t
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-50bd2cc taught the toaster  to write haiku
-                          ┬─
-                          ╰─ Subject lines must not contain excessive whitespace.
-                             (noExcessiveWhitespace)
+${grey`50bd2cc`} taught the toaster  to write haiku
+                          ${red`┬─`}
+                          ${red`╰─ Subject lines must not contain excessive whitespace.`}
+                          ${red`   (noExcessiveWhitespace)`}
 `.trim(),
 		)
 	})
@@ -226,10 +227,10 @@ describe("when 'noExcessiveWhitespace' has a concern about characters 23-26 of t
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-c687be9 Install tiny disco ball   in build room
-                               ─┬─
-                                ╰─ Subject lines must not contain excessive whitespace.
-                                   (noExcessiveWhitespace)
+${grey`c687be9`} Install tiny disco ball   in build room
+                               ${red`─┬─`}
+                                ${red`╰─ Subject lines must not contain excessive whitespace.`}
+                                ${red`   (noExcessiveWhitespace)`}
 `.trim(),
 		)
 	})
@@ -249,14 +250,14 @@ describe("when 'noExcessiveWhitespace' has a concern about characters 9-12 of a 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-4154880 Polish the arcade cabinet
-    ╭──
-  1 │ 
-∙ 2 │ The prize   counter now accepts coupons.
-    ·          ─┬─
-    ·           ╰─ Message bodies must not contain excessive whitespace.
-    ·              (noExcessiveWhitespace)
-    ╰──
+${grey`4154880`} Polish the arcade cabinet
+    ${grey`╭──`}
+  ${grey`1 │ `}
+${red`•`} ${grey`${bold`2`} │`} The prize   counter now accepts coupons.
+    ${grey`· `}         ${red`─┬─`}
+    ${grey`· `}          ${red`╰─ Message bodies must not contain excessive whitespace.`}
+    ${grey`· `}          ${red`   (noExcessiveWhitespace)`}
+    ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -277,15 +278,15 @@ describe("when 'noExcessiveWhitespace' has a concern about characters 14-18 of a
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-1006346 Map the museum heist
-    ╭──
-  2 │ First note is perfectly ordinary.
-∙ 3 │ The blue vault    needs a quieter alarm.
-    ·               ─┬──
-    ·                ╰─ Message bodies must not contain excessive whitespace.
-    ·                   (noExcessiveWhitespace)
-  4 │ Last note keeps watch.
-    ╰──
+${grey`1006346`} Map the museum heist
+    ${grey`╭──`}
+  ${grey`2 │ First note is perfectly ordinary.`}
+${red`•`} ${grey`${bold`3`} │`} The blue vault    needs a quieter alarm.
+    ${grey`· `}              ${red`─┬──`}
+    ${grey`· `}               ${red`╰─ Message bodies must not contain excessive whitespace.`}
+    ${grey`· `}               ${red`   (noExcessiveWhitespace)`}
+  ${grey`4 │ Last note keeps watch.`}
+    ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -306,10 +307,10 @@ describe("when 'noMergeCommits' has a concern about the commit", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-507c835 Merge branch 'main' into bugfix/dance-party-playlist
-      ╭─────────────────────────────────────────────────────
-      ╰─ Merge commits are not allowed.
-         (noMergeCommits)
+${grey`507c835`} Merge branch 'main' into bugfix/dance-party-playlist
+      ${red`╭─────────────────────────────────────────────────────`}
+      ${red`╰─ Merge commits are not allowed.`}
+      ${red`   (noMergeCommits)`}
 `.trim(),
 		)
 	})
@@ -330,10 +331,10 @@ describe("when 'noMergeCommits' has a concern about the commit with a long subje
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-71516e1 amend! Merge branch 'feature/new-coffee-machine' into feature/office-overhaul
-      ╭──────────────────────────────────────────────────────────────────────────────
-      ╰─ Merge commits are not allowed.
-         (noMergeCommits)
+${grey`71516e1`} amend! Merge branch 'feature/new-coffee-machine' into feature/office-overhaul
+      ${red`╭──────────────────────────────────────────────────────────────────────────────`}
+      ${red`╰─ Merge commits are not allowed.`}
+      ${red`   (noMergeCommits)`}
 `.trim(),
 		)
 	})
@@ -353,10 +354,10 @@ describe("when 'noRepeatedSubjectLines' has a concern about the commit", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-8c1fbd4 test
-      ╭─────
-      ╰─ Commits must have unique subject lines within a branch.
-         (noRepeatedSubjectLines)
+${grey`8c1fbd4`} test
+      ${red`╭─────`}
+      ${red`╰─ Commits must have unique subject lines within a branch.`}
+      ${red`   (noRepeatedSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -377,10 +378,10 @@ describe("when 'noRepeatedSubjectLines' has a concern about the commit with a lo
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-f3359c9 GH-246 Replace guesswork with a tiny chart and upgrade the \`ButterflyService\` to 8.0.31
-      ╭────────────────────────────────────────────────────────────────────────────────────────
-      ╰─ Commits must have unique subject lines within a branch.
-         (noRepeatedSubjectLines)
+${grey`f3359c9`} GH-246 Replace guesswork with a tiny chart and upgrade the \`ButterflyService\` to 8.0.31
+      ${red`╭────────────────────────────────────────────────────────────────────────────────────────`}
+      ${red`╰─ Commits must have unique subject lines within a branch.`}
+      ${red`   (noRepeatedSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -405,19 +406,19 @@ describe("when 'noRestrictedTrailers' has a concern about a body line with a 'Co
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-a04ada4 Wire the release breadcrumb trail
-    ╭──
-  2 │ Reviewed-By: April O'Neil <april.oneil@fastforward.com>
-∙ 3 │ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
-    · ──────┬───────
-    ·       ╰─ Message bodies must not contain disallowed trailers.
-    ·          (noRestrictedTrailers)
-    ·          
-    ·          Disallowed trailers:
-    ·            ∙ Co-authored-by
-    ·          
-  4 │ Signed-Off-By: Hamato Yoshi <hamato@nycsewers.com>
-    ╰──
+${grey`a04ada4`} Wire the release breadcrumb trail
+    ${grey`╭──`}
+  ${grey`2 │ Reviewed-By: April O'Neil <april.oneil@fastforward.com>`}
+${red`•`} ${grey`${bold`3`} │`} Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+    ${grey`· `}${red`──────┬───────`}
+    ${grey`· `}      ${red`╰─ Message bodies must not contain disallowed trailers.`}
+    ${grey`· `}      ${red`   (noRestrictedTrailers)`}
+    ${grey`· `}      ${red`   `}
+    ${grey`· `}      ${red`   Disallowed trailers:`}
+    ${grey`· `}      ${red`     ∙ Co-authored-by`}
+    ${grey`· `}      ${red`   `}
+  ${grey`4 │ Signed-Off-By: Hamato Yoshi <hamato@nycsewers.com>`}
+    ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -442,20 +443,21 @@ describe("when 'noRestrictedTrailers' has a concern about a body line with a 'Re
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-344eaa9 one link and two notes
-    ╭──
-  5 │   signed-off-by: baxter.stockman <baxter.stockman@fastforward.com>
-∙ 6 │   refs: #668182
-    ·   ─┬──
-    ·    ╰─ Message bodies must not contain disallowed trailers.
-    ·       (noRestrictedTrailers)
-    ·       
-    ·       Disallowed trailers:
-    ·         ∙ Co-authored-by
-    ·         ∙ Refs
-    ·         ∙ Reviewed-by
-    ·         ∙ Signed-off-by
-    ╰──
+${grey`344eaa9`} one link and two notes
+    ${grey`╭──`}
+  ${grey`5 │   signed-off-by: baxter.stockman <baxter.stockman@fastforward.com>`}
+${red`•`} ${grey`${bold`6`} │`}   refs: #668182
+    ${grey`· `}  ${red`─┬──`}
+    ${grey`· `}   ${red`╰─ Message bodies must not contain disallowed trailers.`}
+    ${grey`· `}   ${red`   (noRestrictedTrailers)`}
+    ${grey`· `}   ${red`   `}
+    ${grey`· `}   ${red`   Disallowed trailers:`}
+    ${grey`· `}   ${red`     ∙ Co-authored-by`}
+    ${grey`· `}   ${red`     ∙ Refs`}
+    ${grey`· `}   ${red`     ∙ Reviewed-by`}
+    ${grey`· `}   ${red`     ∙ Signed-off-by`}
+    ${grey`· `}   ${red`   `}
+    ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -475,10 +477,10 @@ describe("when 'noRevertRevertCommits' has a concern about characters 0-14 of th
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-d4e7a97 Revert "Revert "Make the program act like a clown""
-        ──────┬───────
-              ╰─ Cherry-pick the original commit instead of reverting it over.
-                 (noRevertRevertCommits)
+${grey`d4e7a97`} Revert "Revert "Make the program act like a clown""
+        ${red`──────┬───────`}
+              ${red`╰─ Cherry-pick the original commit instead of reverting it over.`}
+              ${red`   (noRevertRevertCommits)`}
 `.trim(),
 		)
 	})
@@ -498,10 +500,10 @@ describe("when 'noRevertRevertCommits' has a concern about characters 1-24 of th
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-34aa41b  revert "revert  "revert "repair the soft ice machine """
-         ───────────┬───────────
-                    ╰─ Cherry-pick the original commit instead of reverting it over.
-                       (noRevertRevertCommits)
+${grey`34aa41b`}  revert "revert  "revert "repair the soft ice machine """
+         ${red`───────────┬───────────`}
+                    ${red`╰─ Cherry-pick the original commit instead of reverting it over.`}
+                    ${red`   (noRevertRevertCommits)`}
 `.trim(),
 		)
 	})
@@ -521,10 +523,10 @@ describe("when 'noSingleWordSubjectLines' has a concern about characters 0-3 of 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-964bce7 WIP
-        ─┬─
-         ╰─ Subject lines must contain at least two words.
-            (noSingleWordSubjectLines)
+${grey`964bce7`} WIP
+        ${red`─┬─`}
+         ${red`╰─ Subject lines must contain at least two words.`}
+         ${red`   (noSingleWordSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -544,10 +546,10 @@ describe("when 'noSingleWordSubjectLines' has a concern about characters 11-17 o
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-a4b6d0e fixup! #17 bugfix
-                   ──┬───
-                     ╰─ Subject lines must contain at least two words.
-                        (noSingleWordSubjectLines)
+${grey`a4b6d0e`} fixup! #17 bugfix
+                   ${red`──┬───`}
+                     ${red`╰─ Subject lines must contain at least two words.`}
+                     ${red`   (noSingleWordSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -567,10 +569,10 @@ describe("when 'noSquashMarkers' has a concern about characters 0-6 of the subje
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-ffebad1 amend!Apply strawberry jam to make the code sweeter
-        ──┬───
-          ╰─ Combine squash commits with their ancestors.
-             (noSquashMarkers)
+${grey`ffebad1`} amend!Apply strawberry jam to make the code sweeter
+        ${red`──┬───`}
+          ${red`╰─ Combine squash commits with their ancestors.`}
+          ${red`   (noSquashMarkers)`}
 `.trim(),
 		)
 	})
@@ -590,10 +592,10 @@ describe("when 'noSquashMarkers' has a concern about characters 1-14 of the subj
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-56c750b  fixup! fixup! found a funny easter egg
-         ──────┬──────
-               ╰─ Combine squash commits with their ancestors.
-                  (noSquashMarkers)
+${grey`56c750b`}  fixup! fixup! found a funny easter egg
+         ${red`──────┬──────`}
+               ${red`╰─ Combine squash commits with their ancestors.`}
+               ${red`   (noSquashMarkers)`}
 `.trim(),
 		)
 	})
@@ -613,10 +615,10 @@ describe("when 'noUnexpectedPunctuation' has a concern about characters 8-9 of t
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-41c3cb1 fixed it!
-                ┬
-                ╰─ Subject lines must not end with punctuation.
-                   (noUnexpectedPunctuation)
+${grey`41c3cb1`} fixed it!
+                ${red`┬`}
+                ${red`╰─ Subject lines must not end with punctuation.`}
+                ${red`   (noUnexpectedPunctuation)`}
 `.trim(),
 		)
 	})
@@ -636,10 +638,10 @@ describe("when 'noUnexpectedPunctuation' has a concern about characters 10-11 of
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-9b83d7c Formatting.
-                  ┬
-                  ╰─ Subject lines must not end with punctuation.
-                     (noUnexpectedPunctuation)
+${grey`9b83d7c`} Formatting.
+                  ${red`┬`}
+                  ${red`╰─ Subject lines must not end with punctuation.`}
+                  ${red`   (noUnexpectedPunctuation)`}
 `.trim(),
 		)
 	})
@@ -659,10 +661,10 @@ describe("when 'noUnexpectedPunctuation' has a concern about characters 14-16 of
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-94486b7 the old route -> 
-                      ┬─
-                      ╰─ Subject lines must not end with punctuation.
-                         (noUnexpectedPunctuation)
+${grey`94486b7`} the old route -> 
+                      ${red`┬─`}
+                      ${red`╰─ Subject lines must not end with punctuation.`}
+                      ${red`   (noUnexpectedPunctuation)`}
 `.trim(),
 		)
 	})
@@ -682,10 +684,10 @@ describe("when 'noUnexpectedPunctuation' has a concern about characters 57-62 of
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-f67544d a cheerful easter egg is hiding somewhere in this commit :joy:
-                                                                 ──┬──
-                     Subject lines must not end with punctuation. ─╯
-                     (noUnexpectedPunctuation)
+${grey`f67544d`} a cheerful easter egg is hiding somewhere in this commit :joy:
+                                                                 ${red`──┬──`}
+                     ${red`Subject lines must not end with punctuation. ─╯`}
+                     ${red`(noUnexpectedPunctuation)`}
 `.trim(),
 		)
 	})
@@ -705,10 +707,10 @@ describe("when 'noUnexpectedPunctuation' has a concern about characters 27-31 of
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-926af33 the moon laser is operating!!!! #42
-                                   ─┬──
-                                    ╰─ Subject lines must not end with punctuation.
-                                       (noUnexpectedPunctuation)
+${grey`926af33`} the moon laser is operating!!!! #42
+                                   ${red`─┬──`}
+                                    ${red`╰─ Subject lines must not end with punctuation.`}
+                                    ${red`   (noUnexpectedPunctuation)`}
 `.trim(),
 		)
 	})
@@ -735,14 +737,14 @@ describe("when 'useAuthorEmailPatterns' has a concern about a missing author ema
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-87c2ab2 Upgrade the workshop espresso workflow
-╰─ authored by: 
-              ╭─
-              ╰─ Email addresses of commit authors must match an accepted pattern.
-                 (useAuthorEmailPatterns)
-                 
-                 Accepted patterns:
-                   ∙ ${String.raw`\d+\+.+@users\.noreply\.github\.com`}
+${grey`87c2ab2`} Upgrade the workshop espresso workflow
+${grey`╰─ authored by:`} 
+              ${red`╭─`}
+              ${red`╰─ Email addresses of commit authors must match an accepted pattern.`}
+              ${red`   (useAuthorEmailPatterns)`}
+              ${red`   `}
+              ${red`   Accepted patterns:`}
+              ${red`     ∙ ${String.raw`\d+\+.+@users\.noreply\.github\.com`}`}
 `.trim(),
 		)
 	})
@@ -774,15 +776,15 @@ describe("when 'useAuthorEmailPatterns' has a concern about the author's email a
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-4014427 Teach the sleigh to parallel park
-╰─ authored by: claus@santasworkshop.com
-              ╭─────────────────────────
-              ╰─ Email addresses of commit authors must match an accepted pattern.
-                 (useAuthorEmailPatterns)
-                 
-                 Accepted patterns:
-                   ∙ ${String.raw`\d+\+.+@users\.noreply\.github\.com`}
-                   ∙ ${String.raw`.+@fictivecompany\.com`}
+${grey`4014427`} Teach the sleigh to parallel park
+${grey`╰─ authored by:`} claus@santasworkshop.com
+              ${red`╭─────────────────────────`}
+              ${red`╰─ Email addresses of commit authors must match an accepted pattern.`}
+              ${red`   (useAuthorEmailPatterns)`}
+              ${red`   `}
+              ${red`   Accepted patterns:`}
+              ${red`     ∙ ${String.raw`\d+\+.+@users\.noreply\.github\.com`}`}
+              ${red`     ∙ ${String.raw`.+@fictivecompany\.com`}`}
 `.trim(),
 		)
 	})
@@ -809,14 +811,14 @@ describe("when 'useAuthorNamePatterns' has a concern about a missing author name
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-f16fc9f overpowered code
-╰─ authored by: 
-              ╭─
-              ╰─ Names of commit authors must match an accepted pattern.
-                 (useAuthorNamePatterns)
-                 
-                 Accepted patterns:
-                   ∙ ${String.raw`\p{Lu}.*\s.+`}
+${grey`f16fc9f`} overpowered code
+${grey`╰─ authored by:`} 
+              ${red`╭─`}
+              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`   (useAuthorNamePatterns)`}
+              ${red`   `}
+              ${red`   Accepted patterns:`}
+              ${red`     ∙ ${String.raw`\p{Lu}.*\s.+`}`}
 `.trim(),
 		)
 	})
@@ -843,15 +845,15 @@ describe("when 'useAuthorNamePatterns' has a concern about the author's name", (
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-e4236bf I’m not lazy, I’m on energy-saving mode
-╰─ authored by: santa.claus
-              ╭────────────
-              ╰─ Names of commit authors must match an accepted pattern.
-                 (useAuthorNamePatterns)
-                 
-                 Accepted patterns:
-                   ∙ ${String.raw`\p{Lu}.*\s.+`}
-                   ∙ ${String.raw`dependabot\[bot\]`}
+${grey`e4236bf`} I’m not lazy, I’m on energy-saving mode
+${grey`╰─ authored by:`} santa.claus
+              ${red`╭────────────`}
+              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`   (useAuthorNamePatterns)`}
+              ${red`   `}
+              ${red`   Accepted patterns:`}
+              ${red`     ∙ ${String.raw`\p{Lu}.*\s.+`}`}
+              ${red`     ∙ ${String.raw`dependabot\[bot\]`}`}
 `.trim(),
 		)
 	})
@@ -871,10 +873,10 @@ describe("when 'useCapitalisedSubjectLines' has a concern about characters 0-1 o
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-497de39 release the robot butler
-        ┬
-        ╰─ The first letter in subject lines must be in uppercase.
-           (useCapitalisedSubjectLines)
+${grey`497de39`} release the robot butler
+        ${red`┬`}
+        ${red`╰─ The first letter in subject lines must be in uppercase.`}
+        ${red`   (useCapitalisedSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -894,10 +896,10 @@ describe("when 'useCapitalisedSubjectLines' has a concern about characters 7-8 o
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-92d6b11 fixup! resolve a bug that thought it was a feature
-               ┬
-               ╰─ The first letter in subject lines must be in uppercase.
-                  (useCapitalisedSubjectLines)
+${grey`92d6b11`} fixup! resolve a bug that thought it was a feature
+               ${red`┬`}
+               ${red`╰─ The first letter in subject lines must be in uppercase.`}
+               ${red`   (useCapitalisedSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -924,14 +926,14 @@ describe("when 'useCommitterEmailPatterns' has a concern about a missing committ
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-28a5bed Remove stale confetti from the deployment logs
-╰─ committed by: 
-               ╭─
-               ╰─ Email addresses of committers must match an accepted pattern.
-                  (useCommitterEmailPatterns)
-                  
-                  Accepted patterns:
-                    ∙ ${String.raw`\d+\+.+@users\.noreply\.github\.com`}
+${grey`28a5bed`} Remove stale confetti from the deployment logs
+${grey`╰─ committed by:`} 
+               ${red`╭─`}
+               ${red`╰─ Email addresses of committers must match an accepted pattern.`}
+               ${red`   (useCommitterEmailPatterns)`}
+               ${red`   `}
+               ${red`   Accepted patterns:`}
+               ${red`     ∙ ${String.raw`\d+\+.+@users\.noreply\.github\.com`}`}
 `.trim(),
 		)
 	})
@@ -963,15 +965,15 @@ describe("when 'useCommitterEmailPatterns' has a concern about the committer's e
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-55ef98a Teach the release notes to speak plainly
-╰─ committed by: noreply@tmnt.com
-               ╭─────────────────
-               ╰─ Email addresses of committers must match an accepted pattern.
-                  (useCommitterEmailPatterns)
-                  
-                  Accepted patterns:
-                    ∙ ${String.raw`\d+\+.+@users\.noreply\.github\.com`}
-                    ∙ ${String.raw`noreply@github\.com`}
+${grey`55ef98a`} Teach the release notes to speak plainly
+${grey`╰─ committed by:`} noreply@tmnt.com
+               ${red`╭─────────────────`}
+               ${red`╰─ Email addresses of committers must match an accepted pattern.`}
+               ${red`   (useCommitterEmailPatterns)`}
+               ${red`   `}
+               ${red`   Accepted patterns:`}
+               ${red`     ∙ ${String.raw`\d+\+.+@users\.noreply\.github\.com`}`}
+               ${red`     ∙ ${String.raw`noreply@github\.com`}`}
 `.trim(),
 		)
 	})
@@ -998,14 +1000,14 @@ describe("when 'useCommitterNamePatterns' has a concern about a missing committe
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-307ce5e retune the tiny deployment bell
-╰─ committed by: 
-               ╭─
-               ╰─ Names of committers must match an accepted pattern.
-                  (useCommitterNamePatterns)
-                  
-                  Accepted patterns:
-                    ∙ ${String.raw`\p{Lu}.*\s.+`}
+${grey`307ce5e`} retune the tiny deployment bell
+${grey`╰─ committed by:`} 
+               ${red`╭─`}
+               ${red`╰─ Names of committers must match an accepted pattern.`}
+               ${red`   (useCommitterNamePatterns)`}
+               ${red`   `}
+               ${red`   Accepted patterns:`}
+               ${red`     ∙ ${String.raw`\p{Lu}.*\s.+`}`}
 `.trim(),
 		)
 	})
@@ -1039,17 +1041,17 @@ describe("when 'useCommitterNamePatterns' has a concern about the committer's na
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-61a6e53 Make the changelog less mysterious
-╰─ committed by: master splinter
-               ╭────────────────
-               ╰─ Names of committers must match an accepted pattern.
-                  (useCommitterNamePatterns)
-                  
-                  Accepted patterns:
-                    ∙ ${String.raw`\p{Lu}.*\s.+`}
-                    ∙ ${String.raw`dependabot\[bot\]`}
-                    ∙ ${String.raw`renovate\[bot\]`}
-                    ∙ ${String.raw`GitHub`}
+${grey`61a6e53`} Make the changelog less mysterious
+${grey`╰─ committed by:`} master splinter
+               ${red`╭────────────────`}
+               ${red`╰─ Names of committers must match an accepted pattern.`}
+               ${red`   (useCommitterNamePatterns)`}
+               ${red`   `}
+               ${red`   Accepted patterns:`}
+               ${red`     ∙ ${String.raw`\p{Lu}.*\s.+`}`}
+               ${red`     ∙ ${String.raw`dependabot\[bot\]`}`}
+               ${red`     ∙ ${String.raw`renovate\[bot\]`}`}
+               ${red`     ∙ ${String.raw`GitHub`}`}
 `.trim(),
 		)
 	})
@@ -1071,10 +1073,10 @@ describe("when 'useConciseSubjectLines' has a concern about characters 20-25 of 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-68e9216 Remove redundant call to \`wrapper\`
-                            ──┬──
-                              ╰─ Subject lines must not exceed 20 characters.
-                                 (useConciseSubjectLines)
+${grey`68e9216`} Remove redundant call to \`wrapper\`
+                            ${red`──┬──`}
+                              ${red`╰─ Subject lines must not exceed 20 characters.`}
+                              ${red`   (useConciseSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -1096,10 +1098,10 @@ describe("when 'useConciseSubjectLines' has a concern about characters 20-67 of 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-9bed522 revisit the boolean properties in the \`IceCreamMachine\` constructor
-                            ───────────────────────┬───────────────────────
-     Subject lines must not exceed 20 characters. ─╯
-     (useConciseSubjectLines)
+${grey`9bed522`} revisit the boolean properties in the \`IceCreamMachine\` constructor
+                            ${red`───────────────────────┬───────────────────────`}
+     ${red`Subject lines must not exceed 20 characters. ─╯`}
+     ${red`(useConciseSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -1121,10 +1123,10 @@ describe("when 'useConciseSubjectLines' has a concern about characters 50-52 of 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-e8c95d6 Retrieve data from the exclusive third-party service
-                                                          ─┬
-             Subject lines must not exceed 50 characters. ─╯
-             (useConciseSubjectLines)
+${grey`e8c95d6`} Retrieve data from the exclusive third-party service
+                                                          ${red`─┬`}
+             ${red`Subject lines must not exceed 50 characters. ─╯`}
+             ${red`(useConciseSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -1146,10 +1148,10 @@ describe("when 'useConciseSubjectLines' has a concern about characters 72-76 of 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-be86674 make a genuine attempt to fix the bugs that the users were complaining about
-                                                                                ──┬─
-                                    Subject lines must not exceed 72 characters. ─╯
-                                    (useConciseSubjectLines)
+${grey`be86674`} make a genuine attempt to fix the bugs that the users were complaining about
+                                                                                ${red`──┬─`}
+                                    ${red`Subject lines must not exceed 72 characters. ─╯`}
+                                    ${red`(useConciseSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -1172,13 +1174,13 @@ describe("when 'useEmptyLineBeforeBodyLines' has a concern about the first body 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-f163851 Install a quieter keyboard
-    ╭──
-∙ 1 │ The old one sounded like hail.
-    · ┬
-    · ╰─ Subject lines and message bodies must be separated by exactly one empty line.
-    ·    (useEmptyLineBeforeBodyLines)
-    ╰──
+${grey`f163851`} Install a quieter keyboard
+    ${grey`╭──`}
+${red`•`} ${grey`${bold`1`} │`} The old one sounded like hail.
+    ${grey`· `}${red`┬`}
+    ${grey`· `}${red`╰─ Subject lines and message bodies must be separated by exactly one empty line.`}
+    ${grey`· `}${red`   (useEmptyLineBeforeBodyLines)`}
+    ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -1201,15 +1203,15 @@ describe("when 'useEmptyLineBeforeBodyLines' has a concern about an extra empty 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-30fd57b Clean the tiny dashboard
-    ╭──
-  1 │ 
-∙ 2 │ 
-    · ┬
-    · ╰─ Subject lines and message bodies must be separated by exactly one empty line.
-    ·    (useEmptyLineBeforeBodyLines)
-  3 │ The widgets sparkle.
-    ╰──
+${grey`30fd57b`} Clean the tiny dashboard
+    ${grey`╭──`}
+  ${grey`1 │ `}
+${red`•`} ${grey`${bold`2`} │`} 
+    ${grey`· `}${red`┬`}
+    ${grey`· `}${red`╰─ Subject lines and message bodies must be separated by exactly one empty line.`}
+    ${grey`· `}${red`   (useEmptyLineBeforeBodyLines)`}
+  ${grey`3 │ The widgets sparkle.`}
+    ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -1229,10 +1231,10 @@ describe("when 'useImperativeSubjectLines' has a concern about characters 0-5 of
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-9e45e09 Added a feature that should have stayed on the whiteboard
-        ──┬──
-          ╰─ Subject lines must start with a verb in the imperative mood.
-             (useImperativeSubjectLines)
+${grey`9e45e09`} Added a feature that should have stayed on the whiteboard
+        ${red`──┬──`}
+          ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
+          ${red`   (useImperativeSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -1252,10 +1254,10 @@ describe("when 'useImperativeSubjectLines' has a concern about characters 14-18 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-339b6fc amend! GH-55: made the console less dramatic
-                      ─┬──
-                       ╰─ Subject lines must start with a verb in the imperative mood.
-                          (useImperativeSubjectLines)
+${grey`339b6fc`} amend! GH-55: made the console less dramatic
+                      ${red`─┬──`}
+                       ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
+                       ${red`   (useImperativeSubjectLines)`}
 `.trim(),
 		)
 	})
@@ -1277,12 +1279,12 @@ describe("when 'useIssueLinks' with position 'anywhere' has a concern about char
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-c861aea Organise the robot uprising without a ticket
-        ┬
-        ╰─ Subject lines must include an issue link.
-           (useIssueLinks)
-           
-           Examples: #123, GH-123, GL-123
+${grey`c861aea`} Organise the robot uprising without a ticket
+        ${red`┬`}
+        ${red`╰─ Subject lines must include an issue link.`}
+        ${red`   (useIssueLinks)`}
+        ${red`   `}
+        ${red`   Examples: #123, GH-123, GL-123`}
 `.trim(),
 		)
 	})
@@ -1304,12 +1306,12 @@ describe("when 'useIssueLinks' with position 'prefix' has a concern about charac
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-fb10023 amend! Teach the unit tests to write themselves
-               ┬
-               ╰─ Subject lines must start with an issue link.
-                  (useIssueLinks)
-                  
-                  Examples: #123, GH-123, GL-123
+${grey`fb10023`} amend! Teach the unit tests to write themselves
+               ${red`┬`}
+               ${red`╰─ Subject lines must start with an issue link.`}
+               ${red`   (useIssueLinks)`}
+               ${red`   `}
+               ${red`   Examples: #123, GH-123, GL-123`}
 `.trim(),
 		)
 	})
@@ -1331,12 +1333,12 @@ describe("when 'useIssueLinks' with position 'suffix' has a concern about charac
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-d9a30bb make the automated tests question their existence
-                                                         ┬
-             Subject lines must end with an issue link. ─╯
-             (useIssueLinks)
-             
-             Examples: #123, GH-123, GL-123
+${grey`d9a30bb`} make the automated tests question their existence
+                                                         ${red`┬`}
+             ${red`Subject lines must end with an issue link. ─╯`}
+             ${red`(useIssueLinks)`}
+             ${red``}
+             ${red`Examples: #123, GH-123, GL-123`}
 `.trim(),
 		)
 	})
@@ -1358,12 +1360,12 @@ describe("when 'useIssueLinks' with position 'suffix' has a concern about charac
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-5761bad Cooked this commit at 3 AM
-                                  ┬
-                                  ╰─ Subject lines must end with an issue link.
-                                     (useIssueLinks)
-                                     
-                                     Examples: #123, GH-123, GL-123
+${grey`5761bad`} Cooked this commit at 3 AM
+                                  ${red`┬`}
+                                  ${red`╰─ Subject lines must end with an issue link.`}
+                                  ${red`   (useIssueLinks)`}
+                                  ${red`   `}
+                                  ${red`   Examples: #123, GH-123, GL-123`}
 `.trim(),
 		)
 	})
@@ -1386,12 +1388,12 @@ describe("when 'useIssueLinks' with position 'anywhere' and a wildcard has a con
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-ca745a7 attend the acoustic show
-        ┬
-        ╰─ Subject lines must include an issue link.
-           (useIssueLinks)
-           
-           Examples: #123, (no-issue)
+${grey`ca745a7`} attend the acoustic show
+        ${red`┬`}
+        ${red`╰─ Subject lines must include an issue link.`}
+        ${red`   (useIssueLinks)`}
+        ${red`   `}
+        ${red`   Examples: #123, (no-issue)`}
 `.trim(),
 		)
 	})
@@ -1414,12 +1416,12 @@ describe("when 'useIssueLinks' with position 'anywhere' and Jira-style issue lin
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-d0709d2  squash!  made the code so clean that it sparkles
-                  ┬
-                  ╰─ Subject lines must include an issue link.
-                     (useIssueLinks)
-                     
-                     Example: ABC-123
+${grey`d0709d2`}  squash!  made the code so clean that it sparkles
+                  ${red`┬`}
+                  ${red`╰─ Subject lines must include an issue link.`}
+                  ${red`   (useIssueLinks)`}
+                  ${red`   `}
+                  ${red`   Example: ABC-123`}
 `.trim(),
 		)
 	})
@@ -1442,12 +1444,12 @@ describe("when 'useIssueLinks' with position 'prefix' and custom-style issue lin
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-f6fc239 Refactored code, now it’s overpowered
-        ┬
-        ╰─ Subject lines must start with an issue link.
-           (useIssueLinks)
-           
-           Examples: test#123, experiment#123, [incident]
+${grey`f6fc239`} Refactored code, now it’s overpowered
+        ${red`┬`}
+        ${red`╰─ Subject lines must start with an issue link.`}
+        ${red`   (useIssueLinks)`}
+        ${red`   `}
+        ${red`   Examples: test#123, experiment#123, [incident]`}
 `.trim(),
 		)
 	})
@@ -1470,12 +1472,12 @@ describe("when 'useIssueLinks' with position 'suffix' and Jira-style issue links
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-cccee2c Fixed a bad typo in comment (yes, really)
-                                                 ┬
-     Subject lines must end with an issue link. ─╯
-     (useIssueLinks)
-     
-     Examples: AWESOME-123, UNICORN-123, PROJECT-123
+${grey`cccee2c`} Fixed a bad typo in comment (yes, really)
+                                                 ${red`┬`}
+     ${red`Subject lines must end with an issue link. ─╯`}
+     ${red`(useIssueLinks)`}
+     ${red``}
+     ${red`Examples: AWESOME-123, UNICORN-123, PROJECT-123`}
 `.trim(),
 		)
 	})
@@ -1497,15 +1499,15 @@ describe("when 'useLineWrapping' has a concern about characters 20-22 of a body 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-646e471 Tidy the note
-    ╭──
-  2 │ Before this note.
-∙ 3 │ A tiny note runs long.
-    ·                     ┬─
-    ·                     ╰─ Message body lines must not exceed 20 characters.
-    ·                        (useLineWrapping)
-  4 │ After this note.
-    ╰──
+${grey`646e471`} Tidy the note
+    ${grey`╭──`}
+  ${grey`2 │ Before this note.`}
+${red`•`} ${grey`${bold`3`} │`} A tiny note runs long.
+    ${grey`· `}                    ${red`┬─`}
+    ${grey`· `}                    ${red`╰─ Message body lines must not exceed 20 characters.`}
+    ${grey`· `}                    ${red`   (useLineWrapping)`}
+  ${grey`4 │ After this note.`}
+    ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -1528,15 +1530,15 @@ describe("when 'useLineWrapping' has a concern about characters 20-56 of a body 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-7756d37 Record the migration
-    ╭──
-  1 │ 
-∙ 2 │ The pager now points to the correct team before sunrise.
-    ·                     ─────────────────┬──────────────────
-    ·                                      ╰─ Message body lines must not exceed 20 characters.
-    ·                                         (useLineWrapping)
-  3 │ 
-    ╰──
+${grey`7756d37`} Record the migration
+    ${grey`╭──`}
+  ${grey`1 │ `}
+${red`•`} ${grey`${bold`2`} │`} The pager now points to the correct team before sunrise.
+    ${grey`· `}                    ${red`─────────────────┬──────────────────`}
+    ${grey`· `}                                     ${red`╰─ Message body lines must not exceed 20 characters.`}
+    ${grey`· `}                                     ${red`   (useLineWrapping)`}
+  ${grey`3 │ `}
+    ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -1559,15 +1561,15 @@ describe("when 'useLineWrapping' has a concern about characters 50-77 of a body 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-df31f7e squash! refine the deploy notes
-    ╭──
-  1 │ 
-∙ 2 │ the deploy bot left a very long note about sandwiches and spectral keyboards.
-    ·                                                   ─────────────┬─────────────
-    ·             Message body lines must not exceed 50 characters. ─╯
-    ·             (useLineWrapping)
-  3 │ the release train leaves at noon with snacks.
-    ╰──
+${grey`df31f7e`} squash! refine the deploy notes
+    ${grey`╭──`}
+  ${grey`1 │ `}
+${red`•`} ${grey`${bold`2`} │`} the deploy bot left a very long note about sandwiches and spectral keyboards.
+    ${grey`· `}                                                  ${red`─────────────┬─────────────`}
+    ${grey`· `}            ${red`Message body lines must not exceed 50 characters. ─╯`}
+    ${grey`· `}            ${red`(useLineWrapping)`}
+  ${grey`3 │ the release train leaves at noon with snacks.`}
+    ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -1590,14 +1592,14 @@ describe("when 'useLineWrapping' has a concern about characters 72-73 of a body 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-e0121c8 Ship to production
-    ╭──
-  1 │ 
-∙ 2 │ It was just a matter of time before it would cause customers to complain.
-    ·                                                                         ┬
-    ·                      Message body lines must not exceed 72 characters. ─╯
-    ·                      (useLineWrapping)
-    ╰──
+${grey`e0121c8`} Ship to production
+    ${grey`╭──`}
+  ${grey`1 │ `}
+${red`•`} ${grey`${bold`2`} │`} It was just a matter of time before it would cause customers to complain.
+    ${grey`· `}                                                                        ${red`┬`}
+    ${grey`· `}                     ${red`Message body lines must not exceed 72 characters. ─╯`}
+    ${grey`· `}                     ${red`(useLineWrapping)`}
+    ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -1620,14 +1622,14 @@ describe("when 'useLineWrapping' has a concern about characters 72-91 of a body 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-14c415e Audit the migration
-     ╭──
-   9 │ \`\`\`
-∙ 10 │ The tenth body line is intentionally long so the report shows its two-digit gutter clearly.
-     ·                                                                         ─────────┬─────────
-     ·                               Message body lines must not exceed 72 characters. ─╯
-     ·                               (useLineWrapping)
-     ╰──
+${grey`14c415e`} Audit the migration
+     ${grey`╭──`}
+  ${grey` 9 │ \`\`\``}
+${red`•`} ${grey`${bold`10`} │`} The tenth body line is intentionally long so the report shows its two-digit gutter clearly.
+     ${grey`· `}                                                                        ${red`─────────┬─────────`}
+     ${grey`· `}                              ${red`Message body lines must not exceed 72 characters. ─╯`}
+     ${grey`· `}                              ${red`(useLineWrapping)`}
+     ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -1650,15 +1652,15 @@ describe("when 'useLineWrapping' has a concern about characters 72-95 of a body 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-2376812 Audit the deployment
-     ╭──
-  11 │ \`\`\`
-∙ 12 │ The twelfth body line is also intentionally too long for the report to show a two-digit gutter.
-     ·                                                                         ───────────┬───────────
-     ·                                 Message body lines must not exceed 72 characters. ─╯
-     ·                                 (useLineWrapping)
-  13 │ more info goes here...
-     ╰──
+${grey`2376812`} Audit the deployment
+     ${grey`╭──`}
+  ${grey`11 │ \`\`\``}
+${red`•`} ${grey`${bold`12`} │`} The twelfth body line is also intentionally too long for the report to show a two-digit gutter.
+     ${grey`· `}                                                                        ${red`───────────┬───────────`}
+     ${grey`· `}                                ${red`Message body lines must not exceed 72 characters. ─╯`}
+     ${grey`· `}                                ${red`(useLineWrapping)`}
+  ${grey`13 │ more info goes here...`}
+     ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -1681,14 +1683,14 @@ describe("when 'useLineWrapping' has a concern about characters 130-154 of a bod
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-a5fa821 Document the audit breadcrumb
-    ╭──
-  1 │ 
-∙ 2 │ Read https://github.com/rainstormy/comet/pull/42 and keep the \`ReleaseLedger\` adapter available while the robots inspect the quiet archive before sunrise.
-    ·                                                                                                                                   ────────────┬───────────
-    ·                                                                                            Message body lines must not exceed 72 characters. ─╯
-    ·                                                                                            (useLineWrapping)
-    ╰──
+${grey`a5fa821`} Document the audit breadcrumb
+    ${grey`╭──`}
+  ${grey`1 │ `}
+${red`•`} ${grey`${bold`2`} │`} Read https://github.com/rainstormy/comet/pull/42 and keep the \`ReleaseLedger\` adapter available while the robots inspect the quiet archive before sunrise.
+    ${grey`· `}                                                                                                                                  ${red`────────────┬───────────`}
+    ${grey`· `}                                                                                           ${red`Message body lines must not exceed 72 characters. ─╯`}
+    ${grey`· `}                                                                                           ${red`(useLineWrapping)`}
+    ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -1714,25 +1716,25 @@ describe("when 'useLineWrapping' has concerns about two body lines", () => {
 		const actualOutput = commitwiseReport(concerns, [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-62f9aae Polish the release notes
-    ╭──
-  1 │ 
-∙ 2 │ The first migration note is intentionally too long for this tiny limit.
-    ·                     ─────────────────────────┬─────────────────────────
-    ·                                              ╰─ Message body lines must not exceed 20 characters.
-    ·                                                 (useLineWrapping)
-  3 │ The second note also runs beyond twenty characters for comparison.
-    ╰──
+${grey`62f9aae`} Polish the release notes
+    ${grey`╭──`}
+  ${grey`1 │ `}
+${red`•`} ${grey`${bold`2`} │`} The first migration note is intentionally too long for this tiny limit.
+    ${grey`· `}                    ${red`─────────────────────────┬─────────────────────────`}
+    ${grey`· `}                                             ${red`╰─ Message body lines must not exceed 20 characters.`}
+    ${grey`· `}                                             ${red`   (useLineWrapping)`}
+  ${grey`3 │ The second note also runs beyond twenty characters for comparison.`}
+    ${grey`╰──`}
 
-62f9aae Polish the release notes
-    ╭──
-  2 │ The first migration note is intentionally too long for this tiny limit.
-∙ 3 │ The second note also runs beyond twenty characters for comparison.
-    ·                     ──────────────────────┬───────────────────────
-    ·                                           ╰─ Message body lines must not exceed 20 characters.
-    ·                                              (useLineWrapping)
-  4 │ Short.
-    ╰──
+${grey`62f9aae`} Polish the release notes
+    ${grey`╭──`}
+  ${grey`2 │ The first migration note is intentionally too long for this tiny limit.`}
+${red`•`} ${grey`${bold`3`} │`} The second note also runs beyond twenty characters for comparison.
+    ${grey`· `}                    ${red`──────────────────────┬───────────────────────`}
+    ${grey`· `}                                          ${red`╰─ Message body lines must not exceed 20 characters.`}
+    ${grey`· `}                                          ${red`   (useLineWrapping)`}
+  ${grey`4 │ Short.`}
+    ${grey`╰──`}
 `.trim(),
 		)
 	})
@@ -1753,10 +1755,10 @@ describe("when 'useSignedCommits' has a concern about the commit", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-9b9e2ab Sign the pantry inventory app
-      ╭──────────────────────────────
-      ╰─ Commits must be signed cryptographically with a signing key.
-         (useSignedCommits)
+${grey`9b9e2ab`} Sign the pantry inventory app
+      ${red`╭──────────────────────────────`}
+      ${red`╰─ Commits must be signed cryptographically with a signing key.`}
+      ${red`   (useSignedCommits)`}
 `.trim(),
 		)
 	})
@@ -1777,10 +1779,10 @@ describe("when 'useSignedCommits' has a concern about the commit with a long sub
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		expect(actualOutput).toBe(
 			`
-42cefd1 fixup! GH-692 it's raining gold everywhere we go
-      ╭─────────────────────────────────────────────────
-      ╰─ Commits must be signed cryptographically with a signing key.
-         (useSignedCommits)
+${grey`42cefd1`} fixup! GH-692 it's raining gold everywhere we go
+      ${red`╭─────────────────────────────────────────────────`}
+      ${red`╰─ Commits must be signed cryptographically with a signing key.`}
+      ${red`   (useSignedCommits)`}
 `.trim(),
 		)
 	})

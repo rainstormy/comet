@@ -1,3 +1,4 @@
+import { bold, gray as grey, red } from "ansis"
 import type { Commit, Commits } from "#commits/Commit.ts"
 import { type Tokens, tokenRangeEnd } from "#commits/Token.ts"
 import type { Configuration } from "#configurations/GetConfiguration.ts"
@@ -8,7 +9,7 @@ import type { Concern, Concerns } from "#rules/concerns/Concern.ts"
 import type { SubjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 import type { UserIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { normaliseTrailerKey } from "#rules/NoRestrictedTrailers.ts"
-import { formatRange } from "#types/CharacterRange.ts"
+import type { CharacterRange } from "#types/CharacterRange.ts"
 import { ALPHABETICALLY, isNotEmptyString } from "#utilities/Arrays.ts"
 import { requireNotNullish } from "#utilities/Assertions.ts"
 import {
@@ -69,7 +70,7 @@ function formatCommitConcern(
 	const shortSha = getShortSha(commit)
 	const subjectLine = getSubjectLine(commit)
 	const rangeLine = indentString(
-		RANGE_PREFIX + "─".repeat(subjectLine.length),
+		red`${RANGE_PREFIX + "─".repeat(subjectLine.length)}`,
 		SHORT_SHA_LENGTH - RANGE_PREFIX.length + 1,
 	)
 	const messageLines = getMessageLines(message, SHORT_SHA_LENGTH - MESSAGE_PREFIX.length + 1)
@@ -116,7 +117,7 @@ function formatBodyLineConcern(
 	const length = rangeEnd - rangeStart
 
 	const gutterWidth = Math.ceil(Math.log10(concern.line + 2)) + 3
-	const concernGutter = indentString("· ", gutterWidth)
+	const concernGutter = indentString(grey`· `, gutterWidth)
 
 	const offset = gutterWidth + 2 + rangeStart
 	const longHalfLength = Math.trunc(length / 2)
@@ -129,7 +130,7 @@ function formatBodyLineConcern(
 	const subjectLine = formatTokens(commit.subjectLine)
 
 	const precedingBodyLine = getBodyLine(commit.bodyLines, concern.line - 1, gutterWidth)
-	const blockHeadLines = `${indentString("╭──", gutterWidth)}\n${precedingBodyLine}`
+	const blockHeadLines = `${indentString(grey`╭──`, gutterWidth)}\n${precedingBodyLine}`
 
 	const concernedBodyLine = getBodyLine(commit.bodyLines, concern.line, gutterWidth, true)
 
@@ -143,7 +144,7 @@ function formatBodyLineConcern(
 		: getMessageLines(message, rangeStart + shortHalfLength)
 
 	const succeedingBodyLine = getBodyLine(commit.bodyLines, concern.line + 1, gutterWidth)
-	const blockTailLines = `${succeedingBodyLine}${indentString("╰──", gutterWidth)}`
+	const blockTailLines = `${succeedingBodyLine}${indentString(grey`╰──`, gutterWidth)}`
 
 	return `${shortSha} ${subjectLine}\n${blockHeadLines}${concernedBodyLine}${rangeLine}\n${prefixStringLines(succeedingBodyLine === "" ? messageLines.trimEnd() : messageLines, concernGutter)}\n${blockTailLines}`
 }
@@ -161,7 +162,14 @@ function getBodyLine(
 	}
 
 	const formattedLineNumber = (lineNumber + 1).toString().padStart(gutterWidth - 3, " ")
-	return `${isConcernedLine ? "∙" : " "} ${formattedLineNumber} │ ${formatTokens(bodyLine)}\n`
+
+	const text = formatTokens(bodyLine)
+
+	if (isConcernedLine) {
+		return `${red`•`} ${grey`${bold`${formattedLineNumber}`} │`} ${text}\n`
+	}
+
+	return `  ${grey`${formattedLineNumber} │ ${text}`}\n`
 }
 
 function formatUserIdentityConcern(
@@ -175,17 +183,19 @@ function formatUserIdentityConcern(
 	const subjectLine = getSubjectLine(commit)
 	const identityKey = getIdentityKey(concern)
 	const identityValue = getIdentityValue(concern, commit)
-	const identityLine = `${identityKey} ${identityValue}`
 
 	const identityOffset = identityKey.length - 1
-	const rangeLine = indentString(RANGE_PREFIX + "─".repeat(identityValue.length), identityOffset)
+	const rangeLine = indentString(
+		red`${RANGE_PREFIX + "─".repeat(identityValue.length)}`,
+		identityOffset,
+	)
 	const messageLines = getMessageLines(message, identityOffset)
 
-	return `${shortSha} ${subjectLine}\n${identityLine}\n${rangeLine}\n${messageLines}`
+	return `${shortSha} ${subjectLine}\n${grey`${identityKey}`} ${identityValue}\n${rangeLine}\n${messageLines}`
 }
 
 function getShortSha(commit: Commit): string {
-	return commit.sha.slice(0, SHORT_SHA_LENGTH)
+	return grey`${commit.sha.slice(0, SHORT_SHA_LENGTH)}`
 }
 
 function getSubjectLine(commit: Commit): string {
@@ -222,12 +232,33 @@ function getIdentityValue(concern: UserIdentityConcern, commit: Commit): string 
 	}
 }
 
+function formatRange(range: CharacterRange, anchoredRight: boolean): string {
+	const [start, end] = range
+	const length = end - start
+
+	if (length === 1) {
+		return red`┬`
+	}
+
+	const longHalfLength = Math.trunc(length / 2)
+	const shortHalfLength = length - longHalfLength - 1
+
+	const longHalf = "─".repeat(longHalfLength)
+	const shortHalf = "─".repeat(shortHalfLength)
+
+	return anchoredRight ? red`${longHalf}┬${shortHalf}` : red`${shortHalf}┬${longHalf}`
+	//                    anchored right ─╯                                ╰─ anchored left
+}
+
 function getMessageLines(message: RuleMessage, offset: number, anchoredRight = false): string {
 	const sidenotes = `(${message.rule})${message.sidenote ? `\n\n${message.sidenote}` : ""}`
 
 	return anchoredRight
-		? indentString(`${message.violation} ${MESSAGE_SUFFIX}\n${sidenotes}`, offset)
-		: indentString(`${MESSAGE_PREFIX} ${message.violation}\n${indentString(sidenotes, 3)}`, offset)
+		? indentString(red`${message.violation} ${MESSAGE_SUFFIX}\n${sidenotes}`, offset)
+		: indentString(
+				red`${MESSAGE_PREFIX} ${message.violation}\n${indentString(sidenotes, 3)}`,
+				offset,
+			)
 }
 
 type RuleMessage = {

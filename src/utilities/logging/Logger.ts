@@ -1,11 +1,12 @@
 // oxlint-disable eslint/no-console -- Using `console` is intentional in this file.
+import { red } from "ansis"
 
 export function printMessage(message: string): void {
 	console.log(message)
 }
 
 export function printCommandLineError(message: string): void {
-	console.error(message)
+	console.error(red`${message}`)
 }
 
 /**
