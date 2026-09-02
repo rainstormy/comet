@@ -4,7 +4,7 @@
 
 # Build artefacts
 dist/*
-!dist/main.mjs
+!dist/main-gha.mjs
 
 # Caches and third-party dependencies
 node_modules/
