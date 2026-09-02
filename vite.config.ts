@@ -45,6 +45,7 @@ export default defineConfig({
 		tasks: {
 			build: { command: "vp pack" },
 			check: { command: "vp lint --type-check" },
+			comet: { command: "node src/main-cli.ts --config .github/comet.json", cache: false },
 			fmt: { command: "vp check --fix" },
 			install: { command: "vp install --frozen-lockfile --ignore-scripts", cache: false },
 			setup: { command: "node tools/setup.script.ts", cache: false },
