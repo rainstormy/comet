@@ -38,8 +38,8 @@ This section describes the necessary steps for you to start coding in this proje
 4. [Clone the project](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) with the authentication key:
 
    ```shell
-   git clone 'git@github.com:rainstormy/github-action-validate-commit-messages.git' && \
-   cd 'github-action-validate-commit-messages'
+   git clone 'git@github.com:rainstormy/comet.git' && \
+   cd 'comet'
    ```
 
 5. Declare your Git identity with your first and last names and GitHub noreply email address:

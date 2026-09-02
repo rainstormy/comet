@@ -8,7 +8,7 @@
 #   gh run watch
 #
 # It can also be triggered manually via the GitHub web interface:
-# https://github.com/rainstormy/github-action-validate-commit-messages/actions/workflows/release.yml
+# https://github.com/rainstormy/comet/actions/workflows/release.yml
 
 name: Release
 
