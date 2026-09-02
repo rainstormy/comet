@@ -19,6 +19,7 @@ node_modules/
 .junie/
 .opencode/
 .run/
+.vite-hooks/
 .vscode/
 .zed/
 *.code-workspace

@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+# Re-install dependencies if they have changed (detected in `pnpm-lock.yaml`) after checking out a branch or a commit.
+if ! git diff --quiet HEAD@\{1\} HEAD -- 'pnpm-lock.yaml'; then
+	vpr install
+fi

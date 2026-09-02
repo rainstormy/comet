@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# Verify the software quality before allowing commits to be pushed.
+vpr check && vpr test

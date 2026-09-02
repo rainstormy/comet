@@ -9,9 +9,8 @@ Consult `AGENTS.md` for a detailed description of the project.
 | `vpr build`               | Generates production-grade build artefacts of all entrypoints.                        |
 | `vpr check`               | Verifies that the source code is clean, type-safe, and well-formatted.                |
 | `vpr fmt`                 | Applies linting suggestions and reformats the source code.                            |
-| `vpr install`             | Installs dependencies and enables Git hooks.                                          |
+| `vpr install`             | Installs dependencies.                                                                |
 | `vpr test [...filenames]` | Runs the given unit test files or the entire test suite if no arguments are provided. |
-| `vpr yolo`                | Disables the Git hooks temporarily.                                                   |
 
 ## Get started
 
@@ -67,18 +66,22 @@ This section describes the necessary steps for you to start coding in this proje
 
 ### Set up the workspace
 
-1. Install dependencies and enable Git hooks:
+1. Install dependencies, enable Git hooks, and generate local IDE workspaces:
 
    ```shell
-   vpr install
+   vpr setup
    ```
 
-2. Create a workspace in the IDE of your choice.
+2. Open the workspace in the IDE of your choice.
 
-> [!TIP]  
-> For IntelliJ IDEA or WebStorm, you can use the project generator as a starting point:
-> 
-> ```shell
-> ./tools/generate-idea-project.sh && \
-> idea .
-> ```
+   IntelliJ IDEA:
+
+   ```shell
+   idea .
+   ```
+
+   Visual Studio Code:
+
+   ```shell
+   code .
+   ```

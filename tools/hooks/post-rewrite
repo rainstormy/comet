@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+read -r BASE_SHA _
+
+# Re-install dependencies if they have changed (detected in `pnpm-lock.yaml`) after rebasing onto another branch or commit.
+if ! git diff --quiet "$BASE_SHA~1" HEAD -- 'pnpm-lock.yaml'; then
+	vpr install
+fi

@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# Reformat files before committing changes.
+vpr fmt
