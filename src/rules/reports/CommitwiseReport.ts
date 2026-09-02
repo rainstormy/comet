@@ -66,14 +66,15 @@ function formatCommitConcern(
 ): string {
 	const message = commitRuleMessage(concern, configuration)
 
-	const commitLine = getCommitLine(commit)
+	const shortSha = getShortSha(commit)
+	const subjectLine = getSubjectLine(commit)
 	const rangeLine = indentString(
-		RANGE_PREFIX + "─".repeat(commitLine.length - SHORT_SHA_LENGTH - 1),
+		RANGE_PREFIX + "─".repeat(subjectLine.length),
 		SHORT_SHA_LENGTH - RANGE_PREFIX.length + 1,
 	)
 	const messageLines = getMessageLines(message, SHORT_SHA_LENGTH - MESSAGE_PREFIX.length + 1)
 
-	return `${commitLine}\n${rangeLine}\n${messageLines}`
+	return `${shortSha} ${subjectLine}\n${rangeLine}\n${messageLines}`
 }
 
 function formatSubjectLineConcern(
@@ -86,20 +87,22 @@ function formatSubjectLineConcern(
 	const [rangeStart, rangeEnd] = concern.range
 	const length = rangeEnd - rangeStart
 
-	const offset = SHORT_SHA_LENGTH + " ".length + rangeStart
+	const offset = SHORT_SHA_LENGTH + rangeStart + 1
 	const longHalfLength = Math.trunc(length / 2)
 	const shortHalfLength = length - longHalfLength - 1
 
 	const violationLength = message.violation.length + MESSAGE_SUFFIX.length
 	const anchoredRight = violationLength < offset + longHalfLength
 
-	const commitLine = getCommitLine(commit)
+	const shortSha = getShortSha(commit)
+	const subjectLine = formatTokens(commit.subjectLine)
+
 	const rangeLine = indentString(formatRange(concern.range, anchoredRight), offset)
 	const messageLines = anchoredRight
 		? getMessageLines(message, offset + longHalfLength - violationLength, true)
 		: getMessageLines(message, offset + shortHalfLength)
 
-	return `${commitLine}\n${rangeLine}\n${messageLines}`
+	return `${shortSha} ${subjectLine}\n${rangeLine}\n${messageLines}`
 }
 
 function formatBodyLineConcern(
@@ -122,7 +125,8 @@ function formatBodyLineConcern(
 	const violationLength = message.violation.length + MESSAGE_SUFFIX.length
 	const anchoredRight = violationLength < offset + longHalfLength
 
-	const commitLine = getCommitLine(commit)
+	const shortSha = getShortSha(commit)
+	const subjectLine = formatTokens(commit.subjectLine)
 
 	const precedingBodyLine = getBodyLine(commit.bodyLines, concern.line - 1, gutterWidth)
 	const blockHeadLines = `${indentString("╭──", gutterWidth)}\n${precedingBodyLine}`
@@ -141,7 +145,7 @@ function formatBodyLineConcern(
 	const succeedingBodyLine = getBodyLine(commit.bodyLines, concern.line + 1, gutterWidth)
 	const blockTailLines = `${succeedingBodyLine}${indentString("╰──", gutterWidth)}`
 
-	return `${commitLine}\n${blockHeadLines}${concernedBodyLine}${rangeLine}\n${prefixStringLines(succeedingBodyLine === "" ? messageLines.trimEnd() : messageLines, concernGutter)}\n${blockTailLines}`
+	return `${shortSha} ${subjectLine}\n${blockHeadLines}${concernedBodyLine}${rangeLine}\n${prefixStringLines(succeedingBodyLine === "" ? messageLines.trimEnd() : messageLines, concernGutter)}\n${blockTailLines}`
 }
 
 function getBodyLine(
@@ -167,35 +171,53 @@ function formatUserIdentityConcern(
 ): string {
 	const message = userIdentityRuleMessage(concern, configuration)
 
-	const identityLine = `╰─ ${getIdentityLine(concern, commit)}`
+	const shortSha = getShortSha(commit)
+	const subjectLine = getSubjectLine(commit)
+	const identityKey = getIdentityKey(concern)
+	const identityValue = getIdentityValue(concern, commit)
+	const identityLine = `${identityKey} ${identityValue}`
 
-	const identityOffset = identityLine.indexOf(":")
-	const identityLength = identityLine.length - identityOffset - 2
-
-	const commitLine = getCommitLine(commit)
-	const rangeLine = indentString(RANGE_PREFIX + "─".repeat(identityLength), identityOffset)
+	const identityOffset = identityKey.length - 1
+	const rangeLine = indentString(RANGE_PREFIX + "─".repeat(identityValue.length), identityOffset)
 	const messageLines = getMessageLines(message, identityOffset)
 
-	return `${commitLine}\n${identityLine}\n${rangeLine}\n${messageLines}`
+	return `${shortSha} ${subjectLine}\n${identityLine}\n${rangeLine}\n${messageLines}`
 }
 
-function getCommitLine(commit: Commit): string {
-	return `${commit.sha.slice(0, SHORT_SHA_LENGTH)} ${formatTokens(commit.subjectLine)}`
+function getShortSha(commit: Commit): string {
+	return commit.sha.slice(0, SHORT_SHA_LENGTH)
 }
 
-function getIdentityLine(concern: UserIdentityConcern, commit: Commit): string {
+function getSubjectLine(commit: Commit): string {
+	return formatTokens(commit.subjectLine)
+}
+
+function getIdentityKey(concern: UserIdentityConcern): string {
+	switch (concern.field) {
+		case "author:email":
+		case "author:name": {
+			return `${MESSAGE_PREFIX} authored by:`
+		}
+		case "committer:email":
+		case "committer:name": {
+			return `${MESSAGE_PREFIX} committed by:`
+		}
+	}
+}
+
+function getIdentityValue(concern: UserIdentityConcern, commit: Commit): string {
 	switch (concern.field) {
 		case "author:email": {
-			return `authored by: ${commit.authorEmail}`
+			return commit.authorEmail
 		}
 		case "author:name": {
-			return `authored by: ${commit.authorName}`
+			return commit.authorName
 		}
 		case "committer:email": {
-			return `committed by: ${commit.committerEmail}`
+			return commit.committerEmail
 		}
 		case "committer:name": {
-			return `committed by: ${commit.committerName}`
+			return commit.committerName
 		}
 	}
 }
