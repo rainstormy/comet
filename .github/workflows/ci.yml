@@ -51,38 +51,7 @@ jobs:
         #
       - name: Verify the commit messages
         # Run the action on itself.
-        # TODO: Upgrade to Comet v2.
         uses: ./
         with:
           github-token: ${{ github.token }}
-          rules: |
-            acknowledged-author-email-addresses,
-            acknowledged-author-names,
-            acknowledged-committer-email-addresses,
-            acknowledged-committer-names,
-            capitalised-subject-lines,
-            empty-line-after-subject-lines,
-            imperative-subject-lines,
-            limit-length-of-body-lines,
-            limit-length-of-subject-lines,
-            multi-word-subject-lines,
-            no-co-authors,
-            no-merge-commits,
-            no-revert-revert-commits,
-            no-squash-commits,
-            no-trailing-punctuation-in-subject-lines,
-            no-unexpected-whitespace,
-            unique-subject-lines,
-
-          # The author and committer email address must be on one of these forms:
-          # - `id+username@users.noreply.github.com`
-          # - `noreply@github.com` (committer only, for automated version upgrades and for reverting pull requests directly from the GitHub web interface)
-          acknowledged-author-email-addresses--patterns: '\d+\+.+@users\.noreply\.github\.com'
-          acknowledged-committer-email-addresses--patterns: '\d+\+.+@users\.noreply\.github\.com noreply@github\.com'
-
-          # The author and committer name must be on one of these forms:
-          # - at least two words where the first word starts with a capital letter
-          # - `renovate[bot]` (for automated version upgrades)
-          # - `GitHub` (committer only, for automated version upgrades and for reverting pull requests directly from the GitHub web interface)
-          acknowledged-author-names--patterns: '\p{Lu}.*\s.+ renovate\[bot\]'
-          acknowledged-committer-names--patterns: '\p{Lu}.*\s.+ renovate\[bot\] GitHub'
+          config-path: .github/comet.json

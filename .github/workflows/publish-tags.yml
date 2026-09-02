@@ -35,7 +35,7 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          # Use a separate access token to allow the push tag event in this workflow to trigger `.github/workflows/publish-github.yml`.
+          # Use a separate access token to allow the push tag event in this workflow to trigger `.github/workflows/publish-github.yml` and `.github/workflows/publish-npm.yml`.
           # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
           token: ${{ secrets.BOT_NIMBUS_GH_AUTH_TOKEN }}
         #

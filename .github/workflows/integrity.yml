@@ -9,7 +9,7 @@
 #   gh run watch
 #
 # It can also be triggered manually on any branch via the GitHub web interface:
-# https://github.com/rainstormy/github-action-validate-commit-messages/actions/workflows/integrity.yml
+# https://github.com/rainstormy/comet/actions/workflows/integrity.yml
 
 name: Integrity
 

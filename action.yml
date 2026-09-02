@@ -1,55 +1,18 @@
-name: Validate commit messages in pull requests
-description: Fails with a non-zero exit code if a commit message in a pull request is deemed invalid to remind developers to keep the commit history healthy by rebasing interactively before merging the pull request.
+name: Comet
+description: >
+  This action ensures that commit messages in pull requests conform to certain standards and
+  conventions declared by a customisable set of rules.
+  It expects the current workflow run to be a `pull_request` event and fails with a non-zero exit
+  code if any commit in the pull request is deemed invalid.
+  It does not make any changes to the commits or the pull request.
 author: Steffen Diswal
 inputs:
   github-token:
-    description: The GitHub token that lets the action list the commits in the pull request.
+    description: 'A GitHub token with `pull-requests: read` permissions to let the action list the commits in pull requests.'
     required: true
-  rules:
-    description: A comma-separated list of the rules to enforce.
-    required: true
-  acknowledged-author-email-addresses--patterns:
-    description: A space-separated list of regular expressions for email addresses of commit authors to be accepted by `acknowledged-author-email-addresses`, e.g. `\d+\+.+@users\.noreply\.github\.com` for personal noreply email addresses on GitHub.
-    required: false
-    default: ^\b$
-  acknowledged-author-names--patterns:
-    description: A space-separated list of regular expressions for names of commit authors to be accepted by `acknowledged-author-names`, e.g. `\p{Lu}.*\s.+` for names that have at least two words where the first one starts with an uppercase letter.
-    required: false
-    default: ^\b$
-  acknowledged-committer-email-addresses--patterns:
-    description: A space-separated list of regular expressions for email addresses of committers to be accepted by `acknowledged-committer-email-addresses`, e.g. `\d+\+.+@users\.noreply\.github\.com` for personal noreply email addresses on GitHub.
-    required: false
-    default: ^\b$
-  acknowledged-committer-names--patterns:
-    description: A space-separated list of regular expressions for names of committers to be accepted by `acknowledged-committer-names`, e.g. `\p{Lu}.*\s.+` for names that have at least two words where the first one starts with an uppercase letter.
-    required: false
-    default: ^\b$
-  imperative-subject-lines--whitelist:
-    description: A comma-separated, case-insensitive list of additional words to be accepted by `imperative-subject-lines`.
-    required: false
-  issue-references-in-subject-lines--allowed-positions:
-    description: A comma-separated list of positions where the issue reference is allowed to appear in the subject line to be enforced by `issue-reference-in-subject-lines`. Valid positions are `as-prefix` and `as-suffix`.
-    required: false
-    default: as-prefix,as-suffix
-  issue-references-in-subject-lines--patterns:
-    description: A space-separated list of regular expressions for issue references to be accepted by `issue-reference-in-subject-lines`, e.g. `#[1-9][0-9]*` for GitHub issues or `ABC-[1-9][0-9]*` for Jira or YouTrack issues in a project named `ABC`.
-    required: false
-    default: ^\b$
-  limit-length-of-body-lines--max-characters:
-    description: A positive integer that specifies the maximum number of characters per line in the commit message body to be accepted by `limit-length-of-body-lines`.
-    required: false
-    default: '72'
-  limit-length-of-subject-lines--max-characters:
-    description: A positive integer that specifies the maximum number of characters in the subject line to be accepted by `limit-length-of-subject-lines`.
-    required: false
-    default: '50'
-  no-squash-commits--disallowed-prefixes:
-    description: A comma-separated, case-sensitive list of subject line prefixes to be rejected by `no-squash-commits`.
-    required: false
-    default: amend!,fixup!,squash!
-  no-trailing-punctuation-in-subject-lines--whitelist:
-    description: A space-separated list of punctuation characters to be ignored by `no-trailing-punctuation-in-subject-lines`.
+  config-path:
+    description: 'A path to a custom JSON configuration file.'
     required: false
 runs:
-  using: node20
-  main: dist/main.mjs
+  using: node24
+  main: dist/main-gha.mjs

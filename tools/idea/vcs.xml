@@ -14,7 +14,7 @@
       <list>
         <IssueNavigationLink>
           <option name="issueRegexp" value="^Merge pull request #(\d+)" />
-          <option name="linkRegexp" value="https://github.com/rainstormy/github-action-validate-commit-messages/pull/$1" />
+          <option name="linkRegexp" value="https://github.com/rainstormy/comet/pull/$1" />
         </IssueNavigationLink>
       </list>
     </option>

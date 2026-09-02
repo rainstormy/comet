@@ -1,17 +1,19 @@
 # This workflow implements one of the final stages of the release pipeline.
-# It creates a draft GitHub release from a full semantic version tag in Git.
+# It publishes the package to the npm registry.
 #
 # It is triggered automatically by pushing a Git tag on the form `v<major.minor.patch[-prerelease][+buildinfo]>` as done by `.github/workflows/publish-tags.yml`.
 #
 # It can be triggered manually via the GitHub CLI:
 #
-#   gh workflow run publish-github.yml --ref <tag-name>
+#   gh workflow run publish-npm.yml --ref <tag-name>
 #   gh run watch
 #
 # It can also be triggered manually via the GitHub web interface:
-# https://github.com/rainstormy/comet/actions/workflows/publish-github.yml
+# https://github.com/rainstormy/comet/actions/workflows/publish-npm.yml
+#
+# CAUTION: The workflow filename `publish-npm.yml` is defined as the trusted publisher of the `@rainstormy/comet` package in the npm registry.
 
-name: Publish / GitHub
+name: Publish / npm
 
 on:
   push:
@@ -24,7 +26,7 @@ on:
 # Cancel all previous runs of this workflow that are still in progress on the same branch.
 # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#concurrency
 concurrency:
-  group: publish-github-${{ github.workflow }}-${{ github.ref }}
+  group: publish-npm-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 # All third-party actions are pinned to a specific commit SHA for security reasons.
@@ -39,8 +41,8 @@ jobs:
       contents: read
     uses: ./.github/workflows/integrity.yml
 
-  github-release:
-    name: GitHub release
+  npm-package:
+    name: npm package
     needs: integrity
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 1
@@ -48,12 +50,31 @@ jobs:
       # To check out the repository.
       # https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
       contents: read
+      #
+      # To publish the npm package with provenance and trusted publishing.
+      # https://docs.npmjs.com/generating-provenance-statements#publishing-packages-with-provenance-via-github-actions
+      # https://docs.npmjs.com/trusted-publishers#step-2-configure-your-cicd-workflow
+      id-token: write
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         #
-      - name: Create a draft GitHub release
-        uses: rainstormy/release/github@eb87dc4ba5e9e89451adce4a3c62538e5ecef809 # v1.1.1
+      - name: Install dependencies
+        uses: voidzero-dev/setup-vp@313600b80b104eadebb9111787d37a2e83e014ca # v1.17.0
         with:
-          gh-auth-token: ${{ secrets.BOT_NIMBUS_GH_AUTH_TOKEN }}
-          version: ${{ github.ref_name }}
+          node-version-file: package.json
+          version-file: pnpm-workspace.yaml
+          cache: true
+        #
+      - name: Generate 'dist/main-cli.mjs'
+        # language=sh
+        run: vpr build
+        shell: bash
+        #
+      - name: Publish the package to npm
+        # language=sh
+        run: |
+          VERSION="$(jq -r '.version' ./package.json)"
+          TAG="$([[ "$VERSION" == *[-+]* ]] && echo 'next' || echo 'latest')"
+          vp pm stage publish --provenance --access 'public' --tag "$TAG" -- --no-git-checks
+        shell: bash
