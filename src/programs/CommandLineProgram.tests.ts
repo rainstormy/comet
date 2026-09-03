@@ -132,6 +132,8 @@ describe("when the 'git remote' command raises an error", () => {
 
 	beforeEach(async () => {
 		mockGitCommand("remote", { exitCode: 1 })
+		mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
+		mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
 		exitCode = await commandLineProgram([])
 	})
 
@@ -153,6 +155,8 @@ describe("when the 'git rev-parse' command raises an error", () => {
 	beforeEach(async () => {
 		mockGitCommand("remote", { output: "origin" })
 		mockGitCommand("rev-parse --abbrev-ref origin/HEAD", { exitCode: 128 })
+		mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
+		mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
 		exitCode = await commandLineProgram([])
 	})
 
@@ -160,10 +164,10 @@ describe("when the 'git rev-parse' command raises an error", () => {
 		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
 	})
 
-	it("prints the error message raised by the local Git client", () => {
+	it("prints an error message that describes the unexpected Git state", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(
-			"Command 'git rev-parse --abbrev-ref origin/HEAD' failed with exit code 128",
+			"Expected a default remote branch (e.g. 'origin/main') or a local branch named 'main' or 'master'",
 		)
 	})
 })
