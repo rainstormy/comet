@@ -2,6 +2,8 @@ import { defineOxfmtConfig } from "@rainstormy/presets-web/oxfmt"
 import { defineOxlintConfig, oxlintRestrictedImportPatterns } from "@rainstormy/presets-web/oxlint"
 import { type UserConfig, defineConfig } from "vite-plus"
 
+const bundledDependencies = ["ansis", "strip-json-comments", "valibot"]
+
 type UserOxfmtConfig = NonNullable<UserConfig["fmt"]>
 
 export default defineConfig({
@@ -30,14 +32,12 @@ export default defineConfig({
 		{
 			entry: "src/main-cli.ts",
 			minify: { compress: true },
+			deps: { alwaysBundle: bundledDependencies, onlyBundle: bundledDependencies },
 		},
 		{
 			entry: "src/main-gha.ts",
 			minify: { compress: true },
-			deps: {
-				alwaysBundle: ["ansis", "valibot"],
-				onlyBundle: ["ansis", "valibot"],
-			},
+			deps: { alwaysBundle: bundledDependencies, onlyBundle: bundledDependencies },
 		},
 	],
 	run: {
