@@ -1,6 +1,7 @@
 import { access, constants, readFile } from "node:fs/promises"
-import { dirname, isAbsolute, normalize, relative, resolve } from "node:path"
+import { dirname, extname, isAbsolute, normalize, relative, resolve } from "node:path"
 import process from "node:process"
+import stripJsonComments from "strip-json-comments"
 import type { JsonValue } from "#types/JsonValue.ts"
 import { assertError } from "#utilities/Assertions.ts"
 
@@ -25,7 +26,7 @@ export function normalisePath(path: string, relativeTo?: string): string {
 export async function readJsonFile(path: string): Promise<JsonValue> {
 	try {
 		const content = await readFile(path, "utf8")
-		return JSON.parse(content)
+		return JSON.parse(stripCommentsFromJsonc(path, content))
 	} catch (error) {
 		if (error instanceof SyntaxError) {
 			throw new TypeError(`Failed to parse '${path}' as JSON: ${error.message}`, { cause: error })
@@ -34,4 +35,8 @@ export async function readJsonFile(path: string): Promise<JsonValue> {
 		assertError(error)
 		throw new Error(`Failed to read '${path}': ${error.message}`, { cause: error })
 	}
+}
+
+function stripCommentsFromJsonc(path: string, content: string): string {
+	return extname(path) === ".jsonc" ? stripJsonComments(content) : content
 }

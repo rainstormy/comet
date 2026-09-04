@@ -17,6 +17,6 @@ export function assertHttpUrlString(
 		!value.startsWith("https://") ||
 		value.length <= "https://".length
 	) {
-		throw new Error(errorMessage(value))
+		throw new TypeError(errorMessage(value))
 	}
 }

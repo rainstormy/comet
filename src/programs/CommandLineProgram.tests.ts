@@ -11,7 +11,7 @@ import {
 	type ExitCode,
 } from "#types/ExitCode.ts"
 import type { JsonValue } from "#types/JsonValue.ts"
-import { mockJsonFile, mockNonexistingFile } from "#utilities/files/Files.fakes.ts"
+import { mockFile, mockJsonFile, mockNonexistingFile } from "#utilities/files/Files.fakes.ts"
 import { mockGitCommand } from "#utilities/git/cli/RunGitCommand.fakes.ts"
 import { printCommandLineError, printMessage } from "#utilities/logging/Logger.ts"
 import { mockPackageVersion } from "#utilities/package/Package.fakes.ts"
@@ -488,7 +488,7 @@ describe.each`
 	${{ rules: 31 }}               | ${"Failed to parse 'comet.json' as a Comet configuration: 'rules' must be an object, but it is a number: 31"}
 	${{ extends: 1000 }}           | ${"Failed to parse 'comet.json' as a Comet configuration: 'extends' must be a string, but it is a number: 1000"}
 `(
-	"when the default configuration file is invalid due to $configuration",
+	"when the default 'comet.json' configuration file is invalid due to $configuration",
 	(props: { configuration: JsonValue; expectedError: string }) => {
 		let exitCode: ExitCode
 
@@ -508,10 +508,37 @@ describe.each`
 	},
 )
 
+describe("when the default 'comet.jsonc' configuration file is invalid", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockFile(
+			"comet.jsonc",
+			// language=json5
+			`{
+	// This was accidentally changed from an object while updating the policy.
+	"rules": 31
+}`,
+		)
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+	})
+
+	it("prints the configuration error", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(
+			"Failed to parse 'comet.jsonc' as a Comet configuration: 'rules' must be an object, but it is a number: 31",
+		)
+	})
+})
+
 describe.each`
 	path                         | expectedError
 	${"comet.local.json"}        | ${"Failed to read 'comet.local.json': File not found"}
-	${"./configs/missing.json"}  | ${"Failed to read 'configs/missing.json': File not found"}
+	${"./configs/missing.jsonc"} | ${"Failed to read 'configs/missing.jsonc': File not found"}
 	${".github/comet.base.json"} | ${"Failed to read '.github/comet.base.json': File not found"}
 `(
 	"when '--config' points to a non-existing configuration file $path",
@@ -562,6 +589,32 @@ describe.each`
 		})
 	},
 )
+
+describe("when '--config' points to a custom JSONC configuration file that is invalid", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockFile(
+			"configs/team.jsonc",
+			// language=json5
+			`{
+	"rules": false /* This invalid setting should identify the custom configuration path. */
+}`,
+		)
+		exitCode = await commandLineProgram(["--config", "configs/team.jsonc"])
+	})
+
+	it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+	})
+
+	it("prints the configuration error", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(
+			"Failed to parse 'configs/team.jsonc' as a Comet configuration: 'rules' must be an object, but it is a boolean: false",
+		)
+	})
+})
 
 describe("when there are no commits in the custom 'comet.json' configuration", () => {
 	let exitCode: ExitCode
@@ -907,6 +960,217 @@ ${grey`c0ffee1`} Untangle the improbable cables
                               ${red`───┬────`}
                                  ${red`╰─ Subject lines must not exceed 22 characters.`}
                                  ${red`   (useConciseSubjectLines)`}
+`.trim(),
+		)
+	})
+})
+
+describe("when there is 1 commit that raises no concerns in the custom 'comet.jsonc' configuration", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockFile(
+			"comet.jsonc",
+			// language=json5
+			`{
+	// Release commit subjects are intentionally lower-case in this repository.
+	"rules": {
+		"useCapitalisedSubjectLines": "off"
+	}
+}`,
+		)
+		mockGitBranchCrudeCommits([fakeCrudeCommit({ message: "release the robot butler" })])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+	})
+})
+
+describe("when there are 3 commits where 2 of them raise concerns in the custom 'comet.jsonc' configuration", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockFile(
+			"comet.jsonc",
+			// language=json5
+			`{
+	// Keep the branch small enough for the release train to stay reviewable.
+	"rules": {
+		"noExcessiveCommitsPerBranch": {
+			"level": "error",
+			"options": { "maxCommits": 1 }
+		}
+	}
+}`,
+		)
+		mockGitBranchCrudeCommits([
+			fakeCrudeCommit({
+				sha: "335aee65f7a82c2f85771f45d9cfec47efab1547",
+				message: "Open the bakery dashboard",
+			}),
+			fakeCrudeCommit({
+				sha: "6f8dafa2608a817129c2ff899c5122eb69ba45cb",
+				message: "Add the cinnamon telemetry",
+			}),
+			fakeCrudeCommit({
+				sha: "b58de17b4d44256ffaa44a1068d743288fc6beda",
+				message: "Wire the oat milk alert",
+			}),
+		])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	})
+
+	it("prints a sorted commitwise report of all concerns", () => {
+		expect(printMessage).toHaveBeenCalledExactlyOnceWith(
+			`
+${grey`6f8dafa`} Add the cinnamon telemetry
+      ${red`╭───────────────────────────`}
+      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`   (noExcessiveCommitsPerBranch)`}
+
+${grey`b58de17`} Wire the oat milk alert
+      ${red`╭────────────────────────`}
+      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`   (noExcessiveCommitsPerBranch)`}
+`.trim(),
+		)
+	})
+})
+
+describe("when both 'comet.json' and 'comet.jsonc' are present", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 2 },
+				},
+				useAuthorNamePatterns: {
+					level: "error",
+					options: {
+						patterns: [
+							String.raw`\p{Lu}.*\s.+`,
+							String.raw`dependabot\[bot\]`,
+							String.raw`renovate\[bot\]`,
+						],
+					},
+				},
+				useConciseSubjectLines: {
+					level: "error",
+					options: { maxLength: 25 },
+				},
+				useLineWrapping: {
+					level: "error",
+					options: { maxLength: 24 },
+				},
+			},
+		})
+		mockFile(
+			"comet.jsonc",
+			// language=json5
+			`{
+	// These settings should be ignored in favour of comet.json.
+	"rules": {
+		/* The JSONC values differ deliberately so precedence is observable. */
+		"noExcessiveWhitespace": "off",
+		"noExcessiveCommitsPerBranch": {
+			"level": "error",
+			"options": { "maxCommits": 3 }
+		},
+		"useAuthorNamePatterns": {
+			"level": "error",
+			"options": { "patterns": ["anonymous"] }
+		},
+		"useConciseSubjectLines": {
+			"level": "error",
+			"options": { "maxLength": 50 }
+		},
+		"useLineWrapping": {
+			"level": "error",
+			"options": { "maxLength": 80 }
+		}
+	}
+}`,
+		)
+		mockGitBranchCrudeCommits([
+			fakeCrudeCommit({
+				authorName: "anonymous",
+				sha: "e6f1b4a3d5c27980e1f4a6b7c9d1e3f4a5b6c7d8",
+				message: "Document the extremely important tea ceremony",
+			}),
+			fakeCrudeCommit({
+				sha: "f7a2c5b4e6d38091f2a5b7c8d0e2f4a5b6c7d8e9",
+				message:
+					"Review the tiny blueprint\n\nA line that is deliberately much longer than twenty-four characters to fit the rendered concern annotation.\nShort note.\nNote with  spaces.\nFinal note.",
+			}),
+			fakeCrudeCommit({
+				sha: "a8b3d6c5f7e49102a3b6c8d9e1f3a5b6c7d8e9f0",
+				message: "Merge the old tea ledger",
+			}),
+		])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	})
+
+	it("makes 'comet.json' take precedence", () => {
+		expect(printMessage).toHaveBeenCalledExactlyOnceWith(
+			`
+${grey`e6f1b4a`} Document the extremely important tea ceremony
+${grey`╰─ authored by:`} anonymous
+              ${red`╭──────────`}
+              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`   (useAuthorNamePatterns)`}
+              ${red`   `}
+              ${red`   Accepted patterns:`}
+              ${red`     ∙ \\p{Lu}.*\\s.+`}
+              ${red`     ∙ dependabot\\[bot\\]`}
+              ${red`     ∙ renovate\\[bot\\]`}
+
+${grey`e6f1b4a`} Document the extremely important tea ceremony
+                                 ${red`─────────┬──────────`}
+                                          ${red`╰─ Subject lines must not exceed 25 characters.`}
+                                          ${red`   (useConciseSubjectLines)`}
+
+${grey`f7a2c5b`} Review the tiny blueprint
+    ${grey`╭──`}
+  ${grey`1 │ `}
+${red`•`} ${grey`${bold`2`} │`} A line that is deliberately much longer than twenty-four characters to fit the rendered concern annotation.
+    ${grey`· `}                        ${red`─────────────────────────────────────────┬─────────────────────────────────────────`}
+    ${grey`· `}              ${red`Message body lines must not exceed 24 characters. ─╯`}
+    ${grey`· `}              ${red`(useLineWrapping)`}
+  ${grey`3 │ Short note.`}
+    ${grey`╰──`}
+
+${grey`f7a2c5b`} Review the tiny blueprint
+    ${grey`╭──`}
+  ${grey`3 │ Short note.`}
+${red`•`} ${grey`${bold`4`} │`} Note with  spaces.
+    ${grey`· `}         ${red`┬─`}
+    ${grey`· `}         ${red`╰─ Message bodies must not contain excessive whitespace.`}
+    ${grey`· `}         ${red`   (noExcessiveWhitespace)`}
+  ${grey`5 │ Final note.`}
+    ${grey`╰──`}
+
+${grey`a8b3d6c`} Merge the old tea ledger
+      ${red`╭─────────────────────────`}
+      ${red`╰─ Branches must not contain more than 2 commits.`}
+      ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
 	})
@@ -1326,6 +1590,98 @@ ${grey`7f811b2`} Revert "Revert "Disable the alarm""
         ${red`──────┬───────`}
               ${red`╰─ Cherry-pick the original commit instead of reverting it over.`}
               ${red`   (noRevertRevertCommits)`}
+`.trim(),
+		)
+	})
+})
+
+describe("when there is 1 commit that raises no concerns in the custom configuration from 'configs/team.jsonc'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockFile(
+			"configs/team.jsonc",
+			// language=json5
+			`{
+	/* Automated release subjects retain the legacy lower-case convention. */
+	"rules": {
+		"useCapitalisedSubjectLines": "off"
+	}
+}`,
+		)
+		mockGitBranchCrudeCommits([fakeCrudeCommit({ message: "release the robot butler" })])
+		exitCode = await commandLineProgram(["--config", "configs/team.jsonc"])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+	})
+})
+
+describe("when there are 3 commits where 2 of them raise concerns in the custom configuration from 'configs/team.jsonc'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockFile(
+			"configs/team.jsonc",
+			// language=json5
+			`{
+	/* Only commits authored by Ada may enter the team branch. */
+	"rules": {
+		"useAuthorNamePatterns": {
+			"level": "error",
+			"options": { "patterns": ["Ada Lovelace"] }
+		}
+	}
+}`,
+		)
+		mockGitBranchCrudeCommits([
+			fakeCrudeCommit({
+				sha: "61a95da418709622ebb04c6bc08977c96ea915b5",
+				message: "Map the paper trail",
+			}),
+			fakeCrudeCommit({
+				authorName: "Ada Lovelace",
+				sha: "d677c3124551246b6e8b65c7708538e93d3f2a19",
+				message: "Install the brass telescope",
+			}),
+			fakeCrudeCommit({
+				sha: "b58de17b4d44256ffaa44a1068d743288fc6beda",
+				message: "Calibrate the wind tunnel",
+			}),
+		])
+		exitCode = await commandLineProgram(["--config", "configs/team.jsonc"])
+	})
+
+	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	})
+
+	it("prints a sorted commitwise report of all concerns", () => {
+		expect(printMessage).toHaveBeenCalledExactlyOnceWith(
+			`
+${grey`61a95da`} Map the paper trail
+${grey`╰─ authored by:`} Master Splinter
+              ${red`╭────────────────`}
+              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`   (useAuthorNamePatterns)`}
+              ${red`   `}
+              ${red`   Accepted patterns:`}
+              ${red`     ∙ Ada Lovelace`}
+
+${grey`b58de17`} Calibrate the wind tunnel
+${grey`╰─ authored by:`} Master Splinter
+              ${red`╭────────────────`}
+              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`   (useAuthorNamePatterns)`}
+              ${red`   `}
+              ${red`   Accepted patterns:`}
+              ${red`     ∙ Ada Lovelace`}
 `.trim(),
 		)
 	})

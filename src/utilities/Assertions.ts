@@ -29,7 +29,7 @@ export function assertNotBlankString(
 	errorMessage: (invalidValue: unknown) => string,
 ): asserts value is string {
 	if (typeof value !== "string" || value.trim().length === 0) {
-		throw new Error(errorMessage(value))
+		throw new TypeError(errorMessage(value))
 	}
 }
 

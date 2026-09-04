@@ -101,6 +101,11 @@ export async function getConfigurationPath(configPath: string | null): Promise<s
 }
 
 async function getDefaultConfigurationPath(): Promise<string | null> {
-	const defaultExists = await isReadableFile("comet.json")
-	return defaultExists ? "comet.json" : null
+	if (await isReadableFile("comet.json")) {
+		return "comet.json"
+	}
+	if (await isReadableFile("comet.jsonc")) {
+		return "comet.jsonc"
+	}
+	return null
 }

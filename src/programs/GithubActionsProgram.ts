@@ -6,7 +6,7 @@ import {
 	getConfigurationPath,
 } from "#configurations/GetConfiguration.ts"
 import { program } from "#programs/Program.ts"
-import { EXIT_CODE_GENERAL_ERROR, type ExitCode } from "#types/ExitCode.ts"
+import { EXIT_CODE_GENERAL_ERROR, EXIT_CODE_INVALID_INPUT, type ExitCode } from "#types/ExitCode.ts"
 import { assertError } from "#utilities/Assertions.ts"
 import { githubEnv } from "#utilities/github/env/GithubEnv.ts"
 import { printGithubActionsError } from "#utilities/logging/Logger.ts"
@@ -23,7 +23,7 @@ export async function githubActionsProgram(): Promise<ExitCode> {
 	} catch (error) {
 		assertError(error)
 		printGithubActionsError(error.message)
-		return EXIT_CODE_GENERAL_ERROR
+		return error instanceof TypeError ? EXIT_CODE_INVALID_INPUT : EXIT_CODE_GENERAL_ERROR
 	}
 }
 
