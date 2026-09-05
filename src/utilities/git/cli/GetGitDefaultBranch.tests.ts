@@ -209,47 +209,67 @@ describe("when the 'git rev-parse' command fails", () => {
 	beforeEach(() => {
 		mockGitCommand("remote", { output: "origin" })
 		mockGitCommand("rev-parse --abbrev-ref origin/HEAD", { exitCode: 128 })
+		mockGitCommand("fetch", { output: "" })
 	})
 
-	describe("and a branch named 'main' exists locally", () => {
+	describe("and the 'git rev-parse' command succeeds after 'git fetch'", () => {
+		const remoteDefaultBranch = "origin/main"
+
 		beforeEach(() => {
-			mockGitCommand("rev-parse --verify --quiet main", {
-				output: "d799201951a348548eb063b548289b1ad58d61fd",
-			})
+			mockGitCommand("rev-parse --abbrev-ref origin/HEAD", { output: remoteDefaultBranch })
 		})
 
-		it("falls back to 'main'", async () => {
+		it("returns the default branch of the remote", async () => {
 			const actualBranch = await getGitDefaultBranch()
-			expect(actualBranch).toBe("main")
+			expect(actualBranch).toBe(remoteDefaultBranch)
 		})
 	})
 
-	describe("and a branch named 'main' does not exist locally", () => {
+	describe("and the local branch does not have a remote-tracking branch", () => {
 		beforeEach(() => {
-			mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
+			mockGitCommand("rev-parse --abbrev-ref --symbolic-full-name @{u}", { exitCode: 128 })
 		})
 
-		describe("and a branch named 'master' exists locally", () => {
+		describe("and a branch named 'main' exists locally", () => {
 			beforeEach(() => {
-				mockGitCommand("rev-parse --verify --quiet master", {
-					output: "bc26eb14f7314ece80f0a28d33d59535288dbad1",
+				mockGitCommand("rev-parse --verify --quiet main", {
+					output: "d799201951a348548eb063b548289b1ad58d61fd",
 				})
 			})
 
-			it("falls back to 'master'", async () => {
+			it("falls back to 'main'", async () => {
 				const actualBranch = await getGitDefaultBranch()
-				expect(actualBranch).toBe("master")
+				expect(actualBranch).toBe("main")
 			})
 		})
 
-		describe("and a branch named 'master' does not exist locally", () => {
+		describe("and a branch named 'main' does not exist locally", () => {
 			beforeEach(() => {
-				mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
+				mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
 			})
 
-			it("returns null", async () => {
-				const actualBranch = await getGitDefaultBranch()
-				expect(actualBranch).toBeNull()
+			describe("and a branch named 'master' exists locally", () => {
+				beforeEach(() => {
+					mockGitCommand("rev-parse --verify --quiet master", {
+						output: "bc26eb14f7314ece80f0a28d33d59535288dbad1",
+					})
+				})
+
+				it("falls back to 'master'", async () => {
+					const actualBranch = await getGitDefaultBranch()
+					expect(actualBranch).toBe("master")
+				})
+			})
+
+			describe("and a branch named 'master' does not exist locally", () => {
+				beforeEach(() => {
+					mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
+				})
+
+				it("returns null", async () => {
+					const actualBranch = await getGitDefaultBranch()
+					expect(actualBranch).toBeNull()
+				})
 			})
 		})
 	})

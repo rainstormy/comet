@@ -1,15 +1,21 @@
 import { beforeEach, vi } from "vitest"
+import { requireNotNullish } from "#utilities/Assertions.ts"
 import { GitCommandError } from "#utilities/git/cli/GitCommandError.ts"
 
 vi.mock(import("#utilities/git/cli/RunGitCommand.ts"), () => ({
 	runGitCommand: vi.fn(async (args) => {
-		const result = resultsByCommand.get(args.join(" ")) ?? null
+		const remainingResults = resultsByCommand.get(args.join(" ")) ?? null
 
-		if (result === null) {
+		if (remainingResults === null) {
 			throw new Error(
 				`Unexpected Git command: ${args.join(" ")}\n\nExpected Git commands in the scope of this test case:\n${getExpectedCommands()}\n\n`,
 			)
 		}
+
+		const result = requireNotNullish(
+			remainingResults.length > 1 ? remainingResults.shift() : remainingResults[0],
+		)
+
 		if (result.exitCode !== undefined && result.exitCode !== 0) {
 			throw new GitCommandError({ args, exitCode: result.exitCode })
 		}
@@ -18,7 +24,7 @@ vi.mock(import("#utilities/git/cli/RunGitCommand.ts"), () => ({
 	}),
 }))
 
-const resultsByCommand = new Map<string, GitCommandResult>()
+const resultsByCommand = new Map<string, Array<GitCommandResult>>()
 
 type GitCommandResult = GitCommandSucceeded | GitCommandFailed
 
@@ -39,5 +45,11 @@ export function mockGitCli(): void {
 }
 
 export function mockGitCommand(command: string, result: GitCommandResult): void {
-	resultsByCommand.set(command, result)
+	const existingResults = resultsByCommand.get(command) ?? null
+
+	if (existingResults) {
+		existingResults.push(result)
+	} else {
+		resultsByCommand.set(command, [result])
+	}
 }

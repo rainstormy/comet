@@ -14,3 +14,9 @@ export class GitCommandError extends Error {
 		this.exitCode = props.exitCode
 	}
 }
+
+export function assertGitCommandError(error: unknown): asserts error is GitCommandError {
+	if (!(error instanceof GitCommandError && error.exitCode !== 0)) {
+		throw error
+	}
+}
