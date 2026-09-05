@@ -155,6 +155,8 @@ describe("when the 'git rev-parse' command raises an error", () => {
 	beforeEach(async () => {
 		mockGitCommand("remote", { output: "origin" })
 		mockGitCommand("rev-parse --abbrev-ref origin/HEAD", { exitCode: 128 })
+		mockGitCommand("fetch", { output: "" })
+		mockGitCommand("rev-parse --abbrev-ref --symbolic-full-name @{u}", { exitCode: 128 })
 		mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
 		mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
 		exitCode = await commandLineProgram([])
