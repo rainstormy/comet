@@ -7,6 +7,7 @@ import { mockFile, mockJsonFile, mockNonexistingFile } from "#utilities/files/Fi
 import type { DeepPartial, DeepRequired } from "#utilities/Objects.ts"
 
 const path = "comet.json"
+const jsoncPath = "comet.jsonc"
 
 describe("a configuration file with an empty object", () => {
 	beforeEach(() => {
@@ -712,6 +713,410 @@ describe("a large configuration file that extends another large file that extend
 	})
 })
 
+describe("a simple JSONC configuration file with line and block comments", () => {
+	beforeEach(() => {
+		mockFile(
+			jsoncPath,
+			// language=json5
+			`{
+	// Merge commits obscure the changes that introduced a regression.
+	"rules": {
+		"noMergeCommits": "error",
+		/*
+		 * This repository has auto-generated commit messages which may exceed the usual width.
+		 * Keep this rule disabled until those messages are updated in the tooling.
+		 */
+		"useLineWrapping": "off"
+	}
+}`,
+		)
+	})
+
+	it("returns the configured ruleset", async () => {
+		const configuration = await getConfiguration(jsoncPath)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			rules: {
+				noMergeCommits: { level: "error" },
+				useLineWrapping: { level: "off" },
+			},
+			tokens: {},
+		})
+	})
+})
+
+describe("a complex JSONC configuration file with line and block comments", () => {
+	beforeEach(() => {
+		mockFile(
+			jsoncPath,
+			// language=json5
+			`
+{
+	/**
+	 * Configure commit message rules.
+	 * https://github.com/rainstormy/comet
+	 */
+	"$schema": "https://example.com/schema.json",
+	"tokens": {
+		"issueLinks": {
+			"prefixes": ["UNICORN-"]
+		}
+	},
+	"rules": {
+		"useSignedCommits": "error", // Company requirement.
+		"noBlankSubjectLines": "error",
+		"noExcessiveCommitsPerBranch": {
+			"level": "error",
+			// We've agreed on the limit in our team to keep pull requests small.
+			"options": { "maxCommits": 2 }
+		},
+		"noExcessiveWhitespace": {
+			"level": "off",
+			"options": { }
+		},
+		"noMergeCommits": "error",
+		"noRepeatedSubjectLines": "error",
+		"noRestrictedTrailers": {
+			"level": "error",
+			"options": { 
+				"restrictedKeys": [
+					/* Required by company policy to remove affiliation with agents. */
+					"Co-authored-by"
+				]
+			}
+		},
+		"noRevertRevertCommits": "error",
+		"noSingleWordSubjectLines": {
+			"level": "error",
+			"options": { }
+		},
+		"noSquashMarkers": "error",
+		"noUnexpectedPunctuation": "off",
+		"useAuthorEmailPatterns": "off",
+		"useAuthorNamePatterns": "off",
+		"useCapitalisedSubjectLines": "error",
+		"useCommitterEmailPatterns": "off",
+		"useCommitterNamePatterns": "off",
+		"useConciseSubjectLines": {
+			"level": "off", // temporarily disabled
+			"options": { "maxLength": 72 }
+		},
+		"useEmptyLineBeforeBodyLines": "off",
+		"useImperativeSubjectLines": {
+			"level": "error",
+			"options": { "whitelist": ["chatify", "dockerise"] }
+		},
+		/*"useIssueLinks": {
+			"level": "error",
+			"options": { "position": "anywhere" }
+		},*/
+		"useLineWrapping": {
+			"level": "off",
+			"options": { "maxLength": 80 }
+		}
+	}
+}`,
+		)
+	})
+
+	it("returns the configured tokens and ruleset", async () => {
+		const configuration = await getConfiguration(jsoncPath)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			rules: {
+				noBlankSubjectLines: { level: "error" },
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 2 },
+				},
+				noExcessiveWhitespace: {
+					level: "off",
+					options: {},
+				},
+				noMergeCommits: { level: "error" },
+				noRepeatedSubjectLines: { level: "error" },
+				noRestrictedTrailers: {
+					level: "error",
+					options: {
+						restrictedKeys: ["Co-authored-by"],
+					},
+				},
+				noRevertRevertCommits: { level: "error" },
+				noSingleWordSubjectLines: {
+					level: "error",
+					options: {},
+				},
+				noSquashMarkers: { level: "error" },
+				noUnexpectedPunctuation: { level: "off" },
+				useAuthorEmailPatterns: { level: "off" },
+				useAuthorNamePatterns: { level: "off" },
+				useCapitalisedSubjectLines: { level: "error" },
+				useCommitterEmailPatterns: { level: "off" },
+				useCommitterNamePatterns: { level: "off" },
+				useConciseSubjectLines: {
+					level: "off", // temporarily disabled
+					options: { maxLength: 72 },
+				},
+				useEmptyLineBeforeBodyLines: { level: "off" },
+				useImperativeSubjectLines: {
+					level: "error",
+					options: { whitelist: ["chatify", "dockerise"] },
+				},
+				useLineWrapping: {
+					level: "off",
+					options: { maxLength: 80 },
+				},
+				useSignedCommits: { level: "error" },
+			},
+			tokens: {
+				issueLinks: {
+					prefixes: ["UNICORN-"],
+					wildcards: [],
+				},
+			},
+		})
+	})
+})
+
+describe("a JSONC configuration file that extends another JSONC configuration file that extends a third JSONC configuration file", () => {
+	beforeEach(() => {
+		mockFile(
+			"base.jsonc",
+			// language=json5
+			`{
+	/* Base policy shared across all projects. */
+	"tokens": {
+		"issueLinks": {
+			"prefixes": ["BASE-", "#"],
+			"wildcards": ["[base]", "*"]
+		}
+	},
+	"rules": {
+		"noMergeCommits": "off",
+		"useAuthorEmailPatterns": {
+			"level": "error",
+			"options": { "patterns": [".+@example.com"] }
+		}
+	}
+}`,
+		)
+		mockFile(
+			"configs/team.jsonc",
+			// language=json5
+			`{
+	"extends": "../base.jsonc",
+	"tokens": {
+		"issueLinks": {
+			"prefixes": ["TEAM-", "#"],
+			"wildcards": ["[team]", "*"]
+		}
+	},
+	"rules": {
+		"noMergeCommits": "error",
+		"noRepeatedSubjectLines": "error",
+		"useAuthorEmailPatterns": {
+			"level": "error",
+			"options": { "patterns": [".+@team.example.com"] }
+		}
+	}
+}`,
+		)
+		mockFile(
+			jsoncPath,
+			// language=json5
+			`{
+	// Project-specific policy takes precedence over shared policy.
+	"extends": "configs/team.jsonc",
+	"tokens": {
+		"issueLinks": {
+			"prefixes": ["PROJECT-", "TEAM-"],
+			"wildcards": ["[release]", "[team]"]
+		}
+	},
+	"rules": {
+		"noMergeCommits": "off",
+		"noSquashMarkers": "off",
+		"useAuthorEmailPatterns": {
+			"level": "off",
+			"options": { "patterns": [".+@project.example.com"] }
+		}
+	}
+}`,
+		)
+	})
+
+	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
+		const configuration = await getConfiguration(jsoncPath)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			rules: {
+				noMergeCommits: { level: "off" },
+				noRepeatedSubjectLines: { level: "error" },
+				noSquashMarkers: { level: "off" },
+				useAuthorEmailPatterns: {
+					level: "off",
+					options: {
+						patterns: [".+@example.com", ".+@team.example.com", ".+@project.example.com"],
+					},
+				},
+			},
+			tokens: {
+				issueLinks: {
+					prefixes: ["BASE-", "#", "TEAM-", "PROJECT-"],
+					wildcards: ["[base]", "*", "[team]", "[release]"],
+				},
+			},
+		})
+	})
+})
+
+describe("a JSONC configuration file that extends a JSON configuration file", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>("base.json", {
+			tokens: {
+				issueLinks: {
+					prefixes: ["JSON-", "SHARED-"],
+					wildcards: ["[json]", "[skip ci]"],
+				},
+			},
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "off",
+					options: { maxCommits: 10 },
+				},
+				noUnexpectedPunctuation: "off",
+				useIssueLinks: {
+					level: "error",
+					options: { position: "anywhere" },
+				},
+			},
+		})
+		mockFile(
+			jsoncPath,
+			// language=json5
+			`{
+	// JSONC adds project-specific limits to the shared JSON policy.
+	"extends": "base.json",
+	"tokens": {
+		"issueLinks": {
+			"prefixes": ["JSONC-", "SHARED-"],
+			"wildcards": ["[jsonc]", "[skip ci]"]
+		}
+	},
+	"rules": {
+		"noExcessiveCommitsPerBranch": {
+			"level": "error",
+			"options": { "maxCommits": 5 }
+		},
+		"useIssueLinks": {
+			"level": "error",
+			"options": { "position": "suffix" }
+		},
+		"useLineWrapping": {
+			"level": "off",
+			"options": { "maxLength": 72 }
+		}
+	}
+}`,
+		)
+	})
+
+	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
+		const configuration = await getConfiguration(jsoncPath)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 5 },
+				},
+				noUnexpectedPunctuation: { level: "off" },
+				useIssueLinks: {
+					level: "error",
+					options: { position: "suffix" },
+				},
+				useLineWrapping: {
+					level: "off",
+					options: { maxLength: 72 },
+				},
+			},
+			tokens: {
+				issueLinks: {
+					prefixes: ["JSON-", "SHARED-", "JSONC-"],
+					wildcards: ["[json]", "[skip ci]", "[jsonc]"],
+				},
+			},
+		})
+	})
+})
+
+describe("a JSON configuration file that extends a JSONC configuration file", () => {
+	beforeEach(() => {
+		mockFile(
+			"base.jsonc",
+			// language=json5
+			`{
+	/* JSONC contains the shared policy for the plain JSON project file. */
+	"tokens": {
+		"issueLinks": {
+			"prefixes": ["JSONC-BASE-", "GL-"],
+			"wildcards": ["[jsonc-base]", "[incident]"]
+		}
+	},
+	"rules": {
+		"noRestrictedTrailers": {
+			"level": "error",
+			"options": { "restrictedKeys": ["Co-authored-by"] }
+		},
+		"useAuthorNamePatterns": {
+			"level": "error",
+			"options": { "patterns": ["Ada Lovelace"] }
+		},
+		"useSignedCommits": "error"
+	}
+}`,
+		)
+		mockJsonFile<JsonConfigurationDto>(path, {
+			extends: "base.jsonc",
+			tokens: {
+				issueLinks: {
+					prefixes: ["JSON-", "GL-"],
+					wildcards: ["[json]", "[incident]"],
+				},
+			},
+			rules: {
+				noRestrictedTrailers: {
+					level: "off",
+					options: { restrictedKeys: ["Reviewed-by"] },
+				},
+				noSingleWordSubjectLines: "off",
+				useAuthorNamePatterns: "off",
+				useSignedCommits: "off",
+			},
+		})
+	})
+
+	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			rules: {
+				noRestrictedTrailers: {
+					level: "off",
+					options: { restrictedKeys: ["Co-authored-by", "Reviewed-by"] },
+				},
+				noSingleWordSubjectLines: { level: "off" },
+				useAuthorNamePatterns: {
+					level: "off",
+					options: { patterns: ["Ada Lovelace"] },
+				},
+				useSignedCommits: { level: "off" },
+			},
+			tokens: {
+				issueLinks: {
+					prefixes: ["JSONC-BASE-", "GL-", "JSON-"],
+					wildcards: ["[jsonc-base]", "[incident]", "[json]"],
+				},
+			},
+		})
+	})
+})
+
 describe("a configuration file with issue link 'prefixes' being a boolean", () => {
 	beforeEach(() => {
 		mockJsonFile(path, {
@@ -1023,6 +1428,25 @@ describe("a configuration file that extends another file with an invalid 'extend
 	})
 })
 
+describe("a JSON configuration file that extends an invalid JSONC configuration file", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, { extends: "base.jsonc" })
+		mockFile(
+			"base.jsonc",
+			`{
+	// The shared policy has not been migrated to the current ruleset yet.
+	"rules": 31
+}`,
+		)
+	})
+
+	it("raises the extended configuration error", async () => {
+		await expect(getConfiguration(path)).rejects.toThrow(
+			"Failed to parse 'base.jsonc' as a Comet configuration: 'rules' must be an object, but it is a number: 31",
+		)
+	})
+})
+
 describe("a configuration file that extends itself", () => {
 	beforeEach(() => {
 		mockJsonFile<JsonConfigurationDto>(path, { extends: "./comet.json" })
@@ -1062,6 +1486,33 @@ describe("three configuration files that extend each other", () => {
 	})
 })
 
+describe("two JSONC configuration files that extend each other", () => {
+	beforeEach(() => {
+		mockFile(
+			jsoncPath,
+			// language=json5
+			`{
+	// The shared team policy contains the common rules.
+	"extends": "base.jsonc"
+}`,
+		)
+		mockFile(
+			"base.jsonc",
+			// language=json5
+			`{
+	/* Project-specific exceptions belong in the root configuration. */
+	"extends": "./comet.jsonc"
+}`,
+		)
+	})
+
+	it("raises a cyclic dependency error", async () => {
+		await expect(getConfiguration(jsoncPath)).rejects.toThrow(
+			"Failed to parse 'comet.jsonc' as a Comet configuration: 'extends' has a cyclic dependency in 'comet.jsonc' -> 'base.jsonc' -> 'comet.jsonc'",
+		)
+	})
+})
+
 describe.each`
 	path                               | content                                               | expectedError
 	${"comet.json"}                    | ${JSON.stringify({ rules: 31 })}                      | ${"Failed to parse 'comet.json' as a Comet configuration: 'rules' must be an object, but it is a number: 31"}
@@ -1072,7 +1523,7 @@ describe.each`
 	${"validate-commit-messages.json"} | ${JSON.stringify({ whatIsThis: true })}               | ${"Failed to parse 'validate-commit-messages.json' as a Comet configuration: 'whatIsThis' is not a valid option"}
 	${"temp.txt"}                      | ${""}                                                 | ${`Failed to parse 'temp.txt' as JSON: Unexpected end of JSON input`}
 	${"readme.md"}                     | ${"hello"}                                            | ${`Failed to parse 'readme.md' as JSON: Unexpected token 'h', "hello" is not valid JSON`}
-	${"./.github/comet.github.jsonc"}  | ${"// bogus file\n-1"}                                | ${`Failed to parse '.github/comet.github.jsonc' as JSON: Unexpected token '/', "// bogus file\n-1" is not valid JSON`}
+	${"./.github/comet.github.jsonc"}  | ${"// bogus file\n-1"}                                | ${"Failed to parse '.github/comet.github.jsonc' as a Comet configuration: The configuration must be a JSON object, but it is a number: -1"}
 `(
 	"an invalid configuration file $path",
 	(props: { path: string; content: string; expectedError: string }) => {
@@ -1086,10 +1537,32 @@ describe.each`
 	},
 )
 
+describe("a malformed JSONC configuration file", () => {
+	beforeEach(() => {
+		mockFile(
+			".github/comet.jsonc",
+			`{
+	// Merge commits obscure the changes that introduced a regression.
+	"rules": {
+		"noMergeCommits": "error"
+		/* This rule is disabled until generated commit messages are updated. */
+		"useLineWrapping": "off"
+	}
+}`,
+		)
+	})
+
+	it("raises an error", async () => {
+		await expect(getConfiguration(".github/comet.jsonc")).rejects.toThrow(
+			"Failed to parse '.github/comet.jsonc' as JSON: Expected ',' or '}' after property value in JSON at position 187 (line 6 column 3)",
+		)
+	})
+})
+
 describe.each`
-	path                            | expectedError
-	${"comet.json"}                 | ${"Failed to read 'comet.json': File not found"}
-	${"./configs/comet.local.json"} | ${`Failed to read 'configs/comet.local.json': File not found`}
+	path                             | expectedError
+	${"comet.json"}                  | ${"Failed to read 'comet.json': File not found"}
+	${"./configs/comet.local.jsonc"} | ${`Failed to read 'configs/comet.local.jsonc': File not found`}
 `("a non-existing configuration file $path", (props: { path: string; expectedError: string }) => {
 	beforeEach(() => {
 		mockNonexistingFile(props.path)

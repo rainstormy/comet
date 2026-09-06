@@ -1,3 +1,4 @@
+import stripJsonComments from "strip-json-comments"
 import { beforeEach, vi } from "vitest"
 import type { JsonValue, JsonValueFrom } from "#types/JsonValue.ts"
 import { isNotEmptyString } from "#utilities/Arrays.ts"
@@ -31,7 +32,7 @@ vi.mock(import("#utilities/files/Files.ts"), () => ({
 		}
 
 		try {
-			return JSON.parse(content)
+			return JSON.parse(path.endsWith(".jsonc") ? stripJsonComments(content) : content)
 		} catch (error) {
 			if (error instanceof SyntaxError) {
 				throw new TypeError(`Failed to parse '${path}' as JSON: ${error.message}`, { cause: error })

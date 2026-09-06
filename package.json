@@ -33,6 +33,7 @@
 	},
 	"dependencies": {
 		"ansis": "catalog:",
+		"strip-json-comments": "catalog:",
 		"valibot": "catalog:"
 	},
 	"devDependencies": {

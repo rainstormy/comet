@@ -19,6 +19,10 @@ catalog:
   # https://github.com/webdiscus/ansis
   ansis: 4.3.1
 
+  # This library removes comments from JSON content, allowing us to read `.jsonc` files.
+  # https://github.com/sindresorhus/strip-json-comments
+  strip-json-comments: 5.0.3
+
   # The official 'tsc' CLI for TypeScript, including the language service (LSP) and Go-powered compiler (tsgo).
   # https://www.typescriptlang.org
   typescript: 7.0.2
