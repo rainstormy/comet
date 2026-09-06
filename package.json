@@ -39,6 +39,7 @@
 	"devDependencies": {
 		"@rainstormy/presets-web": "catalog:",
 		"@types/node": "catalog:",
+		"@valibot/to-json-schema": "catalog:",
 		"typescript": "catalog:",
 		"vite-plus": "catalog:",
 		"vitest": "catalog:"
