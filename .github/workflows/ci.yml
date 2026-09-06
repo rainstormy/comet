@@ -54,4 +54,4 @@ jobs:
         uses: ./
         with:
           github-token: ${{ github.token }}
-          config-path: .github/comet.json
+          config-path: .github/comet.jsonc

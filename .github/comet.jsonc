@@ -1,0 +1,46 @@
+{
+	"rules": {
+		"noRestrictedTrailers": {
+			"level": "error",
+			"options": {
+				"restrictedKeys": ["co-authored-by"]
+			}
+		},
+		"useAuthorEmailPatterns": {
+			"level": "error",
+			"options": {
+				"patterns": [
+					"\\d+\\+.+@users\\.noreply\\.github\\.com" // `<id>+<username>@users.noreply.github.com`
+				]
+			}
+		},
+		"useAuthorNamePatterns": {
+			"level": "error",
+			"options": {
+				"patterns": [
+					"\\p{Lu}.*\\s.+", // at least two words where the first word starts with a capital letter
+					"renovate\\[bot\\]" // `renovate[bot]` (for automated version upgrades)
+				]
+			}
+		},
+		"useCommitterEmailPatterns": {
+			"level": "error",
+			"options": {
+				"patterns": [
+					"\\d+\\+.+@users\\.noreply\\.github\\.com", // `<id>+<username>@users.noreply.github.com`
+					"noreply@github\\.com" // `noreply@github.com` (for automated version upgrades and for reverting pull requests directly from the GitHub web interface)
+				]
+			}
+		},
+		"useCommitterNamePatterns": {
+			"level": "error",
+			"options": {
+				"patterns": [
+					"\\p{Lu}.*\\s.+", // at least two words where the first word starts with a capital letter
+					"renovate\\[bot\\]", // `renovate[bot]` (for automated version upgrades)
+					"GitHub" // `GitHub` (for automated version upgrades and for reverting pull requests directly from the GitHub web interface)
+				]
+			}
+		}
+	}
+}
