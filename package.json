@@ -25,7 +25,8 @@
 		"comet": "dist/main-cli.mjs"
 	},
 	"files": [
-		"dist/main-cli.mjs"
+		"dist/main-cli.mjs",
+		"dist/schema.json"
 	],
 	"type": "module",
 	"imports": {

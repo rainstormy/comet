@@ -5,6 +5,7 @@
 # Build artefacts
 dist/*
 !dist/main-gha.mjs
+!dist/schema.json
 
 # Caches and third-party dependencies
 node_modules/

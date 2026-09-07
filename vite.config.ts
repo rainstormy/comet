@@ -43,7 +43,7 @@ export default defineConfig({
 	run: {
 		// language=sh
 		tasks: {
-			build: { command: "vp pack" },
+			build: { command: ["vp pack", "node tools/jsonschema.script.ts"] },
 			check: { command: "vp lint --type-check" },
 			comet: { command: "node src/main-cli.ts --config .github/comet.jsonc", cache: false },
 			fmt: { command: "vp check --fix" },
