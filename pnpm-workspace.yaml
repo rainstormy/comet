@@ -15,6 +15,10 @@ catalog:
   # https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/node
   '@types/node': 24.13.3
 
+  # This Valibot plugin generates JSON schemas from Valibot schemas.
+  # https://valibot.dev/guides/json-schema
+  '@valibot/to-json-schema': 1.7.1
+
   # Ansis formats console output.
   # https://github.com/webdiscus/ansis
   ansis: 4.3.1
