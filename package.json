@@ -22,26 +22,24 @@
 		"url": "https://github.com/rainstormy/comet.git"
 	},
 	"bin": {
-		"comet": "dist/main-cli.mjs"
+		"comet": "main-cli.mjs"
 	},
 	"files": [
-		"dist/main-cli.mjs",
-		"dist/schema.json"
+		"main-cli.mjs",
+		"schema.json"
 	],
 	"type": "module",
 	"imports": {
 		"#*": "./src/*"
 	},
-	"dependencies": {
-		"ansis": "catalog:",
-		"strip-json-comments": "catalog:",
-		"valibot": "catalog:"
-	},
 	"devDependencies": {
 		"@rainstormy/presets-web": "catalog:",
 		"@types/node": "catalog:",
 		"@valibot/to-json-schema": "catalog:",
+		"ansis": "catalog:",
+		"strip-json-comments": "catalog:",
 		"typescript": "catalog:",
+		"valibot": "catalog:",
 		"vite-plus": "catalog:",
 		"vitest": "catalog:"
 	},

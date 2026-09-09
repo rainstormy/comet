@@ -236,16 +236,6 @@ catalogs:
 importers:
 
   .:
-    dependencies:
-      ansis:
-        specifier: 'catalog:'
-        version: 4.3.1
-      strip-json-comments:
-        specifier: 'catalog:'
-        version: 5.0.3
-      valibot:
-        specifier: 'catalog:'
-        version: 1.4.2(typescript@7.0.2)
     devDependencies:
       '@rainstormy/presets-web':
         specifier: 'catalog:'
@@ -256,12 +246,21 @@ importers:
       '@valibot/to-json-schema':
         specifier: 'catalog:'
         version: 1.7.1(valibot@1.4.2(typescript@7.0.2))
+      ansis:
+        specifier: 'catalog:'
+        version: 4.3.1
       node:
         specifier: runtime:24.19.0
         version: runtime:24.19.0
+      strip-json-comments:
+        specifier: 'catalog:'
+        version: 5.0.3
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
+      valibot:
+        specifier: 'catalog:'
+        version: 1.4.2(typescript@7.0.2)
       vite-plus:
         specifier: 'catalog:'
         version: 0.2.9(@types/node@24.13.3)(@vitest/ui@4.1.10)(typescript@7.0.2)(vite@8.1.4(@types/node@24.13.3))

@@ -66,9 +66,14 @@ jobs:
           version-file: pnpm-workspace.yaml
           cache: true
         #
-      - name: Generate 'dist/main-cli.mjs'
+      - name: Generate build artefacts
         # language=sh
         run: vpr build
+        shell: bash
+        #
+      - name: Move build artefacts to the project root directory
+        # language=sh
+        run: mv --force dist/* ./
         shell: bash
         #
       - name: Publish the package to npm
