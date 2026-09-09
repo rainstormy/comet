@@ -61,12 +61,12 @@ jobs:
           node-version-file: package.json
           version-file: pnpm-workspace.yaml
         #
-      - name: Generate 'dist/main-gha.mjs'
+      - name: Generate build artefacts
         # language=sh
         run: vpr build
         shell: bash
         #
-      - name: Update the release artefacts
+      - name: Update release artefacts
         uses: rainstormy/updraft@23bb449c54a4e967c87a6943a1ef9a237eafdb99 # v1.2.0
         with:
           check-sequential-release: true
