@@ -32,16 +32,14 @@
 	"imports": {
 		"#*": "./src/*"
 	},
-	"dependencies": {
-		"ansis": "catalog:",
-		"strip-json-comments": "catalog:",
-		"valibot": "catalog:"
-	},
 	"devDependencies": {
 		"@rainstormy/presets-web": "catalog:",
 		"@types/node": "catalog:",
 		"@valibot/to-json-schema": "catalog:",
+		"ansis": "catalog:",
+		"strip-json-comments": "catalog:",
 		"typescript": "catalog:",
+		"valibot": "catalog:",
 		"vite-plus": "catalog:",
 		"vitest": "catalog:"
 	},
