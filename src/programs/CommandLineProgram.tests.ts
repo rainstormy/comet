@@ -78,13 +78,14 @@ describe.each`
 )
 
 describe.each`
-	invalidArgs                                                               | expectedError
-	${["-c"]}                                                                 | ${"Unknown option '-c'"}
-	${["--check"]}                                                            | ${"Unknown option '--check'"}
-	${["--skip-commits"]}                                                     | ${"Unknown option '--skip-commits'"}
-	${["--config"]}                                                           | ${"'--config' requires exactly 1 argument, but got 0"}
-	${["--config", "comet-a.json", "--config", "comet-b.json"]}               | ${"'--config' requires exactly 1 argument, but got 2"}
-	${["--config", "comet.jsonc", "comet.local.jsonc", "comet.github.jsonc"]} | ${"'--config' requires exactly 1 argument, but got 3"}
+	invalidArgs                                 | expectedError
+	${["-c"]}                                   | ${"Unknown option '-c'"}
+	${["--check"]}                              | ${"Unknown option '--check'"}
+	${["--skip-commits"]}                       | ${"Unknown option '--skip-commits'"}
+	${["--config"]}                             | ${"'--config' requires at least 1 argument, but got 0"}
+	${["--config", "--config"]}                 | ${"'--config' requires at least 1 argument, but got 0"}
+	${["--config", "--skip-missing-configs"]}   | ${"'--config' requires at least 1 argument, but got 0"}
+	${["--skip-missing-configs", "unexpected"]} | ${"'--skip-missing-configs' requires exactly 0 arguments, but got 1"}
 `(
 	"when the args are $invalidArgs",
 	(props: { invalidArgs: Array<string>; expectedError: string }) => {
@@ -543,20 +544,41 @@ describe.each`
 `(
 	"when '--config' points to a non-existing configuration file $path",
 	(props: { path: string; expectedError: string }) => {
-		let exitCode: ExitCode
+		describe("and '--skip-missing-configs' is not enabled", () => {
+			let exitCode: ExitCode
 
-		beforeEach(async () => {
-			mockNonexistingFile(props.path)
-			exitCode = await commandLineProgram(["--config", props.path])
+			beforeEach(async () => {
+				mockNonexistingFile(props.path)
+				exitCode = await commandLineProgram(["--config", props.path])
+			})
+
+			it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+				expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+			})
+
+			it("prints an error message", () => {
+				expect(printMessage).not.toHaveBeenCalled()
+				expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(props.expectedError)
+			})
 		})
 
-		it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-			expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
-		})
+		describe("and '--skip-missing-configs' is enabled", () => {
+			let exitCode: ExitCode
 
-		it("prints an error message", () => {
-			expect(printMessage).not.toHaveBeenCalled()
-			expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(props.expectedError)
+			beforeEach(async () => {
+				mockNonexistingFile(props.path)
+				mockGitBranchCrudeCommits([])
+				exitCode = await commandLineProgram(["--skip-missing-configs", "--config", props.path])
+			})
+
+			it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+				expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+			})
+
+			it("skips the missing configuration", () => {
+				expect(printMessage).not.toHaveBeenCalled()
+				expect(printCommandLineError).not.toHaveBeenCalled()
+			})
 		})
 	},
 )
@@ -1683,6 +1705,334 @@ ${grey`╰─ authored by:`} Master Splinter
               ${red`   Accepted patterns:`}
               ${red`     ∙ Ada Lovelace`}
 `.trim(),
+		)
+	})
+})
+
+describe("when there is 1 commit that raises concerns from the last configuration file in a custom sequence of configuration files", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("configs/base.json", {
+			rules: {
+				useAuthorNamePatterns: {
+					level: "error",
+					options: { patterns: ["Grace Hopper"] },
+				},
+			},
+		})
+		mockJsonFile("configs/team.json", {
+			rules: {
+				useAuthorNamePatterns: {
+					level: "error",
+					options: { patterns: ["Ada Lovelace"] },
+				},
+			},
+		})
+		mockJsonFile("configs/local.json", {
+			rules: {
+				useCommitterEmailPatterns: {
+					level: "error",
+					options: { patterns: [String.raw`.+@fastforward\.com`] },
+				},
+			},
+		})
+		mockGitBranchCrudeCommits([
+			fakeCrudeCommit({
+				sha: "98634c15dcab46ae1f23ca87a8d66467093415b3",
+				message: "Refactor the signal lantern",
+			}),
+		])
+		exitCode = await commandLineProgram([
+			"--config",
+			"configs/base.json",
+			"--config",
+			"configs/team.json",
+			"--config",
+			"configs/local.json",
+		])
+	})
+
+	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	})
+
+	it("prints a sorted commitwise report of all concerns", () => {
+		expect(printMessage).toHaveBeenCalledExactlyOnceWith(
+			`
+${grey`98634c1`} Refactor the signal lantern
+${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
+               ${red`╭───────────────────────────────────────────────`}
+               ${red`╰─ Email addresses of committers must match an accepted pattern.`}
+               ${red`   (useCommitterEmailPatterns)`}
+               ${red`   `}
+               ${red`   Accepted patterns:`}
+               ${red`     ∙ .+@fastforward\\.com`}
+`.trim(),
+		)
+	})
+})
+
+describe("when there are 2 commits that raise concerns from the second-to-last configuration file in a custom sequence of configuration files with the last file missing", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("configs/base.json", {
+			rules: {
+				useCommitterNamePatterns: {
+					level: "error",
+					options: { patterns: ["Release Robot"] },
+				},
+			},
+		})
+		mockJsonFile("configs/team.json", {
+			rules: {
+				useAuthorNamePatterns: {
+					level: "error",
+					options: { patterns: ["Ada Lovelace"] },
+				},
+			},
+		})
+		mockNonexistingFile("configs/local.json")
+		mockGitBranchCrudeCommits([
+			fakeCrudeCommit({
+				sha: "61a95da418709622ebb04c6bc08977c96ea915b5",
+				message: "Map the paper trail",
+			}),
+			fakeCrudeCommit({
+				sha: "b58de17b4d44256ffaa44a1068d743288fc6beda",
+				message: "Calibrate the wind tunnel",
+			}),
+		])
+		exitCode = await commandLineProgram([
+			"--skip-missing-configs",
+			"--config",
+			"configs/base.json",
+			"--config",
+			"configs/team.json",
+			"--config",
+			"configs/local.json",
+		])
+	})
+
+	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	})
+
+	it("prints a sorted commitwise report of all concerns", () => {
+		expect(printMessage).toHaveBeenCalledExactlyOnceWith(
+			`
+${grey`61a95da`} Map the paper trail
+${grey`╰─ authored by:`} Master Splinter
+              ${red`╭────────────────`}
+              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`   (useAuthorNamePatterns)`}
+              ${red`   `}
+              ${red`   Accepted patterns:`}
+              ${red`     ∙ Ada Lovelace`}
+
+${grey`b58de17`} Calibrate the wind tunnel
+${grey`╰─ authored by:`} Master Splinter
+              ${red`╭────────────────`}
+              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`   (useAuthorNamePatterns)`}
+              ${red`   `}
+              ${red`   Accepted patterns:`}
+              ${red`     ∙ Ada Lovelace`}
+`.trim(),
+		)
+	})
+})
+
+describe("when there are 3 commits where 2 of them raise concerns from the first configuration file in a custom sequence of configuration files with the other files missing", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("configs/base.json", {
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 1 },
+				},
+			},
+		})
+		mockNonexistingFile("configs/team.json")
+		mockNonexistingFile("configs/local.json")
+		mockGitBranchCrudeCommits([
+			fakeCrudeCommit({
+				sha: "335aee65f7a82c2f85771f45d9cfec47efab1547",
+				message: "Open the bakery dashboard",
+			}),
+			fakeCrudeCommit({
+				sha: "6f8dafa2608a817129c2ff899c5122eb69ba45cb",
+				message: "Add the cinnamon telemetry",
+			}),
+			fakeCrudeCommit({
+				sha: "b58de17b4d44256ffaa44a1068d743288fc6beda",
+				message: "Wire the oat milk alert",
+			}),
+		])
+		exitCode = await commandLineProgram([
+			"--skip-missing-configs",
+			"--config",
+			"configs/base.json",
+			"--config",
+			"configs/team.json",
+			"--config",
+			"configs/local.json",
+		])
+	})
+
+	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	})
+
+	it("prints a sorted commitwise report of all concerns", () => {
+		expect(printMessage).toHaveBeenCalledExactlyOnceWith(
+			`
+${grey`6f8dafa`} Add the cinnamon telemetry
+      ${red`╭───────────────────────────`}
+      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`   (noExcessiveCommitsPerBranch)`}
+
+${grey`b58de17`} Wire the oat milk alert
+      ${red`╭────────────────────────`}
+      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`   (noExcessiveCommitsPerBranch)`}
+`.trim(),
+		)
+	})
+})
+
+describe("when there are 4 commits where 3 of them raise concerns from the last configuration file in a custom sequence of configuration files", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("configs/base.json", {
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 3 },
+				},
+			},
+		})
+		mockJsonFile("configs/team.json", {
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 2 },
+				},
+			},
+		})
+		mockJsonFile("configs/local.json", {
+			rules: {
+				noExcessiveCommitsPerBranch: {
+					level: "error",
+					options: { maxCommits: 1 },
+				},
+			},
+		})
+		mockGitBranchCrudeCommits([
+			fakeCrudeCommit({
+				sha: "335aee65f7a82c2f85771f45d9cfec47efab1547",
+				message: "added feature, removed my coworkers' sanity",
+			}),
+			fakeCrudeCommit({
+				sha: "6f8dafa2608a817129c2ff899c5122eb69ba45cb",
+				message: "Oops, forgot to save before commit",
+			}),
+			fakeCrudeCommit({
+				sha: "b58de17b4d44256ffaa44a1068d743288fc6beda",
+				message: "Not sure why this works, but it does",
+			}),
+			fakeCrudeCommit({
+				sha: "9f1a1b2c3d4e5f678901234567890123456789ab",
+				message: "This commit is a lie",
+			}),
+		])
+		exitCode = await commandLineProgram([
+			"--config",
+			"configs/base.json",
+			"--config",
+			"configs/team.json",
+			"--config",
+			"configs/local.json",
+		])
+	})
+
+	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	})
+
+	it("prints a sorted commitwise report of all concerns", () => {
+		expect(printMessage).toHaveBeenCalledExactlyOnceWith(
+			`
+${grey`335aee6`} added feature, removed my coworkers' sanity
+        ${red`┬`}
+        ${red`╰─ The first letter in subject lines must be in uppercase.`}
+        ${red`   (useCapitalisedSubjectLines)`}
+
+${grey`335aee6`} added feature, removed my coworkers' sanity
+        ${red`──┬──`}
+          ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
+          ${red`   (useImperativeSubjectLines)`}
+
+${grey`6f8dafa`} Oops, forgot to save before commit
+      ${red`╭───────────────────────────────────`}
+      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`   (noExcessiveCommitsPerBranch)`}
+
+${grey`6f8dafa`} Oops, forgot to save before commit
+        ${red`─┬──`}
+         ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
+         ${red`   (useImperativeSubjectLines)`}
+
+${grey`b58de17`} Not sure why this works, but it does
+      ${red`╭─────────────────────────────────────`}
+      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`   (noExcessiveCommitsPerBranch)`}
+
+${grey`b58de17`} Not sure why this works, but it does
+        ${red`─┬─`}
+         ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
+         ${red`   (useImperativeSubjectLines)`}
+
+${grey`9f1a1b2`} This commit is a lie
+      ${red`╭─────────────────────`}
+      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`   (noExcessiveCommitsPerBranch)`}
+
+${grey`9f1a1b2`} This commit is a lie
+        ${red`─┬──`}
+         ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
+         ${red`   (useImperativeSubjectLines)`}
+`.trim(),
+		)
+	})
+})
+
+describe("when a configuration file in a custom sequence of configuration files is missing and '--skip-missing-configs' is not enabled", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("configs/base.json", { rules: 31 })
+		mockNonexistingFile("configs/local.json")
+		exitCode = await commandLineProgram([
+			"--config",
+			"configs/base.json",
+			"--config",
+			"configs/local.json",
+		])
+	})
+
+	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	})
+
+	it("raises an error for the missing configuration", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(
+			"Failed to read 'configs/local.json': File not found",
 		)
 	})
 })

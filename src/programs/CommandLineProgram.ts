@@ -19,7 +19,8 @@ import { deepMerge } from "#utilities/Objects.ts"
 import { getPackageVersion } from "#utilities/package/Package.ts"
 
 const OPTION_SCHEMA = defineOptions({
-	"--config": { args: { min: 1, max: 1 } },
+	"--config": { args: { min: 1 } },
+	"--skip-missing-configs": { args: { min: 0, max: 0 } },
 })
 
 export async function commandLineProgram(args: Array<string>): Promise<ExitCode> {
@@ -34,11 +35,12 @@ export async function commandLineProgram(args: Array<string>): Promise<ExitCode>
 
 	try {
 		const parsedArgs = parseArgs(OPTION_SCHEMA, args)
-		const configPath = parsedArgs["--config"]?.[0] ?? null
+		const configPaths = parsedArgs["--config"] ?? []
+		const skipMissingConfigPaths = parsedArgs["--skip-missing-configs"] !== undefined
 
 		const [crudeCommits, configuration] = await Promise.all([
 			getGitBranchCrudeCommits(),
-			resolveConfiguration(configPath),
+			resolveConfiguration(configPaths, skipMissingConfigPaths),
 		])
 
 		return await program(crudeCommits, configuration)
@@ -53,9 +55,12 @@ export function getHelpText(): string {
 	return "Usage: comet [options]"
 }
 
-async function resolveConfiguration(configPath: string | null): Promise<Configuration> {
+async function resolveConfiguration(
+	configPaths: Array<string>,
+	skipMissingConfigPaths: boolean,
+): Promise<Configuration> {
 	const defaultConfiguration = DEFAULT_COMMAND_LINE_CONFIGURATION
-	const path = await getConfigurationPath(configPath)
+	const path = await getConfigurationPath(configPaths.toReversed(), skipMissingConfigPaths)
 
 	if (path === null) {
 		return defaultConfiguration

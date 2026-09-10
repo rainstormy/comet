@@ -96,8 +96,18 @@ function sanitiseConfiguration(
 	}
 }
 
-export async function getConfigurationPath(configPath: string | null): Promise<string | null> {
-	return configPath ?? (await getDefaultConfigurationPath())
+export async function getConfigurationPath(
+	configPaths: Array<string>,
+	skipMissingConfigPaths: boolean,
+): Promise<string | null> {
+	for (const configPath of configPaths) {
+		// oxlint-disable-next-line eslint/no-await-in-loop -- Configurations must be checked from last to first until one exists.
+		if (!skipMissingConfigPaths || (await isReadableFile(configPath))) {
+			return configPath
+		}
+	}
+
+	return getDefaultConfigurationPath()
 }
 
 async function getDefaultConfigurationPath(): Promise<string | null> {
