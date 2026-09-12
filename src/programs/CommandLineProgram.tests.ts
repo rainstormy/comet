@@ -50,6 +50,7 @@ describe.each`
 
 	it("prints a help text with usage instructions", () => {
 		expect(printMessage).toHaveBeenCalledExactlyOnceWith(getHelpText())
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -74,6 +75,7 @@ describe.each`
 
 		it(`prints the tool version of '${props.version}'`, () => {
 			expect(printMessage).toHaveBeenCalledExactlyOnceWith(props.version)
+			expect(printCommandLineError).not.toHaveBeenCalled()
 		})
 	},
 )
@@ -293,6 +295,7 @@ ${grey`98634c1`} fix!
            ${red`   (noUnexpectedPunctuation)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -340,6 +343,7 @@ ${red`•`} ${grey`${bold`2`} │`} This body line is intentionally longer than 
     ${grey`╰──`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -392,6 +396,7 @@ ${grey`b58de17`} Sign the pantry inventory
       ${red`   (useSignedCommits)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -481,6 +486,7 @@ ${grey`7f811b2`} Merge the old tea ledger
       ${red`   (noMergeCommits)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -806,6 +812,7 @@ ${red`•`} ${grey`${bold`2`} │`} Co-authored-by: Ada Lovelace <ada@example.co
     ${grey`╰──`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -853,6 +860,7 @@ ${grey`╰─ authored by:`} Master Splinter
               ${red`     ∙ Ada Lovelace`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -912,6 +920,7 @@ ${grey`9f1a1b2`} Test the emergency toaster
       ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -985,6 +994,7 @@ ${grey`c0ffee1`} Untangle the improbable cables
                                  ${red`   (useConciseSubjectLines)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1068,6 +1078,7 @@ ${grey`b58de17`} Wire the oat milk alert
       ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1196,6 +1207,7 @@ ${grey`a8b3d6c`} Merge the old tea ledger
       ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1400,6 +1412,7 @@ ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
                ${red`     ∙ .+@fastforward\\.com`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1467,6 +1480,7 @@ ${grey`d677c31`} Tune the observatory clock
       ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1555,6 +1569,7 @@ ${grey`a43a3f3`} Archive the noisy bell!
                               ${red`   (noUnexpectedPunctuation)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1615,6 +1630,7 @@ ${grey`7f811b2`} Revert "Revert "Disable the alarm""
               ${red`   (noRevertRevertCommits)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1707,6 +1723,7 @@ ${grey`╰─ authored by:`} Master Splinter
               ${red`     ∙ Ada Lovelace`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1771,6 +1788,7 @@ ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
                ${red`     ∙ .+@fastforward\\.com`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1842,6 +1860,7 @@ ${grey`╰─ authored by:`} Master Splinter
               ${red`     ∙ Ada Lovelace`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1902,6 +1921,7 @@ ${grey`b58de17`} Wire the oat milk alert
       ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -2009,6 +2029,7 @@ ${grey`9f1a1b2`} This commit is a lie
          ${red`   (useImperativeSubjectLines)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
