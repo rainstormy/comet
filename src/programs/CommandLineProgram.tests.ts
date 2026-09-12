@@ -6,7 +6,7 @@ import { commandLineProgram, getHelpText } from "#programs/CommandLineProgram.ts
 import { fakeCommitSha } from "#types/CommitSha.fakes.ts"
 import {
 	EXIT_CODE_GENERAL_ERROR,
-	EXIT_CODE_INVALID_INPUT,
+	EXIT_CODE_INVALID_CONFIGURATION,
 	EXIT_CODE_RULE_VIOLATION,
 	EXIT_CODE_SUCCESS,
 	type ExitCode,
@@ -96,8 +96,8 @@ describe.each`
 			exitCode = await commandLineProgram(props.invalidArgs)
 		})
 
-		it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-			expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+		it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 		})
 
 		it("prints an error message", () => {
@@ -499,8 +499,8 @@ describe.each`
 			exitCode = await commandLineProgram([])
 		})
 
-		it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-			expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+		it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 		})
 
 		it("prints an error message", () => {
@@ -525,8 +525,8 @@ describe("when the default 'comet.jsonc' configuration file is invalid", () => {
 		exitCode = await commandLineProgram([])
 	})
 
-	it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+	it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 	})
 
 	it("prints the configuration error", () => {
@@ -602,8 +602,8 @@ describe.each`
 			exitCode = await commandLineProgram(["--config", "configs/comet.json"])
 		})
 
-		it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-			expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+		it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 		})
 
 		it("prints the configuration error", () => {
@@ -627,8 +627,8 @@ describe("when '--config' points to a custom JSONC configuration file that is in
 		exitCode = await commandLineProgram(["--config", "configs/team.jsonc"])
 	})
 
-	it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+	it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 	})
 
 	it("prints the configuration error", () => {

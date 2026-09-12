@@ -6,7 +6,7 @@ import { githubActionsProgram } from "#programs/GithubActionsProgram.ts"
 import { fakeCommitSha } from "#types/CommitSha.fakes.ts"
 import {
 	EXIT_CODE_GENERAL_ERROR,
-	EXIT_CODE_INVALID_INPUT,
+	EXIT_CODE_INVALID_CONFIGURATION,
 	EXIT_CODE_RULE_VIOLATION,
 	EXIT_CODE_SUCCESS,
 	type ExitCode,
@@ -80,8 +80,8 @@ describe("when the 'github-token' input parameter is missing", () => {
 		exitCode = await githubActionsProgram()
 	})
 
-	it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+	it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 	})
 
 	it("prints an error message that describes the expected input parameter", () => {
@@ -438,8 +438,8 @@ describe.each`
 			exitCode = await githubActionsProgram()
 		})
 
-		it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-			expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+		it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 		})
 
 		it("prints an error message", () => {
@@ -464,8 +464,8 @@ describe("when the default 'comet.jsonc' configuration file is invalid", () => {
 		exitCode = await githubActionsProgram()
 	})
 
-	it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+	it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 	})
 
 	it("prints the configuration error", () => {
@@ -522,8 +522,8 @@ describe.each`
 			exitCode = await githubActionsProgram()
 		})
 
-		it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-			expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+		it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 		})
 
 		it("prints the configuration error", () => {
@@ -548,8 +548,8 @@ describe("when 'config-path' points to a custom JSONC configuration file that is
 		exitCode = await githubActionsProgram()
 	})
 
-	it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+	it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 	})
 
 	it("prints the configuration error", () => {
