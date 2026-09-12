@@ -41,7 +41,7 @@ catalog:
   # https://oxc.rs/docs/guide/usage/linter.html
   # https://vitejs.dev
   # https://viteplus.dev
-  vite-plus: 0.2.9
+  vite-plus: 0.3.1
 
   # Vitest is a unit testing framework.
   # https://vitest.dev
