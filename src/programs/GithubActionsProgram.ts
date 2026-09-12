@@ -29,7 +29,8 @@ export async function githubActionsProgram(): Promise<ExitCode> {
 
 async function resolveConfiguration(): Promise<Configuration> {
 	const defaultConfiguration = DEFAULT_GITHUB_ACTIONS_CONFIGURATION
-	const path = await getConfigurationPath(githubEnv().configPath)
+	const configPath = githubEnv().configPath
+	const path = await getConfigurationPath(configPath !== null ? [configPath] : [], false)
 
 	if (path === null) {
 		return defaultConfiguration
