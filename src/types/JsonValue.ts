@@ -16,8 +16,8 @@ export type JsonValueFrom<Input> = Input extends JsonValue
 			? Array<JsonValueFrom<Item>>
 			: Input extends object
 				? {
-						[Key in keyof Input as JsonValueFrom<Input[Key]> extends never
-							? never
-							: Key]: JsonValueFrom<Input[Key]>
+						[
+							Key in keyof Input as JsonValueFrom<Input[Key]> extends never ? never : Key
+						]: JsonValueFrom<Input[Key]>
 					}
 				: never
