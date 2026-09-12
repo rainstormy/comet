@@ -6,7 +6,8 @@ import { commandLineProgram, getHelpText } from "#programs/CommandLineProgram.ts
 import { fakeCommitSha } from "#types/CommitSha.fakes.ts"
 import {
 	EXIT_CODE_GENERAL_ERROR,
-	EXIT_CODE_INVALID_INPUT,
+	EXIT_CODE_INVALID_CONFIGURATION,
+	EXIT_CODE_RULE_VIOLATION,
 	EXIT_CODE_SUCCESS,
 	type ExitCode,
 } from "#types/ExitCode.ts"
@@ -49,6 +50,7 @@ describe.each`
 
 	it("prints a help text with usage instructions", () => {
 		expect(printMessage).toHaveBeenCalledExactlyOnceWith(getHelpText())
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -73,6 +75,7 @@ describe.each`
 
 		it(`prints the tool version of '${props.version}'`, () => {
 			expect(printMessage).toHaveBeenCalledExactlyOnceWith(props.version)
+			expect(printCommandLineError).not.toHaveBeenCalled()
 		})
 	},
 )
@@ -95,8 +98,8 @@ describe.each`
 			exitCode = await commandLineProgram(props.invalidArgs)
 		})
 
-		it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-			expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+		it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 		})
 
 		it("prints an error message", () => {
@@ -269,8 +272,8 @@ describe("when there is 1 commit that raises concerns in the default configurati
 		exitCode = await commandLineProgram([])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -292,6 +295,7 @@ ${grey`98634c1`} fix!
            ${red`   (noUnexpectedPunctuation)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -313,8 +317,8 @@ describe("when there are 2 commits that raise concerns in the default configurat
 		exitCode = await commandLineProgram([])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -339,6 +343,7 @@ ${red`•`} ${grey`${bold`2`} │`} This body line is intentionally longer than 
     ${grey`╰──`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -364,8 +369,8 @@ describe("when there are 3 commits that raise concerns in the default configurat
 		exitCode = await commandLineProgram([])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -391,6 +396,7 @@ ${grey`b58de17`} Sign the pantry inventory
       ${red`   (useSignedCommits)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -424,8 +430,8 @@ describe("when there are 6 commits where 4 of them raise concerns in the default
 		exitCode = await commandLineProgram([])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -480,6 +486,7 @@ ${grey`7f811b2`} Merge the old tea ledger
       ${red`   (noMergeCommits)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -498,8 +505,8 @@ describe.each`
 			exitCode = await commandLineProgram([])
 		})
 
-		it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-			expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+		it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 		})
 
 		it("prints an error message", () => {
@@ -524,8 +531,8 @@ describe("when the default 'comet.jsonc' configuration file is invalid", () => {
 		exitCode = await commandLineProgram([])
 	})
 
-	it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+	it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 	})
 
 	it("prints the configuration error", () => {
@@ -601,8 +608,8 @@ describe.each`
 			exitCode = await commandLineProgram(["--config", "configs/comet.json"])
 		})
 
-		it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-			expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+		it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 		})
 
 		it("prints the configuration error", () => {
@@ -626,8 +633,8 @@ describe("when '--config' points to a custom JSONC configuration file that is in
 		exitCode = await commandLineProgram(["--config", "configs/team.jsonc"])
 	})
 
-	it(`exits with ${EXIT_CODE_INVALID_INPUT}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_INVALID_INPUT)
+	it(`exits with ${EXIT_CODE_INVALID_CONFIGURATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_INVALID_CONFIGURATION)
 	})
 
 	it("prints the configuration error", () => {
@@ -783,8 +790,8 @@ describe("when there is 1 commit that raises concerns in the custom 'comet.json'
 		exitCode = await commandLineProgram([])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -805,6 +812,7 @@ ${red`•`} ${grey`${bold`2`} │`} Co-authored-by: Ada Lovelace <ada@example.co
     ${grey`╰──`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -834,8 +842,8 @@ describe("when there are 2 commits where 1 of them raises concerns in the custom
 		exitCode = await commandLineProgram([])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -852,6 +860,7 @@ ${grey`╰─ authored by:`} Master Splinter
               ${red`     ∙ Ada Lovelace`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -888,8 +897,8 @@ describe("when there are 4 commits where 3 of them raise concerns in the custom 
 		exitCode = await commandLineProgram([])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -911,6 +920,7 @@ ${grey`9f1a1b2`} Test the emergency toaster
       ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -951,8 +961,8 @@ describe("when there are 5 commits that raise concerns in the custom 'comet.json
 		exitCode = await commandLineProgram([])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -984,6 +994,7 @@ ${grey`c0ffee1`} Untangle the improbable cables
                                  ${red`   (useConciseSubjectLines)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1049,8 +1060,8 @@ describe("when there are 3 commits where 2 of them raise concerns in the custom 
 		exitCode = await commandLineProgram([])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -1067,6 +1078,7 @@ ${grey`b58de17`} Wire the oat milk alert
       ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1146,8 +1158,8 @@ describe("when both 'comet.json' and 'comet.jsonc' are present", () => {
 		exitCode = await commandLineProgram([])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("makes 'comet.json' take precedence", () => {
@@ -1195,6 +1207,7 @@ ${grey`a8b3d6c`} Merge the old tea ledger
       ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1382,8 +1395,8 @@ describe("when there is 1 commit that raises concerns in the custom configuratio
 		exitCode = await commandLineProgram(["--config", "configs/strict-comet.json"])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -1399,6 +1412,7 @@ ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
                ${red`     ∙ .+@fastforward\\.com`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1444,8 +1458,8 @@ describe("when there are 2 commits that raise concerns in the custom configurati
 		exitCode = await commandLineProgram(["--config", "configs/strict-comet.json"])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -1466,6 +1480,7 @@ ${grey`d677c31`} Tune the observatory clock
       ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1519,8 +1534,8 @@ describe("when there are 4 commits where 3 of them raise concerns in the custom 
 		exitCode = await commandLineProgram(["--config", "configs/strict-comet.json"])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -1554,6 +1569,7 @@ ${grey`a43a3f3`} Archive the noisy bell!
                               ${red`   (noUnexpectedPunctuation)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1601,8 +1617,8 @@ describe("when there are 5 commits where 1 of them raises concerns in the custom
 		exitCode = await commandLineProgram(["--config", "configs/strict-comet.json"])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -1614,6 +1630,7 @@ ${grey`7f811b2`} Revert "Revert "Disable the alarm""
               ${red`   (noRevertRevertCommits)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1680,8 +1697,8 @@ describe("when there are 3 commits where 2 of them raise concerns in the custom 
 		exitCode = await commandLineProgram(["--config", "configs/team.jsonc"])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -1706,6 +1723,7 @@ ${grey`╰─ authored by:`} Master Splinter
               ${red`     ∙ Ada Lovelace`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1753,8 +1771,8 @@ describe("when there is 1 commit that raises concerns from the last configuratio
 		])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -1770,6 +1788,7 @@ ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
                ${red`     ∙ .+@fastforward\\.com`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1815,8 +1834,8 @@ describe("when there are 2 commits that raise concerns from the second-to-last c
 		])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -1841,6 +1860,7 @@ ${grey`╰─ authored by:`} Master Splinter
               ${red`     ∙ Ada Lovelace`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1883,8 +1903,8 @@ describe("when there are 3 commits where 2 of them raise concerns from the first
 		])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -1901,6 +1921,7 @@ ${grey`b58de17`} Wire the oat milk alert
       ${red`   (noExcessiveCommitsPerBranch)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
@@ -1960,8 +1981,8 @@ describe("when there are 4 commits where 3 of them raise concerns from the last 
 		])
 	})
 
-	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
 	})
 
 	it("prints a sorted commitwise report of all concerns", () => {
@@ -2008,6 +2029,7 @@ ${grey`9f1a1b2`} This commit is a lie
          ${red`   (useImperativeSubjectLines)`}
 `.trim(),
 		)
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 

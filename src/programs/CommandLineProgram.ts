@@ -8,7 +8,7 @@ import {
 import { program } from "#programs/Program.ts"
 import {
 	EXIT_CODE_GENERAL_ERROR,
-	EXIT_CODE_INVALID_INPUT,
+	EXIT_CODE_INVALID_CONFIGURATION,
 	EXIT_CODE_SUCCESS,
 	type ExitCode,
 } from "#types/ExitCode.ts"
@@ -47,7 +47,7 @@ export async function commandLineProgram(args: Array<string>): Promise<ExitCode>
 	} catch (error) {
 		assertError(error)
 		printCommandLineError(error.message)
-		return error instanceof TypeError ? EXIT_CODE_INVALID_INPUT : EXIT_CODE_GENERAL_ERROR
+		return error instanceof TypeError ? EXIT_CODE_INVALID_CONFIGURATION : EXIT_CODE_GENERAL_ERROR
 	}
 }
 
