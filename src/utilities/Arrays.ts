@@ -40,6 +40,7 @@ export function isNonEmptyArray<Item>(items: Array<Item>): items is NonEmptyArra
 export type Comparator<Item> = (a: Item, b: Item) => number
 
 export const ALPHABETICALLY: Comparator<string> = (a, b) => a.localeCompare(b, "en")
+export const NUMERICALLY: Comparator<number> = (a, b) => a - b
 
 export function findMin<Item>(items: NonEmptyArray<Item>, comparator: Comparator<Item>): Item {
 	const iterator = items[Symbol.iterator]()
