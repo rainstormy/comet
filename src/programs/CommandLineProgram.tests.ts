@@ -1,10 +1,15 @@
-import { bold, gray as grey, red } from "ansis"
+import ansis, { bold, gray as grey, red } from "ansis"
 import { beforeEach, describe, expect, it } from "vitest"
 import { fakeCrudeCommit } from "#commits/CrudeCommit.fakes.ts"
 import { mockGitBranchCrudeCommits } from "#commits/git/GetGitBranchCrudeCommits.fakes.ts"
-import { commandLineProgram, getHelpText } from "#programs/CommandLineProgram.ts"
+import {
+	COMMAND_LINE_OPTION_SCHEMA,
+	commandLineProgram,
+	getHelpText,
+} from "#programs/CommandLineProgram.ts"
 import { fakeCommitSha } from "#types/CommitSha.fakes.ts"
 import {
+	ALL_EXIT_CODES,
 	EXIT_CODE_GENERAL_ERROR,
 	EXIT_CODE_INVALID_CONFIGURATION,
 	EXIT_CODE_RULE_VIOLATION,
@@ -12,21 +17,37 @@ import {
 	type ExitCode,
 } from "#types/ExitCode.ts"
 import type { JsonValue } from "#types/JsonValue.ts"
+import { ALPHABETICALLY, NUMERICALLY } from "#utilities/Arrays.ts"
 import { mockFile, mockJsonFile, mockNonexistingFile } from "#utilities/files/Files.fakes.ts"
 import { mockGitCommand } from "#utilities/git/cli/RunGitCommand.fakes.ts"
 import { printCommandLineError, printMessage } from "#utilities/logging/Logger.ts"
 import { mockPackageVersion } from "#utilities/package/Package.fakes.ts"
 
 describe("the help text", () => {
-	it("is a list of program arguments and options", () => {
-		expect(getHelpText()).toBe("Usage: comet [options]")
+	const lines = ansis.strip(getHelpText()).split("\n")
+
+	it("describes all exit codes in numerical order", () => {
+		const exitCodes = lines
+			.slice(lines.indexOf("Exit codes:"), lines.indexOf("Options:"))
+			.filter((line) => line.startsWith("  "))
+			.map((line) => Number(line.trim().split(" ")[0]))
+
+		expect(exitCodes).toEqual(ALL_EXIT_CODES.toSorted(NUMERICALLY))
+	})
+
+	it("describes all options in alphabetical order", () => {
+		const options = lines
+			.slice(lines.indexOf("Options:"))
+			.filter((line) => line.startsWith("  --"))
+			.map((line) => line.trim().split(/[ ,]/u)[0])
+
+		const allOptions = ["--help", "--version", ...Object.keys(COMMAND_LINE_OPTION_SCHEMA)]
+		expect(options).toEqual(allOptions.toSorted(ALPHABETICALLY))
 	})
 
 	it("fits within a window of 80 characters", () => {
-		const lines = getHelpText().split("\n")
-
 		for (const line of lines) {
-			expect(line.length).toBeLessThanOrEqual(80)
+			expect(line.length, `This line is too long:\n${line}\n`).toBeLessThanOrEqual(80)
 		}
 	})
 })

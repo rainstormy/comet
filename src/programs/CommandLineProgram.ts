@@ -1,3 +1,4 @@
+import { blue, bold, green, gray as grey, magenta, red } from "ansis"
 import { getGitBranchCrudeCommits } from "#commits/git/GetGitBranchCrudeCommits.ts"
 import { DEFAULT_COMMAND_LINE_CONFIGURATION } from "#configurations/defaults/DefaultCommandLineConfiguration.ts"
 import {
@@ -18,7 +19,7 @@ import { printCommandLineError, printMessage } from "#utilities/logging/Logger.t
 import { deepMerge } from "#utilities/Objects.ts"
 import { getPackageVersion } from "#utilities/package/Package.ts"
 
-const OPTION_SCHEMA = defineOptions({
+export const COMMAND_LINE_OPTION_SCHEMA = defineOptions({
 	"--config": { args: { min: 1 } },
 	"--skip-missing-configs": { args: { min: 0, max: 0 } },
 })
@@ -34,7 +35,7 @@ export async function commandLineProgram(args: Array<string>): Promise<ExitCode>
 	}
 
 	try {
-		const parsedArgs = parseArgs(OPTION_SCHEMA, args)
+		const parsedArgs = parseArgs(COMMAND_LINE_OPTION_SCHEMA, args)
 		const configPaths = parsedArgs["--config"] ?? []
 		const skipMissingConfigPaths = parsedArgs["--skip-missing-configs"] !== undefined
 
@@ -52,7 +53,60 @@ export async function commandLineProgram(args: Array<string>): Promise<ExitCode>
 }
 
 export function getHelpText(): string {
-	return "Usage: comet [options]"
+	return `${bold`Usage:`} comet [options]
+
+Comet is a linter to ensure that Git commit messages conform to certain
+standards and conventions declared by a customisable set of rules.
+
+It checks the commits on the current branch that have not been delivered to the
+main branch, i.e. the range ${magenta`origin/HEAD..HEAD`} for a remote named ${magenta`origin`}. If no
+remote exists, it checks the local range ${magenta`main..HEAD`} or ${magenta`master..HEAD`}.
+
+It does not modify any commits.
+
+You can change the default set of rules by providing a custom configuration in
+${magenta`comet.json`} (or ${magenta`comet.jsonc`}) or a specific path via ${magenta`--config <path>`}.
+Use the official JSON schema to validate the configuration file and to enable
+code completion, for example:
+
+${grey`{
+    "$schema": "./node_modules/@rainstormy/comet/schema.json",
+    "rules": {
+        "noMergeCommits": "error",
+        "noSquashCommits": "error",
+        "useConciseSubjectLines": {
+            "level": "error",
+            "options": { "maxLength": 50 }
+        },
+        "useSignedCommits": "error",
+    }
+}`}
+
+A configuration file may also inherit settings from another file through the
+${magenta`extends`} property.
+
+${bold`Exit codes:`}
+   ${green.bold`0`}  Every commit passed all configured rules.
+   ${red.bold`1`}  An unexpected error occurred.
+   ${red.bold`2`}  A command-line argument or a configuration file is invalid.
+  ${red.bold`40`}  At least one commit violated some configured rules.
+
+${bold`Options:`}
+  ${blue`${bold`--config`} <path>`}
+      Load a custom ${magenta`.json`} (or ${magenta`.jsonc`}) configuration file at the given path.
+
+      Multiple pairs of ${magenta`--config <path>`} may be provided, in which case it picks
+      the last path and ignores the previous ones. Use ${magenta`--skip-missing-configs`} to
+      disregard non-existing paths before picking a path.
+
+  ${blue.bold`--help`}, ${blue.bold`-h`}
+      Display this help screen and exit.
+
+  ${blue.bold`--skip-missing-configs`}
+      Ignore missing paths provided in ${magenta`--config`} instead of failing.
+
+  ${blue.bold`--version`}, ${blue.bold`-v`}
+      Display the version of this tool and exit.`
 }
 
 async function resolveConfiguration(
