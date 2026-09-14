@@ -5,14 +5,62 @@ import type { Concern } from "#rules/concerns/Concern.ts"
 import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 
 /**
- * Verifies that the subject line contains at least one issue link.
+ * Verifies that subject lines contain an issue link in the configured position.
  *
- * Linking commits to issues in a project management system like GitHub or Jira
- * provides traceability between code changes and the work that motivated them,
- * making it easier to understand the project history and to find related changes.
+ * ## Rationale
  *
- * It ignores merge commits, revert commits, and dependency upgrade commits.
- * It disregards squash markers when the position is `prefix`.
+ * Linking commits to issues in a project management system provides traceability
+ * between a code change and the work that motivated it, making related changes
+ * easier to understand and find.
+ *
+ * ## Remarks
+ *
+ * - Merge commits, revert commits, and subjects containing semver tokens are exempt.
+ * - Squash markers are skipped while checking a prefix, but they do not satisfy the requirement.
+ * - The rule recognises only issue links configured under `tokens.issueLinks`.
+ *
+ * ## Options
+ *
+ * `position` is one of `"anywhere"`, `"prefix"`, or `"suffix"`; it defaults to
+ * `"anywhere"`. Configure recognised issue links under `tokens.issueLinks`. Each prefix
+ * is followed by digits, while wildcards are matched as literal issue-link labels.
+ *
+ * ```json
+ * {
+ *   "tokens": {
+ *     "issueLinks": {
+ *       "prefixes": ["#", "GH-", "GL-"],
+ *       "wildcards": ["(no-issue)", "[incident]"]
+ *     }
+ *   },
+ *   "rules": {
+ *     "useIssueLinks": {
+ *       "level": "error",
+ *       "options": { "position": "suffix" }
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * ## Examples
+ *
+ * With `position: "suffix"` and the configuration above:
+ *
+ * ### Rejected
+ *
+ * ```
+ * #42 Convince the office printer to print in colour
+ * Convince the office printer to print in colour
+ * GL-1024 keep the hamsters on the wheel
+ * ```
+ *
+ * ### Accepted
+ *
+ * ```
+ * Convince the office printer to print in colour #42
+ * Keep the hamsters on the wheel GL-1024
+ * The city can build more pylons (no-issue)
+ * ```
  */
 export function* useIssueLinks(
 	commits: Commits,

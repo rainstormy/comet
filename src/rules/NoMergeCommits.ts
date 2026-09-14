@@ -4,10 +4,42 @@ import { commitConcern } from "#rules/concerns/CommitConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Verifies that the commit has at most one parent commit, thus disallowing merge commits.
+ * Rejects commits with more than one parent commit, encouraging rebasing instead of merging to keep a branch up to date with the main branch.
  *
- * Avoiding merge commits makes the commit history linear and preserves the ability to rebase interactively.
- * This helps to preserve the readability of the commit history and makes it easier to revert changes later.
+ * ## Rationale
+ *
+ * A linear commit history is easier to read, easier to rebase, and easier to revert.
+ *
+ * ## Remarks
+ *
+ * - Only the number of parent commits matters; it disregards the subject line.
+ * - It disregards merge commits created by GitHub when merging pull requests.
+ *
+ * ## Examples
+ *
+ * `⇧` denotes the number of parent commits.
+ *
+ * ### Rejected
+ *
+ * 1. ```
+ *    ⇧ 2
+ *    Merge branch 'main' into bugfix/dance-party-playlist`
+ *    ```
+ * 2. ```
+ *    ⇧ 3
+ *    Cthulhu visited my branch today
+ *    ```
+ *
+ * ### Accepted
+ *
+ * 1. ```
+ *    ⇧ 0
+ *    initial commit
+ *    ```
+ * 2. ```
+ *    ⇧ 1
+ *    Merge `SoftIceService` and `IceCreamFactory`
+ *    ```
  */
 export function* noMergeCommits(
 	commits: Commits,

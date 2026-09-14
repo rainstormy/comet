@@ -6,12 +6,54 @@ import type { Concern } from "#rules/concerns/Concern.ts"
 import { isNotEmptyString } from "#utilities/Arrays.ts"
 
 /**
- * Verifies that the message body does not contain trailers with certain keys.
+ * Verifies that commit message bodies do not contain trailers with restricted keys.
  *
- * For example, disallowing `Co-authored-by` trailers helps to keep the commit history attributable,
- * as co-authors are unable to sign commits. It also rejects commits made from code review suggestions through the GitHub web interface.
+ * ## Rationale
  *
- * It is case-insensitive.
+ * Restricting trailers such as `Co-authored-by` keeps the commit history attributable
+ * and prevents workflows that cannot sign commits from adding metadata.
+ *
+ * ## Remarks
+ *
+ * - Matching ignores letter case. Configured keys are trimmed, and a trailing colon is optional.
+ * - Only lines parsed as trailers are checked, so the same text in ordinary body prose is allowed.
+ * - An empty `restrictedKeys` array leaves every trailer allowed.
+ *
+ * ## Options
+ *
+ * `restrictedKeys` is an array of trailer keys. It defaults to an empty array,
+ * so no trailers are restricted until you configure it.
+ *
+ * ```json
+ * {
+ *   "rules": {
+ *     "noRestrictedTrailers": {
+ *       "level": "error",
+ *       "options": { "restrictedKeys": ["Co-authored-by", "Signed-off-by"] }
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * ## Examples
+ *
+ * With `restrictedKeys: ["Co-authored-by"]`:
+ *
+ * ### Rejected
+ *
+ * ```
+ * Teach the robot butler who gets credit
+ *
+ * Co-Authored-By: Everloving Easter Bunny <everloving.easter.bunny@example.com>
+ * ```
+ *
+ * ### Accepted
+ *
+ * ```
+ * Teach the robot butler who gets credit
+ *
+ * Reviewed-by: April O'Neil <april.oneil@fastforward.com>
+ * ```
  */
 export function* noRestrictedTrailers(
 	commits: Commits,

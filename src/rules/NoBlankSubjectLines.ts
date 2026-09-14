@@ -6,12 +6,79 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
 
 /**
- * Verifies that the subject line contains at least one alphanumeric character.
+ * Rejects subject lines without any alphanumeric characters.
  *
- * Including a subject line makes the commit distinguishable from other commits.
- * This helps to preserve the readability of the commit history.
+ * ## Rationale
  *
- * Issue links, revert markers, and squash markers do not count as alphanumeric characters.
+ * The subject line is the part of a commit that readers see most often when scanning the commit history.
+ *
+ * A meaningful subject line makes the commit distinguishable from other commits.
+ * This keeps the commit history readable and makes the commit easier to find.
+ *
+ * ## How to fix
+ *
+ * ### Command-line interface (CLI)
+ *
+ * Rebase interactively and mark the commit with `reword` to edit the subject line.
+ *
+ * ```shell
+ * git rebase --interactive <commit-sha>
+ * ```
+ *
+ * ### IntelliJ IDEA
+ *
+ * In the Git tool window, right-click the commit and select `Edit Commit Message...`.
+ * Write a descriptive subject line.
+ *
+ * ## Remarks
+ *
+ * The following kinds of tokens do _not_ count as alphanumeric characters:
+ *
+ * - Issue links, e.g. `#7` and `NEOWISE-2020`.
+ * - Revert markers, e.g. `Revert ""`.
+ * - Squash markers, e.g. `fixup!` and `squash!`.
+ *
+ * ## Examples
+ *
+ * ### Rejected
+ *
+ * ```
+ * ...
+ * ```
+ *
+ * ```
+ * ``
+ * ```
+ *
+ * ```
+ * fixup! -
+ * ```
+ *
+ * ```
+ * #4 Revert " "
+ * ```
+ *
+ * ### Accepted
+ *
+ * ```
+ * bugfix
+ * ```
+ *
+ * ```
+ * init project
+ * ```
+ *
+ * ```
+ * Refactor `HotChocolateMachine`
+ * ```
+ *
+ * ```
+ * 2.4.0-beta.1
+ * ```
+ *
+ * ## Related rules
+ *
+ * - [noSingleWordSubjectLines](./NoSingleWordSubjectLines.md)
  */
 export function* noBlankSubjectLines(
 	commits: Commits,

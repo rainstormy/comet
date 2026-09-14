@@ -6,10 +6,37 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 import { rangeBetween } from "#types/CharacterRange.ts"
 
 /**
- * Verifies that the subject line does not contain any squash marker.
+ * Verifies that subject lines do not contain squash markers.
  *
- * Combining squash commits with their ancestors makes the commit history cleaner and easier to read,
- * as it omits unnecessary diffs and increases the cohesion of commits. It also makes it easier to revert changes later.
+ * ## Rationale
+ *
+ * Squashing temporary commits before delivery removes noisy intermediate diffs,
+ * keeps each final change cohesive, and makes the history easier to revert.
+ *
+ * ## Remarks
+ *
+ * - Markers such as `fixup!`, `squash!`, and `amend!` are recognised case-insensitively,
+ *   including when they are combined or repeated.
+ * - A marker must include an exclamation mark; plain words such as `fixup`, `squash`,
+ *   and `amend` are allowed.
+ *
+ * ## Examples
+ *
+ * ### Rejected
+ *
+ * ```
+ * fixup! Reheat the leftovers
+ * squash! Make the program act like a clown
+ * amend! Apply strawberry jam to make the code sweeter
+ * ```
+ *
+ * ### Accepted
+ *
+ * ```
+ * Refactor the taxi module
+ * Make the commit scream fixup! again
+ * Revert "Release the robot butler"
+ * ```
  */
 export function* noSquashMarkers(
 	commits: Commits,

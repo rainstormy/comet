@@ -5,10 +5,52 @@ import { userIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { regexUnion } from "#utilities/Regexes.ts"
 
 /**
- * Verifies that the commit author has a name that matches a given regex pattern.
+ * Verifies that author names match at least one configured regular-expression pattern.
  *
- * Restricting author names to trusted patterns helps to keep the commit history attributable
- * and avoids leaks of private information (e.g. a personal username).
+ * ## Rationale
+ *
+ * Restricting author names to trusted patterns keeps the commit history attributable
+ * and helps avoid exposing private usernames.
+ *
+ * ## Remarks
+ *
+ * - Patterns are matched against the complete name and are case-sensitive.
+ * - Leading and trailing whitespace is part of the value matched against each pattern.
+ * - An empty `patterns` array accepts every name.
+ *
+ * ## Options
+ *
+ * `patterns` is an array of regular-expression strings. It defaults to an empty array,
+ * so every name is accepted until you configure it.
+ *
+ * ```json
+ * {
+ *   "rules": {
+ *     "useAuthorNamePatterns": {
+ *       "level": "error",
+ *       "options": { "patterns": ["\\p{Lu}.*\\s.+"] }
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * ## Examples
+ *
+ * With the pattern above:
+ *
+ * ### Rejected
+ *
+ * ```
+ * santa claus
+ * Jeanne
+ * ```
+ *
+ * ### Accepted
+ *
+ * ```
+ * The Little Mermaid
+ * Jeanne d'Arc
+ * ```
  */
 export function* useAuthorNamePatterns(
 	commits: Commits,

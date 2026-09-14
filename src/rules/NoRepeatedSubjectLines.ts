@@ -5,13 +5,40 @@ import { commitConcern } from "#rules/concerns/CommitConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Verifies that each commit has a unique subject line within the branch.
+ * Verifies that no commit repeats an earlier subject line in the branch.
  *
- * Commits that repeat a subject line are probably meant to be squash commits or the author may have forgotten to update the subject line.
- * Rewording commits or combining squash commits with their ancestors makes the commit history cleaner and easier to read.
+ * ## Rationale
  *
- * It is whitespace- and case-insensitive.
- * It ignores merge commits, revert commits, and commits with squash markers.
+ * Unique subject lines make individual changes easier to identify in a branch's history.
+ * Repeated subjects can make it difficult to tell whether a change was duplicated or its subject was never updated.
+ *
+ * ## Remarks
+ *
+ * - Subject comparison ignores whitespace and capitalization.
+ * - Merge commits are considered when comparing later subjects, but they never raise concerns.
+ * - Revert commits and commits with squash markers are skipped entirely.
+ *
+ * ## Examples
+ *
+ * ### Rejected
+ *
+ * ```
+ * 1. Add some extra love to the code
+ * 2. add   some extra love to the code
+ * ```
+ *
+ * ### Accepted
+ *
+ * ```
+ * 1. Label the mystery switch
+ * 2. Test the mystery switch
+ * ```
+ *
+ * ```
+ * 1. Tune the kettle
+ * 2. fixup! Tune the kettle
+ * 3. Revert "Tune the kettle"
+ * ```
  */
 export function* noRepeatedSubjectLines(
 	commits: Commits,

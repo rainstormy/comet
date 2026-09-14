@@ -39,7 +39,7 @@ describe("when 'noBlankSubjectLines' has a concern about characters 0-1 of the s
 			`
 ${grey`52f07a2`} 
         ${red`┬`}
-        ${red`╰─ Subject lines must contain at least one non-whitespace character.`}
+        ${red`╰─ Subject lines must contain at least one alphanumeric character.`}
         ${red`   (noBlankSubjectLines)`}
 `.trim(),
 		)
@@ -62,7 +62,7 @@ describe("when 'noBlankSubjectLines' has a concern about characters 13-17 of the
 			`
 ${grey`2ba57d6`} amend! Revert " "
                      ${red`─┬──`}
-                      ${red`╰─ Subject lines must contain at least one non-whitespace character.`}
+                      ${red`╰─ Subject lines must contain at least one alphanumeric character.`}
                       ${red`   (noBlankSubjectLines)`}
 `.trim(),
 		)
