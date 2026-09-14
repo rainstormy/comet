@@ -1,17 +1,33 @@
-# `noUnexpectedPunctuation`
+# noUnexpectedPunctuation
 
-Disallows trailing punctuation in subject lines. Revert commits are ignored. The
-rule also disregards recognised issue links, matched closing brackets and quotes,
-and symbols associated with numbers, such as `100%`, `C++`, and `3+`.
+Rejects subject lines with unexpected trailing punctuation.
 
-Omitting unnecessary sentence punctuation makes short subjects more uniform and
-leaves more of their limited width for the description.
+A consistent subject-line ending makes the commit history easier to scan
+and keeps the same convention across Git clients.
+
+## Remarks
+
+- Revert commits are skipped.
+- Trailing issue links are disregarded.
+- Closing brackets, paired quotes, and symbols associated with numbers are allowed.
+- Punctuation in the message body is not checked.
 
 ## Examples
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| Update the retry policy | Update the retry policy. |
-| Explain the fallback (for operators) | Explain the fallback? |
-| Increase the sample rate to 100% | Signal success! |
-| Close the retry issue #42 | Remove the old route -> |
+### Rejected
+
+```
+Make the program act like a clown.
+Apply strawberry jam to make the code sweeter~
+Is the coffee ready?
+Hide a cheerful easter egg :joy:
+```
+
+### Accepted
+
+```
+Release the robot butler
+Rewire the pantry (after lunch) #42
+Increase the tax to 100%
+Revert "Release the robot butler!"
+```

@@ -5,13 +5,36 @@ import type { Concern } from "#rules/concerns/Concern.ts"
 import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 
 /**
- * Verifies that the subject line contains at least two words.
+ * Rejects subject lines containing only one significant word.
  *
- * Providing more context in the commit message (such as a thorough description) helps to preserve
- * the traceability of the commit history.
+ * A little context in the subject line makes the commit easier to identify,
+ * search for, and understand later.
  *
- * It ignores commits with revert markers.
- * Issue links and squash markers do not count as words. Hyperlinks and inline code phrases count as one word each.
+ * ## Remarks
+ *
+ * - Blank subjects and subjects containing no significant words are accepted.
+ * - Revert commits are skipped.
+ * - Issue links and squash markers do not count as words.
+ * - Hyperlinks, inline code phrases, and semver tokens count as one word each.
+ *
+ * ## Examples
+ *
+ * ### Rejected
+ *
+ * ```
+ * WIP
+ * Unsubscribe
+ * fixup! Test
+ * ```
+ *
+ * ### Accepted
+ *
+ * ```
+ * Fix validation
+ * Refactor `HotChocolateMachine`
+ * Read https://docs.example.com
+ * 2.4.0-beta.1
+ * ```
  */
 export function* noSingleWordSubjectLines(
 	commits: Commits,

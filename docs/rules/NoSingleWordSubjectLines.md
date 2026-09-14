@@ -1,17 +1,32 @@
-# `noSingleWordSubjectLines`
+# noSingleWordSubjectLines
 
-Requires at least two word-like parts in the subject line. Hyperlinks and inline
-code phrases each count as one word; issue links and squash markers do not. Revert
-commits are ignored.
+Rejects subject lines containing only one significant word.
 
-A single word rarely identifies the change well enough to distinguish it from
-neighbouring commits. Requiring a second word encourages a compact but useful
-summary.
+A little context in the subject line makes the commit easier to identify,
+search for, and understand later.
+
+## Remarks
+
+- Blank subjects and subjects containing no significant words are accepted.
+- Revert commits are skipped.
+- Issue links and squash markers do not count as words.
+- Hyperlinks, inline code phrases, and semver tokens count as one word each.
 
 ## Examples
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| Fix validation | Fix |
-| Update `ReleaseLedger` | WIP |
-| Read https://docs.example.com | fixup! Test |
+### Rejected
+
+```
+WIP
+Unsubscribe
+fixup! Test
+```
+
+### Accepted
+
+```
+Fix validation
+Refactor `HotChocolateMachine`
+Read https://docs.example.com
+2.4.0-beta.1
+```

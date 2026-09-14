@@ -1,11 +1,15 @@
-# `useConciseSubjectLines`
+# useConciseSubjectLines
 
-Limits subject-line length. Hyperlinks, issue links, and inline code phrases do
-not count towards the limit. Merge, revert, and squash commits, along with
-subject lines containing a semantic version, are ignored.
+Rejects subject lines whose counted characters exceed a configured maximum (default: 50 characters).
 
-Short subjects remain readable in Git clients, pull-request lists, and command
-output. A concise summary also makes a history easier to scan.
+Keeping subject lines short makes the commit history easier to scan in Git clients
+and leaves room for issue links or other useful context.
+
+## Remarks
+
+- Merge commits, revert commits, squash commits, and subjects containing semver tokens are ignored.
+- Hyperlinks, issue links, and inline code phrases do not count towards the limit.
+- Only the subject line is checked; the message body is unaffected.
 
 ## Options
 
@@ -26,8 +30,17 @@ output. A concise summary also makes a history easier to scan.
 
 With `maxLength: 50`:
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| Add retry metrics | Explain why the retry policy needs another configuration option |
-| Explain `RapidTransportService` retries to operators | Replace the temporary metric with a dashboard-ready counter |
-| Fix the login retry loop #42 |  |
+### Rejected
+
+```
+Compare the list of items to the objects downloaded from the server
+Make a genuine attempt to fix the bugs that the users were complaining about
+```
+
+### Accepted
+
+```
+Add retry metrics
+Explain `RapidTransportService` retries to operators
+Fix the login retry loop #42
+```

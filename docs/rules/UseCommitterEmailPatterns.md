@@ -1,12 +1,15 @@
-# `useCommitterEmailPatterns`
+# useCommitterEmailPatterns
 
-Requires each committer's email address to match one of the configured regular
-expression patterns. Comet matches the entire address.
+Rejects commits whose committer email does not match any configured regex pattern.
 
-Trusted committer-email formats preserve attribution and prevent personal email
-addresses from being recorded permanently in repository history. They can also
-help a team detect commits made through a web interface with an unexpected
-committer identity.
+Restricting committer email addresses to trusted patterns keeps the commit history attributable
+and helps prevent private addresses from leaking into a public repository.
+
+## Remarks
+
+- Patterns are matched against the complete email address and are case-sensitive.
+- Leading and trailing whitespace is not removed before matching.
+- An empty `patterns` array accepts every address.
 
 ## Options
 
@@ -30,7 +33,15 @@ array, which accepts every address.
 
 With the pattern above:
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| 18920129+santaclaus@users.noreply.github.com | claus@santasworkshop.example |
-|  | noreply@github.com |
+### Rejected
+
+```
+bunny@theeastercompany.com
+claus@santasworkshop.com
+```
+
+### Accepted
+
+```
+12345678+santaclaus@users.noreply.github.com
+```

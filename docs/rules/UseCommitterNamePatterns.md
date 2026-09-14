@@ -1,11 +1,15 @@
-# `useCommitterNamePatterns`
+# useCommitterNamePatterns
 
-Requires each committer's name to match one of the configured regular-expression
-patterns. Comet matches the entire name.
+Rejects commits whose committer name does not match any configured regex pattern.
 
-Trusted committer-name formats preserve attribution and avoid permanently
-recording personal usernames that do not identify a contributor in the project
-history.
+Restricting committer names to trusted patterns keeps the commit history attributable
+and helps prevent private usernames from being exposed.
+
+## Remarks
+
+- Patterns are matched against the complete name and are case-sensitive.
+- Leading and trailing whitespace is not removed before matching.
+- An empty `patterns` array accepts every name.
 
 ## Options
 
@@ -27,7 +31,16 @@ array, which accepts every name.
 
 With the pattern above:
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| Grace Hopper | grace hopper |
-| Jeanne d'Arc | Grace |
+### Rejected
+
+```
+master splinter
+Leonardo
+```
+
+### Accepted
+
+```
+Leonardo da Vinci
+Master Splinter
+```

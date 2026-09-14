@@ -1,11 +1,18 @@
-# `noExcessiveCommitsPerBranch`
+# noExcessiveCommitsPerBranch
 
-Limits the number of commits in the branch being checked. Comet reports every
-counted commit after the configured limit. Merge commits and commits with squash
-markers do not contribute to that count.
+Rejects branches with more than a given number of undelivered commits.
 
-Small pull requests are easier to review and to revert. A limit can also expose a
-branch that was rebased onto the wrong base branch or still contains stale work.
+## Rationale
+
+Keeping pull requests small makes them easier to review and safer to revert if needed.
+It may also help to catch accidental rebases onto stale commits and wrong branches.
+
+## Remarks
+
+The following kinds of commits do _not_ count towards the limit:
+
+- Merge commits, i.e. commits with more than one parent.
+- Commits with squash markers such as `fixup!` and `squash!`.
 
 ## Options
 
@@ -16,7 +23,9 @@ branch that was rebased onto the wrong base branch or still contains stale work.
   "rules": {
     "noExcessiveCommitsPerBranch": {
       "level": "error",
-      "options": { "maxCommits": 3 }
+      "options": {
+        "maxCommits": 10
+      }
     }
   }
 }
@@ -26,8 +35,29 @@ branch that was rebased onto the wrong base branch or still contains stale work.
 
 With `maxCommits: 3`:
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| 1. Add the dashboard shell<br>2. Connect the dashboard data<br>3. Test the empty state | 1. Add the dashboard shell<br>2. Connect the dashboard data<br>3. Test the empty state<br>4. Polish the loading state |
-| Merge branch 'main' into feature/dashboard |  |
-| fixup! Test the empty state |  |
+### Rejected
+
+1. ```
+   Create new bakery dashboard
+   ```
+2. ```
+   Add Cinnamon telemetry
+   ```
+3. ```
+   Fix the suspicious croissant counter
+   ```
+4. ```
+   Test emergency toaster
+   ```
+
+### Accepted
+
+1. ```
+   Replace guesswork with a tiny chart
+   ```
+2. ```
+   Teach the kettle to apologise
+   ```
+3. ```
+   Add a label to the mystery switch
+   ```

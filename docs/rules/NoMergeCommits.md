@@ -1,16 +1,30 @@
-# `noMergeCommits`
+# noMergeCommits
 
-Disallows commits with more than one parent commit.
+Rejects merge commits with more than one parent.
 
-Avoiding merge commits keeps the checked branch linear. A linear history is
-easier to read, can be rebased interactively, and makes individual changes easier
-to revert.
+Keeping the commit history linear makes it easier to rebase interactively,
+understand the order of changes, and revert a change later.
+
+## Remarks
+
+- The number of parent commits determines the result, not the subject line.
+- Initial commits with no parents and ordinary commits with one parent are accepted.
 
 ## Examples
 
 `⇧` denotes the number of parent commits.
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| ⇧ 1<br><br>Merge the two validation paths | ⇧ 2<br><br>Merge branch 'main' into feature/dashboard |
-| ⇧ 0<br><br>Initialise the repository | ⇧ 3<br><br>Keep the branch up to date |
+### Rejected
+
+```
+⇧ 2  Merge branch 'main' into bugfix/dance-party-playlist
+⇧ 3  Keep my branch up to date
+```
+
+### Accepted
+
+```
+⇧ 1  Merge the two validation paths
+⇧ 0  Establish the repository
+⇧ 1  Release the robot butler
+```

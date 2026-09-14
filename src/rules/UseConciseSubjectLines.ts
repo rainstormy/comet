@@ -5,12 +5,50 @@ import type { Concern } from "#rules/concerns/Concern.ts"
 import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 
 /**
- * Verifies that the subject line does not exceed a given number of characters (default: 50 characters).
+ * Rejects subject lines whose counted characters exceed a configured maximum (default: 50 characters).
  *
- * Keeping the subject line short helps to preserve the readability of the commit history in various Git clients.
+ * Keeping subject lines short makes the commit history easier to scan in Git clients
+ * and leaves room for issue links or other useful context.
  *
- * It ignores merge commits, revert commits, squash commits, and dependency upgrade commits.
- * Hyperlinks, issue links, and inline code phrases do not count towards the limit.
+ * ## Remarks
+ *
+ * - Merge commits, revert commits, squash commits, and subjects containing semver tokens are ignored.
+ * - Hyperlinks, issue links, and inline code phrases do not count towards the limit.
+ * - Only the subject line is checked; the message body is unaffected.
+ *
+ * ## Options
+ *
+ * `maxLength` is a positive integer. Its default is `50`.
+ *
+ * ```json
+ * {
+ *   "rules": {
+ *     "useConciseSubjectLines": {
+ *       "level": "error",
+ *       "options": { "maxLength": 50 }
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * ## Examples
+ *
+ * With `maxLength: 50`:
+ *
+ * ### Rejected
+ *
+ * ```
+ * Compare the list of items to the objects downloaded from the server
+ * Make a genuine attempt to fix the bugs that the users were complaining about
+ * ```
+ *
+ * ### Accepted
+ *
+ * ```
+ * Add retry metrics
+ * Explain `RapidTransportService` retries to operators
+ * Fix the login retry loop #42
+ * ```
  */
 export function* useConciseSubjectLines(
 	commits: Commits,

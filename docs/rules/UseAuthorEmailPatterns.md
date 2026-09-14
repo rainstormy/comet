@@ -1,11 +1,15 @@
-# `useAuthorEmailPatterns`
+# useAuthorEmailPatterns
 
-Requires each commit author's email address to match one of the configured regular
-expression patterns. Comet matches the entire address, so a pattern describes an
-accepted address format rather than a substring.
+Rejects commits whose author email does not match any configured regex pattern.
 
-Trusted author-email formats preserve attribution and prevent personal email
-addresses from being recorded permanently in repository history.
+Restricting author email addresses to trusted patterns keeps the commit history attributable
+and helps prevent private addresses from leaking into a public repository.
+
+## Remarks
+
+- Patterns are matched against the complete email address and are case-sensitive.
+- Leading and trailing whitespace is not removed before matching.
+- An empty `patterns` array accepts every address.
 
 ## Options
 
@@ -29,7 +33,15 @@ array, which accepts every address.
 
 With the pattern above:
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| 19891117+littlemermaid@users.noreply.github.com | little.mermaid@theocean.example |
-|  | noreply@github.com |
+### Rejected
+
+```
+bunny@theeastercompany.com
+claus@santasworkshop.com
+```
+
+### Accepted
+
+```
+87654321+littlemermaid@users.noreply.github.com
+```

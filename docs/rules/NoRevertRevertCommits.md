@@ -1,15 +1,28 @@
-# `noRevertRevertCommits`
+# noRevertRevertCommits
 
-Allows at most one revert marker in a subject line, preventing a commit that
-reverts a revert.
+Rejects subject lines containing more than one revert marker.
 
-Cherry-picking the original commit retains its message and authorship. That gives
-later readers more context than a chain of reversals and keeps the history
-traceable.
+Restoring a revert of a revert can obscure which change is active and where it came from.
+Cherry-picking the original commit keeps the original message and authorship visible instead.
+
+## Remarks
+
+- Revert-marker matching is case-insensitive.
+- Only tokenised revert markers count; ordinary words such as `revert` and `Reverted` do not.
+- A single revert marker is accepted, including one preceded by a squash marker.
 
 ## Examples
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| Revert "Remove the retry policy" | Revert Revert the retry policy |
-| Restore the retry policy manually | Revert Revert Revert the retry policy |
+### Rejected
+
+```
+Revert "Revert "Fix the nasty bug""
+Revert "Revert "Revert "Repair the soft ice machine"""
+```
+
+### Accepted
+
+```
+Revert "Repair the soft ice machine"
+Time to revert it
+```

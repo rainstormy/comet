@@ -1,16 +1,36 @@
-# `useEmptyLineBeforeBodyLines`
+# useEmptyLineBeforeBodyLines
 
-Requires exactly one empty line between a subject line and the first non-blank
-body line. A commit with no body, or only blank body lines, is accepted.
+Rejects commit messages whose body is not separated from the subject line by exactly one empty line.
 
-Git treats the text before the first blank line as the commit title. Keeping the
-separator makes the title and explanatory body render predictably in Git tools.
+A predictable subject-and-body boundary keeps commit messages readable in Git clients
+and makes the first paragraph easy to identify.
+
+## Remarks
+
+- Commits without a body and commits with only a blank body are accepted.
+- A body immediately after the subject and a body preceded by multiple empty lines are rejected.
+- The separator may contain whitespace, as long as there is only one empty line before the body.
 
 ## Examples
 
-`⏎` denotes a newline.
+### Rejected
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| Explain the retry policy⏎<br>⏎<br>The service retries only transient failures. | Explain the retry policy⏎<br>The service retries only transient failures. |
-| Fix the retry policy | Explain the retry policy⏎<br>⏎<br>⏎<br>The service retries only transient failures. |
+```
+Install a quieter keyboard
+The old one sounded like hail.
+```
+
+```
+Clean the tiny dashboard
+
+
+The widgets sparkle.
+```
+
+### Accepted
+
+```
+Teach the changelog to whisper
+
+The noisy bits moved to the release notes.
+```

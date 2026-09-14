@@ -1,12 +1,26 @@
-# `useSignedCommits`
+# useSignedCommits
 
-Requires every commit to be signed cryptographically with a signing key.
+Rejects commits without a valid cryptographic signature.
 
-A signature makes impersonation harder by binding the commit to the key used to
-sign it. It strengthens the attribution recorded in project history.
+Signed commits make it harder to impersonate authors and help preserve
+confidence in who created and delivered each change.
+
+## Remarks
+
+- Valid SSH and PGP signatures are accepted.
+- The signature metadata determines the result; the subject line and message body do not.
 
 ## Examples
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| A commit carrying a valid SSH or PGP signature | A commit with no cryptographic signature |
+### Rejected
+
+```
+Teach the coffee machine to stop judging mugs
+```
+
+### Accepted
+
+```
+Give the release notes a sensible haircut
+put the changelog back where it belongs
+```

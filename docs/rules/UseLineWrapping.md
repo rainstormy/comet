@@ -1,11 +1,16 @@
-# `useLineWrapping`
+# useLineWrapping
 
-Limits the length of each body line. Hyperlinks, issue links, and inline code
-phrases do not count towards the limit. Merge commits, fenced-code-block lines,
-and trailer lines are ignored.
+Rejects body lines whose counted characters exceed a configured maximum (default: 72 characters).
 
-Wrapped prose remains readable in terminals and other Git clients that reserve
-part of the line for indentation or metadata.
+Keeping body lines short makes the commit history easier to read in Git clients
+and avoids forcing readers to scroll sideways through a paragraph.
+
+## Remarks
+
+- Merge commits are ignored.
+- Lines in fenced code blocks and trailer lines are preserved without checking their length.
+- Hyperlinks, issue links, and inline code phrases do not count towards the limit.
+- Only body lines are checked; the subject line is unaffected.
 
 ## Options
 
@@ -26,7 +31,26 @@ part of the line for indentation or metadata.
 
 With `maxLength: 72`:
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| Explain the retry policy⏎<br>⏎<br>The service retries transient failures and reports the final outcome. | Explain the retry policy⏎<br>⏎<br>The service retries transient failures and reports the final outcome to every interested caller. |
-| Explain the retry policy⏎<br>⏎<br>⏎<br>\`\`\`text⏎<br>⏎<br>This deliberately long command example is preserved verbatim.⏎<br>⏎<br>\`\`\` |  |
+### Rejected
+
+```
+Prepare the launch checklist
+
+It was just a matter of time before it would cause customers to complain.
+```
+
+### Accepted
+
+```
+Prepare the launch checklist
+
+The deploy bot left a short note about sandwiches.
+```
+
+Lines in fenced code blocks are preserved verbatim:
+
+````text
+```text
+This fenced example can be much longer without raising a concern.
+```
+````

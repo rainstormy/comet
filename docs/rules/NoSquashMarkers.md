@@ -1,16 +1,30 @@
-# `noSquashMarkers`
+# noSquashMarkers
 
-Disallows squash markers such as `amend!`, `fixup!`, and `squash!` in subject
-lines.
+Rejects subject lines that contain a squash marker.
 
-These markers are useful while preparing a branch for autosquash, but they should
-be combined with their ancestor before the branch is merged. Doing so removes
-intermediate diffs, makes commits more cohesive, and simplifies later reversions.
+Squashing temporary commits before delivery removes noisy intermediate diffs,
+keeps each final change cohesive, and makes the history easier to revert.
+
+## Remarks
+
+- `fixup!`, `squash!`, and `amend!` are recognised as squash markers.
+- Marker matching is case-insensitive and combined or repeated markers are still rejected.
+- Plain words such as `fixup`, `squash`, and `amend` without a marker are allowed.
 
 ## Examples
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| Add the release checklist | amend! Add the release checklist |
-| Test the release checklist | fixup! Test the release checklist |
-|  | squash! Add the release checklist |
+### Rejected
+
+```
+fixup! Reheat the leftovers
+squash! Make the program act like a clown
+amend! Apply strawberry jam to make the code sweeter
+```
+
+### Accepted
+
+```
+Refactor the taxi module
+Make the commit scream fixup! again
+Revert "Release the robot butler"
+```

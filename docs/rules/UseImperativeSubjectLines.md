@@ -1,10 +1,16 @@
-# `useImperativeSubjectLines`
+# useImperativeSubjectLines
 
-Requires subject lines to start with a verb in the imperative mood. Leading issue
-links and squash markers are disregarded, and revert commits are ignored.
+Rejects subject lines whose first relevant word is not a verb in the imperative mood.
 
-The imperative matches Git's own generated subjects, such as `Merge branch ...`
-and `Revert ...`. It describes the change as an action that the commit applies.
+Imperative subjects describe the change directly and keep the commit history
+consistent with instructions such as “Add”, “Fix”, and “Remove”.
+
+## Remarks
+
+- Revert commits are ignored.
+- Issue links and squash markers are skipped when locating the first relevant word.
+- The first relevant token must be a word; an inline code phrase or punctuation mark is not an imperative verb.
+- Whitelisted words are case-insensitive and are trimmed before matching.
 
 ## Options
 
@@ -24,8 +30,18 @@ verbs. It defaults to an empty array.
 
 ## Examples
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| Add the retry policy | Added the retry policy |
-| Chatify the release notes | Updating the retry policy |
-|  | The retry policy works |
+### Rejected
+
+```
+Added a new feature
+Updating the retry policy
+The retry policy works
+```
+
+### Accepted
+
+```
+Add a new feature
+GH-12 Organise the bookshelf
+Chatify the release notes
+```

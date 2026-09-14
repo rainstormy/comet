@@ -1,18 +1,35 @@
-# `noRepeatedSubjectLines`
+# noRepeatedSubjectLines
 
-Requires each non-merge commit in a branch to have a distinct subject line. The
-comparison is case- and whitespace-insensitive. Revert commits and commits with
-squash markers are not reported by this rule.
+Rejects commits whose subject line repeats an earlier subject line in the branch.
 
-A repeated subject often indicates an unfinished squash or a commit whose message
-was not updated. Distinct descriptions make the history easier to scan and help
-readers recover the purpose of each change.
+Repeated subjects often indicate that a commit should have been squashed or
+that its subject was never updated. Keeping each change identifiable makes
+the commit history easier to scan and maintain.
+
+## Remarks
+
+- Subject comparison ignores whitespace and capitalization.
+- Merge commits do not raise concerns.
+- Revert commits and commits with squash markers are skipped entirely.
 
 ## Examples
 
-Both distinct subjects and repeated squash or revert commits are accepted.
+### Rejected
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| 1. Add the retry policy<br>2. Test the retry policy | 1. Add the retry policy<br>2. add   the retry policy |
-| 1. Add the retry policy<br>2. fixup! Add the retry policy<br>3. Revert "Add the retry policy" |  |
+```
+1. Add some extra love to the code
+2. add   some extra love to the code
+```
+
+### Accepted
+
+```
+1. Label the mystery switch
+2. Test the mystery switch
+```
+
+```
+1. Tune the kettle
+2. fixup! Tune the kettle
+3. Revert "Tune the kettle"
+```

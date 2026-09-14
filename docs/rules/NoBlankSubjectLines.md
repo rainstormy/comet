@@ -1,20 +1,54 @@
-# `noBlankSubjectLines`
+# noBlankSubjectLines
 
 Rejects subject lines without any alphanumeric characters.
 
-A meaningful subject line makes the commit distinguishable in the commit history, as seen in `git log` and pull request views.
+## Rationale
 
-That preserves a readable history even when a commit does not need a body.
+A meaningful subject line makes the commit distinguishable from other commits.
+This helps to preserve the readability of the commit history and makes the commit easier to locate.
 
-A subject line with a
-word, hyperlink, semantic version, or inline code phrase is accepted; whitespace,
-punctuation, issue links, revert markers, and squash markers alone are not.
+## Remarks
+
+The following kinds of tokens do _not_ count as alphanumeric characters:
+
+- Issue links such as `#7` and `NEOWISE-2020`.
+- Revert markers such as `Revert ""`.
+- Squash markers such as `fixup!` and `squash!`.
 
 ## Examples
 
-| ✅ Accepted               | ❌ Rejected |
-|---------------------------|-------------|
-| Add the release checklist | ␠           |
-| `ReleaseLedger`           | ---         |
-| 2.4.0-beta.1              | fixup!      |
-|                           | Revert      |
+### Rejected
+
+```
+...
+```
+
+```
+``
+```
+
+```
+fixup! -
+```
+
+```
+#4 Revert " "
+```
+
+### Accepted
+
+```
+bugfix
+```
+
+```
+init project
+```
+
+```
+Refactor `HotChocolateMachine`
+```
+
+```
+2.4.0-beta.1
+```
