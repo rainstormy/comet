@@ -5,10 +5,120 @@ import { userIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { regexUnion } from "#utilities/Regexes.ts"
 
 /**
- * Verifies that the commit author has a name that matches a given regex pattern.
+ * Rejects commits where the author's name does not match one of the configured regex patterns.
  *
- * Restricting author names to trusted patterns helps to keep the commit history attributable
- * and avoids leaks of private information (e.g. a personal username).
+ * ## Rationale
+ *
+ * Restricting names to a trusted pattern keeps the commit history attributable and standardised for tooling and automated reports.
+ * For example, by requiring authors to use a specific name format.
+ *
+ * It can prevent web-based edits and other kinds of automation from committing to the repository.
+ * It can also prevent exposing private usernames in a public repository when the author has misconfigured Git.
+ *
+ * ## How to fix
+ *
+ * Update the author's name.
+ *
+ * ### Command-line interface (CLI)
+ *
+ * 1. Change your Git name to match one of the configured patterns, for example:
+ *
+ *    ```shell
+ *    git config --global user.name 'Santa Claus'
+ *    ```
+ *
+ *    (omit the `--global` flag to change the name in the current repository only)
+ *
+ * 2. Rebase interactively from (the parent of) the commit SHA, for example:
+ *
+ *    ```shell
+ *    git rebase --interactive '7e0ff1ce^'
+ *    ```
+ *
+ * 3. Set the commit to `edit`, then save and close the editor to proceed:
+ *
+ *    ```
+ *    edit 7e0ff1ce Welcome to my convenience store
+ *    ```
+ *
+ * 4. When the rebase pauses, update the author by amending the commit:
+ *
+ *    ```shell
+ *    git commit --amend --reset-author --no-edit
+ *    ```
+ *
+ * 5. Complete the rebase:
+ *
+ *    ```shell
+ *    git rebase --continue
+ *    ```
+ *
+ * 6. Force-push the rewritten branch to the remote repository:
+ *
+ *    ```shell
+ *    git push --force-with-lease
+ *    ```
+ *
+ * ## Options
+ *
+ * - `patterns` (array of strings): Regular expression patterns to accept. If empty, every name is accepted. Default value: `[]`.
+ *
+ * ```json
+ * {
+ *   "rules": {
+ *     "useAuthorNamePatterns": {
+ *       "level": "error",
+ *       "options": {
+ *         "patterns": []
+ *       }
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * ## Examples
+ *
+ * Rule configuration:
+ *
+ * ```json
+ * "patterns": ["\\p{Lu}.*\\s.+", "dependabot\\[bot\\]", "renovate\\[bot\\]"]
+ * ```
+ *
+ * The following examples display the `author` header of the commit rather than the commit message.
+ *
+ * ### Rejected
+ *
+ * ```
+ * author: santa claus <email>
+ * ```
+ *
+ * ```
+ * author: Jeanne <email>
+ * ```
+ *
+ * ```
+ * author: dependabot <email>
+ * ```
+ *
+ * ### Accepted
+ *
+ * ```
+ * author: The Little Mermaid <email>
+ * ```
+ *
+ * ```
+ * author: Jeanne d'Arc <email>
+ * ```
+ *
+ * ```
+ * author: dependabot[bot] <email>
+ * ```
+ *
+ * ## Related rules
+ *
+ * - [useAuthorEmailPatterns](./UseAuthorEmailPatterns.md)
+ * - [useCommitterEmailPatterns](./UseCommitterEmailPatterns.md)
+ * - [useCommitterNamePatterns](./UseCommitterNamePatterns.md)
  */
 export function* useAuthorNamePatterns(
 	commits: Commits,

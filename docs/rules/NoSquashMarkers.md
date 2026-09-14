@@ -1,16 +1,94 @@
-# `noSquashMarkers`
+# noSquashMarkers
 
-Disallows squash markers such as `amend!`, `fixup!`, and `squash!` in subject
-lines.
+Rejects subject lines beginning with a squash marker like `amend!`, `fixup!`, and `squash!`, reminding you to squash temporary commits before merging pull requests.
 
-These markers are useful while preparing a branch for autosquash, but they should
-be combined with their ancestor before the branch is merged. Doing so removes
-intermediate diffs, makes commits more cohesive, and simplifies later reversions.
+## Rationale
+
+Temporary commits with squash markers make it easier for reviewers to discover changes during a code review.
+They also eliminate the need for writing intermediate commit messages.
+
+Squashing these commits into the original commit produces a cleaner commit history.
+A single, cohesive commit is also easier to revert than a sequence of commits that may be out of order.
+
+## How to fix
+
+Rebase interactively and squash the temporary commits into the original commit.
+
+### Command-line interface (CLI)
+
+1. Rebase interactively from (the parent of) the original commit, with [auto-squashing enabled](https://git-scm.com/docs/git-rebase#Documentation/git-rebase.txt---autosquash), for example:
+
+   ```shell
+   git rebase --interactive --autosquash '7e0ff1ce^'
+   ```
+
+2. Ensure that each temporary commit follows its target commit, then save and close the editor to proceed:
+
+   ```
+   pick 7e0ff1ce Welcome to my convenience store
+   fixup cafebeef fixup! Welcome to my convenience store
+   ```
+
+3. For `squash` actions, in the commit message editor, delete the squash markers and change the subject line (i.e. the first line) to describe the combined change.
+   Then save and close the editor to complete the rebase. Resolve any merge conflicts that arise.
+
+4. Force-push the rewritten branch to the remote repository:
+
+   ```shell
+   git push --force-with-lease
+   ```
+
+### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
+
+1. In the Git tool window, right-click the original commit and select **Interactively Rebase from Here...**.
+
+2. Ensure that each temporary commit follows its target commit and has a matching action, e.g. `fixup` or `squash`.
+   For `squash` actions, delete the squash markers and change the subject line (i.e. the first line) to describe the combined change.
+   Then start the rebase and resolve any merge conflicts that arise.
+
+3. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
+
+## Options
+
+This rule has no configurable options.
+
+```json
+{
+  "rules": {
+    "noSquashMarkers": {
+      "level": "error",
+      "options": {}
+    }
+  }
+}
+```
 
 ## Examples
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| Add the release checklist | amend! Add the release checklist |
-| Test the release checklist | fixup! Test the release checklist |
-|  | squash! Add the release checklist |
+### Rejected
+
+```
+amend!
+```
+
+```
+squash! Reheat the leftovers
+```
+
+```
+fixup! fixup! added some extra love to the code
+```
+
+### Accepted
+
+```
+Refactor the taxi module
+```
+
+```
+Make the commit scream fixup! again
+```
+
+```
+squash the commits
+```

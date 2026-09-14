@@ -1,17 +1,62 @@
-# `useCommitterEmailPatterns`
+# useCommitterEmailPatterns
 
-Requires each committer's email address to match one of the configured regular
-expression patterns. Comet matches the entire address.
+Rejects commits where the committer's email address does not match one of the configured regex patterns.
 
-Trusted committer-email formats preserve attribution and prevent personal email
-addresses from being recorded permanently in repository history. They can also
-help a team detect commits made through a web interface with an unexpected
-committer identity.
+## Rationale
+
+Restricting email addresses to a trusted pattern keeps the commit history attributable and standardised for tooling and automated reports.
+For example, by requiring committers to use a specific email address format or domain.
+
+It can prevent web-based edits and other kinds of automation from committing to the repository.
+It can also prevent exposing private email addresses in a public repository when the committer has misconfigured Git.
+
+## How to fix
+
+Update the committer's email address.
+
+### Command-line interface (CLI)
+
+1. Change your Git email address to match one of the configured patterns, for example:
+
+   ```shell
+   git config --global user.email 'claus@santasworkshop.com'
+   ```
+
+   (omit the `--global` flag to change the email address in the current repository only)
+
+2. Rebase interactively from (the parent of) the commit SHA, for example:
+
+   ```shell
+   git rebase --interactive '7e0ff1ce^'
+   ```
+
+3. Set the commit to `edit`, then save and close the editor to proceed:
+
+   ```
+   edit 7e0ff1ce Welcome to my convenience store
+   ```
+
+4. When the rebase pauses, update the committer by amending the commit:
+
+   ```shell
+   git commit --amend --no-edit
+   ```
+
+5. Complete the rebase:
+
+   ```shell
+   git rebase --continue
+   ```
+
+6. Force-push the rewritten branch to the remote repository:
+
+   ```shell
+   git push --force-with-lease
+   ```
 
 ## Options
 
-`patterns` is an array of regular-expression strings. It defaults to an empty
-array, which accepts every address.
+- `patterns` (array of strings): Regular expression patterns to accept. If empty, every email address is accepted. Default value: `[]`.
 
 ```json
 {
@@ -19,7 +64,7 @@ array, which accepts every address.
     "useCommitterEmailPatterns": {
       "level": "error",
       "options": {
-        "patterns": ["\\d+\\+.+@users\\.noreply\\.github\\.com"]
+        "patterns": []
       }
     }
   }
@@ -28,9 +73,36 @@ array, which accepts every address.
 
 ## Examples
 
-With the pattern above:
+Rule configuration:
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| 18920129+santaclaus@users.noreply.github.com | claus@santasworkshop.example |
-|  | noreply@github.com |
+```json
+"patterns": ["\\d+\\+.+@users\\.noreply\\.github\\.com", "noreply@github\\.com"]
+```
+
+The following examples display the `committer` header of the commit rather than the commit message.
+
+### Rejected
+
+```
+committer: name <hello@fictivecompany.com>
+```
+
+```
+committer: name <claus@santasworkshop.com>
+```
+
+### Accepted
+
+```
+committer: name <146315497+rainstormybot-nimbus@users.noreply.github.com>
+```
+
+```
+committer: name <noreply@github.com>
+```
+
+## Related rules
+
+- [useAuthorEmailPatterns](./UseAuthorEmailPatterns.md)
+- [useAuthorNamePatterns](./UseAuthorNamePatterns.md)
+- [useCommitterNamePatterns](./UseCommitterNamePatterns.md)

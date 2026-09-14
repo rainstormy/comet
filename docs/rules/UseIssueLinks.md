@@ -1,33 +1,70 @@
-# `useIssueLinks`
+# useIssueLinks
 
-Requires a subject line to contain an issue link, either anywhere, at its prefix,
-or at its suffix. The rule ignores merge and revert commits, along with subject
-lines containing a semantic version. For `prefix`, it also disregards a leading
-squash marker.
+Rejects subject lines without an issue link in the configured position.
 
-An issue link connects a code change with the work that motivated it. That makes
-the history easier to understand and provides a direct route to requirements,
-decisions, and related changes.
+## Rationale
+
+Issue links connect commits to requirements, discussions, and incident reports in issue-tracking systems such as GitHub, Jira, and YouTrack.
+This preserves the traceability of the commit history.
+
+Consistent positioning of issue links is predictable and makes the commit history easier to read.
+
+## How to fix
+
+Change the subject line to include an issue link in the appropriate position.
+
+### Command-line interface (CLI)
+
+1. Rebase interactively from (the parent of) the commit SHA, for example:
+
+   ```shell
+   git rebase --interactive '7e0ff1ce^'
+   ```
+
+2. Set the commit to `reword`, then save and close the editor to proceed:
+
+   ```
+   reword 7e0ff1ce Welcome to my convenience store
+   ```
+
+3. In the commit message editor, change the subject line (i.e. the first line) to include an issue link in the appropriate position.
+   Then save and close the editor to complete the rebase.
+
+4. Force-push the rewritten branch to the remote repository:
+
+   ```shell
+   git push --force-with-lease
+   ```
+
+### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
+
+1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
+   Change the subject line (i.e. the first line) to include an issue link in the appropriate position.
+
+2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
+
+## Remarks
+
+The following kinds of commits are always accepted:
+
+- Merge commits, i.e. commits with more than one parent.
+- Revert commits, e.g. `Revert "..."`.
+- Commits with dependency versions in the subject line, e.g. `Bump Vite to 2.4.0-beta.1` and `Pin the Node.js image to 4af617c`.
+
+It only recognises issue links declared in `tokens.issueLinks`; ordinary hyperlinks and `Refs` trailers in the message body will not satisfy the rule.
 
 ## Options
 
-`position` is one of `"anywhere"`, `"prefix"`, or `"suffix"`; it defaults to
-`"anywhere"`. Issue-link tokens must also be configured under `tokens.issueLinks`.
-Each `prefix` is followed by digits, while `wildcards` are literal issue-link
-labels.
+- `position` (one of `anywhere`, `prefix`, or `suffix`): Accept issue links anywhere in, at the beginning of, or at the end of subject lines. Default value: `anywhere`.
 
 ```json
 {
-  "tokens": {
-    "issueLinks": {
-      "prefixes": ["#", "COMET-"],
-      "wildcards": ["[no-issue]"]
-    }
-  },
   "rules": {
     "useIssueLinks": {
       "level": "error",
-      "options": { "position": "suffix" }
+      "options": {
+        "position": "anywhere"
+      }
     }
   }
 }
@@ -35,10 +72,59 @@ labels.
 
 ## Examples
 
-With `position: "suffix"` and the configuration above:
+Rule configuration:
 
-| ✅ Accepted | ❌ Rejected |
-| --- | --- |
-| Explain the retry policy #42 | #42 Explain the retry policy |
-| Explain the retry policy COMET-42 | Explain the retry policy |
-| Document the generated release [no-issue] | Explain COMET-42 retries to operators |
+```json
+"position": "suffix"
+```
+
+Token configuration:
+
+```json
+"issueLinks": {
+  "prefixes": ["#", "GH-", "GL-"],
+  "wildcards": ["(no-issue)", "[incident]"]
+}
+```
+
+### Rejected
+
+```
+#42 Convince the office printer to print in colour
+```
+
+```
+Convince the office printer to print in colour
+
+Refs: #42
+```
+
+```
+Replace GH-42 the hamster wheel with a turbine
+```
+
+```
+Read https://github.com/rainstormy/comet/pull/42
+```
+
+### Accepted
+
+```
+Convince the office printer to print in colour #42
+```
+
+```
+Keep the hamsters on the wheel GL-1024
+```
+
+```
+Construction complete (no-issue)
+```
+
+```
+Insufficient funds [incident]
+```
+
+```
+Bump vite from 4.1.1-beta.0 to 4.3.2
+```

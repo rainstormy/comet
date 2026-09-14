@@ -4,13 +4,13 @@ Consult `AGENTS.md` for a detailed description of the project.
 
 ## Tasks
 
-| Task                      | Description                                                                           |
-|---------------------------|---------------------------------------------------------------------------------------|
-| `vpr build`               | Generates production-grade build artefacts of all entrypoints.                        |
-| `vpr check`               | Verifies that the source code is clean, type-safe, and well-formatted.                |
-| `vpr fmt`                 | Applies linting suggestions and reformats the source code.                            |
-| `vpr install`             | Installs dependencies.                                                                |
-| `vpr test [...filenames]` | Runs the given unit test files or the entire test suite if no arguments are provided. |
+| Task                      | Description                                                                                              |
+|---------------------------|----------------------------------------------------------------------------------------------------------|
+| `vpr build`               | Generates production-grade build artefacts of all entrypoints, including documentation and JSON schemas. |
+| `vpr check`               | Verifies that the source code is clean, type-safe, and well-formatted.                                   |
+| `vpr fmt`                 | Applies linting suggestions and reformats the source code.                                               |
+| `vpr install`             | Installs dependencies.                                                                                   |
+| `vpr test [...filenames]` | Runs the given unit test files or the entire test suite if no arguments are provided.                    |
 
 ## Get started
 

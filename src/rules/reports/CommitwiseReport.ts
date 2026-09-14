@@ -280,7 +280,7 @@ function subjectLineRuleMessage(
 
 	switch (rule) {
 		case "noBlankSubjectLines": {
-			return ruleMessage("Subject lines must contain at least one non-whitespace character.")
+			return ruleMessage("Subject lines must contain at least one alphanumeric character.")
 		}
 		case "noExcessiveWhitespace": {
 			const positionPhrase =
