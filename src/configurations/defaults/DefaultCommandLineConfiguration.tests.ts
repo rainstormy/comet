@@ -11,7 +11,6 @@ it("does not tokenise issue links", () => {
 it.each`
 	enabledRuleKey                   | expectedRuleOptions
 	${"noBlankSubjectLines"}         | ${{}}
-	${"noExcessiveCommitsPerBranch"} | ${{ maxCommits: 10 }}
 	${"noExcessiveWhitespace"}       | ${{}}
 	${"noMergeCommits"}              | ${{}}
 	${"noSingleWordSubjectLines"}    | ${{}}
@@ -28,16 +27,17 @@ it.each`
 })
 
 it.each`
-	disabledRuleKey                | expectedRuleOptions
-	${"noRepeatedSubjectLines"}    | ${{}}
-	${"noRestrictedTrailers"}      | ${{ restrictedKeys: [] }}
-	${"noRevertRevertCommits"}     | ${{}}
-	${"noSquashMarkers"}           | ${{}}
-	${"useAuthorEmailPatterns"}    | ${{ patterns: [] }}
-	${"useAuthorNamePatterns"}     | ${{ patterns: [] }}
-	${"useCommitterEmailPatterns"} | ${{ patterns: [] }}
-	${"useCommitterNamePatterns"}  | ${{ patterns: [] }}
-	${"useIssueLinks"}             | ${{ position: "anywhere" }}
+	disabledRuleKey                  | expectedRuleOptions
+	${"noExcessiveCommitsPerBranch"} | ${{ maxCommits: 10 }}
+	${"noRepeatedSubjectLines"}      | ${{}}
+	${"noRestrictedTrailers"}        | ${{ restrictedKeys: [] }}
+	${"noRevertRevertCommits"}       | ${{}}
+	${"noSquashMarkers"}             | ${{}}
+	${"useAuthorEmailPatterns"}      | ${{ patterns: [] }}
+	${"useAuthorNamePatterns"}       | ${{ patterns: [] }}
+	${"useCommitterEmailPatterns"}   | ${{ patterns: [] }}
+	${"useCommitterNamePatterns"}    | ${{ patterns: [] }}
+	${"useIssueLinks"}               | ${{ position: "anywhere" }}
 `(
 	"does not enable $disabledRuleKey'",
 	(props: { disabledRuleKey: RuleKey; expectedRuleOptions: object }) => {
