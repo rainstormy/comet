@@ -119,6 +119,33 @@ describe("a configuration file with Jira-style issue link tokens", () => {
 	})
 })
 
+describe("a configuration file with issue link tokens configured with whitespace and blank strings", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, {
+			tokens: {
+				issueLinks: {
+					prefixes: ["  ", "comet: ", " COMET:", ""],
+					wildcards: ["[SECURITY] ", "  [no-issue]  ", "", "", " "],
+				},
+			},
+		})
+	})
+
+	it("trims the tokens and omits blank strings", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
+			tokens: {
+				issueLinks: {
+					prefixes: ["comet:", "COMET:"],
+					wildcards: ["[SECURITY]", "[no-issue]"],
+				},
+			},
+			rules: {},
+		})
+	})
+})
+
 describe("a configuration file with some rules configured as 'error'", () => {
 	beforeEach(() => {
 		mockJsonFile<JsonConfigurationDto>(path, {

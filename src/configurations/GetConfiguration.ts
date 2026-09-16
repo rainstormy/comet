@@ -6,7 +6,7 @@ import type {
 } from "#configurations/json/dtos/JsonConfigurationDto.ts"
 import { fetchJsonConfigurationDto } from "#configurations/json/FetchJsonConfigurationDto.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
-import { isNotNullishValue, uniqueItems } from "#utilities/Arrays.ts"
+import { isNotEmptyString, isNotNullishValue, uniqueItems } from "#utilities/Arrays.ts"
 import { isReadableFile, normalisePath } from "#utilities/files/Files.ts"
 import { type DeepPartial, deepMerge } from "#utilities/Objects.ts"
 
@@ -102,12 +102,18 @@ function sanitiseConfiguration(
 		return configuration
 	}
 
+	const prefixes = issueLinks.prefixes ?? []
+	const wildcards = issueLinks.wildcards ?? []
+
+	const normalisedPrefixes = prefixes.map((value) => value.trim()).filter(isNotEmptyString)
+	const normalisedWildcards = wildcards.map((value) => value.trim()).filter(isNotEmptyString)
+
 	return {
 		...configuration,
 		tokens: {
 			issueLinks: {
-				prefixes: uniqueItems(issueLinks.prefixes ?? []),
-				wildcards: uniqueItems(issueLinks.wildcards ?? []),
+				prefixes: uniqueItems(normalisedPrefixes),
+				wildcards: uniqueItems(normalisedWildcards),
 			},
 		},
 	}
