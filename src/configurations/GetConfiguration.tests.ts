@@ -90,6 +90,32 @@ describe("a configuration file with Jira-style issue link tokens", () => {
 	})
 })
 
+describe("a configuration file with issue link tokens configured with whitespace and blank strings", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, {
+			tokens: {
+				issueLinks: {
+					prefixes: ["  ", "comet: ", " COMET:", ""],
+					wildcards: ["[SECURITY] ", "  [no-issue]  ", "", "", " "],
+				},
+			},
+		})
+	})
+
+	it("trims the tokens and omits blank strings", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			tokens: {
+				issueLinks: {
+					prefixes: ["comet:", "COMET:"],
+					wildcards: ["[SECURITY]", "[no-issue]"],
+				},
+			},
+			rules: {},
+		})
+	})
+})
+
 describe("a configuration file with some rules configured as 'error'", () => {
 	beforeEach(() => {
 		mockJsonFile<JsonConfigurationDto>(path, {
@@ -214,6 +240,9 @@ describe.each`
 				rules: {
 					[props.ruleKey]: { level: "error", options: props.options },
 				},
+				tokens: {
+					issueLinks: { prefixes: ["#"] },
+				},
 			})
 		})
 
@@ -223,7 +252,9 @@ describe.each`
 				rules: {
 					[props.ruleKey]: { level: "error", options: props.options },
 				},
-				tokens: {},
+				tokens: {
+					issueLinks: { prefixes: ["#"], wildcards: [] },
+				},
 			})
 		})
 	},
@@ -1198,6 +1229,50 @@ describe("a configuration file with 'issueLinks' being null", () => {
 		)
 	})
 })
+
+describe("a configuration file with 'useIssueLinks' enabled and without 'issueLinks'", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, {
+			rules: {
+				useIssueLinks: "error",
+			},
+		})
+	})
+
+	it("raises an error", async () => {
+		await expect(getConfiguration(path)).rejects.toThrow(
+			"Failed to parse 'comet.json' as a Comet configuration: 'issueLinks' in 'tokens' must be defined when 'useIssueLinks' is enabled",
+		)
+	})
+})
+
+describe.each`
+	prefixes     | wildcards
+	${[]}        | ${[]}
+	${[" ", ""]} | ${[]}
+	${[]}        | ${[""]}
+	${[""]}      | ${["", "  "]}
+`(
+	"a configuration file with 'useIssueLinks' enabled and empty 'issueLinks' of $prefixes and $wildcards",
+	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+		beforeEach(() => {
+			mockJsonFile<JsonConfigurationDto>(path, {
+				rules: {
+					useIssueLinks: "error",
+				},
+				tokens: {
+					issueLinks: props,
+				},
+			})
+		})
+
+		it("raises an error", async () => {
+			await expect(getConfiguration(path)).rejects.toThrow(
+				"Failed to parse 'comet.json' as a Comet configuration: 'issueLinks' in 'tokens' must be defined when 'useIssueLinks' is enabled",
+			)
+		})
+	},
+)
 
 describe("a configuration file with some rules configured as 'warn'", () => {
 	beforeEach(() => {

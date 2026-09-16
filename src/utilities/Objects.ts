@@ -1,4 +1,9 @@
-export type DeepPartial<Source> = Source extends object ? DeepPartialObject<Source> : Source
+export type DeepPartial<Source> =
+	Source extends Array<unknown>
+		? Source
+		: Source extends object
+			? DeepPartialObject<Source>
+			: Source
 
 type DeepPartialObject<Source extends object> = { [Key in keyof Source]?: DeepPartial<Source[Key]> }
 

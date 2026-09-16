@@ -5,7 +5,7 @@ import type {
 } from "#configurations/json/dtos/JsonConfigurationDto.ts"
 import { fetchJsonConfigurationDto } from "#configurations/json/FetchJsonConfigurationDto.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
-import { isNotNullishValue, uniqueItems } from "#utilities/Arrays.ts"
+import { isNotEmptyString, isNotNullishValue, uniqueItems } from "#utilities/Arrays.ts"
 import { isReadableFile, normalisePath } from "#utilities/files/Files.ts"
 import { type DeepPartial, deepMerge } from "#utilities/Objects.ts"
 
@@ -41,7 +41,10 @@ export async function getConfiguration(configPath: string): Promise<DeepPartial<
 		currentPath = dto.extends !== undefined ? normalisePath(dto.extends, currentPath) : null
 	}
 
-	return sanitiseConfiguration(configuration)
+	configuration = sanitiseConfiguration(configuration)
+
+	assertValidConfiguration(configPath, configuration)
+	return configuration
 }
 
 function mapDtoToPartialTokenConfiguration(
@@ -85,14 +88,37 @@ function sanitiseConfiguration(
 		return configuration
 	}
 
+	const prefixes = issueLinks.prefixes ?? []
+	const wildcards = issueLinks.wildcards ?? []
+
+	const normalisedPrefixes = prefixes.map((value) => value.trim()).filter(isNotEmptyString)
+	const normalisedWildcards = wildcards.map((value) => value.trim()).filter(isNotEmptyString)
+
 	return {
 		...configuration,
 		tokens: {
 			issueLinks: {
-				prefixes: uniqueItems(issueLinks.prefixes ?? []),
-				wildcards: uniqueItems(issueLinks.wildcards ?? []),
+				prefixes: uniqueItems(normalisedPrefixes),
+				wildcards: uniqueItems(normalisedWildcards),
 			},
 		},
+	}
+}
+
+function assertValidConfiguration(
+	configPath: string,
+	configuration: DeepPartial<Configuration>,
+): void {
+	if (configuration.rules?.useIssueLinks?.level === "error") {
+		const issueLinks = configuration.tokens?.issueLinks
+		const prefixes = issueLinks?.prefixes ?? []
+		const wildcards = issueLinks?.wildcards ?? []
+
+		if (prefixes.length + wildcards.length === 0) {
+			throw new TypeError(
+				`Failed to parse '${configPath}' as a Comet configuration: 'issueLinks' in 'tokens' must be defined when 'useIssueLinks' is enabled`,
+			)
+		}
 	}
 }
 
