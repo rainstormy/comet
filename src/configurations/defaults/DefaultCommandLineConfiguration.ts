@@ -7,6 +7,7 @@ export const DEFAULT_COMMAND_LINE_CONFIGURATION: Configuration = {
 		issueLinks: { prefixes: [], wildcards: [] },
 	},
 	rules: deepMerge(DEFAULT_RULESET_CONFIGURATION, {
+		noExcessiveCommitsPerBranch: { level: "off" },
 		noRepeatedSubjectLines: { level: "off" },
 		noRestrictedTrailers: { level: "off" },
 		noRevertRevertCommits: { level: "off" },
