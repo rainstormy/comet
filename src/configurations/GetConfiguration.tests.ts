@@ -227,7 +227,7 @@ describe.each`
 	${"useCommitterEmailPatterns"}   | ${{ patterns: [String.raw`automation@.+\.dev`] }}
 	${"useCommitterNamePatterns"}    | ${{ patterns: ["Release Robot", String.raw`Dependabot .+`] }}
 	${"useConciseSubjectLines"}      | ${{ maxLength: 64 }}
-	${"useImperativeSubjectLines"}   | ${{ whitelist: ["Revert", "Release"] }}
+	${"useImperativeSubjectLines"}   | ${{ whitelist: ["chatify", "DECKENIZE"] }}
 	${"useIssueLinks"}               | ${{ position: "anywhere" }}
 	${"useIssueLinks"}               | ${{ position: "prefix" }}
 	${"useIssueLinks"}               | ${{ position: "suffix" }}
@@ -357,7 +357,7 @@ describe("a complete configuration file", () => {
 				useEmptyLineBeforeBodyLines: "off",
 				useImperativeSubjectLines: {
 					level: "error",
-					options: { whitelist: ["Revert"] },
+					options: { whitelist: ["chatify"] },
 				},
 				useIssueLinks: {
 					level: "error",
@@ -422,7 +422,7 @@ describe("a complete configuration file", () => {
 				useEmptyLineBeforeBodyLines: { level: "off" },
 				useImperativeSubjectLines: {
 					level: "error",
-					options: { whitelist: ["Revert"] },
+					options: { whitelist: ["chatify"] },
 				},
 				useIssueLinks: {
 					level: "error",
@@ -834,7 +834,7 @@ describe("a complex JSONC configuration file with line and block comments", () =
 		"useEmptyLineBeforeBodyLines": "off",
 		"useImperativeSubjectLines": {
 			"level": "error",
-			"options": { "whitelist": ["chatify", "dockerise"] }
+			"options": { "whitelist": ["chatify", "DECKENIZE"] }
 		},
 		/*"useIssueLinks": {
 			"level": "error",
@@ -889,7 +889,7 @@ describe("a complex JSONC configuration file with line and block comments", () =
 				useEmptyLineBeforeBodyLines: { level: "off" },
 				useImperativeSubjectLines: {
 					level: "error",
-					options: { whitelist: ["chatify", "dockerise"] },
+					options: { whitelist: ["chatify", "DECKENIZE"] },
 				},
 				useLineWrapping: {
 					level: "off",
@@ -1269,6 +1269,34 @@ describe.each`
 		it("raises an error", async () => {
 			await expect(getConfiguration(path)).rejects.toThrow(
 				"Failed to parse 'comet.json' as a Comet configuration: 'issueLinks' in 'tokens' must be defined when 'useIssueLinks' is enabled",
+			)
+		})
+	},
+)
+
+describe.each`
+	whitelist                                     | expectedRedundantImperativeVerbs
+	${["add"]}                                    | ${["add"]}
+	${["ADD"]}                                    | ${["add"]}
+	${[" add "]}                                  | ${["add"]}
+	${["release", "RELEASE", " add ", "chatify"]} | ${["release", "add"]}
+`(
+	"a configuration file with redundant imperative verbs in the 'useImperativeSubjectLines' whitelist",
+	(props: { whitelist: Array<string>; expectedRedundantImperativeVerbs: Array<string> }) => {
+		beforeEach(() => {
+			mockJsonFile<JsonConfigurationDto>(path, {
+				rules: {
+					useImperativeSubjectLines: {
+						level: "error",
+						options: { whitelist: props.whitelist },
+					},
+				},
+			})
+		})
+
+		it("raises an error about the redundant verbs", async () => {
+			await expect(getConfiguration(path)).rejects.toThrow(
+				`Failed to parse 'comet.json' as a Comet configuration: 'whitelist' of 'useImperativeSubjectLines' must not contain redundant imperative verbs: ${props.expectedRedundantImperativeVerbs.join(", ")}`,
 			)
 		})
 	},

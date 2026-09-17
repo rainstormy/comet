@@ -610,7 +610,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 				noRepeatedSubjectLines: "error",
 				useImperativeSubjectLines: {
 					level: "error",
-					options: { whitelist: ["deploy"] },
+					options: { whitelist: ["deployify"] },
 				},
 				useIssueLinks: {
 					level: "error",
@@ -625,7 +625,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 			},
 		})
 		mockGithubPullRequestCrudeCommits([
-			fakeCrudeCommit({ message: "BOT-71 Deploy the robot butler" }),
+			fakeCrudeCommit({ message: "BOT-71 Deployify the robot butler" }),
 		])
 		exitCode = await githubActionsProgram()
 	})
