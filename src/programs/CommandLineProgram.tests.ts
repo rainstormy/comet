@@ -73,6 +73,7 @@ describe.each`
 	it("prints a help text with usage instructions", () => {
 		expect(printMessage).toHaveBeenCalledExactlyOnceWith(getHelpText())
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -98,6 +99,7 @@ describe.each`
 		it(`prints the tool version of '${props.version}'`, () => {
 			expect(printMessage).toHaveBeenCalledExactlyOnceWith(props.version)
 			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
 		})
 	},
 )
@@ -188,6 +190,7 @@ describe.each`
 				it("remains silent", () => {
 					expect(printMessage).not.toHaveBeenCalled()
 					expect(printCommandLineError).not.toHaveBeenCalled()
+					expect(printCommandLineWarning).not.toHaveBeenCalled()
 				})
 			},
 		)
@@ -218,6 +221,7 @@ describe.each`
 				it("remains silent", () => {
 					expect(printMessage).not.toHaveBeenCalled()
 					expect(printCommandLineError).not.toHaveBeenCalled()
+					expect(printCommandLineWarning).not.toHaveBeenCalled()
 				})
 			},
 		)
@@ -235,6 +239,7 @@ describe.each`
 			it("remains silent", () => {
 				expect(printMessage).not.toHaveBeenCalled()
 				expect(printCommandLineError).not.toHaveBeenCalled()
+				expect(printCommandLineWarning).not.toHaveBeenCalled()
 			})
 		})
 	},
@@ -262,6 +267,7 @@ describe.each`
 		it("remains silent", () => {
 			expect(printMessage).not.toHaveBeenCalled()
 			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
 		})
 	},
 )
@@ -289,6 +295,7 @@ describe.each`
 		it("remains silent", () => {
 			expect(printMessage).not.toHaveBeenCalled()
 			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
 		})
 	},
 )
@@ -461,6 +468,7 @@ describe("when there are no commits in the default configuration", () => {
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -479,6 +487,7 @@ describe("when there is 1 commit that raises no concerns in the default configur
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -502,6 +511,7 @@ describe("when there are 4 commits that raise no concerns in the default configu
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -542,6 +552,7 @@ ${grey`98634c1`} fix!
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -590,6 +601,7 @@ ${red`•`} ${grey`${bold`2`} │`} This body line is intentionally longer than 
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -643,6 +655,7 @@ ${grey`b58de17`} Sign the pantry inventory
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -733,6 +746,7 @@ ${grey`7f811b2`} Merge the old tea ledger
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -831,6 +845,7 @@ describe.each`
 			it("skips the missing configuration", () => {
 				expect(printMessage).not.toHaveBeenCalled()
 				expect(printCommandLineError).not.toHaveBeenCalled()
+				expect(printCommandLineWarning).not.toHaveBeenCalled()
 			})
 		})
 	},
@@ -925,6 +940,7 @@ describe("when there are no commits in the custom 'comet.json' configuration", (
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -962,6 +978,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1012,6 +1029,7 @@ describe("when there are 3 commits that raise no concerns in the custom 'comet.j
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1059,6 +1077,7 @@ ${red`•`} ${grey`${bold`2`} │`} Co-authored-by: Ada Lovelace <ada@example.co
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1107,6 +1126,7 @@ ${grey`╰─ authored by:`} Master Splinter
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1167,6 +1187,7 @@ ${grey`9f1a1b2`} Test the emergency toaster
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1241,6 +1262,7 @@ ${grey`c0ffee1`} Untangle the improbable cables
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1269,6 +1291,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1325,6 +1348,7 @@ ${grey`b58de17`} Wire the oat milk alert
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1454,6 +1478,7 @@ ${grey`a8b3d6c`} Merge the old tea ledger
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1503,6 +1528,7 @@ describe("when there are no commits in the custom configuration from 'configs/st
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1553,6 +1579,7 @@ describe("when there is 1 commit that raises no concerns in the custom configura
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1605,6 +1632,7 @@ describe("when there are 7 commits that raise no concerns in the custom configur
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1659,6 +1687,7 @@ ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1727,6 +1756,7 @@ ${grey`d677c31`} Tune the observatory clock
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1816,6 +1846,7 @@ ${grey`a43a3f3`} Archive the noisy bell!
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1877,6 +1908,7 @@ ${grey`7f811b2`} Revert "Revert "Disable the alarm""
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1905,6 +1937,7 @@ describe("when there is 1 commit that raises no concerns in the custom configura
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1970,6 +2003,7 @@ ${grey`╰─ authored by:`} Master Splinter
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -2035,6 +2069,7 @@ ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -2107,6 +2142,7 @@ ${grey`╰─ authored by:`} Master Splinter
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -2168,6 +2204,7 @@ ${grey`b58de17`} Wire the oat milk alert
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -2276,6 +2313,7 @@ ${grey`9f1a1b2`} This commit is a lie
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 

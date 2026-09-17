@@ -147,6 +147,7 @@ describe("when there are no commits", () => {
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -165,6 +166,7 @@ describe("when there is 1 commit that raises no concerns in the default configur
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -188,6 +190,7 @@ describe("when there are 4 commits that raise no concerns in the default configu
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -228,6 +231,7 @@ ${grey`98634c1`} fix!
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -276,6 +280,7 @@ ${red`•`} ${grey`${bold`2`} │`} This body line is intentionally longer than 
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -329,6 +334,7 @@ ${grey`b58de17`} Sign the pantry inventory
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -424,6 +430,7 @@ ${grey`7f811b2`} Merge the old tea ledger
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -598,6 +605,7 @@ describe("when there are no commits in the custom 'comet.json' configuration", (
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -637,6 +645,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -687,6 +696,7 @@ describe("when there are 3 commits that raise no concerns in the custom 'comet.j
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -734,6 +744,7 @@ ${red`•`} ${grey`${bold`2`} │`} Co-authored-by: Ada Lovelace <ada@example.co
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -782,6 +793,7 @@ ${grey`╰─ authored by:`} Master Splinter
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -842,6 +854,7 @@ ${grey`9f1a1b2`} Test the emergency toaster
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -916,6 +929,7 @@ ${grey`c0ffee1`} Untangle the improbable cables
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -944,6 +958,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1000,6 +1015,7 @@ ${grey`b58de17`} Wire the oat milk alert
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1129,6 +1145,7 @@ ${grey`a8b3d6c`} Merge the old tea ledger
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1179,6 +1196,7 @@ describe("when there are no commits in the custom configuration from 'configs/st
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1232,6 +1250,7 @@ describe("when there is 1 commit that raises no concerns in the custom configura
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1285,6 +1304,7 @@ describe("when there are 7 commits that raise no concerns in the custom configur
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1340,6 +1360,7 @@ ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1409,6 +1430,7 @@ ${grey`d677c31`} Tune the observatory clock
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1499,6 +1521,7 @@ ${grey`a43a3f3`} Archive the noisy bell!
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1561,6 +1584,7 @@ ${grey`7f811b2`} Revert "Revert "Disable the alarm""
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1590,6 +1614,7 @@ describe("when there is 1 commit that raises no concerns in the custom configura
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1656,5 +1681,6 @@ ${grey`╰─ authored by:`} Master Splinter
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
