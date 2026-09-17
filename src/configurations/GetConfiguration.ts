@@ -9,6 +9,7 @@ import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfi
 import { isNotEmptyString, isNotNullishValue, uniqueItems } from "#utilities/Arrays.ts"
 import { isReadableFile, normalisePath } from "#utilities/files/Files.ts"
 import { type DeepPartial, deepMerge } from "#utilities/Objects.ts"
+import { isImperativeVerb } from "#utilities/Verbs.ts"
 
 export type Configuration = {
 	git: GitConfiguration
@@ -146,6 +147,23 @@ async function getDefaultConfigurationPath(): Promise<string | null> {
 export function* validateConfiguration(
 	configuration: DeepPartial<Configuration>,
 ): Generator<string> {
+	if (configuration.rules?.useImperativeSubjectLines?.level === "error") {
+		const whitelist = configuration.rules.useImperativeSubjectLines.options?.whitelist ?? []
+
+		if (whitelist.length > 0) {
+			const redundantWords = uniqueItems(
+				whitelist
+					.map((word) => word.trim().toLowerCase())
+					.filter(isNotEmptyString)
+					.filter(isImperativeVerb),
+			)
+
+			if (redundantWords.length > 0) {
+				yield `Flawed Comet configuration: 'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: ${redundantWords.join(", ")}`
+			}
+		}
+	}
+
 	if (configuration.rules?.useIssueLinks?.level === "error") {
 		const issueLinks = configuration.tokens?.issueLinks
 		const prefixes = issueLinks?.prefixes ?? []

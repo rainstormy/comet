@@ -957,7 +957,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 				noRepeatedSubjectLines: "error",
 				useImperativeSubjectLines: {
 					level: "error",
-					options: { whitelist: ["deploy"] },
+					options: { whitelist: ["deployify"] },
 				},
 				useIssueLinks: {
 					level: "error",
@@ -971,7 +971,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 				},
 			},
 		})
-		mockGitBranchCrudeCommits([fakeCrudeCommit({ message: "BOT-71 Deploy the robot butler" })])
+		mockGitBranchCrudeCommits([fakeCrudeCommit({ message: "BOT-71 Deployify the robot butler" })])
 		exitCode = await commandLineProgram([])
 	})
 
@@ -2441,6 +2441,104 @@ describe("when 'useIssueLinks' is disabled without 'issueLinks'", () => {
 	beforeEach(async () => {
 		mockJsonFile("comet.json", {
 			rules: { useIssueLinks: "off" },
+		})
+		mockGitBranchCrudeCommits([])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
+	})
+})
+
+describe.each`
+	whitelist                                                       | expectedRedundantWordsList
+	${[" DISCOMBOBULATE "]}                                         | ${"discombobulate"}
+	${["OBFUSCATE", "abjure"]}                                      | ${"obfuscate, abjure"}
+	${[" ABJURE ", "StReAmLiNe", "obfuscate", "abjure", "chatify"]} | ${"abjure, streamline, obfuscate"}
+`(
+	"when 'useImperativeSubjectLines' is enabled with a whitelist of $whitelist that contains redundant words",
+	(props: { whitelist: Array<string>; expectedRedundantWordsList: string }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: {
+					useImperativeSubjectLines: {
+						level: "error",
+						options: { whitelist: props.whitelist },
+					},
+				},
+			})
+			mockGitBranchCrudeCommits([])
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("prints a configuration warning", () => {
+			expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+				`Flawed Comet configuration: 'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: ${props.expectedRedundantWordsList}`,
+			)
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe.each`
+	whitelist
+	${[]}
+	${["chatify", "deployify"]}
+`(
+	"when 'useImperativeSubjectLines' is enabled with a whitelist of $whitelist that does not contain any redundant words",
+	(props: { whitelist: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: {
+					useImperativeSubjectLines: {
+						level: "error",
+						options: { whitelist: props.whitelist },
+					},
+				},
+			})
+			mockGitBranchCrudeCommits([])
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("remains silent", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe("when 'useImperativeSubjectLines' is disabled a whitelist that contains redundant words", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: {
+				useImperativeSubjectLines: {
+					level: "off",
+					options: { whitelist: [" DISCOMBOBULATE ", "abjure"] },
+				},
+			},
 		})
 		mockGitBranchCrudeCommits([])
 		exitCode = await commandLineProgram([])
