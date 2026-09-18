@@ -4,14 +4,16 @@ import { commitConcern } from "#rules/concerns/CommitConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Rejects merge commits with more than one parent.
+ * Verifies that commits have at most one parent.
+ *
+ * ## Rationale
  *
  * Keeping the commit history linear makes it easier to rebase interactively,
  * understand the order of changes, and revert a change later.
  *
  * ## Remarks
  *
- * - The number of parent commits determines the result, not the subject line.
+ * - The number of parents determines the result; the subject line is irrelevant.
  * - Initial commits with no parents and ordinary commits with one parent are accepted.
  *
  * ## Examples

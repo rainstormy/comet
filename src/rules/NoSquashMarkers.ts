@@ -6,16 +6,19 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 import { rangeBetween } from "#types/CharacterRange.ts"
 
 /**
- * Rejects subject lines that contain a squash marker.
+ * Verifies that subject lines do not contain squash markers.
+ *
+ * ## Rationale
  *
  * Squashing temporary commits before delivery removes noisy intermediate diffs,
  * keeps each final change cohesive, and makes the history easier to revert.
  *
  * ## Remarks
  *
- * - `fixup!`, `squash!`, and `amend!` are recognised as squash markers.
- * - Marker matching is case-insensitive and combined or repeated markers are still rejected.
- * - Plain words such as `fixup`, `squash`, and `amend` without a marker are allowed.
+ * - Markers such as `fixup!`, `squash!`, and `amend!` are recognised case-insensitively,
+ *   including when they are combined or repeated.
+ * - A marker must include an exclamation mark; plain words such as `fixup`, `squash`,
+ *   and `amend` are allowed.
  *
  * ## Examples
  *

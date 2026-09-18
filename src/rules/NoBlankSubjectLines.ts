@@ -10,6 +10,8 @@ import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
  *
  * ## Rationale
  *
+ * The subject line is the part of a commit that readers see most often when scanning the commit history.
+ *
  * A meaningful subject line makes the commit distinguishable from other commits.
  * This keeps the commit history readable and makes the commit easier to find.
  *

@@ -4,7 +4,9 @@ import { commitConcern } from "#rules/concerns/CommitConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Rejects commits without a valid cryptographic signature.
+ * Rejects commits without a cryptographic signature.
+ *
+ * ## Rationale
  *
  * Signed commits make it harder to impersonate authors and help preserve
  * confidence in who created and delivered each change.
@@ -12,7 +14,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ## Remarks
  *
  * - Valid SSH and PGP signatures are accepted.
- * - The signature metadata determines the result; the subject line and message body do not.
+ * - Only signature metadata is checked; the subject line and message body do not affect the result.
  *
  * ## Examples
  *

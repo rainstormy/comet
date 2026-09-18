@@ -5,21 +5,23 @@ import { userIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { regexUnion } from "#utilities/Regexes.ts"
 
 /**
- * Rejects commits whose committer name does not match any configured regex pattern.
+ * Verifies that committer names match at least one configured regular-expression pattern.
+ *
+ * ## Rationale
  *
  * Restricting committer names to trusted patterns keeps the commit history attributable
- * and helps prevent private usernames from being exposed.
+ * and helps avoid exposing private usernames.
  *
  * ## Remarks
  *
  * - Patterns are matched against the complete name and are case-sensitive.
- * - Leading and trailing whitespace is not removed before matching.
+ * - Leading and trailing whitespace is part of the value matched against each pattern.
  * - An empty `patterns` array accepts every name.
  *
  * ## Options
  *
- * `patterns` is an array of regular-expression strings. It defaults to an empty
- * array, which accepts every name.
+ * `patterns` is an array of regular-expression strings. It defaults to an empty array,
+ * so every name is accepted until you configure it.
  *
  * ```json
  * {

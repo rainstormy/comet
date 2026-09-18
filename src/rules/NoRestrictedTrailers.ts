@@ -6,22 +6,23 @@ import type { Concern } from "#rules/concerns/Concern.ts"
 import { isNotEmptyString } from "#utilities/Arrays.ts"
 
 /**
- * Rejects commits whose message body contains a trailer with a restricted key.
+ * Verifies that commit message bodies do not contain trailers with restricted keys.
+ *
+ * ## Rationale
  *
  * Restricting trailers such as `Co-authored-by` keeps the commit history attributable
- * and prevents metadata from being added through workflows that cannot sign commits.
+ * and prevents workflows that cannot sign commits from adding metadata.
  *
  * ## Remarks
  *
- * - Trailer-key matching is case-insensitive.
- * - Configured keys are trimmed, and an optional trailing colon is ignored.
- * - Only trailer keys are checked; the same text in ordinary body prose is allowed.
- * - An empty `restrictedKeys` array allows every trailer.
+ * - Matching ignores letter case. Configured keys are trimmed, and a trailing colon is optional.
+ * - Only lines parsed as trailers are checked, so the same text in ordinary body prose is allowed.
+ * - An empty `restrictedKeys` array leaves every trailer allowed.
  *
  * ## Options
  *
  * `restrictedKeys` is an array of trailer keys. It defaults to an empty array,
- * so no trailers are restricted until the option is configured.
+ * so no trailers are restricted until you configure it.
  *
  * ```json
  * {

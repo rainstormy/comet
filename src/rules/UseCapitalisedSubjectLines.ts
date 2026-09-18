@@ -5,16 +5,18 @@ import type { Concern } from "#rules/concerns/Concern.ts"
 import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 
 /**
- * Rejects subject lines whose first relevant word starts with a lowercase letter.
+ * Verifies that the first relevant word in each subject line starts with an uppercase letter when it starts with a letter.
+ *
+ * ## Rationale
  *
  * A consistent capitalisation style makes the commit history easier to scan
  * and gives each subject line a clear visual beginning.
  *
  * ## Remarks
  *
- * - Subjects that do not start with a letter and subjects that start with a hyperlink are accepted.
- * - Issue links, inline code phrases, and squash markers are skipped when locating the first relevant word.
- * - The rule checks the first relevant word only; later lowercase words are allowed.
+ * - A subject whose first relevant token is not a letter, or whose first relevant token is a hyperlink, is accepted.
+ * - Issue links, inline code phrases (enclosed in `backticks`), and squash markers are skipped when locating the first relevant word.
+ * - Only the first relevant word is checked; later lowercase words are allowed.
  *
  * ## Examples
  *

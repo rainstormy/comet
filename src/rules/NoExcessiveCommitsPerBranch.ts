@@ -10,7 +10,9 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ## Rationale
  *
  * Keeping pull requests small makes them easier to review and safer to revert if needed.
- * It can also help catch accidental rebases onto stale commits.
+ * Reordering commits during an interactive rebase (e.g. to squash `fixup!` commits) on a branch with few commits is less likely to cause merge conflicts.
+ *
+ * This rule can also help catch accidental rebases onto stale commits. Such an operation is likely to add copies of old base commits to the current branch.
  *
  * ## Remarks
  *

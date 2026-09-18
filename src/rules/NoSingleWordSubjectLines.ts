@@ -5,7 +5,9 @@ import type { Concern } from "#rules/concerns/Concern.ts"
 import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 
 /**
- * Rejects subject lines containing only one significant word.
+ * Verifies that subject lines do not contain exactly one significant word.
+ *
+ * ## Rationale
  *
  * A little context in the subject line makes the commit easier to identify,
  * search for, and understand later.
@@ -14,8 +16,8 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *
  * - Blank subjects and subjects containing no significant words are accepted.
  * - Revert commits are skipped.
- * - Issue links and squash markers do not count as words.
- * - Hyperlinks, inline code phrases, and semver tokens count as one word each.
+ * - Issue links and squash markers do not count as words; hyperlinks, inline code phrases
+ *   (enclosed in `backticks`), and semver tokens count as one word each.
  *
  * ## Examples
  *

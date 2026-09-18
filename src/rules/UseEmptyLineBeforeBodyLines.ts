@@ -5,16 +5,17 @@ import { bodyLineConcern } from "#rules/concerns/BodyLineConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Rejects commit messages whose body is not separated from the subject line by exactly one empty line.
+ * Verifies that a commit message body is separated from its subject line by exactly one empty line.
+ *
+ * ## Rationale
  *
  * A predictable subject-and-body boundary keeps commit messages readable in Git clients
  * and makes the first paragraph easy to identify.
  *
  * ## Remarks
  *
- * - Commits without a body and commits with only a blank body are accepted.
- * - A body immediately after the subject and a body preceded by multiple empty lines are rejected.
- * - The separator may contain whitespace, as long as there is only one empty line before the body.
+ * - Commits without body text, including commits with only blank lines, are accepted.
+ * - The separator line may contain whitespace, but it must be the only empty line before body text.
  *
  * ## Examples
  *

@@ -5,7 +5,9 @@ import type { Concern } from "#rules/concerns/Concern.ts"
 import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 
 /**
- * Rejects subject lines without an issue link in the configured position.
+ * Verifies that subject lines contain an issue link in the configured position.
+ *
+ * ## Rationale
  *
  * Linking commits to issues in a project management system provides traceability
  * between a code change and the work that motivated it, making related changes
@@ -16,13 +18,12 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * - Merge commits, revert commits, and subjects containing semver tokens are exempt.
  * - Squash markers are skipped while checking a prefix, but they do not satisfy the requirement.
  * - The rule recognises only issue links configured under `tokens.issueLinks`.
- * - Each configured prefix is followed by digits, while configured wildcards are literal labels.
  *
  * ## Options
  *
  * `position` is one of `"anywhere"`, `"prefix"`, or `"suffix"`; it defaults to
- * `"anywhere"`. Issue-link tokens must also be configured under `tokens.issueLinks`.
- * Each `prefix` is followed by digits, while `wildcards` are literal issue-link labels.
+ * `"anywhere"`. Configure recognised issue links under `tokens.issueLinks`. Each prefix
+ * is followed by digits, while wildcards are matched as literal issue-link labels.
  *
  * ```json
  * {

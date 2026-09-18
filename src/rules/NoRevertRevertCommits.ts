@@ -6,16 +6,18 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 import { rangeBetween } from "#types/CharacterRange.ts"
 
 /**
- * Rejects subject lines containing more than one revert marker.
+ * Verifies that subject lines contain at most one revert marker.
  *
- * Restoring a revert of a revert can obscure which change is active and where it came from.
- * Cherry-picking the original commit keeps the original message and authorship visible instead.
+ * ## Rationale
+ *
+ * Reverting a revert can obscure which change is active and where it came from.
+ * Cherry-picking the original commit keeps the original message and authorship visible.
  *
  * ## Remarks
  *
- * - Revert-marker matching is case-insensitive.
+ * - Matching is case-insensitive.
  * - Only tokenised revert markers count; ordinary words such as `revert` and `Reverted` do not.
- * - A single revert marker is accepted, including one preceded by a squash marker.
+ * - One revert marker is allowed, including one preceded by a squash marker.
  *
  * ## Examples
  *

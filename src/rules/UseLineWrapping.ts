@@ -5,7 +5,9 @@ import { bodyLineConcern } from "#rules/concerns/BodyLineConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Rejects body lines whose counted characters exceed a configured maximum (default: 72 characters).
+ * Verifies that counted characters in body lines do not exceed a configured maximum (default: 72 characters).
+ *
+ * ## Rationale
  *
  * Keeping body lines short makes the commit history easier to read in Git clients
  * and avoids forcing readers to scroll sideways through a paragraph.
@@ -13,13 +15,12 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ## Remarks
  *
  * - Merge commits are ignored.
- * - Lines in fenced code blocks and trailer lines are preserved without checking their length.
- * - Hyperlinks, issue links, and inline code phrases do not count towards the limit.
- * - Only body lines are checked; the subject line is unaffected.
+ * - Fenced code blocks and trailer lines are not checked.
+ * - Hyperlinks, issue links, and inline code phrases (enclosed in `backticks`) do not count towards the limit.
  *
  * ## Options
  *
- * `maxLength` is a positive integer. Its default is `72`.
+ * `maxLength` is a positive integer. It defaults to `72`.
  *
  * ```json
  * {

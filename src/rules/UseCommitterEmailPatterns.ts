@@ -5,21 +5,23 @@ import { userIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { regexUnion } from "#utilities/Regexes.ts"
 
 /**
- * Rejects commits whose committer email does not match any configured regex pattern.
+ * Verifies that committer email addresses match at least one configured regular-expression pattern.
+ *
+ * ## Rationale
  *
  * Restricting committer email addresses to trusted patterns keeps the commit history attributable
- * and helps prevent private addresses from leaking into a public repository.
+ * and helps avoid exposing private addresses in a public repository.
  *
  * ## Remarks
  *
  * - Patterns are matched against the complete email address and are case-sensitive.
- * - Leading and trailing whitespace is not removed before matching.
+ * - Leading and trailing whitespace is part of the value matched against each pattern.
  * - An empty `patterns` array accepts every address.
  *
  * ## Options
  *
- * `patterns` is an array of regular-expression strings. It defaults to an empty
- * array, which accepts every address.
+ * `patterns` is an array of regular-expression strings. It defaults to an empty array,
+ * so every address is accepted until you configure it.
  *
  * ```json
  * {

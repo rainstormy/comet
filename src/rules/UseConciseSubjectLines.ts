@@ -5,20 +5,21 @@ import type { Concern } from "#rules/concerns/Concern.ts"
 import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 
 /**
- * Rejects subject lines whose counted characters exceed a configured maximum (default: 50 characters).
+ * Verifies that counted characters in subject lines do not exceed a configured maximum (default: 50 characters).
+ *
+ * ## Rationale
  *
  * Keeping subject lines short makes the commit history easier to scan in Git clients
  * and leaves room for issue links or other useful context.
  *
  * ## Remarks
  *
- * - Merge commits, revert commits, squash commits, and subjects containing semver tokens are ignored.
- * - Hyperlinks, issue links, and inline code phrases do not count towards the limit.
- * - Only the subject line is checked; the message body is unaffected.
+ * - Merge, revert, and squash commits, as well as subjects containing semver tokens, are ignored.
+ * - Hyperlinks, issue links, and inline code phrases (enclosed in `backticks`) do not count towards the limit.
  *
  * ## Options
  *
- * `maxLength` is a positive integer. Its default is `50`.
+ * `maxLength` is a positive integer. It defaults to `50`.
  *
  * ```json
  * {

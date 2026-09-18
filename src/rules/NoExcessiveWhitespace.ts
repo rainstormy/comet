@@ -6,17 +6,17 @@ import type { Concern } from "#rules/concerns/Concern.ts"
 import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 
 /**
- * Rejects subject lines with leading, trailing, or consecutive whitespace,
- * and body lines with consecutive whitespace.
+ * Rejects subject lines with leading, trailing, or consecutive whitespace characters,
+ * and body lines with consecutive whitespace characters.
  *
- * Consistent spacing keeps commit messages readable in Git clients and prevents
- * visually similar subject lines from representing different text.
+ * ## Rationale
+ *
+ * Consistent spacing is predictable and makes the commit history easier to read.
  *
  * ## Remarks
  *
- * - Leading and trailing whitespace is checked only in subject lines.
- * - Indentation and trailing whitespace in body lines are allowed.
- * - Whitespace in inline code phrases and fenced code blocks is disregarded.
+ * - Body lines may contain leading and trailing whitespace (e.g. for indentation).
+ * - It disregards whitespace in inline code phrases (enclosed in `backticks`) and fenced code blocks.
  *
  * ## Examples
  *
@@ -24,8 +24,11 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *
  * ```
  *  Recalibrate the espresso machine
- * Keep  waffles in  sync
  *
+ * Keep  waffles in  sync
+ * ```
+ *
+ * ```
  * Move sauce  left and bolts   right
  * ```
  *
@@ -35,7 +38,11 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * Release the robot butler
  * Explain the fallback
  *
- *   Indented text is allowed.
+ *   Indented text is allowed here.
+ * ```
+ *
+ * ```
+ * Format `two  spaces` exactly
  * ```
  */
 export function* noExcessiveWhitespace(

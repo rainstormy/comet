@@ -10,17 +10,19 @@ const ALLOWED_PUNCTUATION_REGEX =
 const TRAILING_EMOJI_SHORTCODE_REGEX = /:\w+:$/u
 
 /**
- * Rejects subject lines with unexpected trailing punctuation.
+ * Verifies that subject lines do not end with unexpected punctuation.
+ *
+ * ## Rationale
  *
  * A consistent subject-line ending makes the commit history easier to scan
- * and keeps the same convention across Git clients.
+ * and applies the same convention across Git clients.
  *
  * ## Remarks
  *
  * - Revert commits are skipped.
- * - Trailing issue links are disregarded.
- * - Closing brackets, paired quotes, and symbols associated with numbers are allowed.
- * - Punctuation in the message body is not checked.
+ * - Issue links at the end of a subject line are ignored when checking punctuation.
+ * - Closing brackets, paired quotes, and symbols associated with numbers (e.g. `100%`) are allowed.
+ * - Only subject lines are checked; punctuation in body lines is left alone.
  *
  * ## Examples
  *

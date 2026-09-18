@@ -7,7 +7,9 @@ import { isNotEmptyString } from "#utilities/Arrays.ts"
 import { isImperativeVerb } from "#utilities/Verbs.ts"
 
 /**
- * Rejects subject lines whose first relevant word is not a verb in the imperative mood.
+ * Verifies that the first relevant word in a subject line is a verb in the imperative mood.
+ *
+ * ## Rationale
  *
  * Imperative subjects describe the change directly and keep the commit history
  * consistent with instructions such as “Add”, “Fix”, and “Remove”.
@@ -16,13 +18,14 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  *
  * - Revert commits are ignored.
  * - Issue links and squash markers are skipped when locating the first relevant word.
- * - The first relevant token must be a word; an inline code phrase or punctuation mark is not an imperative verb.
- * - Whitelisted words are case-insensitive and are trimmed before matching.
+ * - The first relevant token must be a word; punctuation and inline code phrases (enclosed in `backticks`)
+ *   cannot serve as imperative verbs.
+ * - Whitelisted words are matched case-insensitively after trimming whitespace.
  *
  * ## Options
  *
- * `whitelist` adds case-insensitive words that should be accepted as imperative
- * verbs. It defaults to an empty array.
+ * `whitelist` adds case-insensitive words that should be accepted as imperative verbs.
+ * Entries are trimmed before matching, and the option defaults to an empty array.
  *
  * ```json
  * {

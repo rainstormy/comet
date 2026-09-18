@@ -5,16 +5,17 @@ import { commitConcern } from "#rules/concerns/CommitConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Rejects commits whose subject line repeats an earlier subject line in the branch.
+ * Verifies that no commit repeats an earlier subject line in the branch.
  *
- * Repeated subjects often indicate that a commit should have been squashed or
- * that its subject was never updated. Keeping each change identifiable makes
- * the commit history easier to scan and maintain.
+ * ## Rationale
+ *
+ * Unique subject lines make individual changes easier to identify in a branch's history.
+ * Repeated subjects can make it difficult to tell whether a change was duplicated or its subject was never updated.
  *
  * ## Remarks
  *
  * - Subject comparison ignores whitespace and capitalization.
- * - Merge commits do not raise concerns.
+ * - Merge commits are considered when comparing later subjects, but they never raise concerns.
  * - Revert commits and commits with squash markers are skipped entirely.
  *
  * ## Examples
