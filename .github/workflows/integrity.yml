@@ -34,7 +34,7 @@ concurrency:
 jobs:
   check:
     name: Check
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 2
     permissions:
       # To check out the repository.

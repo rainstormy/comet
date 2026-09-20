@@ -42,7 +42,7 @@ jobs:
   github-release:
     name: GitHub release
     needs: integrity
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
     permissions:
       # To check out the repository.

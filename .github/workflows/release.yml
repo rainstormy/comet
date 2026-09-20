@@ -45,7 +45,7 @@ jobs:
     # A release must always be created from the `main` branch.
     if: github.ref_name == github.event.repository.default_branch
     needs: integrity
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
     permissions: {}
     steps:

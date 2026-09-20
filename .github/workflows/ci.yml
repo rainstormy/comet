@@ -39,7 +39,7 @@ jobs:
     name: Commit messages
     # Skip verification of commit messages when the software integrity checks fail, as it will most likely require another commit to fix them.
     needs: integrity
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
     permissions:
       # To review the commit messages in the pull request.

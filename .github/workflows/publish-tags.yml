@@ -28,7 +28,7 @@ jobs:
     name: Tags
     # Only create version tags for pull requests from `.github/workflows/release.yml`.
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
     permissions: {}
     steps:
