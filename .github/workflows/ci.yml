@@ -39,7 +39,7 @@ jobs:
     name: Commit messages
     # Skip verification of commit messages when the software integrity checks fail, as it will most likely require another commit to fix them.
     needs: integrity
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
     permissions:
       # To review the commit messages in the pull request.
@@ -48,6 +48,10 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Prevent `GITHUB_TOKEN` from leaking into the runner's file system.
+          # https://github.com/actions/checkout#usage
+          persist-credentials: false
         #
       - name: Verify the commit messages
         # Run the action on itself.

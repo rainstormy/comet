@@ -44,7 +44,7 @@ jobs:
   npm-package:
     name: npm package
     needs: integrity
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
     permissions:
       # To check out the repository.
@@ -58,6 +58,10 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Prevent `GITHUB_TOKEN` from leaking into the runner's file system.
+          # https://github.com/actions/checkout#usage
+          persist-credentials: false
         #
       - name: Install dependencies
         uses: voidzero-dev/setup-vp@313600b80b104eadebb9111787d37a2e83e014ca # v1.17.0

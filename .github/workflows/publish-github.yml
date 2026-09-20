@@ -42,7 +42,7 @@ jobs:
   github-release:
     name: GitHub release
     needs: integrity
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
     permissions:
       # To check out the repository.
@@ -51,6 +51,10 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Prevent `GITHUB_TOKEN` from leaking into the runner's file system.
+          # https://github.com/actions/checkout#usage
+          persist-credentials: false
         #
       - name: Create a draft GitHub release
         uses: rainstormy/release/github@eb87dc4ba5e9e89451adce4a3c62538e5ecef809 # v1.1.1

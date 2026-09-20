@@ -28,7 +28,7 @@ jobs:
     name: Tags
     # Only create version tags for pull requests from `.github/workflows/release.yml`.
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
     permissions: {}
     steps:
@@ -48,10 +48,5 @@ jobs:
         #
       - name: Create a full semantic version tag in Git
         uses: rainstormy/release/tag@eb87dc4ba5e9e89451adce4a3c62538e5ecef809 # v1.1.1
-        with:
-          version: ${{ github.head_ref }}
-        #
-      - name: Create a major-only version tag in Git
-        uses: rainstormy/release/major-tag@eb87dc4ba5e9e89451adce4a3c62538e5ecef809 # v1.1.1
         with:
           version: ${{ github.head_ref }}

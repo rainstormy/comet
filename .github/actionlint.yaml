@@ -1,0 +1,8 @@
+# Configure actionlint.
+# https://github.com/rhysd/actionlint/blob/main/docs/config.md
+
+# Enable runner labels in actionlint.
+# https://docs.github.com/en/actions/reference/runners/github-hosted-runners
+self-hosted-runner:
+  labels:
+    - ubuntu-26.04-arm
