@@ -1,5 +1,6 @@
 import type { TokenConfiguration } from "#commits/TokenConfiguration.ts"
 import type {
+	JsonConfigurationGitDto,
 	JsonConfigurationRulesDto,
 	JsonConfigurationTokensDto,
 } from "#configurations/json/dtos/JsonConfigurationDto.ts"
@@ -10,8 +11,13 @@ import { isReadableFile, normalisePath } from "#utilities/files/Files.ts"
 import { type DeepPartial, deepMerge } from "#utilities/Objects.ts"
 
 export type Configuration = {
+	git: GitConfiguration
 	rules: RulesetConfiguration
 	tokens: TokenConfiguration
+}
+
+type GitConfiguration = {
+	defaultBranch: string | null
 }
 
 export async function getConfiguration(configPath: string): Promise<DeepPartial<Configuration>> {
@@ -34,6 +40,7 @@ export async function getConfiguration(configPath: string): Promise<DeepPartial<
 		const dto = await fetchJsonConfigurationDto(currentPath)
 
 		const extendedBaseConfiguration: DeepPartial<Configuration> = {
+			git: mapDtoToPartialGitConfiguration(dto.git),
 			tokens: mapDtoToPartialTokenConfiguration(dto.tokens),
 			rules: mapDtoToPartialRuleConfiguration(dto.rules),
 		}
@@ -42,6 +49,16 @@ export async function getConfiguration(configPath: string): Promise<DeepPartial<
 	}
 
 	return sanitiseConfiguration(configuration)
+}
+
+function mapDtoToPartialGitConfiguration(
+	dto: JsonConfigurationGitDto,
+): DeepPartial<GitConfiguration> {
+	if (dto?.defaultBranch === undefined) {
+		return {}
+	}
+
+	return { defaultBranch: dto.defaultBranch }
 }
 
 function mapDtoToPartialTokenConfiguration(

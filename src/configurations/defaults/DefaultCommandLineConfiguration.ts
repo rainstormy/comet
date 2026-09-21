@@ -3,6 +3,7 @@ import type { Configuration } from "#configurations/GetConfiguration.ts"
 import { deepMerge } from "#utilities/Objects.ts"
 
 export const DEFAULT_COMMAND_LINE_CONFIGURATION: Configuration = {
+	git: { defaultBranch: null },
 	tokens: {
 		issueLinks: { prefixes: [], wildcards: [] },
 	},

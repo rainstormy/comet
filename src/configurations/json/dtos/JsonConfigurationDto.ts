@@ -8,6 +8,7 @@ import { stringArray } from "#types/StringArray.ts"
 
 export type JsonConfigurationDto = v.InferOutput<typeof JSON_CONFIGURATION_DTO>
 
+export type JsonConfigurationGitDto = JsonConfigurationDto["git"]
 export type JsonConfigurationTokensDto = JsonConfigurationDto["tokens"]
 export type JsonConfigurationRulesDto = JsonConfigurationDto["rules"]
 
@@ -18,6 +19,10 @@ const TOKENS_DTO = v.strictObject({
 			wildcards: v.exactOptional(stringArray()),
 		}),
 	),
+})
+
+const GIT_DTO = v.strictObject({
+	defaultBranch: v.exactOptional(v.string()),
 })
 
 // Allow JSON configuration files to provide an `error` or `off` string literal directly, omitting the object of `level` and `options`.
@@ -49,6 +54,7 @@ type RuleDtoSchema<Key extends RuleKey> = v.ExactOptionalSchema<
 export const JSON_CONFIGURATION_DTO = v.strictObject({
 	$schema: v.exactOptional(v.unknown()), // Ignore the `$schema` property.
 	extends: v.exactOptional(v.string()),
+	git: v.exactOptional(GIT_DTO),
 	rules: v.exactOptional(RULES_DTO),
 	tokens: v.exactOptional(TOKENS_DTO),
 })

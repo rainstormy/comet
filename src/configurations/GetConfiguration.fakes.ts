@@ -10,6 +10,7 @@ export function fakeConfiguration(
 	tokens?: Partial<TokenConfiguration>,
 ): Configuration {
 	return {
+		git: { defaultBranch: null },
 		rules: fakeRulesetConfiguration(rules),
 		tokens: fakeTokenConfiguration(tokens),
 	}

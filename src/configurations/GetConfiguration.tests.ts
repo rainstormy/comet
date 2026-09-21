@@ -17,6 +17,7 @@ describe("a configuration file with an empty object", () => {
 	it("falls back to the default configuration", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			tokens: {},
 			rules: {},
 		})
@@ -33,11 +34,37 @@ describe("a configuration file with metadata fields only", () => {
 	it("falls back to the default configuration", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			tokens: {},
 			rules: {},
 		})
 	})
 })
+
+describe.each`
+	defaultBranch
+	${"origin/master"}
+	${"github/main"}
+	${"upstream/develop"}
+`(
+	"a configuration file with a default branch of $defaultBranch",
+	(props: { defaultBranch: string }) => {
+		beforeEach(() => {
+			mockJsonFile<JsonConfigurationDto>(path, {
+				git: { defaultBranch: props.defaultBranch },
+			})
+		})
+
+		it("returns the configured default branch", async () => {
+			const configuration = await getConfiguration(path)
+			expect(configuration).toEqual<DeepPartial<Configuration>>({
+				git: { defaultBranch: props.defaultBranch },
+				tokens: {},
+				rules: {},
+			})
+		})
+	},
+)
 
 describe("a configuration file with GitHub-/GitLab-style issue link tokens", () => {
 	beforeEach(() => {
@@ -53,6 +80,7 @@ describe("a configuration file with GitHub-/GitLab-style issue link tokens", () 
 	it("returns the configured tokens", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			tokens: {
 				issueLinks: {
 					prefixes: ["#", "GH-", "GL-"],
@@ -79,6 +107,7 @@ describe("a configuration file with Jira-style issue link tokens", () => {
 	it("returns the configured tokens", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			tokens: {
 				issueLinks: {
 					prefixes: ["UNICORN-"],
@@ -105,6 +134,7 @@ describe("a configuration file with some rules configured as 'error'", () => {
 	it("returns the configured ruleset", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			rules: {
 				noBlankSubjectLines: { level: "error" },
 				noMergeCommits: { level: "error" },
@@ -131,6 +161,7 @@ describe("a configuration file with some rules configured as 'off'", () => {
 	it("returns the configured ruleset", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			rules: {
 				noExcessiveCommitsPerBranch: { level: "off" },
 				noRepeatedSubjectLines: { level: "off" },
@@ -169,6 +200,7 @@ describe("a configuration file with some rules configured as objects", () => {
 	it("returns the configured ruleset", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			rules: {
 				noExcessiveCommitsPerBranch: {
 					level: "error",
@@ -220,6 +252,7 @@ describe.each`
 		it("returns the configured ruleset", async () => {
 			const configuration = await getConfiguration(path)
 			expect(configuration).toEqual<DeepPartial<Configuration>>({
+				git: {},
 				rules: {
 					[props.ruleKey]: { level: "error", options: props.options },
 				},
@@ -254,6 +287,7 @@ describe("a configuration file with a mixed ruleset of valid options", () => {
 	it("returns the configured ruleset", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			rules: {
 				noBlankSubjectLines: { level: "off" },
 				noExcessiveCommitsPerBranch: {
@@ -279,6 +313,7 @@ describe("a complete configuration file", () => {
 	beforeEach(() => {
 		mockJsonFile<Omit<DeepRequired<JsonConfigurationDto>, "extends"> & { $schema: string }>(path, {
 			$schema: "https://example.com/schema.json",
+			git: { defaultBranch: "github/main" },
 			rules: {
 				noBlankSubjectLines: "error",
 				noExcessiveCommitsPerBranch: {
@@ -347,9 +382,10 @@ describe("a complete configuration file", () => {
 		})
 	})
 
-	it("returns the configured tokens and ruleset", async () => {
+	it("returns the configured default branch, tokens, and ruleset", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: { defaultBranch: "github/main" },
 			rules: {
 				noBlankSubjectLines: { level: "error" },
 				noExcessiveCommitsPerBranch: {
@@ -416,6 +452,7 @@ describe("a complete configuration file", () => {
 describe("a configuration file that extends another file", () => {
 	beforeEach(() => {
 		mockJsonFile<JsonConfigurationDto>("base.json", {
+			git: { defaultBranch: "origin/main" },
 			tokens: {
 				issueLinks: {
 					prefixes: ["BASE-", "SHARED-"],
@@ -450,6 +487,7 @@ describe("a configuration file that extends another file", () => {
 	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: { defaultBranch: "origin/main" },
 			rules: {
 				noExcessiveCommitsPerBranch: {
 					level: "error",
@@ -480,6 +518,7 @@ describe("a configuration file that extends another file that extends a third fi
 		})
 		mockJsonFile<JsonConfigurationDto>("configs/team.json", {
 			extends: "../base.json",
+			git: { defaultBranch: "origin/main" },
 			rules: {
 				noExcessiveCommitsPerBranch: {
 					level: "error",
@@ -490,6 +529,7 @@ describe("a configuration file that extends another file that extends a third fi
 		})
 		mockJsonFile<JsonConfigurationDto>(path, {
 			extends: "configs/team.json",
+			git: { defaultBranch: "github/next" },
 			rules: {
 				noExcessiveCommitsPerBranch: {
 					level: "off",
@@ -503,6 +543,7 @@ describe("a configuration file that extends another file that extends a third fi
 	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: { defaultBranch: "github/next" },
 			rules: {
 				noExcessiveCommitsPerBranch: {
 					level: "off",
@@ -574,6 +615,7 @@ describe("a large configuration file that extends another large file", () => {
 	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			rules: {
 				noExcessiveCommitsPerBranch: {
 					level: "error",
@@ -680,6 +722,7 @@ describe("a large configuration file that extends another large file that extend
 	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			rules: {
 				noExcessiveCommitsPerBranch: {
 					level: "off",
@@ -735,6 +778,7 @@ describe("a simple JSONC configuration file with line and block comments", () =>
 	it("returns the configured ruleset", async () => {
 		const configuration = await getConfiguration(jsoncPath)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			rules: {
 				noMergeCommits: { level: "error" },
 				useLineWrapping: { level: "off" },
@@ -821,6 +865,7 @@ describe("a complex JSONC configuration file with line and block comments", () =
 	it("returns the configured tokens and ruleset", async () => {
 		const configuration = await getConfiguration(jsoncPath)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			rules: {
 				noBlankSubjectLines: { level: "error" },
 				noExcessiveCommitsPerBranch: {
@@ -946,6 +991,7 @@ describe("a JSONC configuration file that extends another JSONC configuration fi
 	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
 		const configuration = await getConfiguration(jsoncPath)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			rules: {
 				noMergeCommits: { level: "off" },
 				noRepeatedSubjectLines: { level: "error" },
@@ -1021,6 +1067,7 @@ describe("a JSONC configuration file that extends a JSON configuration file", ()
 	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
 		const configuration = await getConfiguration(jsoncPath)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			rules: {
 				noExcessiveCommitsPerBranch: {
 					level: "error",
@@ -1095,6 +1142,7 @@ describe("a JSON configuration file that extends a JSONC configuration file", ()
 	it("merges the configurations additively with the nearest scalar values taking precedence", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
 			rules: {
 				noRestrictedTrailers: {
 					level: "off",
@@ -1114,6 +1162,20 @@ describe("a JSON configuration file that extends a JSONC configuration file", ()
 				},
 			},
 		})
+	})
+})
+
+describe("a configuration file with the default branch being a number", () => {
+	beforeEach(() => {
+		mockJsonFile(path, {
+			git: { defaultBranch: 42 },
+		})
+	})
+
+	it("raises an error", async () => {
+		await expect(getConfiguration(path)).rejects.toThrow(
+			"Failed to parse 'comet.json' as a Comet configuration: 'defaultBranch' of 'git' must be a string, but it is a number: 42",
+		)
 	})
 })
 

@@ -37,14 +37,12 @@ export async function commandLineProgram(args: Array<string>): Promise<ExitCode>
 	try {
 		const parsedArgs = parseArgs(OPTION_SCHEMA, args)
 		const configPaths = parsedArgs["--config"] ?? []
-		const defaultBranch = parsedArgs["--default-branch"]?.[0] ?? null
 		const skipMissingConfigPaths = parsedArgs["--skip-missing-configs"] !== undefined
 
-		const [crudeCommits, configuration] = await Promise.all([
-			getGitBranchCrudeCommits(defaultBranch),
-			resolveConfiguration(configPaths, skipMissingConfigPaths),
-		])
+		const configuration = await resolveConfiguration(configPaths, skipMissingConfigPaths)
+		const defaultBranch = parsedArgs["--default-branch"]?.[0] ?? configuration.git.defaultBranch
 
+		const crudeCommits = await getGitBranchCrudeCommits(defaultBranch)
 		return await program(crudeCommits, configuration)
 	} catch (error) {
 		assertError(error)

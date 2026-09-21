@@ -13,6 +13,7 @@ import {
 } from "#types/ExitCode.ts"
 import type { JsonValue } from "#types/JsonValue.ts"
 import { mockFile, mockJsonFile, mockNonexistingFile } from "#utilities/files/Files.fakes.ts"
+import { mockGitLog, mockSabotagedGitLog } from "#utilities/git/cli/GetGitLog.fakes.ts"
 import { mockGitCommand } from "#utilities/git/cli/RunGitCommand.fakes.ts"
 import { printCommandLineError, printMessage } from "#utilities/logging/Logger.ts"
 import { mockPackageVersion } from "#utilities/package/Package.fakes.ts"
@@ -111,7 +112,7 @@ describe.each`
 	},
 )
 
-describe("when the default Git branch cannot be determined", () => {
+describe("when the default branch cannot be determined", () => {
 	let exitCode: ExitCode
 
 	beforeEach(async () => {
@@ -137,28 +138,223 @@ describe.each`
 	defaultBranch
 	${"origin/main"}
 	${"upstream/develop"}
-`("when '--default-branch' is specified as $defaultBranch", (props: { defaultBranch: string }) => {
-	let exitCode: ExitCode
+`(
+	"when the '--default-branch' arg of $defaultBranch is an existing branch",
+	(cliProps: { defaultBranch: string }) => {
+		let exitCode: ExitCode
 
-	beforeEach(async () => {
-		mockGitCommand("remote", { output: "" })
-		mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
-		mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
-		mockGitCommand(`--no-pager log --format=raw --no-color ${props.defaultBranch}..HEAD`, {
-			output: "",
+		beforeEach(() => {
+			mockGitLog([], cliProps.defaultBranch)
 		})
-		exitCode = await commandLineProgram(["--default-branch", props.defaultBranch])
-	})
 
-	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
-		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
-	})
+		describe.each`
+			defaultBranch
+			${"origin/master"}
+			${"github/next"}
+		`(
+			"and the 'git.defaultBranch' configuration of $defaultBranch is a non-existing branch",
+			(configProps: { defaultBranch: string }) => {
+				beforeEach(async () => {
+					mockJsonFile("comet.json", { git: { defaultBranch: configProps.defaultBranch } })
+					mockSabotagedGitLog(configProps.defaultBranch)
+					exitCode = await commandLineProgram(["--default-branch", cliProps.defaultBranch])
+				})
 
-	it("remains silent", () => {
-		expect(printMessage).not.toHaveBeenCalled()
-		expect(printCommandLineError).not.toHaveBeenCalled()
-	})
-})
+				it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+					expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+				})
+
+				it("remains silent", () => {
+					expect(printMessage).not.toHaveBeenCalled()
+					expect(printCommandLineError).not.toHaveBeenCalled()
+				})
+			},
+		)
+
+		describe.each`
+			defaultBranch
+			${"origin/develop"}
+			${"upstream/next"}
+		`(
+			"and the inherited 'git.defaultBranch' configuration of $defaultBranch is a non-existing branch",
+			(configProps: { defaultBranch: string }) => {
+				beforeEach(async () => {
+					mockJsonFile("configs/base.json", { git: { defaultBranch: configProps.defaultBranch } })
+					mockJsonFile("configs/team.json", { extends: "base.json" })
+					mockSabotagedGitLog(configProps.defaultBranch)
+					exitCode = await commandLineProgram([
+						"--default-branch",
+						cliProps.defaultBranch,
+						"--config",
+						"configs/team.json",
+					])
+				})
+
+				it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+					expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+				})
+
+				it("remains silent", () => {
+					expect(printMessage).not.toHaveBeenCalled()
+					expect(printCommandLineError).not.toHaveBeenCalled()
+				})
+			},
+		)
+
+		describe("and the 'git.defaultBranch' configuration is absent", () => {
+			beforeEach(async () => {
+				mockJsonFile("comet.json", { rules: {} })
+				exitCode = await commandLineProgram(["--default-branch", cliProps.defaultBranch])
+			})
+
+			it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+				expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+			})
+
+			it("remains silent", () => {
+				expect(printMessage).not.toHaveBeenCalled()
+				expect(printCommandLineError).not.toHaveBeenCalled()
+			})
+		})
+	},
+)
+
+describe.each`
+	defaultBranch
+	${"origin/master"}
+	${"github/next"}
+`(
+	"when the 'git.defaultBranch' configuration of $defaultBranch is an existing branch",
+	(configProps: { defaultBranch: string }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", { git: { defaultBranch: configProps.defaultBranch } })
+			mockGitLog([], configProps.defaultBranch)
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("remains silent", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe.each`
+	defaultBranch
+	${"origin/develop"}
+	${"upstream/next"}
+`(
+	"when the inherited 'git.defaultBranch' configuration of $defaultBranch is an existing branch",
+	(configProps: { defaultBranch: string }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("configs/base.json", { git: { defaultBranch: configProps.defaultBranch } })
+			mockJsonFile("configs/team.json", { extends: "base.json" })
+			mockGitLog([], configProps.defaultBranch)
+			exitCode = await commandLineProgram(["--config", "configs/team.json"])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("remains silent", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe.each`
+	defaultBranch
+	${"origin/main"}
+	${"upstream/develop"}
+`(
+	"when the '--default-branch' arg of $defaultBranch is a non-existing branch",
+	(cliProps: { defaultBranch: string }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockSabotagedGitLog(cliProps.defaultBranch)
+			exitCode = await commandLineProgram(["--default-branch", cliProps.defaultBranch])
+		})
+
+		it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+		})
+
+		it("prints the error message raised by the local Git client", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(
+				`Command 'git --no-pager log --format=raw --no-color ${cliProps.defaultBranch}..HEAD' failed with exit code 128`,
+			)
+		})
+	},
+)
+
+describe.each`
+	defaultBranch
+	${"origin/master"}
+	${"github/next"}
+`(
+	"when the 'git.defaultBranch' configuration of $defaultBranch is a non-existing branch",
+	(configProps: { defaultBranch: string }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", { git: { defaultBranch: configProps.defaultBranch } })
+			mockSabotagedGitLog(configProps.defaultBranch)
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+		})
+
+		it("prints the error message raised by the local Git client", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(
+				`Command 'git --no-pager log --format=raw --no-color ${configProps.defaultBranch}..HEAD' failed with exit code 128`,
+			)
+		})
+	},
+)
+
+describe.each`
+	defaultBranch
+	${"origin/develop"}
+	${"upstream/next"}
+`(
+	"when the inherited 'git.defaultBranch' configuration of $defaultBranch is a non-existing branch",
+	(configProps: { defaultBranch: string }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("configs/base.json", { git: { defaultBranch: configProps.defaultBranch } })
+			mockJsonFile("configs/team.json", { extends: "base.json" })
+			mockSabotagedGitLog(configProps.defaultBranch)
+			exitCode = await commandLineProgram(["--config", "configs/team.json"])
+		})
+
+		it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+		})
+
+		it("prints the error message raised by the local Git client", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(
+				`Command 'git --no-pager log --format=raw --no-color ${configProps.defaultBranch}..HEAD' failed with exit code 128`,
+			)
+		})
+	},
+)
 
 describe("when the 'git remote' command raises an error", () => {
 	let exitCode: ExitCode
