@@ -4,8 +4,10 @@ import type { GitLogCommitDto } from "#utilities/git/cli/dtos/GitLogCommitDto.ts
 import { getGitDefaultBranch } from "#utilities/git/cli/GetGitDefaultBranch.ts"
 import { getGitLog } from "#utilities/git/cli/GetGitLog.ts"
 
-export async function getGitBranchCrudeCommits(): Promise<CrudeCommits> {
-	const fromRef = await getGitDefaultBranch()
+export async function getGitBranchCrudeCommits(
+	defaultBranch: string | null = null,
+): Promise<CrudeCommits> {
+	const fromRef = defaultBranch ?? (await getGitDefaultBranch())
 
 	if (fromRef === null) {
 		throw new Error(

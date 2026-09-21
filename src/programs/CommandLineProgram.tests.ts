@@ -88,6 +88,8 @@ describe.each`
 	${["--config"]}                             | ${"'--config' requires at least 1 argument, but got 0"}
 	${["--config", "--config"]}                 | ${"'--config' requires at least 1 argument, but got 0"}
 	${["--config", "--skip-missing-configs"]}   | ${"'--config' requires at least 1 argument, but got 0"}
+	${["--default-branch"]}                     | ${"'--default-branch' requires exactly 1 argument, but got 0"}
+	${["--default-branch", "main", "master"]}   | ${"'--default-branch' requires exactly 1 argument, but got 2"}
 	${["--skip-missing-configs", "unexpected"]} | ${"'--skip-missing-configs' requires exactly 0 arguments, but got 1"}
 `(
 	"when the args are $invalidArgs",
@@ -128,6 +130,24 @@ describe("when the default Git branch cannot be determined", () => {
 		expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(
 			"Expected a default remote branch (e.g. 'origin/main') or a local branch named 'main' or 'master'",
 		)
+	})
+})
+
+describe("when '--default-branch' is specified", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockGitCommand("--no-pager log --format=raw --no-color upstream/release..HEAD", { output: "" })
+		exitCode = await commandLineProgram(["--default-branch", "upstream/release"])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("uses the provided branch without determining a branch automatically", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 

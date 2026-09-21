@@ -6,6 +6,18 @@ import type { CommitSha } from "#types/CommitSha.ts"
 import type { Vector } from "#types/Vector.ts"
 import { fakeGitLogCommitDtos } from "#utilities/git/cli/dtos/GitLogCommitDto.fakes.ts"
 import { mockGitLog, mockSabotagedGitLog } from "#utilities/git/cli/GetGitLog.fakes.ts"
+import { mockGitCommand } from "#utilities/git/cli/RunGitCommand.fakes.ts"
+
+describe("when a default branch is provided", () => {
+	beforeEach(() => {
+		mockGitCommand("--no-pager log --format=raw --no-color upstream/release..HEAD", { output: "" })
+	})
+
+	it("gets commits from the provided branch", async () => {
+		const commits = await getGitBranchCrudeCommits("upstream/release")
+		expect(commits).toEqual([])
+	})
+})
 
 describe.each`
 	sha
