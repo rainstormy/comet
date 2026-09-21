@@ -10,6 +10,7 @@ export type JsonConfigurationDto = v.InferOutput<typeof JSON_CONFIGURATION_DTO>
 
 export type JsonConfigurationTokensDto = JsonConfigurationDto["tokens"]
 export type JsonConfigurationRulesDto = JsonConfigurationDto["rules"]
+export type JsonConfigurationGitDto = JsonConfigurationDto["git"]
 
 const TOKENS_DTO = v.strictObject({
 	issueLinks: v.exactOptional(
@@ -18,6 +19,10 @@ const TOKENS_DTO = v.strictObject({
 			wildcards: v.exactOptional(stringArray()),
 		}),
 	),
+})
+
+const GIT_DTO = v.strictObject({
+	defaultBranch: v.exactOptional(v.string()),
 })
 
 // Allow JSON configuration files to provide an `error` or `off` string literal directly, omitting the object of `level` and `options`.
@@ -51,4 +56,5 @@ export const JSON_CONFIGURATION_DTO = v.strictObject({
 	extends: v.exactOptional(v.string()),
 	rules: v.exactOptional(RULES_DTO),
 	tokens: v.exactOptional(TOKENS_DTO),
+	git: v.exactOptional(GIT_DTO),
 })

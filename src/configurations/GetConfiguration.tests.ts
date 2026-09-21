@@ -9,6 +9,10 @@ import type { DeepPartial, DeepRequired } from "#utilities/Objects.ts"
 const path = "comet.json"
 const jsoncPath = "comet.jsonc"
 
+type CompleteJsonConfigurationDto = Omit<DeepRequired<JsonConfigurationDto>, "extends" | "git"> & {
+	$schema: string
+}
+
 describe("a configuration file with an empty object", () => {
 	beforeEach(() => {
 		mockJsonFile<JsonConfigurationDto>(path, {})
@@ -277,7 +281,7 @@ describe("a configuration file with a mixed ruleset of valid options", () => {
 
 describe("a complete configuration file", () => {
 	beforeEach(() => {
-		mockJsonFile<Omit<DeepRequired<JsonConfigurationDto>, "extends"> & { $schema: string }>(path, {
+		mockJsonFile<CompleteJsonConfigurationDto>(path, {
 			$schema: "https://example.com/schema.json",
 			rules: {
 				noBlankSubjectLines: "error",
