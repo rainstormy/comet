@@ -20,6 +20,7 @@ import { getPackageVersion } from "#utilities/package/Package.ts"
 
 const OPTION_SCHEMA = defineOptions({
 	"--config": { args: { min: 1 } },
+	"--default-branch": { args: { min: 1, max: 1 } },
 	"--skip-missing-configs": { args: { min: 0, max: 0 } },
 })
 
@@ -36,10 +37,11 @@ export async function commandLineProgram(args: Array<string>): Promise<ExitCode>
 	try {
 		const parsedArgs = parseArgs(OPTION_SCHEMA, args)
 		const configPaths = parsedArgs["--config"] ?? []
+		const defaultBranch = parsedArgs["--default-branch"]?.[0] ?? null
 		const skipMissingConfigPaths = parsedArgs["--skip-missing-configs"] !== undefined
 
 		const [crudeCommits, configuration] = await Promise.all([
-			getGitBranchCrudeCommits(),
+			getGitBranchCrudeCommits(defaultBranch),
 			resolveConfiguration(configPaths, skipMissingConfigPaths),
 		])
 

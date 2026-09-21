@@ -81,14 +81,16 @@ describe.each`
 )
 
 describe.each`
-	invalidArgs                                 | expectedError
-	${["-c"]}                                   | ${"Unknown option '-c'"}
-	${["--check"]}                              | ${"Unknown option '--check'"}
-	${["--skip-commits"]}                       | ${"Unknown option '--skip-commits'"}
-	${["--config"]}                             | ${"'--config' requires at least 1 argument, but got 0"}
-	${["--config", "--config"]}                 | ${"'--config' requires at least 1 argument, but got 0"}
-	${["--config", "--skip-missing-configs"]}   | ${"'--config' requires at least 1 argument, but got 0"}
-	${["--skip-missing-configs", "unexpected"]} | ${"'--skip-missing-configs' requires exactly 0 arguments, but got 1"}
+	invalidArgs                                      | expectedError
+	${["-c"]}                                        | ${"Unknown option '-c'"}
+	${["--check"]}                                   | ${"Unknown option '--check'"}
+	${["--skip-commits"]}                            | ${"Unknown option '--skip-commits'"}
+	${["--config"]}                                  | ${"'--config' requires at least 1 argument, but got 0"}
+	${["--config", "--config"]}                      | ${"'--config' requires at least 1 argument, but got 0"}
+	${["--config", "--skip-missing-configs"]}        | ${"'--config' requires at least 1 argument, but got 0"}
+	${["--default-branch"]}                          | ${"'--default-branch' requires exactly 1 argument, but got 0"}
+	${["--default-branch", "main", "origin/master"]} | ${"'--default-branch' requires exactly 1 argument, but got 2"}
+	${["--skip-missing-configs", "unexpected"]}      | ${"'--skip-missing-configs' requires exactly 0 arguments, but got 1"}
 `(
 	"when the args are $invalidArgs",
 	(props: { invalidArgs: Array<string>; expectedError: string }) => {
@@ -128,6 +130,33 @@ describe("when the default Git branch cannot be determined", () => {
 		expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(
 			"Expected a default remote branch (e.g. 'origin/main') or a local branch named 'main' or 'master'",
 		)
+	})
+})
+
+describe.each`
+	defaultBranch
+	${"origin/main"}
+	${"upstream/develop"}
+`("when '--default-branch' is specified as $defaultBranch", (props: { defaultBranch: string }) => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockGitCommand("remote", { output: "" })
+		mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
+		mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
+		mockGitCommand(`--no-pager log --format=raw --no-color ${props.defaultBranch}..HEAD`, {
+			output: "",
+		})
+		exitCode = await commandLineProgram(["--default-branch", props.defaultBranch])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
