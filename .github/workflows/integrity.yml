@@ -65,7 +65,12 @@ jobs:
           version-file: pnpm-workspace.yaml
           cache: true
         #
-      - name: Verify the code style (Oxfmt, Oxlint, TypeScript)
+      - name: Verify the code formatting (Oxfmt)
+        # language=sh
+        run: vp fmt --check
+        shell: bash
+        #
+      - name: Verify the code style (Oxlint, TypeScript)
         # language=sh
         run: vpr check
         shell: bash

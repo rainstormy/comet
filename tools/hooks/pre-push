@@ -3,8 +3,9 @@
 # Verify the software quality before allowing commits to be pushed.
 vpr check
 
-# Unit tests must pass.
-vpr test
+# Unit tests must pass if they are affected by the changed files.
+# shellcheck disable=SC2046 # Rely on word splitting to provide the correct filenames as arguments to Vitest.
+vpr test related --run $(git diff --name-only "$(git remote | head -n 1)/HEAD..HEAD" -- '*.ts')
 
 # Commit messages must be well-formed.
 vpr comet

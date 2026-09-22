@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
-# Reformat files before committing changes.
-vpr fmt
+# Reformat files before committing changes and restage the formatted files.
+vp staged
