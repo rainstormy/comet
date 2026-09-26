@@ -41,7 +41,8 @@ ${grey`52f07a2`}
         ${red`┬`}
         ${red`╰─ Subject lines must contain at least one non-whitespace character.`}
         ${red`   (noBlankSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -64,7 +65,8 @@ ${grey`2ba57d6`} amend! Revert " "
                      ${red`─┬──`}
                       ${red`╰─ Subject lines must contain at least one non-whitespace character.`}
                       ${red`   (noBlankSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -89,7 +91,8 @@ ${grey`9a7e6aa`} invite the parser to brunch
       ${red`╭────────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
       ${red`   (noExcessiveCommitsPerBranch)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -114,7 +117,8 @@ ${grey`75bedf8`} Refactor the jam queue
       ${red`╭───────────────────────`}
       ${red`╰─ Branches must not contain more than 3 commits.`}
       ${red`   (noExcessiveCommitsPerBranch)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -139,7 +143,8 @@ ${grey`f753a24`} last minute fix
       ${red`╭────────────────`}
       ${red`╰─ Branches must not contain more than 10 commits.`}
       ${red`   (noExcessiveCommitsPerBranch)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -162,7 +167,8 @@ ${grey`47722cd`}  Recalibrate the espresso machine
         ${red`┬`}
         ${red`╰─ Subject lines must not start with whitespace.`}
         ${red`   (noExcessiveWhitespace)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -185,7 +191,8 @@ ${grey`067ab0c`} make the office fern require less water
                                                ${red`┬`}
   ${red`Subject lines must not end with whitespace. ─╯`}
   ${red`(noExcessiveWhitespace)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -208,7 +215,8 @@ ${grey`50bd2cc`} taught the toaster  to write haiku
                           ${red`┬─`}
                           ${red`╰─ Subject lines must not contain excessive whitespace.`}
                           ${red`   (noExcessiveWhitespace)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -231,7 +239,8 @@ ${grey`c687be9`} Install tiny disco ball   in build room
                                ${red`─┬─`}
                                 ${red`╰─ Subject lines must not contain excessive whitespace.`}
                                 ${red`   (noExcessiveWhitespace)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -258,7 +267,8 @@ ${red`•`} ${grey`${bold`2`} │`} The prize   counter now accepts coupons.
     ${grey`· `}          ${red`╰─ Message bodies must not contain excessive whitespace.`}
     ${grey`· `}          ${red`   (noExcessiveWhitespace)`}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -287,7 +297,8 @@ ${red`•`} ${grey`${bold`3`} │`} The blue vault    needs a quieter alarm.
     ${grey`· `}               ${red`   (noExcessiveWhitespace)`}
   ${grey`4 │ Last note keeps watch.`}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -311,7 +322,8 @@ ${grey`507c835`} Merge branch 'main' into bugfix/dance-party-playlist
       ${red`╭─────────────────────────────────────────────────────`}
       ${red`╰─ Merge commits are not allowed.`}
       ${red`   (noMergeCommits)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -335,7 +347,8 @@ ${grey`71516e1`} amend! Merge branch 'feature/new-coffee-machine' into feature/o
       ${red`╭──────────────────────────────────────────────────────────────────────────────`}
       ${red`╰─ Merge commits are not allowed.`}
       ${red`   (noMergeCommits)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -358,7 +371,8 @@ ${grey`8c1fbd4`} test
       ${red`╭─────`}
       ${red`╰─ Commits must have unique subject lines within a branch.`}
       ${red`   (noRepeatedSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -382,7 +396,8 @@ ${grey`f3359c9`} GH-246 Replace guesswork with a tiny chart and upgrade the \`Bu
       ${red`╭────────────────────────────────────────────────────────────────────────────────────────`}
       ${red`╰─ Commits must have unique subject lines within a branch.`}
       ${red`   (noRepeatedSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -419,7 +434,8 @@ ${red`•`} ${grey`${bold`3`} │`} Co-Authored-By: Claude Fable 5 <noreply@anth
     ${grey`· `}      ${red`   `}
   ${grey`4 │ Signed-Off-By: Hamato Yoshi <hamato@nycsewers.com>`}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -458,7 +474,8 @@ ${red`•`} ${grey`${bold`6`} │`}   refs: #668182
     ${grey`· `}   ${red`     ∙ Signed-off-by`}
     ${grey`· `}   ${red`   `}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -481,7 +498,8 @@ ${grey`d4e7a97`} Revert "Revert "Make the program act like a clown""
         ${red`──────┬───────`}
               ${red`╰─ Cherry-pick the original commit instead of reverting it over.`}
               ${red`   (noRevertRevertCommits)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -504,7 +522,8 @@ ${grey`34aa41b`}  revert "revert  "revert "repair the soft ice machine """
          ${red`───────────┬───────────`}
                     ${red`╰─ Cherry-pick the original commit instead of reverting it over.`}
                     ${red`   (noRevertRevertCommits)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -527,7 +546,8 @@ ${grey`964bce7`} WIP
         ${red`─┬─`}
          ${red`╰─ Subject lines must contain at least two words.`}
          ${red`   (noSingleWordSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -550,7 +570,8 @@ ${grey`a4b6d0e`} fixup! #17 bugfix
                    ${red`──┬───`}
                      ${red`╰─ Subject lines must contain at least two words.`}
                      ${red`   (noSingleWordSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -573,7 +594,8 @@ ${grey`ffebad1`} amend!Apply strawberry jam to make the code sweeter
         ${red`──┬───`}
           ${red`╰─ Combine squash commits with their ancestors.`}
           ${red`   (noSquashMarkers)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -596,7 +618,8 @@ ${grey`56c750b`}  fixup! fixup! found a funny easter egg
          ${red`──────┬──────`}
                ${red`╰─ Combine squash commits with their ancestors.`}
                ${red`   (noSquashMarkers)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -619,7 +642,8 @@ ${grey`41c3cb1`} fixed it!
                 ${red`┬`}
                 ${red`╰─ Subject lines must not end with punctuation.`}
                 ${red`   (noUnexpectedPunctuation)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -642,7 +666,8 @@ ${grey`9b83d7c`} Formatting.
                   ${red`┬`}
                   ${red`╰─ Subject lines must not end with punctuation.`}
                   ${red`   (noUnexpectedPunctuation)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -665,7 +690,8 @@ ${grey`94486b7`} the old route ->
                       ${red`┬─`}
                       ${red`╰─ Subject lines must not end with punctuation.`}
                       ${red`   (noUnexpectedPunctuation)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -688,7 +714,8 @@ ${grey`f67544d`} a cheerful easter egg is hiding somewhere in this commit :joy:
                                                                  ${red`──┬──`}
                      ${red`Subject lines must not end with punctuation. ─╯`}
                      ${red`(noUnexpectedPunctuation)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -711,7 +738,8 @@ ${grey`926af33`} the moon laser is operating!!!! #42
                                    ${red`─┬──`}
                                     ${red`╰─ Subject lines must not end with punctuation.`}
                                     ${red`   (noUnexpectedPunctuation)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -745,7 +773,8 @@ ${grey`╰─ authored by:`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ ${String.raw`\d+\+.+@users\.noreply\.github\.com`}`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -785,7 +814,8 @@ ${grey`╰─ authored by:`} claus@santasworkshop.com
               ${red`   Accepted patterns:`}
               ${red`     ∙ ${String.raw`\d+\+.+@users\.noreply\.github\.com`}`}
               ${red`     ∙ ${String.raw`.+@fictivecompany\.com`}`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -819,7 +849,8 @@ ${grey`╰─ authored by:`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ ${String.raw`\p{Lu}.*\s.+`}`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -854,7 +885,8 @@ ${grey`╰─ authored by:`} santa.claus
               ${red`   Accepted patterns:`}
               ${red`     ∙ ${String.raw`\p{Lu}.*\s.+`}`}
               ${red`     ∙ ${String.raw`dependabot\[bot\]`}`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -877,7 +909,8 @@ ${grey`497de39`} release the robot butler
         ${red`┬`}
         ${red`╰─ The first letter in subject lines must be in uppercase.`}
         ${red`   (useCapitalisedSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -900,7 +933,8 @@ ${grey`92d6b11`} fixup! resolve a bug that thought it was a feature
                ${red`┬`}
                ${red`╰─ The first letter in subject lines must be in uppercase.`}
                ${red`   (useCapitalisedSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -934,7 +968,8 @@ ${grey`╰─ committed by:`}
                ${red`   `}
                ${red`   Accepted patterns:`}
                ${red`     ∙ ${String.raw`\d+\+.+@users\.noreply\.github\.com`}`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -974,7 +1009,8 @@ ${grey`╰─ committed by:`} noreply@tmnt.com
                ${red`   Accepted patterns:`}
                ${red`     ∙ ${String.raw`\d+\+.+@users\.noreply\.github\.com`}`}
                ${red`     ∙ ${String.raw`noreply@github\.com`}`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1008,7 +1044,8 @@ ${grey`╰─ committed by:`}
                ${red`   `}
                ${red`   Accepted patterns:`}
                ${red`     ∙ ${String.raw`\p{Lu}.*\s.+`}`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1052,7 +1089,8 @@ ${grey`╰─ committed by:`} master splinter
                ${red`     ∙ ${String.raw`dependabot\[bot\]`}`}
                ${red`     ∙ ${String.raw`renovate\[bot\]`}`}
                ${red`     ∙ ${String.raw`GitHub`}`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1077,7 +1115,8 @@ ${grey`68e9216`} Remove redundant call to \`wrapper\`
                             ${red`──┬──`}
                               ${red`╰─ Subject lines must not exceed 20 characters.`}
                               ${red`   (useConciseSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1102,7 +1141,8 @@ ${grey`9bed522`} revisit the boolean properties in the \`IceCreamMachine\` const
                             ${red`───────────────────────┬───────────────────────`}
      ${red`Subject lines must not exceed 20 characters. ─╯`}
      ${red`(useConciseSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1127,7 +1167,8 @@ ${grey`e8c95d6`} Retrieve data from the exclusive third-party service
                                                           ${red`─┬`}
              ${red`Subject lines must not exceed 50 characters. ─╯`}
              ${red`(useConciseSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1152,7 +1193,8 @@ ${grey`be86674`} make a genuine attempt to fix the bugs that the users were comp
                                                                                 ${red`──┬─`}
                                     ${red`Subject lines must not exceed 72 characters. ─╯`}
                                     ${red`(useConciseSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1181,7 +1223,8 @@ ${red`•`} ${grey`${bold`1`} │`} The old one sounded like hail.
     ${grey`· `}${red`╰─ Subject lines and message bodies must be separated by exactly one empty line.`}
     ${grey`· `}${red`   (useEmptyLineBeforeBodyLines)`}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1212,7 +1255,8 @@ ${red`•`} ${grey`${bold`2`} │`}
     ${grey`· `}${red`   (useEmptyLineBeforeBodyLines)`}
   ${grey`3 │ The widgets sparkle.`}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1235,7 +1279,8 @@ ${grey`9e45e09`} Added a feature that should have stayed on the whiteboard
         ${red`──┬──`}
           ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
           ${red`   (useImperativeSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1258,7 +1303,8 @@ ${grey`339b6fc`} amend! GH-55: made the console less dramatic
                       ${red`─┬──`}
                        ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
                        ${red`   (useImperativeSubjectLines)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1285,7 +1331,8 @@ ${grey`c861aea`} Organise the robot uprising without a ticket
         ${red`   (useIssueLinks)`}
         ${red`   `}
         ${red`   Examples: #123, GH-123, GL-123`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1312,7 +1359,8 @@ ${grey`fb10023`} amend! Teach the unit tests to write themselves
                ${red`   (useIssueLinks)`}
                ${red`   `}
                ${red`   Examples: #123, GH-123, GL-123`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1339,7 +1387,8 @@ ${grey`d9a30bb`} make the automated tests question their existence
              ${red`(useIssueLinks)`}
              ${red``}
              ${red`Examples: #123, GH-123, GL-123`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1366,7 +1415,8 @@ ${grey`5761bad`} Cooked this commit at 3 AM
                                   ${red`   (useIssueLinks)`}
                                   ${red`   `}
                                   ${red`   Examples: #123, GH-123, GL-123`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1394,7 +1444,8 @@ ${grey`ca745a7`} attend the acoustic show
         ${red`   (useIssueLinks)`}
         ${red`   `}
         ${red`   Examples: #123, (no-issue)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1422,7 +1473,8 @@ ${grey`d0709d2`}  squash!  made the code so clean that it sparkles
                   ${red`   (useIssueLinks)`}
                   ${red`   `}
                   ${red`   Example: ABC-123`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1450,7 +1502,8 @@ ${grey`f6fc239`} Refactored code, now it’s overpowered
         ${red`   (useIssueLinks)`}
         ${red`   `}
         ${red`   Examples: test#123, experiment#123, [incident]`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1478,7 +1531,8 @@ ${grey`cccee2c`} Fixed a bad typo in comment (yes, really)
      ${red`(useIssueLinks)`}
      ${red``}
      ${red`Examples: AWESOME-123, UNICORN-123, PROJECT-123`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1508,7 +1562,8 @@ ${red`•`} ${grey`${bold`3`} │`} A tiny note runs long.
     ${grey`· `}                    ${red`   (useLineWrapping)`}
   ${grey`4 │ After this note.`}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1539,7 +1594,8 @@ ${red`•`} ${grey`${bold`2`} │`} The pager now points to the correct team bef
     ${grey`· `}                                     ${red`   (useLineWrapping)`}
   ${grey`3 │ `}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1570,7 +1626,8 @@ ${red`•`} ${grey`${bold`2`} │`} the deploy bot left a very long note about s
     ${grey`· `}            ${red`(useLineWrapping)`}
   ${grey`3 │ the release train leaves at noon with snacks.`}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1600,7 +1657,8 @@ ${red`•`} ${grey`${bold`2`} │`} It was just a matter of time before it would
     ${grey`· `}                     ${red`Message body lines must not exceed 72 characters. ─╯`}
     ${grey`· `}                     ${red`(useLineWrapping)`}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1630,7 +1688,8 @@ ${red`•`} ${grey`${bold`10`} │`} The tenth body line is intentionally long s
      ${grey`· `}                              ${red`Message body lines must not exceed 72 characters. ─╯`}
      ${grey`· `}                              ${red`(useLineWrapping)`}
      ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1661,7 +1720,8 @@ ${red`•`} ${grey`${bold`12`} │`} The twelfth body line is also intentionally
      ${grey`· `}                                ${red`(useLineWrapping)`}
   ${grey`13 │ more info goes here...`}
      ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1691,7 +1751,8 @@ ${red`•`} ${grey`${bold`2`} │`} Read https://github.com/rainstormy/comet/pul
     ${grey`· `}                                                                                           ${red`Message body lines must not exceed 72 characters. ─╯`}
     ${grey`· `}                                                                                           ${red`(useLineWrapping)`}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1735,7 +1796,8 @@ ${red`•`} ${grey`${bold`3`} │`} The second note also runs beyond twenty char
     ${grey`· `}                                          ${red`   (useLineWrapping)`}
   ${grey`4 │ Short.`}
     ${grey`╰──`}
-`.trim(),
+
+Found 2 concerns in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1759,7 +1821,8 @@ ${grey`9b9e2ab`} Sign the pantry inventory app
       ${red`╭──────────────────────────────`}
       ${red`╰─ Commits must be signed cryptographically with a signing key.`}
       ${red`   (useSignedCommits)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
@@ -1783,7 +1846,8 @@ ${grey`42cefd1`} fixup! GH-692 it's raining gold everywhere we go
       ${red`╭─────────────────────────────────────────────────`}
       ${red`╰─ Commits must be signed cryptographically with a signing key.`}
       ${red`   (useSignedCommits)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
