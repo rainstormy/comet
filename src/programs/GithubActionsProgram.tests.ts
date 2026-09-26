@@ -232,7 +232,8 @@ ${grey`98634c1`} fix!
            ${red`┬`}
            ${red`╰─ Subject lines must not end with punctuation.`}
            ${red`   (noUnexpectedPunctuation)`}
-`.trim(),
+
+Found 3 concerns in 1 commit.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -281,7 +282,8 @@ ${red`•`} ${grey`${bold`2`} │`} This body line is intentionally longer than 
     ${grey`· `}                               ${red`Message body lines must not exceed 72 characters. ─╯`}
     ${grey`· `}                               ${red`(useLineWrapping)`}
     ${grey`╰──`}
-`.trim(),
+
+Found 2 concerns in 2 commits.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -335,7 +337,8 @@ ${grey`b58de17`} Sign the pantry inventory
       ${red`╭──────────────────────────`}
       ${red`╰─ Commits must be signed cryptographically with a signing key.`}
       ${red`   (useSignedCommits)`}
-`.trim(),
+
+Found 3 concerns in 3 commits.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -431,7 +434,8 @@ ${grey`7f811b2`} Merge the old tea ledger
       ${red`╭─────────────────────────`}
       ${red`╰─ Merge commits are not allowed.`}
       ${red`   (noMergeCommits)`}
-`.trim(),
+
+Found 8 concerns in 4 commits.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -745,7 +749,8 @@ ${red`•`} ${grey`${bold`2`} │`} Co-authored-by: Ada Lovelace <ada@example.co
     ${grey`· `}      ${red`     ∙ Reviewed-by`}
     ${grey`· `}      ${red`   `}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -794,7 +799,8 @@ ${grey`╰─ authored by:`} Master Splinter
               ${red`   Accepted patterns:`}
               ${red`     ∙ Leonardo da Vinci`}
               ${red`     ∙ Ada Lovelace`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -855,7 +861,8 @@ ${grey`9f1a1b2`} Test the emergency toaster
       ${red`╭───────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
       ${red`   (noExcessiveCommitsPerBranch)`}
-`.trim(),
+
+Found 3 concerns in 3 commits.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -930,7 +937,8 @@ ${grey`c0ffee1`} Untangle the improbable cables
                               ${red`───┬────`}
                                  ${red`╰─ Subject lines must not exceed 22 characters.`}
                                  ${red`   (useConciseSubjectLines)`}
-`.trim(),
+
+Found 5 concerns in 5 commits.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -1016,7 +1024,8 @@ ${grey`b58de17`} Wire the oat milk alert
       ${red`╭────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
       ${red`   (noExcessiveCommitsPerBranch)`}
-`.trim(),
+
+Found 2 concerns in 2 commits.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -1146,7 +1155,8 @@ ${grey`a8b3d6c`} Merge the old tea ledger
       ${red`╭─────────────────────────`}
       ${red`╰─ Branches must not contain more than 2 commits.`}
       ${red`   (noExcessiveCommitsPerBranch)`}
-`.trim(),
+
+Found 5 concerns in 3 commits.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -1361,7 +1371,8 @@ ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
                ${red`   `}
                ${red`   Accepted patterns:`}
                ${red`     ∙ .+@fastforward\\.com`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -1431,7 +1442,8 @@ ${grey`d677c31`} Tune the observatory clock
       ${red`╭───────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
       ${red`   (noExcessiveCommitsPerBranch)`}
-`.trim(),
+
+Found 2 concerns in 2 commits.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -1522,7 +1534,8 @@ ${grey`a43a3f3`} Archive the noisy bell!
                               ${red`┬`}
                               ${red`╰─ Subject lines must not end with punctuation.`}
                               ${red`   (noUnexpectedPunctuation)`}
-`.trim(),
+
+Found 3 concerns in 3 commits.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -1585,7 +1598,8 @@ ${grey`7f811b2`} Revert "Revert "Disable the alarm""
         ${red`──────┬───────`}
               ${red`╰─ Cherry-pick the original commit instead of reverting it over.`}
               ${red`   (noRevertRevertCommits)`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
@@ -1682,7 +1696,8 @@ ${grey`╰─ authored by:`} Master Splinter
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ Ada Lovelace`}
-`.trim(),
+
+Found 2 concerns in 2 commits.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()

@@ -25,9 +25,18 @@ export function commitwiseReport(
 	commits: Commits,
 	configuration: Configuration,
 ): string {
-	return concerns
+	if (concerns.length === 0) {
+		return ""
+	}
+
+	const formattedConcerns = concerns
 		.map((concern) => formatConcern(concern, getConcernedCommit(concern, commits), configuration))
 		.join("\n\n")
+
+	const concernedCommitCount = new Set(concerns.map(({ commitSha }) => commitSha)).size
+	const totalConcerns = `Found ${formatCount(concerns.length, "concern", "concerns")} in ${formatCount(concernedCommitCount, "commit", "commits")}.`
+
+	return `${formattedConcerns}\n\n${totalConcerns}`
 }
 
 function getConcernedCommit(concern: Concern, commits: Commits): Commit {
