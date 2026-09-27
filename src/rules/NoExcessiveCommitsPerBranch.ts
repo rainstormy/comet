@@ -14,6 +14,20 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * This rule can also help catch accidental rebases onto stale commits. Such an operation is likely to add copies of old base commits to the current branch.
  *
+ * ## How to fix
+ *
+ * TODO: ### Command-line interface (CLI)
+ *
+ * Use an interactive rebase to combine related commits with `squash` or `fixup` until the branch is within `maxCommits`. Keep independent work on separate branches or pull requests:
+ *
+ * ```shell
+ * git rebase --interactive <commit-sha>
+ * ```
+ *
+ * TODO: ### IntelliJ IDEA
+ *
+ * In the Git tool window, right-click the base commit and select `Interactively Rebase from Here...`. Set related commits to `Squash` or `Fixup` in the rebase dialog. Keep independent work on separate branches or pull requests.
+ *
  * ## Remarks
  *
  * The following kinds of commits do _not_ count towards the limit:
@@ -23,7 +37,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * ## Options
  *
- * `maxCommits` is a positive integer (default value: 10).
+ * - `maxCommits` (positive integer): Maximum number of commits allowed per branch. Default value: `10`.
  *
  * ```json
  * {

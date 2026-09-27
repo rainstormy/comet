@@ -5,23 +5,43 @@ import { userIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { regexUnion } from "#utilities/Regexes.ts"
 
 /**
- * Verifies that author email addresses match at least one configured regular-expression pattern.
+ * Rejects commits where the author's email address does not match one of the configured regex patterns.
  *
  * ## Rationale
  *
- * Restricting author email addresses to trusted patterns keeps the commit history attributable
- * and helps avoid exposing private addresses in a public repository.
+ * Restricting email addresses to a trusted pattern keeps the commit history attributable and standardised for tooling and automated reports.
+ * For example, by requiring authors to use a specific email address format or domain.
  *
- * ## Remarks
+ * It can prevent web-based edits and other kinds of automation from committing to the repository.
+ * It can also prevent exposing private email addresses in a public repository when the author has misconfigured Git.
  *
- * - Patterns are matched against the complete email address and are case-sensitive.
- * - Leading and trailing whitespace is part of the value matched against each pattern.
- * - An empty `patterns` array accepts every address.
+ * ## How to fix
+ *
+ * TODO: ### Command-line interface (CLI)
+ *
+ * Update your Git email address to match one of the configured patterns, for example:
+ *
+ * ```shell
+ * git config user.email 'name@example.com'
+ * ```
+ *
+ *
+ * To repair an existing commit, start an interactive rebase from its parent and mark it `edit`:
+ *
+ * ```shell
+ * git rebase --interactive <commit-sha>
+ * ```
+ *
+ * When the rebase pauses, amend the author email while preserving the intended author name, then continue:
+ *
+ * ```shell
+ * git commit --amend --reset-author --no-edit
+ * git rebase --continue
+ * ```
  *
  * ## Options
  *
- * `patterns` is an array of regular-expression strings. It defaults to an empty array,
- * so every address is accepted until you configure it.
+ * - `patterns` (array of strings): Regular expression patterns to accept. If empty, every email address is accepted. Default value: `[]`.
  *
  * ```json
  * {
@@ -29,29 +49,43 @@ import { regexUnion } from "#utilities/Regexes.ts"
  *     "useAuthorEmailPatterns": {
  *       "level": "error",
  *       "options": {
- *         "patterns": ["\\d+\\+.+@users\\.noreply\\.github\\.com"]
+ *         "patterns": []
  *       }
  *     }
  *   }
  * }
  * ```
  *
- * ## Examples
+ * TODO: ## Examples
  *
- * With the pattern above:
+ * With `patterns: ["\\d+\\+.+@users\\.noreply\\.github\\.com"]`:
+ *
+ * The first line in each block shows the author's email; the remaining line is the commit subject.
  *
  * ### Rejected
  *
  * ```
- * bunny@theeastercompany.com
- * claus@santasworkshop.com
+ * author email: bunny@theeastercompany.com
+ * Release the robot butler
+ * ```
+ *
+ * ```
+ * author email: claus@santasworkshop.com
+ * Teach the release notes to sing
  * ```
  *
  * ### Accepted
  *
  * ```
- * 87654321+littlemermaid@users.noreply.github.com
+ * author email: 87654321+littlemermaid@users.noreply.github.com
+ * Add the missing release note
  * ```
+ *
+ * ## Related rules
+ *
+ * - [useAuthorNamePatterns](./UseAuthorNamePatterns.md)
+ * - [useCommitterEmailPatterns](./UseCommitterEmailPatterns.md)
+ * - [useCommitterNamePatterns](./UseCommitterNamePatterns.md)
  */
 export function* useAuthorEmailPatterns(
 	commits: Commits,

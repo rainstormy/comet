@@ -5,14 +5,31 @@ import { bodyLineConcern } from "#rules/concerns/BodyLineConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Verifies that counted characters in body lines do not exceed a configured maximum (default: 72 characters).
+ * TODO: Rejects body lines that exceed a configured character limit.
  *
- * ## Rationale
+ * TODO: ## Rationale
  *
  * Keeping body lines short makes the commit history easier to read in Git clients
  * and avoids forcing readers to scroll sideways through a paragraph.
  *
- * ## Remarks
+ * Wrapped body text fits more comfortably in terminals, pull requests, and side-by-side diffs.
+ * Users can read an explanation without horizontal scrolling while still keeping code and metadata intact.
+ *
+ * ## How to fix
+ *
+ * TODO: ### Command-line interface (CLI)
+ *
+ * Wrap prose in the commit body so each checked line stays within the configured `maxLength`. To edit an existing message, start an interactive rebase and mark the commit `reword`:
+ *
+ * ```shell
+ * git rebase --interactive <commit-sha>
+ * ```
+ *
+ * TODO: ### IntelliJ IDEA
+ *
+ * In the Git tool window, right-click the commit and select `Edit Commit Message...`. Wrap body prose so each checked line stays within the configured limit.
+ *
+ * TODO: ## Remarks
  *
  * - Merge commits are ignored.
  * - Fenced code blocks and trailer lines are not checked.
@@ -20,20 +37,22 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * ## Options
  *
- * `maxLength` is a positive integer. It defaults to `72`.
+ * - `maxLength` (positive integer): Maximum number of characters allowed per body line. Default value: `72`.
  *
  * ```json
  * {
  *   "rules": {
  *     "useLineWrapping": {
  *       "level": "error",
- *       "options": { "maxLength": 72 }
+ *       "options": {
+ *         "maxLength": 72
+ *       }
  *     }
  *   }
  * }
  * ```
  *
- * ## Examples
+ * TODO: ## Examples
  *
  * With `maxLength: 72`:
  *
@@ -53,13 +72,17 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * The deploy bot left a short note about sandwiches.
  * ```
  *
- * Lines in fenced code blocks are preserved verbatim:
+ * ````
+ * Preserve the generated example
  *
- * ````text
- * ```text
+ * ```md
  * This fenced example can be much longer without raising a concern.
  * ```
  * ````
+ *
+ * ## Related rules
+ *
+ * - [useConciseSubjectLines](./UseConciseSubjectLines.md)
  */
 export function* useLineWrapping(
 	commits: Commits,

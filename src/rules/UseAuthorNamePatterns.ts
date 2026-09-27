@@ -5,52 +5,91 @@ import { userIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { regexUnion } from "#utilities/Regexes.ts"
 
 /**
- * Verifies that author names match at least one configured regular-expression pattern.
+ * Rejects commits where the author's name does not match one of the configured regex patterns.
  *
  * ## Rationale
  *
- * Restricting author names to trusted patterns keeps the commit history attributable
- * and helps avoid exposing private usernames.
+ * Restricting names to a trusted pattern keeps the commit history attributable and standardised for tooling and automated reports.
+ * For example, by requiring authors to use a specific name format.
  *
- * ## Remarks
+ * It can prevent web-based edits and other kinds of automation from committing to the repository.
+ * It can also prevent exposing private usernames in a public repository when the author has misconfigured Git.
  *
- * - Patterns are matched against the complete name and are case-sensitive.
- * - Leading and trailing whitespace is part of the value matched against each pattern.
- * - An empty `patterns` array accepts every name.
+ * ## How to fix
+ *
+ * TODO: ### Command-line interface (CLI)
+ *
+ * Set your Git name to one matching the configured patterns:
+ *
+ * ```shell
+ * git config user.name "Author Name"
+ * ```
+ *
+ * To repair an existing commit, start an interactive rebase from its parent and mark it `edit`:
+ *
+ * ```shell
+ * git rebase --interactive <commit-sha>
+ * ```
+ *
+ * When the rebase pauses, amend the author name while preserving the intended author email, then continue:
+ *
+ * ```shell
+ * git commit --amend --author="Author Name <author@example.com>" --no-edit
+ * git rebase --continue
+ * ```
  *
  * ## Options
  *
- * `patterns` is an array of regular-expression strings. It defaults to an empty array,
- * so every name is accepted until you configure it.
+ * - `patterns` (array of strings): Regular expression patterns to accept. If empty, every name is accepted. Default value: `[]`.
  *
  * ```json
  * {
  *   "rules": {
  *     "useAuthorNamePatterns": {
  *       "level": "error",
- *       "options": { "patterns": ["\\p{Lu}.*\\s.+"] }
+ *       "options": {
+ *         "patterns": []
+ *       }
  *     }
  *   }
  * }
  * ```
  *
- * ## Examples
+ * TODO: ## Examples
  *
- * With the pattern above:
+ * With `patterns: ["\\p{Lu}.*\\s.+"]`:
+ *
+ * The first line in each block shows the author's name; the remaining line is the commit subject.
  *
  * ### Rejected
  *
  * ```
- * santa claus
- * Jeanne
+ * author name: santa claus
+ * Release the robot butler
+ * ```
+ *
+ * ```
+ * author name: Jeanne
+ * Teach the release notes to sing
  * ```
  *
  * ### Accepted
  *
  * ```
- * The Little Mermaid
- * Jeanne d'Arc
+ * author name: The Little Mermaid
+ * Add the missing release note
  * ```
+ *
+ * ```
+ * author name: Jeanne d'Arc
+ * Fix the broken release note
+ * ```
+ *
+ * ## Related rules
+ *
+ * - [useAuthorEmailPatterns](./UseAuthorEmailPatterns.md)
+ * - [useCommitterEmailPatterns](./UseCommitterEmailPatterns.md)
+ * - [useCommitterNamePatterns](./UseCommitterNamePatterns.md)
  */
 export function* useAuthorNamePatterns(
 	commits: Commits,

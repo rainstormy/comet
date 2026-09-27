@@ -5,19 +5,51 @@ import { bodyLineConcern } from "#rules/concerns/BodyLineConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Verifies that a commit message body is separated from its subject line by exactly one empty line.
+ * TODO: Rejects commit messages whose body is not separated from the subject line by exactly one empty line.
  *
- * ## Rationale
+ * TODO: ## Rationale
  *
  * A predictable subject-and-body boundary keeps commit messages readable in Git clients
  * and makes the first paragraph easy to identify.
  *
- * ## Remarks
+ * A stable subject-and-body boundary lets users read a short summary without losing the detailed explanation below it.
+ * It also helps Git clients and automation identify the subject and the first paragraph consistently.
+ *
+ * ## How to fix
+ *
+ * TODO: ### Command-line interface (CLI)
+ *
+ * When a body is present, put exactly one blank line between it and the subject, and remove any extra blank lines there. To edit an existing commit, start an interactive rebase and mark it `reword`:
+ *
+ * ```shell
+ * git rebase --interactive <commit-sha>
+ * ```
+ *
+ * TODO: ### IntelliJ IDEA
+ *
+ * In the Git tool window, right-click the commit and select `Edit Commit Message...`. Add exactly one blank line between the subject and body.
+ *
+ * TODO: ## Remarks
  *
  * - Commits without body text, including commits with only blank lines, are accepted.
  * - The separator line may contain whitespace, but it must be the only empty line before body text.
  *
- * ## Examples
+ * ## Options
+ *
+ * This rule has no configurable options.
+ *
+ * ```json
+ * {
+ *   "rules": {
+ *     "useEmptyLineBeforeBodyLines": {
+ *       "level": "error",
+ *       "options": {}
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * TODO: ## Examples
  *
  * ### Rejected
  *
@@ -39,6 +71,10 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * Teach the changelog to whisper
  *
  * The noisy bits moved to the release notes.
+ * ```
+ *
+ * ```
+ * Record the quiet acknowledgement
  * ```
  */
 export function* useEmptyLineBeforeBodyLines(

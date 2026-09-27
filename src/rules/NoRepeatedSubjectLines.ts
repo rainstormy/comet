@@ -5,40 +5,77 @@ import { commitConcern } from "#rules/concerns/CommitConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Verifies that no commit repeats an earlier subject line in the branch.
+ * Rejects subject lines equal to a previous subject line in the current branch.
  *
  * ## Rationale
  *
- * Unique subject lines make individual changes easier to identify in a branch's history.
- * Repeated subjects can make it difficult to tell whether a change was duplicated or its subject was never updated.
+ * The subject line is the part of a commit that readers see most often when scanning the commit history.
  *
- * ## Remarks
+ * A unique subject line makes the commit distinguishable from other commits.
+ * This keeps the commit history readable and makes the commit easier to find.
+ *
+ * Sometimes, a duplicated subject line is meant to amend a previous commit.
+ * In those cases, it should start with a squash marker such as `amend!`, `fixup!`, or `squash!` to make the intent clear and to enable tools for interactive rebasing.
+ *
+ * ## How to fix
+ *
+ * TODO: ### Command-line interface (CLI)
+ *
+ * Give independent changes distinct subject lines. If a commit amends earlier work, combine it with that commit using `fixup` or `squash`; otherwise, mark the duplicate `reword` and give it a unique subject:
+ *
+ * ```shell
+ * git rebase --interactive <commit-sha>
+ * ```
+ *
+ * TODO: ### IntelliJ IDEA
+ *
+ * In the Git tool window, right-click an independent duplicate and select `Edit Commit Message...` to give it a unique subject. If it amends earlier work, select `Interactively Rebase from Here...` and set it to `Fixup` or `Squash`.
+ *
+ * TODO: ## Remarks
  *
  * - Subject comparison ignores whitespace and capitalization.
  * - Merge commits are considered when comparing later subjects, but they never raise concerns.
  * - Revert commits and commits with squash markers are skipped entirely.
  *
- * ## Examples
+ * ## Options
+ *
+ * This rule has no configurable options.
+ *
+ * ```json
+ * {
+ *   "rules": {
+ *     "noRepeatedSubjectLines": {
+ *       "level": "error",
+ *       "options": {}
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * TODO: ## Examples
+ *
+ * Each numbered item is a separate commit in the same branch.
  *
  * ### Rejected
  *
- * ```
- * 1. Add some extra love to the code
- * 2. add   some extra love to the code
- * ```
+ * 1. ```
+ *    Add some extra love to the code
+ *    ```
+ * 2. ```
+ *    add   some extra love to the code
+ *    ```
  *
  * ### Accepted
  *
- * ```
- * 1. Label the mystery switch
- * 2. Test the mystery switch
- * ```
- *
- * ```
- * 1. Tune the kettle
- * 2. fixup! Tune the kettle
- * 3. Revert "Tune the kettle"
- * ```
+ * 1. ```
+ *    Label the mystery switch
+ *    ```
+ * 2. ```
+ *    fixup! Label the mystery switch
+ *    ```
+ * 3. ```
+ *    fixup! Label the mystery switch
+ *    ```
  */
 export function* noRepeatedSubjectLines(
 	commits: Commits,

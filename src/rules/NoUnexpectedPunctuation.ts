@@ -10,28 +10,61 @@ const ALLOWED_PUNCTUATION_REGEX =
 const TRAILING_EMOJI_SHORTCODE_REGEX = /:\w+:$/u
 
 /**
- * Verifies that subject lines do not end with unexpected punctuation.
+ * TODO: Rejects subject lines ending with unexpected punctuation.
  *
- * ## Rationale
+ * TODO: ## Rationale
  *
  * A consistent subject-line ending makes the commit history easier to scan
  * and applies the same convention across Git clients.
  *
- * ## Remarks
+ * A consistent ending lets users scan a history without mentally filtering mixed sentence styles.
+ * The rule preserves punctuation that carries meaning, so users can keep useful issue references, paired delimiters, and numeric symbols.
+ *
+ * ## How to fix
+ *
+ * TODO: ### Command-line interface (CLI)
+ *
+ * Remove unsupported punctuation at the end of the subject. To edit an existing commit, start an interactive rebase and mark it `reword`:
+ *
+ * ```shell
+ * git rebase --interactive <commit-sha>
+ * ```
+ *
+ * TODO: ### IntelliJ IDEA
+ *
+ * In the Git tool window, right-click the commit and select `Edit Commit Message...`. Remove unsupported punctuation at the end of its subject.
+ *
+ * TODO: ## Remarks
  *
  * - Revert commits are skipped.
  * - Issue links at the end of a subject line are ignored when checking punctuation.
- * - Closing brackets, paired quotes, and symbols associated with numbers (e.g. `100%`) are allowed.
+ * - Paired delimiters, paired quotes, and symbols such as a percentage sign after a number are allowed.
  * - Only subject lines are checked; punctuation in body lines is left alone.
  *
- * ## Examples
+ * ## Options
+ *
+ * This rule has no configurable options.
+ *
+ * ```json
+ * {
+ *   "rules": {
+ *     "noUnexpectedPunctuation": {
+ *       "level": "error",
+ *       "options": {}
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * TODO: ## Examples
  *
  * ### Rejected
  *
  * ```
  * Make the program act like a clown.
- * Apply strawberry jam to make the code sweeter~
- * Is the coffee ready?
+ * ```
+ *
+ * ```
  * Hide a cheerful easter egg :joy:
  * ```
  *
@@ -39,9 +72,16 @@ const TRAILING_EMOJI_SHORTCODE_REGEX = /:\w+:$/u
  *
  * ```
  * Release the robot butler
+ * ```
+ *
+ * ```
  * Rewire the pantry (after lunch) #42
- * Increase the tax to 100%
- * Revert "Release the robot butler!"
+ * ```
+ *
+ * ```
+ * Update the report
+ *
+ * The body may end with punctuation!
  * ```
  */
 export function* noUnexpectedPunctuation(

@@ -6,36 +6,68 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 import { rangeBetween } from "#types/CharacterRange.ts"
 
 /**
- * Verifies that subject lines do not contain squash markers.
+ * Rejects subject lines beginning with a squash marker like `amend!`, `fixup!`, and `squash!`.
  *
  * ## Rationale
  *
- * Squashing temporary commits before delivery removes noisy intermediate diffs,
+ * Temporary commits with squash markers make it easier to discover changes during a code review.
+ *
+ * TODO: Squashing temporary commits before delivery removes noisy intermediate diffs,
  * keeps each final change cohesive, and makes the history easier to revert.
  *
- * ## Remarks
+ * ## How to fix
  *
- * - Markers such as `fixup!`, `squash!`, and `amend!` are recognised case-insensitively,
- *   including when they are combined or repeated.
- * - A marker must include an exclamation mark; plain words such as `fixup`, `squash`,
- *   and `amend` are allowed.
+ * TODO: ### Command-line interface (CLI)
  *
- * ## Examples
+ * Before delivering the branch, combine each temporary commit with its target using `fixup` or `squash`. Keep a descriptive final subject without a squash marker:
+ *
+ * ```shell
+ * git rebase --interactive <base-commit-sha>
+ * ```
+ *
+ * TODO: ### IntelliJ IDEA
+ *
+ * In the Git tool window, right-click the base commit and select `Interactively Rebase from Here...`. Set each temporary commit to `Fixup` or `Squash` in the rebase dialog, and keep a descriptive final subject without a marker.
+ *
+ * ## Options
+ *
+ * This rule has no configurable options.
+ *
+ * ```json
+ * {
+ *   "rules": {
+ *     "noSquashMarkers": {
+ *       "level": "error",
+ *       "options": {}
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * TODO: ## Examples
  *
  * ### Rejected
  *
  * ```
  * fixup! Reheat the leftovers
- * squash! Make the program act like a clown
- * amend! Apply strawberry jam to make the code sweeter
+ * ```
+ *
+ * ```
+ * fixup! fixup! Enforce the linting rules
  * ```
  *
  * ### Accepted
  *
  * ```
  * Refactor the taxi module
+ * ```
+ *
+ * ```
  * Make the commit scream fixup! again
- * Revert "Release the robot butler"
+ * ```
+ *
+ * ```
+ * squash the commits
  * ```
  */
 export function* noSquashMarkers(

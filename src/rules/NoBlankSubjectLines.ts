@@ -38,6 +38,21 @@ import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
  * - Revert markers, e.g. `Revert ""`.
  * - Squash markers, e.g. `fixup!` and `squash!`.
  *
+ * ## Options
+ *
+ * This rule has no configurable options.
+ *
+ * ```json
+ * {
+ *   "rules": {
+ *     "noBlankSubjectLines": {
+ *       "level": "error",
+ *       "options": {}
+ *     }
+ *   }
+ * }
+ * ```
+ *
  * ## Examples
  *
  * ### Rejected

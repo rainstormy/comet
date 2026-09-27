@@ -5,52 +5,91 @@ import { userIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { regexUnion } from "#utilities/Regexes.ts"
 
 /**
- * Verifies that committer names match at least one configured regular-expression pattern.
+ * Rejects commits where the committer's name does not match one of the configured regex patterns.
  *
  * ## Rationale
  *
- * Restricting committer names to trusted patterns keeps the commit history attributable
- * and helps avoid exposing private usernames.
+ * Restricting names to a trusted pattern keeps the commit history attributable and standardised for tooling and automated reports.
+ * For example, by requiring committers to use a specific name format.
  *
- * ## Remarks
+ * It can prevent web-based edits and other kinds of automation from committing to the repository.
+ * It can also prevent exposing private usernames in a public repository when the committer has misconfigured Git.
  *
- * - Patterns are matched against the complete name and are case-sensitive.
- * - Leading and trailing whitespace is part of the value matched against each pattern.
- * - An empty `patterns` array accepts every name.
+ * ## How to fix
+ *
+ * TODO: ### Command-line interface (CLI)
+ *
+ * Set your Git name to one matching the configured patterns:
+ *
+ * ```shell
+ * git config user.name "Comet Maintainer"
+ * ```
+ *
+ * To repair an existing commit, start an interactive rebase from its parent and mark it `edit`:
+ *
+ * ```shell
+ * git rebase --interactive <commit-sha>
+ * ```
+ *
+ * When the rebase pauses, amend the commit so Git records the configured committer name, then continue:
+ *
+ * ```shell
+ * git commit --amend --no-edit
+ * git rebase --continue
+ * ```
  *
  * ## Options
  *
- * `patterns` is an array of regular-expression strings. It defaults to an empty array,
- * so every name is accepted until you configure it.
+ * - `patterns` (array of strings): Regular expression patterns to accept. If empty, every name is accepted. Default value: `[]`.
  *
  * ```json
  * {
  *   "rules": {
  *     "useCommitterNamePatterns": {
  *       "level": "error",
- *       "options": { "patterns": ["\\p{Lu}.*\\s.+"] }
+ *       "options": {
+ *         "patterns": []
+ *       }
  *     }
  *   }
  * }
  * ```
  *
- * ## Examples
+ * TODO: ## Examples
  *
- * With the pattern above:
+ * With `patterns: ["\\p{Lu}.*\\s.+"]`:
+ *
+ * The first line in each block shows the committer's name; the remaining line is the commit subject.
  *
  * ### Rejected
  *
  * ```
- * master splinter
- * Leonardo
+ * committer name: master splinter
+ * Release the robot butler
+ * ```
+ *
+ * ```
+ * committer name: Leonardo
+ * Teach the release notes to sing
  * ```
  *
  * ### Accepted
  *
  * ```
- * Leonardo da Vinci
- * Master Splinter
+ * committer name: Leonardo da Vinci
+ * Add the missing release note
  * ```
+ *
+ * ```
+ * committer name: Master Splinter
+ * Fix the broken release note
+ * ```
+ *
+ * ## Related rules
+ *
+ * - [useAuthorEmailPatterns](./UseAuthorEmailPatterns.md)
+ * - [useAuthorNamePatterns](./UseAuthorNamePatterns.md)
+ * - [useCommitterEmailPatterns](./UseCommitterEmailPatterns.md)
  */
 export function* useCommitterNamePatterns(
 	commits: Commits,

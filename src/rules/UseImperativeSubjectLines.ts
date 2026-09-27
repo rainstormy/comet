@@ -7,44 +7,66 @@ import { isNotEmptyString } from "#utilities/Arrays.ts"
 import { isImperativeVerb } from "#utilities/Verbs.ts"
 
 /**
- * Verifies that the first relevant word in a subject line is a verb in the imperative mood.
+ * Rejects subject lines that do not start with a verb in the imperative mood.
  *
- * ## Rationale
+ * TODO: ## Rationale
  *
  * Imperative subjects describe the change directly and keep the commit history
  * consistent with instructions such as “Add”, “Fix”, and “Remove”.
  *
- * ## Remarks
+ * Imperative subjects tell users what a commit changes instead of describing a past event or current state.
+ * This makes a history easier to scan and gives teams a consistent language for reviewing and maintaining changes.
+ *
+ * ## How to fix
+ *
+ * TODO: ### Command-line interface (CLI)
+ *
+ * Start the subject's first relevant word with an imperative verb such as `Add`, `Fix`, or `Remove`. If the project accepts another verb, add it to the `whitelist`. To change an existing subject, start an interactive rebase and mark it `reword`:
+ *
+ * ```shell
+ * git rebase --interactive <commit-sha>
+ * ```
+ *
+ * TODO: ### IntelliJ IDEA
+ *
+ * In the Git tool window, right-click the commit and select `Edit Commit Message...`. Change the first relevant word to an imperative verb accepted by the project.
+ *
+ * TODO: ## Remarks
  *
  * - Revert commits are ignored.
  * - Issue links and squash markers are skipped when locating the first relevant word.
- * - The first relevant token must be a word; punctuation and inline code phrases (enclosed in `backticks`)
- *   cannot serve as imperative verbs.
+ * - The first relevant token must be a word; punctuation, hyperlinks, inline code phrases (enclosed in `backticks`),
+ *   and semantic-version tokens cannot serve as imperative verbs.
  * - Whitelisted words are matched case-insensitively after trimming whitespace.
  *
  * ## Options
  *
- * `whitelist` adds case-insensitive words that should be accepted as imperative verbs.
- * Entries are trimmed before matching, and the option defaults to an empty array.
+ * - `whitelist` (array of strings): Custom words to accept in addition to the built-in list of verbs. Default value: `[]`.
  *
  * ```json
  * {
  *   "rules": {
  *     "useImperativeSubjectLines": {
  *       "level": "error",
- *       "options": { "whitelist": ["chatify", "dockerise"] }
+ *       "options": {
+ *         "whitelist": []
+ *       }
  *     }
  *   }
  * }
  * ```
  *
- * ## Examples
+ * TODO: ## Examples
+ *
+ * With `whitelist: ["chatify", "dockerise"]`:
  *
  * ### Rejected
  *
  * ```
  * Added a new feature
- * Updating the retry policy
+ * ```
+ *
+ * ```
  * The retry policy works
  * ```
  *
@@ -52,7 +74,13 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  *
  * ```
  * Add a new feature
+ * ```
+ *
+ * ```
  * GH-12 Organise the bookshelf
+ * ```
+ *
+ * ```
  * Chatify the release notes
  * ```
  */

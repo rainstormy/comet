@@ -5,25 +5,42 @@ import type { Concern } from "#rules/concerns/Concern.ts"
 import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 
 /**
- * Verifies that subject lines contain an issue link in the configured position.
+ * TODO: Rejects subject lines without an issue link in the configured position.
  *
- * ## Rationale
+ * TODO: ## Rationale
  *
  * Linking commits to issues in a project management system provides traceability
  * between a code change and the work that motivated it, making related changes
  * easier to understand and find.
  *
- * ## Remarks
+ * A link in the subject gives users a direct path from a change to its requirements, discussion, or incident.
+ * This rule reduces the time users spend searching for context when reviewing a history or investigating a regression.
+ *
+ * ## How to fix
+ *
+ * TODO: ### Command-line interface (CLI)
+ *
+ * Add an issue link recognised under `tokens.issueLinks` in the position configured for this rule. To edit an existing subject, start an interactive rebase and mark the commit `reword`:
+ *
+ * ```shell
+ * git rebase --interactive <commit-sha>
+ * ```
+ *
+ * TODO: ### IntelliJ IDEA
+ *
+ * In the Git tool window, right-click the commit and select `Edit Commit Message...`. Add a configured issue link in the required position.
+ *
+ * TODO: ## Remarks
  *
  * - Merge commits, revert commits, and subjects containing semver tokens are exempt.
  * - Squash markers are skipped while checking a prefix, but they do not satisfy the requirement.
  * - The rule recognises only issue links configured under `tokens.issueLinks`.
  *
- * ## Options
+ * TODO: ## Options
  *
- * `position` is one of `"anywhere"`, `"prefix"`, or `"suffix"`; it defaults to
- * `"anywhere"`. Configure recognised issue links under `tokens.issueLinks`. Each prefix
- * is followed by digits, while wildcards are matched as literal issue-link labels.
+ * - `position` (one of `"anywhere"`, `"prefix"`, or `"suffix"`): The required position of an issue link in a subject line. Default value: `"anywhere"`.
+ *
+ * Configure recognised issue links under `tokens.issueLinks`. Each prefix is followed by digits, while wildcards are matched as literal issue-link labels.
  *
  * ```json
  * {
@@ -36,21 +53,29 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *   "rules": {
  *     "useIssueLinks": {
  *       "level": "error",
- *       "options": { "position": "suffix" }
+ *       "options": {
+ *         "position": "anywhere"
+ *       }
  *     }
  *   }
  * }
  * ```
  *
- * ## Examples
+ * TODO: ## Examples
  *
- * With `position: "suffix"` and the configuration above:
+ * With `position: "suffix"` and the token configuration above:
  *
  * ### Rejected
  *
  * ```
  * #42 Convince the office printer to print in colour
+ * ```
+ *
+ * ```
  * Convince the office printer to print in colour
+ * ```
+ *
+ * ```
  * GL-1024 keep the hamsters on the wheel
  * ```
  *
@@ -58,7 +83,9 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *
  * ```
  * Convince the office printer to print in colour #42
- * Keep the hamsters on the wheel GL-1024
+ * ```
+ *
+ * ```
  * The city can build more pylons (no-issue)
  * ```
  */

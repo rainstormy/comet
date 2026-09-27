@@ -33,6 +33,21 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * - Body lines may contain leading and trailing whitespace, e.g. for indentation and for soft, Markdown-style line breaks.
  * - It disregards whitespace in inline code phrases (enclosed in `backticks`) and fenced code blocks.
  *
+ * ## Options
+ *
+ * This rule has no configurable options.
+ *
+ * ```json
+ * {
+ *   "rules": {
+ *     "noExcessiveWhitespace": {
+ *       "level": "error",
+ *       "options": {}
+ *     }
+ *   }
+ * }
+ * ```
+ *
  * ## Examples
  *
  * ### Rejected

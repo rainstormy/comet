@@ -6,14 +6,31 @@ import type { Concern } from "#rules/concerns/Concern.ts"
 import { isNotEmptyString } from "#utilities/Arrays.ts"
 
 /**
- * Verifies that commit message bodies do not contain trailers with restricted keys.
+ * TODO: Rejects commit messages whose bodies contain trailers with restricted keys.
  *
- * ## Rationale
+ * TODO: ## Rationale
  *
  * Restricting trailers such as `Co-authored-by` keeps the commit history attributable
  * and prevents workflows that cannot sign commits from adding metadata.
  *
- * ## Remarks
+ * Trailer metadata can change who appears to have contributed to a commit and how automated tooling interprets it.
+ * Configuring restricted keys lets users enforce the metadata policy that fits their workflow while allowing unrelated body prose.
+ *
+ * ## How to fix
+ *
+ * TODO: ### Command-line interface (CLI)
+ *
+ * Remove the restricted trailer or replace it with an allowed key. To edit an existing message, start an interactive rebase and mark the commit `reword`:
+ *
+ * ```shell
+ * git rebase --interactive <commit-sha>
+ * ```
+ *
+ * TODO: ### IntelliJ IDEA
+ *
+ * In the Git tool window, right-click the commit and select `Edit Commit Message...`. Remove the restricted trailer or replace it with an allowed key.
+ *
+ * TODO: ## Remarks
  *
  * - Matching ignores letter case. Configured keys are trimmed, and a trailing colon is optional.
  * - Only lines parsed as trailers are checked, so the same text in ordinary body prose is allowed.
@@ -21,23 +38,24 @@ import { isNotEmptyString } from "#utilities/Arrays.ts"
  *
  * ## Options
  *
- * `restrictedKeys` is an array of trailer keys. It defaults to an empty array,
- * so no trailers are restricted until you configure it.
+ * - `restrictedKeys` (array of strings): Trailer keys to disallow. If empty, every trailer is allowed. Default value: `[]`.
  *
  * ```json
  * {
  *   "rules": {
  *     "noRestrictedTrailers": {
  *       "level": "error",
- *       "options": { "restrictedKeys": ["Co-authored-by", "Signed-off-by"] }
+ *       "options": {
+ *         "restrictedKeys": []
+ *       }
  *     }
  *   }
  * }
  * ```
  *
- * ## Examples
+ * TODO: ## Examples
  *
- * With `restrictedKeys: ["Co-authored-by"]`:
+ * With `restrictedKeys: ["Co-authored-by", "Signed-off-by"]`:
  *
  * ### Rejected
  *
@@ -53,6 +71,12 @@ import { isNotEmptyString } from "#utilities/Arrays.ts"
  * Teach the robot butler who gets credit
  *
  * Reviewed-by: April O'Neil <april.oneil@fastforward.com>
+ * ```
+ *
+ * ```
+ * Document the credit policy
+ *
+ * The phrase Co-authored-by: appears here as ordinary prose.
  * ```
  */
 export function* noRestrictedTrailers(
