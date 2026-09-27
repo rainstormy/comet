@@ -26,7 +26,7 @@ vi.mock(import("#utilities/git/cli/RunGitCommand.ts"), () => ({
 
 const resultsByCommand = new Map<string, Array<GitCommandResult>>()
 
-type GitCommandResult = GitCommandSucceeded | GitCommandFailed
+export type GitCommandResult = GitCommandSucceeded | GitCommandFailed
 
 type GitCommandSucceeded = { output: string; exitCode?: 0 }
 

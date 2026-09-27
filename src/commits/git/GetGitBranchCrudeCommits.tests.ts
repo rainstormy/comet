@@ -546,6 +546,27 @@ describe("when the Git log does not have any commits", () => {
 	})
 })
 
+describe.each`
+	defaultBranch
+	${"origin/main"}
+	${"upstream/develop"}
+`(
+	"when the Git log does not have any commits and a default branch of $defaultBranch is provided",
+	(props: { defaultBranch: string }) => {
+		const defaultBranch = props.defaultBranch
+		const commitDtos = fakeGitLogCommitDtos(0)
+
+		beforeEach(() => {
+			mockGitLog(commitDtos, defaultBranch)
+		})
+
+		it("returns an empty array of commits", async () => {
+			const commits = await getGitBranchCrudeCommits(defaultBranch)
+			expect(commits).toEqual([])
+		})
+	},
+)
+
 describe("when the Git log has 1 commit", () => {
 	const commitDtos = fakeGitLogCommitDtos(1)
 
@@ -564,6 +585,33 @@ describe("when the Git log has 1 commit", () => {
 		])
 	})
 })
+
+describe.each`
+	defaultBranch
+	${"origin/main"}
+	${"upstream/develop"}
+`(
+	"when the Git log has 1 commit and a default branch of $defaultBranch is provided",
+	(props: { defaultBranch: string }) => {
+		const defaultBranch = props.defaultBranch
+		const commitDtos = fakeGitLogCommitDtos(1)
+
+		beforeEach(() => {
+			mockGitLog(commitDtos, defaultBranch)
+		})
+
+		it("returns an array of 1 commit", async () => {
+			const commits = await getGitBranchCrudeCommits(defaultBranch)
+			expect(commits).toHaveLength(1)
+			expect(commits).toMatchObject<[Partial<CrudeCommit>]>([
+				{
+					sha: commitDtos[0].commit[0] as CommitSha,
+					message: "Commit 1\n\nMore lines of text.",
+				},
+			])
+		})
+	},
+)
 
 describe.each`
 	count
@@ -613,3 +661,24 @@ describe("when a Git error occurs", () => {
 		)
 	})
 })
+
+describe.each`
+	defaultBranch
+	${"origin/main"}
+	${"upstream/develop"}
+`(
+	"when a Git error occurs and a default branch of $defaultBranch is provided",
+	(props: { defaultBranch: string }) => {
+		const defaultBranch = props.defaultBranch
+
+		beforeEach(() => {
+			mockSabotagedGitLog(defaultBranch)
+		})
+
+		it("throws an error", async () => {
+			await expect(getGitBranchCrudeCommits(defaultBranch)).rejects.toThrow(
+				`Command 'git --no-pager log --format=raw --no-color ${defaultBranch}..HEAD' failed with exit code 128`,
+			)
+		})
+	},
+)

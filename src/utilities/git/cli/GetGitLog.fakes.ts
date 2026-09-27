@@ -3,26 +3,33 @@ import {
 	fakeGitLogCommitDto,
 } from "#utilities/git/cli/dtos/GitLogCommitDto.fakes.ts"
 import type { GitLogCommitDto } from "#utilities/git/cli/dtos/GitLogCommitDto.ts"
-import { mockGitCommand } from "#utilities/git/cli/RunGitCommand.fakes.ts"
+import { type GitCommandResult, mockGitCommand } from "#utilities/git/cli/RunGitCommand.fakes.ts"
 
-export function mockGitLog(dtos: Array<GitLogCommitDtoTemplate>): void {
-	mockGitCommand("remote", { output: "origin" })
-	mockGitCommand("rev-parse --abbrev-ref origin/HEAD", {
-		output: "origin/main",
-	})
-	mockGitCommand("--no-pager log --format=raw --no-color origin/main..HEAD", {
+export function mockGitLog(
+	dtos: Array<GitLogCommitDtoTemplate>,
+	defaultBranch: string | null = null,
+): void {
+	mockGitLogCommands(defaultBranch, {
 		output: dtos.map(fakeGitLogCommitDto).map(formatCommitDto).toReversed().join("\n\n"),
 	})
 }
 
-export function mockSabotagedGitLog(): void {
-	mockGitCommand("remote", { output: "origin" })
-	mockGitCommand("rev-parse --abbrev-ref origin/HEAD", {
-		output: "origin/main",
-	})
-	mockGitCommand("--no-pager log --format=raw --no-color origin/main..HEAD", {
+export function mockSabotagedGitLog(defaultBranch: string | null = null): void {
+	mockGitLogCommands(defaultBranch, {
 		exitCode: 128,
 	})
+}
+
+function mockGitLogCommands(defaultBranch: string | null, result: GitCommandResult): void {
+	if (defaultBranch === null) {
+		mockGitCommand("remote", { output: "origin" })
+		mockGitCommand("rev-parse --abbrev-ref origin/HEAD", { output: "origin/main" })
+	}
+
+	mockGitCommand(
+		`--no-pager log --format=raw --no-color ${defaultBranch ?? "origin/main"}..HEAD`,
+		result,
+	)
 }
 
 function formatCommitDto(dto: GitLogCommitDto): string {
