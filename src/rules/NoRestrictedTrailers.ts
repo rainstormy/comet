@@ -23,7 +23,7 @@ import { isNotEmptyString } from "#utilities/Arrays.ts"
  * Remove the restricted trailer or replace it with an allowed key. To edit an existing message, start an interactive rebase and mark the commit `reword`:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * TODO: ### IntelliJ IDEA

@@ -19,10 +19,10 @@ import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
  *
  * ### Command-line interface (CLI)
  *
- * Rebase interactively and mark the commit with `reword` to edit the subject line.
+ * TODO: Rebase interactively and mark the commit with `reword` to edit the subject line.
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * ### IntelliJ IDEA

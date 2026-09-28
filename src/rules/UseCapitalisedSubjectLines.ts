@@ -21,7 +21,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * Capitalise the first relevant token in the subject, for example, change `fix the bug` to `Fix the bug`. To edit an existing commit, start an interactive rebase and mark it `reword`:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * TODO: ### IntelliJ IDEA

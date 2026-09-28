@@ -24,7 +24,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * Give independent changes distinct subject lines. If a commit amends earlier work, combine it with that commit using `fixup` or `squash`; otherwise, mark the duplicate `reword` and give it a unique subject:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * TODO: ### IntelliJ IDEA

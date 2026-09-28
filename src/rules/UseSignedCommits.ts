@@ -27,7 +27,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * To sign an earlier commit, start an interactive rebase and mark it `edit`:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * When the rebase pauses, sign the commit and continue:

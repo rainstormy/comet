@@ -22,7 +22,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * Shorten the subject to fit the configured `maxLength` while keeping its key information. Move secondary details to the body. To edit an existing commit, start an interactive rebase and mark it `reword`:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * TODO: ### IntelliJ IDEA

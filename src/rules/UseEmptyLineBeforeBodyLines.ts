@@ -22,7 +22,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * When a body is present, put exactly one blank line between it and the subject, and remove any extra blank lines there. To edit an existing commit, start an interactive rebase and mark it `reword`:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * TODO: ### IntelliJ IDEA

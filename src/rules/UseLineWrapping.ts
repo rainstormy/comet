@@ -22,7 +22,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * Wrap prose in the commit body so each checked line stays within the configured `maxLength`. To edit an existing message, start an interactive rebase and mark the commit `reword`:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * TODO: ### IntelliJ IDEA

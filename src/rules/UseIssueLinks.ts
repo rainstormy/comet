@@ -23,7 +23,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * Add an issue link recognised under `tokens.issueLinks` in the position configured for this rule. To edit an existing subject, start an interactive rebase and mark the commit `reword`:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * TODO: ### IntelliJ IDEA

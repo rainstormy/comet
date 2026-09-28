@@ -27,7 +27,7 @@ const TRAILING_EMOJI_SHORTCODE_REGEX = /:\w+:$/u
  * Remove unsupported punctuation at the end of the subject. To edit an existing commit, start an interactive rebase and mark it `reword`:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * TODO: ### IntelliJ IDEA

@@ -21,7 +21,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * Add enough context to say what changed or why, such as `Fix validation` instead of `Fix`. To repair an existing commit, start an interactive rebase and mark it `reword`:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * TODO: ### IntelliJ IDEA

@@ -22,7 +22,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  * Before delivering the branch, combine each temporary commit with its target using `fixup` or `squash`. Keep a descriptive final subject without a squash marker:
  *
  * ```shell
- * git rebase --interactive <base-commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * TODO: ### IntelliJ IDEA

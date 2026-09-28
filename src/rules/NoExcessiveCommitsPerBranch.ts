@@ -21,7 +21,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * Use an interactive rebase to combine related commits with `squash` or `fixup` until the branch is within `maxCommits`. Keep independent work on separate branches or pull requests:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * TODO: ### IntelliJ IDEA

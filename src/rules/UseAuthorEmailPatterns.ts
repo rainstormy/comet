@@ -17,27 +17,37 @@ import { regexUnion } from "#utilities/Regexes.ts"
  *
  * ## How to fix
  *
- * TODO: ### Command-line interface (CLI)
+ * ### Command-line interface (CLI)
  *
- * Update your Git email address to match one of the configured patterns, for example:
+ * 1. Update your Git email address to match one of the configured patterns, for example:
  *
- * ```shell
- * git config user.email 'name@example.com'
- * ```
+ *    ```shell
+ *    git config user.email 'name@example.com'
+ *    ```
  *
+ * 2. Rebase interactively from (the parent of) the commit SHA:
  *
- * To repair an existing commit, start an interactive rebase from its parent and mark it `edit`:
+ *    ```shell
+ *    git rebase --interactive '7e0ff1ce^'
+ *    ```
  *
- * ```shell
- * git rebase --interactive <commit-sha>
- * ```
+ * 3. Set the commit to `edit`:
  *
- * When the rebase pauses, amend the author email while preserving the intended author name, then continue:
+ *    ```
+ *    edit 7e0ff1ce Welcome to my convenience store
+ *    ```
  *
- * ```shell
- * git commit --amend --reset-author --no-edit
- * git rebase --continue
- * ```
+ * 4. When the rebase pauses, reset the author by amending the commit:
+ *
+ *    ```shell
+ *    git commit --amend --reset-author --no-edit
+ *    ```
+ *
+ * 5. Complete the rebase:
+ *
+ *    ```shell
+ *    git rebase --continue
+ *    ```
  *
  * ## Options
  *

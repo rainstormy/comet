@@ -24,7 +24,7 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  * Start the subject's first relevant word with an imperative verb such as `Add`, `Fix`, or `Remove`. If the project accepts another verb, add it to the `whitelist`. To change an existing subject, start an interactive rebase and mark it `reword`:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * TODO: ### IntelliJ IDEA

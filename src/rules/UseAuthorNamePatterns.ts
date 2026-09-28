@@ -28,7 +28,7 @@ import { regexUnion } from "#utilities/Regexes.ts"
  * To repair an existing commit, start an interactive rebase from its parent and mark it `edit`:
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * When the rebase pauses, amend the author name while preserving the intended author email, then continue:

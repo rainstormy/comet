@@ -16,11 +16,11 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *
  * ### Command-line interface (CLI)
  *
- * Rebase interactively and mark the commit with `reword` to edit the commit message.
+ * TODO: Rebase interactively and mark the commit with `reword` to edit the commit message.
  * Delete leading, trailing, and consecutive whitespace characters.
  *
  * ```shell
- * git rebase --interactive <commit-sha>
+ * git rebase --interactive <commit-sha>~1
  * ```
  *
  * ### IntelliJ IDEA
