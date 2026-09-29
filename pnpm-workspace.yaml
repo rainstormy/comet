@@ -37,15 +37,23 @@ catalog:
 
   # Vite+ is a unified toolchain and task runner for Oxfmt (an opinionated code formatter), Oxlint (a TypeScript linter), tsdown (a bundler), Vite, and Vitest.
   # It is also a version manager of Node.js and pnpm.
-  # https://oxc.rs/docs/guide/usage/formatter.html
-  # https://oxc.rs/docs/guide/usage/linter.html
-  # https://vitejs.dev
   # https://viteplus.dev
-  vite-plus: 0.3.1
+  vite-plus: 1.0.0-rc.0
 
   # Vitest is a unit testing framework.
+  # It is also provided by Vite+, but IDE tooling (such as the test runner in IntelliJ IDEA) currently expects the Vitest CLI to exist on the PATH.
   # https://vitest.dev
-  vitest: 4.1.10
+  vitest: 5.0.2
+
+# Consolidate tool versions provided by Vite+ with the ones specified in the catalog.
+overrides:
+  vitest: 'catalog:'
+
+# Let some packages bypass the minimum release age requirement to allow urgent security upgrades to be installed despite being less than 3 days old.
+minimumReleaseAgeExclude: []
+
+# Disallow all script execution during package installation.
+allowBuilds: {}
 
 # Be very strict about third-party dependencies to reduce the risk of supply chain attacks.
 # https://pnpm.io/blog/2025/12/05/newsroom-npm-supply-chain-security
@@ -55,6 +63,3 @@ savePrefix: ''
 strictDepBuilds: true
 trustPolicy: no-downgrade
 trustPolicyIgnoreAfter: 4200 # minutes
-
-# Let some packages bypass the minimum release age requirement to allow urgent security upgrades to be installed despite being less than 3 days old.
-# minimumReleaseAgeExclude:
