@@ -19,11 +19,13 @@ import { regexUnion } from "#utilities/Regexes.ts"
  *
  * ### Command-line interface (CLI)
  *
- * 1. Update your Git email address to match one of the configured patterns, for example:
+ * 1. Change your Git email address to match one of the configured patterns, for example:
  *
  *    ```shell
- *    git config user.email 'name@example.com'
+ *    git config --global user.email 'claus@santasworkshop.com'
  *    ```
+ *
+ *    (omit the `--global` flag to change the email address in the current repository only)
  *
  * 2. Rebase interactively from (the parent of) the commit SHA:
  *
