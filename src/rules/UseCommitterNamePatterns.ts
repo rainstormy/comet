@@ -17,26 +17,39 @@ import { regexUnion } from "#utilities/Regexes.ts"
  *
  * ## How to fix
  *
- * TODO: ### Command-line interface (CLI)
+ * ### Command-line interface (CLI)
  *
- * Set your Git name to one matching the configured patterns:
+ * 1. Change your Git name to match one of the configured patterns, for example:
  *
- * ```shell
- * git config user.name "Comet Maintainer"
- * ```
+ *    ```shell
+ *    git config --global user.name 'Santa Claus'
+ *    ```
  *
- * To repair an existing commit, start an interactive rebase from its parent and mark it `edit`:
+ *    (omit the `--global` flag to change the name in the current repository only)
  *
- * ```shell
- * git rebase --interactive <commit-sha>~1
- * ```
+ * 2. Rebase interactively from (the parent of) the commit SHA:
  *
- * When the rebase pauses, amend the commit so Git records the configured committer name, then continue:
+ *    ```shell
+ *    git rebase --interactive '7e0ff1ce^'
+ *    ```
  *
- * ```shell
- * git commit --amend --no-edit
- * git rebase --continue
- * ```
+ * 3. Set the commit to `edit`:
+ *
+ *    ```
+ *    edit 7e0ff1ce Welcome to my convenience store
+ *    ```
+ *
+ * 4. When the rebase pauses, reset the author by amending the commit:
+ *
+ *    ```shell
+ *    git commit --amend --reset-author --no-edit
+ *    ```
+ *
+ * 5. Complete the rebase:
+ *
+ *    ```shell
+ *    git rebase --continue
+ *    ```
  *
  * ## Options
  *
