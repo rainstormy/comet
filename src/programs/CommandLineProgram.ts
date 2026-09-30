@@ -5,6 +5,7 @@ import {
 	type Configuration,
 	getConfiguration,
 	getConfigurationPath,
+	validateConfiguration,
 } from "#configurations/GetConfiguration.ts"
 import { program } from "#programs/Program.ts"
 import {
@@ -15,7 +16,11 @@ import {
 } from "#types/ExitCode.ts"
 import { defineOptions, parseArgs } from "#utilities/Args.ts"
 import { assertError } from "#utilities/Assertions.ts"
-import { printCommandLineError, printMessage } from "#utilities/logging/Logger.ts"
+import {
+	printCommandLineError,
+	printCommandLineWarning,
+	printMessage,
+} from "#utilities/logging/Logger.ts"
 import { deepMerge } from "#utilities/Objects.ts"
 import { getPackageVersion } from "#utilities/package/Package.ts"
 
@@ -128,5 +133,10 @@ async function resolveConfiguration(
 	}
 
 	const jsonConfiguration = await getConfiguration(path)
+
+	for (const warning of validateConfiguration(jsonConfiguration)) {
+		printCommandLineWarning(warning)
+	}
+
 	return deepMerge(defaultConfiguration, jsonConfiguration)
 }

@@ -4,6 +4,7 @@ import {
 	type Configuration,
 	getConfiguration,
 	getConfigurationPath,
+	validateConfiguration,
 } from "#configurations/GetConfiguration.ts"
 import { program } from "#programs/Program.ts"
 import {
@@ -13,7 +14,7 @@ import {
 } from "#types/ExitCode.ts"
 import { assertError } from "#utilities/Assertions.ts"
 import { githubEnv } from "#utilities/github/env/GithubEnv.ts"
-import { printGithubActionsError } from "#utilities/logging/Logger.ts"
+import { printGithubActionsError, printGithubActionsWarning } from "#utilities/logging/Logger.ts"
 import { deepMerge } from "#utilities/Objects.ts"
 
 export async function githubActionsProgram(): Promise<ExitCode> {
@@ -41,5 +42,10 @@ async function resolveConfiguration(): Promise<Configuration> {
 	}
 
 	const jsonConfiguration = await getConfiguration(path)
+
+	for (const warning of validateConfiguration(jsonConfiguration)) {
+		printGithubActionsWarning(warning)
+	}
+
 	return deepMerge(defaultConfiguration, jsonConfiguration)
 }

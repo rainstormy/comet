@@ -142,3 +142,19 @@ async function getDefaultConfigurationPath(): Promise<string | null> {
 	}
 	return null
 }
+
+export function* validateConfiguration(
+	configuration: DeepPartial<Configuration>,
+): Generator<string> {
+	if (configuration.rules?.useIssueLinks?.level === "error") {
+		const issueLinks = configuration.tokens?.issueLinks
+		const prefixes = issueLinks?.prefixes ?? []
+		const wildcards = issueLinks?.wildcards ?? []
+
+		if (issueLinks === undefined) {
+			yield "Flawed Comet configuration: 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled"
+		} else if (prefixes.length + wildcards.length === 0) {
+			yield "Flawed Comet configuration: 'issueLinks' in 'tokens' should contain at least one non-blank prefix or wildcard when 'useIssueLinks' is enabled"
+		}
+	}
+}

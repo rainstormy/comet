@@ -21,7 +21,11 @@ import { ALPHABETICALLY, NUMERICALLY } from "#utilities/Arrays.ts"
 import { mockFile, mockJsonFile, mockNonexistingFile } from "#utilities/files/Files.fakes.ts"
 import { mockGitLog, mockSabotagedGitLog } from "#utilities/git/cli/GetGitLog.fakes.ts"
 import { mockGitCommand } from "#utilities/git/cli/RunGitCommand.fakes.ts"
-import { printCommandLineError, printMessage } from "#utilities/logging/Logger.ts"
+import {
+	printCommandLineError,
+	printCommandLineWarning,
+	printMessage,
+} from "#utilities/logging/Logger.ts"
 import { mockPackageVersion } from "#utilities/package/Package.fakes.ts"
 
 describe("the help text", () => {
@@ -2340,5 +2344,115 @@ describe("when a configuration file in a custom sequence of configuration files 
 		expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(
 			"Failed to read 'configs/local.json': File not found",
 		)
+	})
+})
+
+describe("when 'useIssueLinks' is enabled without 'issueLinks'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: { useIssueLinks: "error" },
+		})
+		mockGitBranchCrudeCommits([])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("prints a configuration warning", () => {
+		expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+			"Flawed Comet configuration: 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled",
+		)
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+	})
+})
+
+describe.each`
+	prefixes     | wildcards
+	${[]}        | ${[]}
+	${[" ", ""]} | ${[]}
+	${[]}        | ${[""]}
+	${[""]}      | ${["", "  "]}
+`(
+	"when 'useIssueLinks' is enabled with blank 'issueLinks' of $prefixes and $wildcards",
+	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: { useIssueLinks: "error" },
+				tokens: { issueLinks: props },
+			})
+			mockGitBranchCrudeCommits([])
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("prints a configuration warning", () => {
+			expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+				"Flawed Comet configuration: 'issueLinks' in 'tokens' should contain at least one non-blank prefix or wildcard when 'useIssueLinks' is enabled",
+			)
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe.each`
+	prefixes    | wildcards
+	${["FUT-"]} | ${[]}
+	${[]}       | ${["[no-issue]"]}
+`(
+	"when 'useIssueLinks' is enabled with 'issueLinks' of $prefixes and $wildcards",
+	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: { useIssueLinks: "error" },
+				tokens: { issueLinks: props },
+			})
+			mockGitBranchCrudeCommits([])
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("remains silent", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe("when 'useIssueLinks' is disabled without 'issueLinks'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: { useIssueLinks: "off" },
+		})
+		mockGitBranchCrudeCommits([])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })

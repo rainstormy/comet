@@ -24,7 +24,11 @@ import {
 	mockEmptyGithubEventDto,
 	mockGithubPullRequestEventDto,
 } from "#utilities/github/event/FetchGithubEventDto.fakes.ts"
-import { printGithubActionsError, printMessage } from "#utilities/logging/Logger.ts"
+import {
+	printGithubActionsError,
+	printGithubActionsWarning,
+	printMessage,
+} from "#utilities/logging/Logger.ts"
 
 beforeEach(() => {
 	mockGithubEnv()
@@ -1680,6 +1684,114 @@ ${grey`╰─ authored by:`} Master Splinter
               ${red`     ∙ Ada Lovelace`}
 `.trim(),
 		)
+		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
+	})
+})
+
+describe("when 'useIssueLinks' is enabled without 'issueLinks'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: { useIssueLinks: "error" },
+		})
+		mockGithubPullRequestCrudeCommits([])
+		exitCode = await githubActionsProgram()
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("prints a configuration warning", () => {
+		expect(printGithubActionsWarning).toHaveBeenCalledExactlyOnceWith(
+			"Flawed Comet configuration: 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled",
+		)
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printGithubActionsError).not.toHaveBeenCalled()
+	})
+})
+
+describe.each`
+	prefixes     | wildcards
+	${[]}        | ${[]}
+	${[" ", ""]} | ${[]}
+	${[]}        | ${[""]}
+	${[""]}      | ${["", "  "]}
+`(
+	"when 'useIssueLinks' is enabled with blank 'issueLinks' of $prefixes and $wildcards",
+	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: { useIssueLinks: "error" },
+				tokens: { issueLinks: props },
+			})
+			mockGithubPullRequestCrudeCommits([])
+			exitCode = await githubActionsProgram()
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("prints a configuration warning", () => {
+			expect(printGithubActionsWarning).toHaveBeenCalledExactlyOnceWith(
+				"Flawed Comet configuration: 'issueLinks' in 'tokens' should contain at least one non-blank prefix or wildcard when 'useIssueLinks' is enabled",
+			)
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printGithubActionsError).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe.each`
+	prefixes    | wildcards
+	${["FUT-"]} | ${[]}
+	${[]}       | ${["[no-issue]"]}
+`(
+	"when 'useIssueLinks' is enabled with 'issueLinks' of $prefixes and $wildcards",
+	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: { useIssueLinks: "error" },
+				tokens: { issueLinks: props },
+			})
+			mockGithubPullRequestCrudeCommits([])
+			exitCode = await githubActionsProgram()
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("remains silent", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printGithubActionsError).not.toHaveBeenCalled()
+			expect(printGithubActionsWarning).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe("when 'useIssueLinks' is disabled without 'issueLinks'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", { rules: { useIssueLinks: "off" } })
+		mockGithubPullRequestCrudeCommits([])
+		exitCode = await githubActionsProgram()
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
