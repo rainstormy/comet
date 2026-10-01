@@ -2364,7 +2364,7 @@ describe("when 'useIssueLinks' is enabled without 'issueLinks'", () => {
 
 	it("prints a configuration warning", () => {
 		expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
-			"Flawed Comet configuration: 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled",
+			`${bold`1 issue detected in the Comet configuration:`}\n- 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled\n`,
 		)
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
@@ -2397,7 +2397,7 @@ describe.each`
 
 		it("prints a configuration warning", () => {
 			expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
-				"Flawed Comet configuration: 'issueLinks' in 'tokens' should contain at least one non-blank prefix or wildcard when 'useIssueLinks' is enabled",
+				`${bold`1 issue detected in the Comet configuration:`}\n- 'issueLinks' in 'tokens' should contain at least one non-blank prefix or wildcard when 'useIssueLinks' is enabled\n`,
 			)
 			expect(printMessage).not.toHaveBeenCalled()
 			expect(printCommandLineError).not.toHaveBeenCalled()
@@ -2486,7 +2486,7 @@ describe.each`
 
 		it("prints a configuration warning", () => {
 			expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
-				`Flawed Comet configuration: 'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: ${props.expectedRedundantWordsList}`,
+				`${bold`1 issue detected in the Comet configuration:`}\n- 'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: ${props.expectedRedundantWordsList}\n`,
 			)
 			expect(printMessage).not.toHaveBeenCalled()
 			expect(printCommandLineError).not.toHaveBeenCalled()
@@ -2552,5 +2552,35 @@ describe("when 'useImperativeSubjectLines' is disabled a whitelist that contains
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
+	})
+})
+
+describe("when the configuration has multiple issues", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: {
+				useImperativeSubjectLines: {
+					level: "error",
+					options: { whitelist: ["release"] },
+				},
+				useIssueLinks: "error",
+			},
+		})
+		mockGitBranchCrudeCommits([])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("prints all configuration issues in a single warning", () => {
+		expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+			`${bold`2 issues detected in the Comet configuration:`}\n- 'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: release\n- 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled\n`,
+		)
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })

@@ -1,3 +1,4 @@
+import { bold } from "ansis"
 import type { TokenConfiguration } from "#commits/TokenConfiguration.ts"
 import type {
 	JsonConfigurationGitDto,
@@ -9,6 +10,7 @@ import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfi
 import { isNotEmptyString, isNotNullishValue, uniqueItems } from "#utilities/Arrays.ts"
 import { isReadableFile, normalisePath } from "#utilities/files/Files.ts"
 import { type DeepPartial, deepMerge } from "#utilities/Objects.ts"
+import { formatCount } from "#utilities/Strings.ts"
 import { isImperativeVerb } from "#utilities/Verbs.ts"
 
 export type Configuration = {
@@ -144,9 +146,19 @@ async function getDefaultConfigurationPath(): Promise<string | null> {
 	return null
 }
 
-export function* validateConfiguration(
-	configuration: DeepPartial<Configuration>,
-): Generator<string> {
+export function formatConfigurationIssues(configuration: DeepPartial<Configuration>): string {
+	const issues = [...validateConfiguration(configuration)]
+
+	if (issues.length === 0) {
+		return ""
+	}
+
+	const issuePhrase = formatCount(issues.length, "issue", "issues")
+	const formattedIssues = issues.map((issue) => `- ${issue}`).join("\n")
+	return `${bold`${issuePhrase} detected in the Comet configuration:`}\n${formattedIssues}\n`
+}
+
+function* validateConfiguration(configuration: DeepPartial<Configuration>): Generator<string> {
 	if (configuration.rules?.useImperativeSubjectLines?.level === "error") {
 		const whitelist = configuration.rules.useImperativeSubjectLines.options?.whitelist ?? []
 
@@ -159,7 +171,7 @@ export function* validateConfiguration(
 			)
 
 			if (redundantWords.length > 0) {
-				yield `Flawed Comet configuration: 'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: ${redundantWords.join(", ")}`
+				yield `'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: ${redundantWords.join(", ")}`
 			}
 		}
 	}
@@ -170,9 +182,9 @@ export function* validateConfiguration(
 		const wildcards = issueLinks?.wildcards ?? []
 
 		if (issueLinks === undefined) {
-			yield "Flawed Comet configuration: 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled"
+			yield "'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled"
 		} else if (prefixes.length + wildcards.length === 0) {
-			yield "Flawed Comet configuration: 'issueLinks' in 'tokens' should contain at least one non-blank prefix or wildcard when 'useIssueLinks' is enabled"
+			yield "'issueLinks' in 'tokens' should contain at least one non-blank prefix or wildcard when 'useIssueLinks' is enabled"
 		}
 	}
 }

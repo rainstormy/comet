@@ -3,9 +3,9 @@ import { getGitBranchCrudeCommits } from "#commits/git/GetGitBranchCrudeCommits.
 import { DEFAULT_COMMAND_LINE_CONFIGURATION } from "#configurations/defaults/DefaultCommandLineConfiguration.ts"
 import {
 	type Configuration,
+	formatConfigurationIssues,
 	getConfiguration,
 	getConfigurationPath,
-	validateConfiguration,
 } from "#configurations/GetConfiguration.ts"
 import { program } from "#programs/Program.ts"
 import {
@@ -133,9 +133,10 @@ async function resolveConfiguration(
 	}
 
 	const jsonConfiguration = await getConfiguration(path)
+	const formattedIssues = formatConfigurationIssues(jsonConfiguration)
 
-	for (const warning of validateConfiguration(jsonConfiguration)) {
-		printCommandLineWarning(warning)
+	if (formattedIssues !== "") {
+		printCommandLineWarning(formattedIssues)
 	}
 
 	return deepMerge(defaultConfiguration, jsonConfiguration)

@@ -2,9 +2,9 @@ import { getGithubPullRequestCrudeCommits } from "#commits/github/GetGithubPullR
 import { DEFAULT_GITHUB_ACTIONS_CONFIGURATION } from "#configurations/defaults/DefaultGithubActionsConfiguration.ts"
 import {
 	type Configuration,
+	formatConfigurationIssues,
 	getConfiguration,
 	getConfigurationPath,
-	validateConfiguration,
 } from "#configurations/GetConfiguration.ts"
 import { program } from "#programs/Program.ts"
 import {
@@ -42,9 +42,10 @@ async function resolveConfiguration(): Promise<Configuration> {
 	}
 
 	const jsonConfiguration = await getConfiguration(path)
+	const formattedIssues = formatConfigurationIssues(jsonConfiguration)
 
-	for (const warning of validateConfiguration(jsonConfiguration)) {
-		printGithubActionsWarning(warning)
+	if (formattedIssues !== "") {
+		printGithubActionsWarning(formattedIssues)
 	}
 
 	return deepMerge(defaultConfiguration, jsonConfiguration)
