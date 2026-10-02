@@ -24,7 +24,11 @@ import {
 	mockEmptyGithubEventDto,
 	mockGithubPullRequestEventDto,
 } from "#utilities/github/event/FetchGithubEventDto.fakes.ts"
-import { printGithubActionsError, printMessage } from "#utilities/logging/Logger.ts"
+import {
+	printGithubActionsError,
+	printGithubActionsWarning,
+	printMessage,
+} from "#utilities/logging/Logger.ts"
 
 beforeEach(() => {
 	mockGithubEnv()
@@ -147,6 +151,7 @@ describe("when there are no commits", () => {
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -165,6 +170,7 @@ describe("when there is 1 commit that raises no concerns in the default configur
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -188,6 +194,7 @@ describe("when there are 4 commits that raise no concerns in the default configu
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -228,6 +235,7 @@ ${grey`98634c1`} fix!
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -276,6 +284,7 @@ ${red`•`} ${grey`${bold`2`} │`} This body line is intentionally longer than 
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -329,6 +338,7 @@ ${grey`b58de17`} Sign the pantry inventory
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -424,6 +434,7 @@ ${grey`7f811b2`} Merge the old tea ledger
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -598,6 +609,7 @@ describe("when there are no commits in the custom 'comet.json' configuration", (
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -610,7 +622,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 				noRepeatedSubjectLines: "error",
 				useImperativeSubjectLines: {
 					level: "error",
-					options: { whitelist: ["deploy"] },
+					options: { whitelist: ["deployify"] },
 				},
 				useIssueLinks: {
 					level: "error",
@@ -625,7 +637,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 			},
 		})
 		mockGithubPullRequestCrudeCommits([
-			fakeCrudeCommit({ message: "BOT-71 Deploy the robot butler" }),
+			fakeCrudeCommit({ message: "BOT-71 Deployify the robot butler" }),
 		])
 		exitCode = await githubActionsProgram()
 	})
@@ -637,6 +649,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -687,6 +700,7 @@ describe("when there are 3 commits that raise no concerns in the custom 'comet.j
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -734,6 +748,7 @@ ${red`•`} ${grey`${bold`2`} │`} Co-authored-by: Ada Lovelace <ada@example.co
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -782,6 +797,7 @@ ${grey`╰─ authored by:`} Master Splinter
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -842,6 +858,7 @@ ${grey`9f1a1b2`} Test the emergency toaster
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -916,6 +933,7 @@ ${grey`c0ffee1`} Untangle the improbable cables
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -944,6 +962,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1000,6 +1019,7 @@ ${grey`b58de17`} Wire the oat milk alert
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1129,6 +1149,7 @@ ${grey`a8b3d6c`} Merge the old tea ledger
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1179,6 +1200,7 @@ describe("when there are no commits in the custom configuration from 'configs/st
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1232,6 +1254,7 @@ describe("when there is 1 commit that raises no concerns in the custom configura
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1285,6 +1308,7 @@ describe("when there are 7 commits that raise no concerns in the custom configur
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1340,6 +1364,7 @@ ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1409,6 +1434,7 @@ ${grey`d677c31`} Tune the observatory clock
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1499,6 +1525,7 @@ ${grey`a43a3f3`} Archive the noisy bell!
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1561,6 +1588,7 @@ ${grey`7f811b2`} Revert "Revert "Disable the alarm""
 `.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1590,6 +1618,7 @@ describe("when there is 1 commit that raises no concerns in the custom configura
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1655,6 +1684,243 @@ ${grey`╰─ authored by:`} Master Splinter
               ${red`     ∙ Ada Lovelace`}
 `.trim(),
 		)
+		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
+	})
+})
+
+describe("when 'useIssueLinks' is enabled without 'issueLinks'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: { useIssueLinks: "error" },
+		})
+		mockGithubPullRequestCrudeCommits([])
+		exitCode = await githubActionsProgram()
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("prints a configuration warning", () => {
+		expect(printGithubActionsWarning).toHaveBeenCalledExactlyOnceWith(
+			`${bold`1 issue detected in the Comet configuration:`}\n- 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled\n`,
+		)
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printGithubActionsError).not.toHaveBeenCalled()
+	})
+})
+
+describe.each`
+	prefixes     | wildcards
+	${[]}        | ${[]}
+	${[" ", ""]} | ${[]}
+	${[]}        | ${[""]}
+	${[""]}      | ${["", "  "]}
+`(
+	"when 'useIssueLinks' is enabled with blank 'issueLinks' of $prefixes and $wildcards",
+	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: { useIssueLinks: "error" },
+				tokens: { issueLinks: props },
+			})
+			mockGithubPullRequestCrudeCommits([])
+			exitCode = await githubActionsProgram()
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("prints a configuration warning", () => {
+			expect(printGithubActionsWarning).toHaveBeenCalledExactlyOnceWith(
+				`${bold`1 issue detected in the Comet configuration:`}\n- 'issueLinks' in 'tokens' should contain at least one non-blank prefix or wildcard when 'useIssueLinks' is enabled\n`,
+			)
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printGithubActionsError).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe.each`
+	prefixes    | wildcards
+	${["FUT-"]} | ${[]}
+	${[]}       | ${["[no-issue]"]}
+`(
+	"when 'useIssueLinks' is enabled with 'issueLinks' of $prefixes and $wildcards",
+	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: { useIssueLinks: "error" },
+				tokens: { issueLinks: props },
+			})
+			mockGithubPullRequestCrudeCommits([])
+			exitCode = await githubActionsProgram()
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("remains silent", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printGithubActionsError).not.toHaveBeenCalled()
+			expect(printGithubActionsWarning).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe("when 'useIssueLinks' is disabled without 'issueLinks'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", { rules: { useIssueLinks: "off" } })
+		mockGithubPullRequestCrudeCommits([])
+		exitCode = await githubActionsProgram()
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
+	})
+})
+
+describe.each`
+	whitelist                                                       | expectedRedundantWordsList
+	${[" DISCOMBOBULATE "]}                                         | ${"discombobulate"}
+	${["OBFUSCATE", "abjure"]}                                      | ${"obfuscate, abjure"}
+	${[" ABJURE ", "StReAmLiNe", "obfuscate", "abjure", "chatify"]} | ${"abjure, streamline, obfuscate"}
+`(
+	"when 'useImperativeSubjectLines' is enabled with a whitelist of $whitelist that contains redundant words",
+	(props: { whitelist: Array<string>; expectedRedundantWordsList: string }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: {
+					useImperativeSubjectLines: {
+						level: "error",
+						options: { whitelist: props.whitelist },
+					},
+				},
+			})
+			mockGithubPullRequestCrudeCommits([])
+			exitCode = await githubActionsProgram()
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("prints a configuration warning", () => {
+			expect(printGithubActionsWarning).toHaveBeenCalledExactlyOnceWith(
+				`${bold`1 issue detected in the Comet configuration:`}\n- 'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: ${props.expectedRedundantWordsList}\n`,
+			)
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printGithubActionsError).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe.each`
+	whitelist
+	${[]}
+	${["chatify", "deployify"]}
+`(
+	"when 'useImperativeSubjectLines' is enabled with a whitelist of $whitelist that does not contain any redundant words",
+	(props: { whitelist: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: {
+					useImperativeSubjectLines: {
+						level: "error",
+						options: { whitelist: props.whitelist },
+					},
+				},
+			})
+			mockGithubPullRequestCrudeCommits([])
+			exitCode = await githubActionsProgram()
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("remains silent", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printGithubActionsError).not.toHaveBeenCalled()
+			expect(printGithubActionsWarning).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe("when 'useImperativeSubjectLines' is disabled a whitelist that contains redundant words", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: {
+				useImperativeSubjectLines: {
+					level: "off",
+					options: { whitelist: [" DISCOMBOBULATE ", "abjure"] },
+				},
+			},
+		})
+		mockGithubPullRequestCrudeCommits([])
+		exitCode = await githubActionsProgram()
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
+	})
+})
+
+describe("when the configuration has multiple issues", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: {
+				useImperativeSubjectLines: {
+					level: "error",
+					options: { whitelist: ["release"] },
+				},
+				useIssueLinks: "error",
+			},
+		})
+		mockGithubPullRequestCrudeCommits([])
+		exitCode = await githubActionsProgram()
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("prints all configuration issues in a single warning", () => {
+		expect(printGithubActionsWarning).toHaveBeenCalledExactlyOnceWith(
+			`${bold`2 issues detected in the Comet configuration:`}\n- 'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: release\n- 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled\n`,
+		)
+		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 	})
 })

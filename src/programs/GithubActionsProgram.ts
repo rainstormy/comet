@@ -2,6 +2,7 @@ import { getGithubPullRequestCrudeCommits } from "#commits/github/GetGithubPullR
 import { DEFAULT_GITHUB_ACTIONS_CONFIGURATION } from "#configurations/defaults/DefaultGithubActionsConfiguration.ts"
 import {
 	type Configuration,
+	formatConfigurationIssues,
 	getConfiguration,
 	getConfigurationPath,
 } from "#configurations/GetConfiguration.ts"
@@ -13,7 +14,7 @@ import {
 } from "#types/ExitCode.ts"
 import { assertError } from "#utilities/Assertions.ts"
 import { githubEnv } from "#utilities/github/env/GithubEnv.ts"
-import { printGithubActionsError } from "#utilities/logging/Logger.ts"
+import { printGithubActionsError, printGithubActionsWarning } from "#utilities/logging/Logger.ts"
 import { deepMerge } from "#utilities/Objects.ts"
 
 export async function githubActionsProgram(): Promise<ExitCode> {
@@ -41,5 +42,11 @@ async function resolveConfiguration(): Promise<Configuration> {
 	}
 
 	const jsonConfiguration = await getConfiguration(path)
+	const formattedIssues = formatConfigurationIssues(jsonConfiguration)
+
+	if (formattedIssues !== "") {
+		printGithubActionsWarning(formattedIssues)
+	}
+
 	return deepMerge(defaultConfiguration, jsonConfiguration)
 }

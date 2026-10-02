@@ -21,7 +21,11 @@ import { ALPHABETICALLY, NUMERICALLY } from "#utilities/Arrays.ts"
 import { mockFile, mockJsonFile, mockNonexistingFile } from "#utilities/files/Files.fakes.ts"
 import { mockGitLog, mockSabotagedGitLog } from "#utilities/git/cli/GetGitLog.fakes.ts"
 import { mockGitCommand } from "#utilities/git/cli/RunGitCommand.fakes.ts"
-import { printCommandLineError, printMessage } from "#utilities/logging/Logger.ts"
+import {
+	printCommandLineError,
+	printCommandLineWarning,
+	printMessage,
+} from "#utilities/logging/Logger.ts"
 import { mockPackageVersion } from "#utilities/package/Package.fakes.ts"
 
 describe("the help text", () => {
@@ -73,6 +77,7 @@ describe.each`
 	it("prints a help text with usage instructions", () => {
 		expect(printMessage).toHaveBeenCalledExactlyOnceWith(getHelpText())
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -98,6 +103,7 @@ describe.each`
 		it(`prints the tool version of '${props.version}'`, () => {
 			expect(printMessage).toHaveBeenCalledExactlyOnceWith(props.version)
 			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
 		})
 	},
 )
@@ -188,6 +194,7 @@ describe.each`
 				it("remains silent", () => {
 					expect(printMessage).not.toHaveBeenCalled()
 					expect(printCommandLineError).not.toHaveBeenCalled()
+					expect(printCommandLineWarning).not.toHaveBeenCalled()
 				})
 			},
 		)
@@ -218,6 +225,7 @@ describe.each`
 				it("remains silent", () => {
 					expect(printMessage).not.toHaveBeenCalled()
 					expect(printCommandLineError).not.toHaveBeenCalled()
+					expect(printCommandLineWarning).not.toHaveBeenCalled()
 				})
 			},
 		)
@@ -235,6 +243,7 @@ describe.each`
 			it("remains silent", () => {
 				expect(printMessage).not.toHaveBeenCalled()
 				expect(printCommandLineError).not.toHaveBeenCalled()
+				expect(printCommandLineWarning).not.toHaveBeenCalled()
 			})
 		})
 	},
@@ -262,6 +271,7 @@ describe.each`
 		it("remains silent", () => {
 			expect(printMessage).not.toHaveBeenCalled()
 			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
 		})
 	},
 )
@@ -289,6 +299,7 @@ describe.each`
 		it("remains silent", () => {
 			expect(printMessage).not.toHaveBeenCalled()
 			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
 		})
 	},
 )
@@ -461,6 +472,7 @@ describe("when there are no commits in the default configuration", () => {
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -479,6 +491,7 @@ describe("when there is 1 commit that raises no concerns in the default configur
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -502,6 +515,7 @@ describe("when there are 4 commits that raise no concerns in the default configu
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -542,6 +556,7 @@ ${grey`98634c1`} fix!
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -590,6 +605,7 @@ ${red`•`} ${grey`${bold`2`} │`} This body line is intentionally longer than 
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -643,6 +659,7 @@ ${grey`b58de17`} Sign the pantry inventory
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -733,6 +750,7 @@ ${grey`7f811b2`} Merge the old tea ledger
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -831,6 +849,7 @@ describe.each`
 			it("skips the missing configuration", () => {
 				expect(printMessage).not.toHaveBeenCalled()
 				expect(printCommandLineError).not.toHaveBeenCalled()
+				expect(printCommandLineWarning).not.toHaveBeenCalled()
 			})
 		})
 	},
@@ -925,6 +944,7 @@ describe("when there are no commits in the custom 'comet.json' configuration", (
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -937,7 +957,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 				noRepeatedSubjectLines: "error",
 				useImperativeSubjectLines: {
 					level: "error",
-					options: { whitelist: ["deploy"] },
+					options: { whitelist: ["deployify"] },
 				},
 				useIssueLinks: {
 					level: "error",
@@ -951,7 +971,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 				},
 			},
 		})
-		mockGitBranchCrudeCommits([fakeCrudeCommit({ message: "BOT-71 Deploy the robot butler" })])
+		mockGitBranchCrudeCommits([fakeCrudeCommit({ message: "BOT-71 Deployify the robot butler" })])
 		exitCode = await commandLineProgram([])
 	})
 
@@ -962,6 +982,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1012,6 +1033,7 @@ describe("when there are 3 commits that raise no concerns in the custom 'comet.j
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1059,6 +1081,7 @@ ${red`•`} ${grey`${bold`2`} │`} Co-authored-by: Ada Lovelace <ada@example.co
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1107,6 +1130,7 @@ ${grey`╰─ authored by:`} Master Splinter
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1167,6 +1191,7 @@ ${grey`9f1a1b2`} Test the emergency toaster
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1241,6 +1266,7 @@ ${grey`c0ffee1`} Untangle the improbable cables
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1269,6 +1295,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1325,6 +1352,7 @@ ${grey`b58de17`} Wire the oat milk alert
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1454,6 +1482,7 @@ ${grey`a8b3d6c`} Merge the old tea ledger
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1503,6 +1532,7 @@ describe("when there are no commits in the custom configuration from 'configs/st
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1553,6 +1583,7 @@ describe("when there is 1 commit that raises no concerns in the custom configura
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1605,6 +1636,7 @@ describe("when there are 7 commits that raise no concerns in the custom configur
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1659,6 +1691,7 @@ ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1727,6 +1760,7 @@ ${grey`d677c31`} Tune the observatory clock
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1816,6 +1850,7 @@ ${grey`a43a3f3`} Archive the noisy bell!
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1877,6 +1912,7 @@ ${grey`7f811b2`} Revert "Revert "Disable the alarm""
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1905,6 +1941,7 @@ describe("when there is 1 commit that raises no concerns in the custom configura
 	it("remains silent", () => {
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -1970,6 +2007,7 @@ ${grey`╰─ authored by:`} Master Splinter
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -2035,6 +2073,7 @@ ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -2107,6 +2146,7 @@ ${grey`╰─ authored by:`} Master Splinter
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -2168,6 +2208,7 @@ ${grey`b58de17`} Wire the oat milk alert
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -2276,6 +2317,7 @@ ${grey`9f1a1b2`} This commit is a lie
 `.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
 	})
 })
 
@@ -2302,5 +2344,243 @@ describe("when a configuration file in a custom sequence of configuration files 
 		expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(
 			"Failed to read 'configs/local.json': File not found",
 		)
+	})
+})
+
+describe("when 'useIssueLinks' is enabled without 'issueLinks'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: { useIssueLinks: "error" },
+		})
+		mockGitBranchCrudeCommits([])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("prints a configuration warning", () => {
+		expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+			`${bold`1 issue detected in the Comet configuration:`}\n- 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled\n`,
+		)
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+	})
+})
+
+describe.each`
+	prefixes     | wildcards
+	${[]}        | ${[]}
+	${[" ", ""]} | ${[]}
+	${[]}        | ${[""]}
+	${[""]}      | ${["", "  "]}
+`(
+	"when 'useIssueLinks' is enabled with blank 'issueLinks' of $prefixes and $wildcards",
+	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: { useIssueLinks: "error" },
+				tokens: { issueLinks: props },
+			})
+			mockGitBranchCrudeCommits([])
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("prints a configuration warning", () => {
+			expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+				`${bold`1 issue detected in the Comet configuration:`}\n- 'issueLinks' in 'tokens' should contain at least one non-blank prefix or wildcard when 'useIssueLinks' is enabled\n`,
+			)
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe.each`
+	prefixes    | wildcards
+	${["FUT-"]} | ${[]}
+	${[]}       | ${["[no-issue]"]}
+`(
+	"when 'useIssueLinks' is enabled with 'issueLinks' of $prefixes and $wildcards",
+	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: { useIssueLinks: "error" },
+				tokens: { issueLinks: props },
+			})
+			mockGitBranchCrudeCommits([])
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("remains silent", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe("when 'useIssueLinks' is disabled without 'issueLinks'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: { useIssueLinks: "off" },
+		})
+		mockGitBranchCrudeCommits([])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
+	})
+})
+
+describe.each`
+	whitelist                                                       | expectedRedundantWordsList
+	${[" DISCOMBOBULATE "]}                                         | ${"discombobulate"}
+	${["OBFUSCATE", "abjure"]}                                      | ${"obfuscate, abjure"}
+	${[" ABJURE ", "StReAmLiNe", "obfuscate", "abjure", "chatify"]} | ${"abjure, streamline, obfuscate"}
+`(
+	"when 'useImperativeSubjectLines' is enabled with a whitelist of $whitelist that contains redundant words",
+	(props: { whitelist: Array<string>; expectedRedundantWordsList: string }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: {
+					useImperativeSubjectLines: {
+						level: "error",
+						options: { whitelist: props.whitelist },
+					},
+				},
+			})
+			mockGitBranchCrudeCommits([])
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("prints a configuration warning", () => {
+			expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+				`${bold`1 issue detected in the Comet configuration:`}\n- 'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: ${props.expectedRedundantWordsList}\n`,
+			)
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe.each`
+	whitelist
+	${[]}
+	${["chatify", "deployify"]}
+`(
+	"when 'useImperativeSubjectLines' is enabled with a whitelist of $whitelist that does not contain any redundant words",
+	(props: { whitelist: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: {
+					useImperativeSubjectLines: {
+						level: "error",
+						options: { whitelist: props.whitelist },
+					},
+				},
+			})
+			mockGitBranchCrudeCommits([])
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("remains silent", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe("when 'useImperativeSubjectLines' is disabled a whitelist that contains redundant words", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: {
+				useImperativeSubjectLines: {
+					level: "off",
+					options: { whitelist: [" DISCOMBOBULATE ", "abjure"] },
+				},
+			},
+		})
+		mockGitBranchCrudeCommits([])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
+	})
+})
+
+describe("when the configuration has multiple issues", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: {
+				useImperativeSubjectLines: {
+					level: "error",
+					options: { whitelist: ["release"] },
+				},
+				useIssueLinks: "error",
+			},
+		})
+		mockGitBranchCrudeCommits([])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("prints all configuration issues in a single warning", () => {
+		expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+			`${bold`2 issues detected in the Comet configuration:`}\n- 'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: release\n- 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled\n`,
+		)
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })

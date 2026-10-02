@@ -1,3 +1,4 @@
+import { bold } from "ansis"
 import type { TokenConfiguration } from "#commits/TokenConfiguration.ts"
 import type {
 	JsonConfigurationGitDto,
@@ -6,9 +7,11 @@ import type {
 } from "#configurations/json/dtos/JsonConfigurationDto.ts"
 import { fetchJsonConfigurationDto } from "#configurations/json/FetchJsonConfigurationDto.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
-import { isNotNullishValue, uniqueItems } from "#utilities/Arrays.ts"
+import { isNotEmptyString, isNotNullishValue, uniqueItems } from "#utilities/Arrays.ts"
 import { isReadableFile, normalisePath } from "#utilities/files/Files.ts"
 import { type DeepPartial, deepMerge } from "#utilities/Objects.ts"
+import { formatCount } from "#utilities/Strings.ts"
+import { isImperativeVerb } from "#utilities/Verbs.ts"
 
 export type Configuration = {
 	git: GitConfiguration
@@ -102,12 +105,18 @@ function sanitiseConfiguration(
 		return configuration
 	}
 
+	const prefixes = issueLinks.prefixes ?? []
+	const wildcards = issueLinks.wildcards ?? []
+
+	const normalisedPrefixes = prefixes.map((value) => value.trim()).filter(isNotEmptyString)
+	const normalisedWildcards = wildcards.map((value) => value.trim()).filter(isNotEmptyString)
+
 	return {
 		...configuration,
 		tokens: {
 			issueLinks: {
-				prefixes: uniqueItems(issueLinks.prefixes ?? []),
-				wildcards: uniqueItems(issueLinks.wildcards ?? []),
+				prefixes: uniqueItems(normalisedPrefixes),
+				wildcards: uniqueItems(normalisedWildcards),
 			},
 		},
 	}
@@ -135,4 +144,47 @@ async function getDefaultConfigurationPath(): Promise<string | null> {
 		return "comet.jsonc"
 	}
 	return null
+}
+
+export function formatConfigurationIssues(configuration: DeepPartial<Configuration>): string {
+	const issues = [...validateConfiguration(configuration)]
+
+	if (issues.length === 0) {
+		return ""
+	}
+
+	const issuePhrase = formatCount(issues.length, "issue", "issues")
+	const formattedIssues = issues.map((issue) => `- ${issue}`).join("\n")
+	return `${bold`${issuePhrase} detected in the Comet configuration:`}\n${formattedIssues}\n`
+}
+
+function* validateConfiguration(configuration: DeepPartial<Configuration>): Generator<string> {
+	if (configuration.rules?.useImperativeSubjectLines?.level === "error") {
+		const whitelist = configuration.rules.useImperativeSubjectLines.options?.whitelist ?? []
+
+		if (whitelist.length > 0) {
+			const redundantWords = uniqueItems(
+				whitelist
+					.map((word) => word.trim().toLowerCase())
+					.filter(isNotEmptyString)
+					.filter(isImperativeVerb),
+			)
+
+			if (redundantWords.length > 0) {
+				yield `'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: ${redundantWords.join(", ")}`
+			}
+		}
+	}
+
+	if (configuration.rules?.useIssueLinks?.level === "error") {
+		const issueLinks = configuration.tokens?.issueLinks
+		const prefixes = issueLinks?.prefixes ?? []
+		const wildcards = issueLinks?.wildcards ?? []
+
+		if (issueLinks === undefined) {
+			yield "'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled"
+		} else if (prefixes.length + wildcards.length === 0) {
+			yield "'issueLinks' in 'tokens' should contain at least one non-blank prefix or wildcard when 'useIssueLinks' is enabled"
+		}
+	}
 }
