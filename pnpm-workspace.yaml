@@ -43,7 +43,7 @@ catalog:
   # Vitest is a unit testing framework.
   # It is also provided by Vite+, but IDE tooling (such as the test runner in IntelliJ IDEA) currently expects the Vitest CLI to exist on the PATH.
   # https://vitest.dev
-  vitest: 5.0.2
+  vitest: 5.0.5
 
 # Consolidate tool versions provided by Vite+ with the ones specified in the catalog.
 overrides:
