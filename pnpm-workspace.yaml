@@ -38,7 +38,7 @@ catalog:
   # Vite+ is a unified toolchain and task runner for Oxfmt (an opinionated code formatter), Oxlint (a TypeScript linter), tsdown (a bundler), Vite, and Vitest.
   # It is also a version manager of Node.js and pnpm.
   # https://viteplus.dev
-  vite-plus: 1.0.0-rc.0
+  vite-plus: 1.3.0
 
   # Vitest is a unit testing framework.
   # It is also provided by Vite+, but IDE tooling (such as the test runner in IntelliJ IDEA) currently expects the Vitest CLI to exist on the PATH.
