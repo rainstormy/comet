@@ -22,29 +22,29 @@ pnpm add --save-dev @rainstormy/comet
 <mark>TODO</mark>
 
 ## Rules
-| Key                               | Description       |
-|-----------------------------------|-------------------|
-| [`noBlankSubjectLines`]()         | <mark>TODO</mark> |
-| [`noExcessiveCommitsPerBranch`]() | <mark>TODO</mark> |
-| [`noExcessiveWhitespace`]()       | <mark>TODO</mark> |
-| [`noMergeCommits`]()              | <mark>TODO</mark> |
-| [`noRepeatedSubjectLines`]()      | <mark>TODO</mark> |
-| [`noRestrictedTrailers`]()        | <mark>TODO</mark> |
-| [`noRevertRevertCommits`]()       | <mark>TODO</mark> |
-| [`noSingleWordSubjectLines`]()    | <mark>TODO</mark> |
-| [`noSquashMarkers`]()             | <mark>TODO</mark> |
-| [`noUnexpectedPunctuation`]()     | <mark>TODO</mark> |
-| [`useAuthorEmailPatterns`]()      | <mark>TODO</mark> |
-| [`useAuthorNamePatterns`]()       | <mark>TODO</mark> |
-| [`useCapitalisedSubjectLines`]()  | <mark>TODO</mark> |
-| [`useCommitterEmailPatterns`]()   | <mark>TODO</mark> |
-| [`useCommitterNamePatterns`]()    | <mark>TODO</mark> |
-| [`useConciseSubjectLines`]()      | <mark>TODO</mark> |
-| [`useEmptyLineBeforeBodyLines`]() | <mark>TODO</mark> |
-| [`useImperativeSubjectLines`]()   | <mark>TODO</mark> |
-| [`useIssueLinks`]()               | <mark>TODO</mark> |
-| [`useLineWrapping`]()             | <mark>TODO</mark> |
-| [`useSignedCommits`]()            | <mark>TODO</mark> |
+| Key                                                                        |
+|----------------------------------------------------------------------------|
+| [`noBlankSubjectLines`](docs/rules/NoBlankSubjectLines.md)                 |
+| [`noExcessiveCommitsPerBranch`](docs/rules/NoExcessiveCommitsPerBranch.md) |
+| [`noExcessiveWhitespace`](docs/rules/NoExcessiveWhitespace.md)             |
+| [`noMergeCommits`](docs/rules/NoMergeCommits.md)                           |
+| [`noRepeatedSubjectLines`](docs/rules/NoRepeatedSubjectLines.md)           |
+| [`noRestrictedTrailers`](docs/rules/NoRestrictedTrailers.md)               |
+| [`noRevertRevertCommits`](docs/rules/NoRevertRevertCommits.md)             |
+| [`noSingleWordSubjectLines`](docs/rules/NoSingleWordSubjectLines.md)       |
+| [`noSquashMarkers`](docs/rules/NoSquashMarkers.md)                         |
+| [`noUnexpectedPunctuation`](docs/rules/NoUnexpectedPunctuation.md)         |
+| [`useAuthorEmailPatterns`](docs/rules/UseAuthorEmailPatterns.md)           |
+| [`useAuthorNamePatterns`](docs/rules/UseAuthorNamePatterns.md)             |
+| [`useCapitalisedSubjectLines`](docs/rules/UseCapitalisedSubjectLines.md)   |
+| [`useCommitterEmailPatterns`](docs/rules/UseCommitterEmailPatterns.md)     |
+| [`useCommitterNamePatterns`](docs/rules/UseCommitterNamePatterns.md)       |
+| [`useConciseSubjectLines`](docs/rules/UseConciseSubjectLines.md)           |
+| [`useEmptyLineBeforeBodyLines`](docs/rules/UseEmptyLineBeforeBodyLines.md) |
+| [`useImperativeSubjectLines`](docs/rules/UseImperativeSubjectLines.md)     |
+| [`useIssueLinks`](docs/rules/UseIssueLinks.md)                             |
+| [`useLineWrapping`](docs/rules/UseLineWrapping.md)                         |
+| [`useSignedCommits`](docs/rules/UseSignedCommits.md)                       |
 
 ## Configuration
 <mark>TODO</mark>

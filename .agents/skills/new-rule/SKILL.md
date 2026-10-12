@@ -1,11 +1,11 @@
 ---
 name: new-rule
-description: Add or modify rules in Comet. Use when defining a new rule, implementing or modifying rule validation logic, rule options, concerns, reports, corresponding tests, or reviewing any such changes in this area.
+description: Add, modify, or document rules in Comet. Use when working on rule validation logic, options, concerns, reports, tests, or JSDoc documentation, including reviews of these changes.
 ---
 
 # New rule
 
-This document describes how to add a new rule to Comet, which involves declaring configurable rule options, implementing validation logic to raise concerns, and outputting formatted concerns in reports.
+This document describes how to add or modify a rule in Comet, which involves declaring configurable rule options, implementing validation logic to raise concerns, outputting formatted concerns in reports, and documenting the rule for end users.
 
 It uses `noTypos` as an example of a new rule to implement.
 
@@ -31,10 +31,7 @@ import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfi
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Verifies that the subject line and body lines do not contain typos.
- * 
- * It ignores revert commits.
- * It disregards inline code phrases and fenced code blocks.
+ * Rejects typos in commit messages.
  */
 export function* noTypos(commits: Commits, ruleset: RulesetConfiguration): Generator<Concern> {
   const rule: RuleKey = "noTypos"
@@ -54,12 +51,6 @@ If `configuration.level` is `off`, the rule is disabled and must return immediat
 `configuration.options` is always an object, including for rules without configurable options in which case it is an empty object.
 
 The `rule` const with the rule key reduces code duplication when yielding concerns.
-
-The JSDoc comment above the function should:
-
-- Always begin with 'Verifies that'.
-- Describe the scope (e.g. whether the rule covers subject lines, body lines, authors, etc.) and intent of the rule (as clarified in Step 1).
-- Describe under which conditions the rule does not apply or only partially applies.
 
 Insert the rule key or function into the existing alphabetically ordered lists found in:
 
@@ -333,7 +324,119 @@ Iterate over the rule implementation and its unit tests in a TDD-like manner unt
 vpr test 'src/rules/NoTypos.tests.ts'
 ```
 
-## Step 6: Implement reports
+## Step 6: Write documentation
+
+The JSDoc comment immediately above the exported generator function is the source of the user-facing rule documentation.
+The `vpr build` task generates the corresponding Markdown file in `docs/rules/`, for example `docs/rules/NoTypos.md`.
+Always make documentation changes in the `.ts` file that contains the rule implementation and JSDoc comment.
+
+Read the documentation of a similar existing rule for guidance, for example `src/rules/UseImperativeSubjectLines.ts` for a message rule or `src/rules/UseAuthorEmailPatterns.ts` for an identity rule.
+
+Always begin with 'Rejects' and state the intent and scope of the rule as clarified in Step 1, including whether it validates subject lines, body lines, identities, commits, or whole branches.
+
+Write the following sections in this order:
+
+1. `## Rationale`: Explain why the rule enforces a policy that actually matters and how users benefit from it.
+2. `## How to fix`: State the correction in one sentence and provide actionable steps under `### Command-line interface (CLI)` with pure Git commands that the user can run in the terminal.
+   Include `### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)` when there is a relevant workflow specific to the JetBrains IDE family, usually involving its built-in Git client.
+   Choose the operation that fixes the rule violation, for example rewording the message, updating the identity, signing the commit, rebasing interactively to squash commits, cherry-picking, or splitting a branch.
+3. `## Remarks` (when needed): Describe precise behaviour, exceptions, ignored commits and/or tokens, normalisation, and limitations relevant to the end users.
+4. `## Options`: For rules with options, use an unordered list to document each option's name, type or allowed set of values (in parentheses), meaning, relevant empty-value behaviour, and default value on the form 'Default value: `<value>`'.
+   For rules without options, state 'This rule has no configurable options'.
+   Always include a valid JSON configuration example with `rules`, the rule key (e.g. `noTypos`), `level` (set to `error`), and `options` using the defaults from `DEFAULT_RULESET_CONFIGURATION`.
+5. `## Examples`: Group examples under `### Rejected` and `### Accepted`, up to 5 examples in each group, illustrating the main violation, the correction, and useful exceptions.
+   State any rule or token configuration that the examples depend on, especially when it differs from the defaults.
+6. `## Related rules` (when applicable): Link to relevant rule documentation with relative Markdown links such as `[useLineWrapping](./UseLineWrapping.md)`.
+
+For example:
+
+````ts
+/**
+ * Rejects typos in commit messages.
+ *
+ * ## Rationale
+ *
+ * Correct spelling keeps commit history understandable.
+ *
+ * ## How to fix
+ *
+ * Correct the misspelled words in the subject line and the message body.
+ *
+ * ### Command-line interface (CLI)
+ *
+ * 1. Rebase interactively from (the parent of) the commit SHA, for example:
+ *
+ *    ```shell
+ *    git rebase --interactive '7e0ff1ce^'
+ *    ```
+ *
+ * 2. Set the commit to `reword`, then save and close the editor to proceed:
+ *
+ *    ```
+ *    reword 7e0ff1ce ...
+ *    ```
+ *
+ * 3. In the commit message editor, correct the misspelled words.
+ *    Then save and close the editor to complete the rebase.
+ *
+ * 4. Force-push the rewritten branch to the remote repository:
+ *
+ *    ```shell
+ *    git push --force-with-lease
+ *    ```
+ *
+ * ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
+ *
+ * 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
+ *    Correct the misspelled words.
+ *
+ * 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
+ *
+ * ## Remarks
+ *
+ * The following kinds of commits are always accepted:
+ *
+ * - Revert commits, e.g. `Revert "..."`.
+ * - Commits with dependency versions in the subject line, e.g. `Bump Vite to 2.4.0-beta.1` and `Pin the Node.js image to 4af617c`.
+ *
+ * It disregards inline code phrases (enclosed in backticks) and fenced code blocks.
+ *
+ * ## Options
+ *
+ * - `whitelist` (array of case-insensitive strings): Custom words to accept. Default value: `[]`.
+ *
+ * ```json
+ * {
+ *   "rules": {
+ *     "noTypos": {
+ *       "level": "error",
+ *       "options": { "whitelist": [] }
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * ## Examples
+ *
+ * ### Rejected
+ *
+ * ```
+ * Fix the parsr typo
+ * ```
+ *
+ * ### Accepted
+ *
+ * ```
+ * Fix the parser typo
+ * ```
+ */
+export function* noTypos(commits: Commits, ruleset: RulesetConfiguration): Generator<Concern> { /* ... */ }
+````
+
+Always verify that the documented behaviour, options, and example outcomes agree with the implementation and tests.
+Acceptance is specific to this rule, even if another rule would reject the example.
+
+## Step 7: Implement reports
 
 Add at least 2 test cases to `src/rules/reports/CommitwiseReport.tests.ts` to cover the new rule.
 Note that test cases appear in alphabetical order by rule names.

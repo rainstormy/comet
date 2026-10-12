@@ -2,6 +2,10 @@ export function capitalise(value: string): string {
 	return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
+export function decapitalise(value: string): string {
+	return value.charAt(0).toLowerCase() + value.slice(1)
+}
+
 /**
  * Replaces each block of one of more whitespace characters with a single regular space character.
  * Hence, it collapses multiple spaces to a single space, and it replaces newlines with spaces.
