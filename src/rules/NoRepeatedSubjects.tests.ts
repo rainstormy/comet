@@ -8,14 +8,14 @@ import { type Concerns, mapCommitsToConcerns } from "#rules/concerns/Concern.ts"
 import { fakeCommitSha } from "#types/CommitSha.fakes.ts"
 import type { Vector } from "#types/Vector.ts"
 
-const rule: RuleKey = "noRepeatedSubjectLines"
+const rule: RuleKey = "noRepeatedSubjects"
 
 const disabled = emptyRulesetConfiguration()
 const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
 
 const fakeCommit = fakeCommitFactory()
 
-describe("when verifying a set of multiple commits and some commits have repeated subject lines", () => {
+describe("when verifying a set of multiple commits and some commits have repeated subjects", () => {
 	const commits: Vector<Commit, 10> = [
 		fakeCommit({ message: "test" }),
 		fakeCommit({ message: "another bugfix" }),
@@ -32,7 +32,7 @@ describe("when verifying a set of multiple commits and some commits have repeate
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns(commits, enabled)
 
-		it("raises concerns about the commits with repeated subject lines", () => {
+		it("raises concerns about the commits with repeated subjects", () => {
 			expect(actualConcerns).toEqual<Concerns>([
 				commitConcern(rule, commits[5].sha),
 				commitConcern(rule, commits[7].sha),
@@ -51,7 +51,7 @@ describe("when verifying a set of multiple commits and some commits have repeate
 	})
 })
 
-describe("when verifying a set of multiple commits and some commits have repeated subject lines differing only by whitespace or case", () => {
+describe("when verifying a set of multiple commits and some commits have repeated subjects differing only by whitespace or case", () => {
 	const commits: Vector<Commit, 12> = [
 		fakeCommit({ message: "test" }),
 		fakeCommit({ message: "another bugfix" }),
@@ -70,7 +70,7 @@ describe("when verifying a set of multiple commits and some commits have repeate
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns(commits, enabled)
 
-		it("raises concerns about the commits with repeated subject lines being whitespace- and case-insensitive", () => {
+		it("raises concerns about the commits with repeated subjects being whitespace- and case-insensitive", () => {
 			expect(actualConcerns).toEqual<Concerns>([
 				commitConcern(rule, commits[4].sha),
 				commitConcern(rule, commits[5].sha),
@@ -91,7 +91,7 @@ describe("when verifying a set of multiple commits and some commits have repeate
 	})
 })
 
-describe("when verifying a set of multiple commits and merge commits have repeated subject lines", () => {
+describe("when verifying a set of multiple commits and merge commits have repeated subjects", () => {
 	const commits: Vector<Commit, 9> = [
 		fakeCommit({ message: "upgrade the snack dispenser" }),
 		fakeCommit({
@@ -119,7 +119,7 @@ describe("when verifying a set of multiple commits and merge commits have repeat
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns(commits, enabled)
 
-		it("raises concerns about the commits with repeated subject lines, but ignores merge commits", () => {
+		it("raises concerns about the commits with repeated subjects, but ignores merge commits", () => {
 			expect(actualConcerns).toEqual<Concerns>([
 				commitConcern(rule, commits[2].sha),
 				commitConcern(rule, commits[6].sha),
@@ -137,7 +137,7 @@ describe("when verifying a set of multiple commits and merge commits have repeat
 	})
 })
 
-describe("when verifying a set of multiple commits and revert commits have repeated subject lines", () => {
+describe("when verifying a set of multiple commits and revert commits have repeated subjects", () => {
 	const commits: Vector<Commit, 8> = [
 		fakeCommit({ message: "Refactor the office playlist scheduler" }),
 		fakeCommit({ message: "upgrade the snack dispenser" }),
@@ -152,7 +152,7 @@ describe("when verifying a set of multiple commits and revert commits have repea
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns(commits, enabled)
 
-		it("raises concerns about the commits with repeated subject lines, but ignores commits with revert markers", () => {
+		it("raises concerns about the commits with repeated subjects, but ignores commits with revert markers", () => {
 			expect(actualConcerns).toEqual<Concerns>([
 				commitConcern(rule, commits[4].sha),
 				commitConcern(rule, commits[5].sha),
@@ -170,7 +170,7 @@ describe("when verifying a set of multiple commits and revert commits have repea
 	})
 })
 
-describe("when verifying a set of multiple commits and squash commits have repeated subject lines", () => {
+describe("when verifying a set of multiple commits and squash commits have repeated subjects", () => {
 	const commits: Vector<Commit, 12> = [
 		fakeCommit({ message: "Refactor the office playlist scheduler" }),
 		fakeCommit({ message: "fixup! Refactor the office playlist scheduler" }),
@@ -189,7 +189,7 @@ describe("when verifying a set of multiple commits and squash commits have repea
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns(commits, enabled)
 
-		it("raises concerns about the commits with repeated subject lines, but ignores commits with squash markers", () => {
+		it("raises concerns about the commits with repeated subjects, but ignores commits with squash markers", () => {
 			expect(actualConcerns).toEqual<Concerns>([
 				commitConcern(rule, commits[6].sha),
 				commitConcern(rule, commits[8].sha),
@@ -207,7 +207,7 @@ describe("when verifying a set of multiple commits and squash commits have repea
 	})
 })
 
-describe("when verifying a set of multiple commits and some commits have repeated subject lines, but different issue links", () => {
+describe("when verifying a set of multiple commits and some commits have repeated subjects, but different issue links", () => {
 	const commits: Vector<Commit, 4> = [
 		fakeCommit({ message: "#1 replace guesswork with a tiny chart" }),
 		fakeCommit({ message: "#2 replace guesswork with a tiny chart" }),
@@ -218,7 +218,7 @@ describe("when verifying a set of multiple commits and some commits have repeate
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns(commits, enabled)
 
-		it("raises concerns about the commits with repeated subject lines, but ignores commits with different issue links", () => {
+		it("raises concerns about the commits with repeated subjects, but ignores commits with different issue links", () => {
 			expect(actualConcerns).toEqual<Concerns>([commitConcern(rule, commits[2].sha)])
 		})
 	})
@@ -244,7 +244,7 @@ describe("when verifying a set of multiple commits and some commits have repeate
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns(commits, enabled)
 
-		it("raises a concern about the repeated subject line", () => {
+		it("raises a concern about the repeated subject", () => {
 			expect(actualConcerns).toEqual<Concerns>([commitConcern(rule, commits[2].sha)])
 		})
 	})
@@ -258,7 +258,7 @@ describe("when verifying a set of multiple commits and some commits have repeate
 	})
 })
 
-describe("when verifying a set of multiple commits and no commits have repeated subject lines", () => {
+describe("when verifying a set of multiple commits and no commits have repeated subjects", () => {
 	const commits: Vector<Commit, 10> = [
 		fakeCommit({ message: "init" }),
 		fakeCommit({ message: "Install the pastry metrics panel" }),

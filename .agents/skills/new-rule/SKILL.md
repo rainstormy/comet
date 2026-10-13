@@ -18,7 +18,7 @@ Read any existing rule files that may sound similar to the intended behaviour be
 Note that every rule is focused to a narrow scope. For example, `useAuthorEmailPatterns`, `useAuthorNamePatterns`, and `useCommitterEmailPatterns` are separate rules.
 Let me know if the new rule is too similar to an existing rule and prompt for new instructions to clarify if you should modify an existing rule instead of implementing a new one.
 
-Identify the unit(s) under validation: subject line, body lines, user identity (author or committer), or the commit as a whole.
+Identify the unit(s) under validation: subject, body lines, user identity (author or committer), or the commit as a whole.
 
 ## Step 2: Scaffold function signature
 
@@ -157,7 +157,7 @@ Look at the existing default values and rule configurations for inspiration. Usu
 Due to their nature, some rules like `noRestrictedTrailers` and `useAuthorEmailPatterns` depend entirely on their configuration in order to know when to raise concerns.
 They use empty arrays in their default values; hence, they never raise any concerns if they are enabled with default values. Such rules are usually disabled by default in all entrypoints to improve performance.
 
-Note that other rules like `useImperativeSubjectLines` (and `noTypos` in our example) may also use empty arrays in their default values, but they are not entirely dependent on their configuration to raise concerns.
+Note that other rules like `useImperativeSubjects` (and `noTypos` in our example) may also use empty arrays in their default values, but they are not entirely dependent on their configuration to raise concerns.
 They are still able to raise concerns even if the configured array is empty. They should not necessarily be disabled by default.
 
 ## Step 4: Outline unit tests
@@ -195,7 +195,7 @@ const fakeCommit = fakeCommitFactory()
 Use `describe.each` in Vitest to cover many test cases easily.
 A test suite for a rule has at least 4 top-level `describe.each` blocks to cover these scenarios:
 
-- when the commit violates the rule (e.g. when the subject line contains one or multiple typos)
+- when the commit violates the rule (e.g. when the subject contains one or multiple typos)
   - and the rule is enabled -> it raises a concern
   - and the rule is disabled -> it does not raise a concern
 - when the commit does not violate the rule
@@ -210,27 +210,27 @@ A test suite for a rule has at least 4 top-level `describe.each` blocks to cover
 
 Assert that the rule raises concerns at the expected character ranges.
 
-For example, a simple top-level block could look like this for a rule that covers subject lines:
+For example, a simple top-level block could look like this for a rule that covers subjects:
 
 ```ts
 describe.each`
-	subjectLine                | expectedRange
+	subject                    | expectedRange
 	${"initz"}                 | ${[0, 5]}
 	${"I'm flabbbergastered"}  | ${[4, 20]}
 	${"Give me eternal welth"} | ${[16, 21]}
 	${"#1 repared again"}      | ${[3, 10]}
 	${"squash!  my baad"}      | ${[12, 16]}
 `(
-  "when the subject line of $subjectLine contains a typo",
-  (props: { subjectLine: string; expectedRange: CharacterRange }) => {
-    const commit = fakeCommit({ message: props.subjectLine })
+  "when the subject of $subject contains a typo",
+  (props: { subject: string; expectedRange: CharacterRange }) => {
+    const commit = fakeCommit({ message: props.subject })
 
     describe("and the rule is enabled", () => {
       const actualConcerns = mapCommitsToConcerns([commit], enabled)
 
       it("raises a concern about the misspelled word", () => {
         expect(actualConcerns).toEqual<Concerns>([
-          subjectLineConcern(rule, commit.sha, { range: props.expectedRange }),
+          subjectConcern(rule, commit.sha, { range: props.expectedRange }),
         ])
       })
     })
@@ -246,11 +246,11 @@ describe.each`
 )
 ```
 
-Additional blocks are needed to cover complex rules with options (e.g. `enabled` and `enabledWhitelist`) or multiple locations for concerns (e.g. subject line + body lines).
+Additional blocks are needed to cover complex rules with options (e.g. `enabled` and `enabledWhitelist`) or multiple locations for concerns (e.g. subject + body lines).
 Be sure to cover many different tokens, for example (but not exhaustive):
 
-- empty or blank subject lines
-- single-word subject lines
+- empty or blank subjects
+- single-word subjects
 - leading and trailing whitespace
 - capitalised and lowercase leading words
 - verbs in imperative mood and in past tense
@@ -298,23 +298,23 @@ export function* noTypos(commits: Commits, ruleset: RulesetConfiguration): Gener
   )
 
   for (const commit of commits) {
-    if (commit.subjectLine.some(isToken("revert"))) {
+    if (commit.subject.some(isToken("revert"))) {
       continue
     }
 
-    const misspelledWords = commit.subjectLine
+    const misspelledWords = commit.subject
       .filter(isToken("word"))
       .filter((word) => !whitelist.has(word.value.toLowerCase()))
       .filter(isMisspelledWord)
 
     for (const word of misspelledWords) {
-      yield subjectLineConcern(rule, commit.sha, { range: word.range })
+      yield subjectConcern(rule, commit.sha, { range: word.range })
     }
   }
 }
 ```
 
-If the rule concerns the subject line or the body lines, consult `src/commits/Token.ts` for a list of all tokens and associated utility functions.
+If the rule concerns the subject or the body lines, consult `src/commits/Token.ts` for a list of all tokens and associated utility functions.
 
 If you need to add or modify commit message tokens, follow the instructions in `.agents/skills/new-token-type/SKILL.md` and implement those changes in a separate commit.
 
@@ -330,9 +330,9 @@ The JSDoc comment immediately above the exported generator function is the sourc
 The `vpr build` task generates the corresponding Markdown file in `docs/rules/`, for example `docs/rules/NoTypos.md`.
 Always make documentation changes in the `.ts` file that contains the rule implementation and JSDoc comment.
 
-Read the documentation of a similar existing rule for guidance, for example `src/rules/UseImperativeSubjectLines.ts` for a message rule or `src/rules/UseAuthorEmailPatterns.ts` for an identity rule.
+Read the documentation of a similar existing rule for guidance, for example `src/rules/UseImperativeSubjects.ts` for a message rule or `src/rules/UseAuthorEmailPatterns.ts` for an identity rule.
 
-Always begin with 'Rejects' and state the intent and scope of the rule as clarified in Step 1, including whether it validates subject lines, body lines, identities, commits, or whole branches.
+Always begin with 'Rejects' and state the intent and scope of the rule as clarified in Step 1, including whether it validates subjects, body lines, identities, commits, or whole branches.
 
 Write the following sections in this order:
 
@@ -360,7 +360,7 @@ For example:
  *
  * ## How to fix
  *
- * Correct the misspelled words in the subject line and the message body.
+ * Correct the misspelled words in the subject and the message body.
  *
  * ### Command-line interface (CLI)
  *
@@ -397,7 +397,7 @@ For example:
  * The following kinds of commits are always accepted:
  *
  * - Revert commits, e.g. `Revert "..."`.
- * - Commits with dependency versions in the subject line, e.g. `Bump Vite to 2.4.0-beta.1` and `Pin the Node.js image to 4af617c`.
+ * - Commits with dependency versions in the subject, e.g. `Bump Vite to 2.4.0-beta.1` and `Pin the Node.js image to 4af617c`.
  *
  * It disregards inline code phrases (enclosed in backticks) and fenced code blocks.
  *

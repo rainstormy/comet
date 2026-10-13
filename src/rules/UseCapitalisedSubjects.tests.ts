@@ -4,11 +4,11 @@ import type { Commit } from "#commits/Commit.ts"
 import { emptyRulesetConfiguration } from "#configurations/GetConfiguration.fakes.ts"
 import type { RuleKey } from "#configurations/RulesetConfiguration.ts"
 import { type Concerns, mapCommitsToConcerns } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import type { Vector } from "#types/Vector.ts"
 
-const rule: RuleKey = "useCapitalisedSubjectLines"
+const rule: RuleKey = "useCapitalisedSubjects"
 
 const disabled = emptyRulesetConfiguration()
 const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
@@ -16,7 +16,7 @@ const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
 const fakeCommit = fakeCommitFactory()
 
 describe.each`
-	subjectLine                                                      | expectedRange
+	subject                                                          | expectedRange
 	${"test"}                                                        | ${[0, 1]}
 	${"release the robot butler"}                                    | ${[0, 1]}
 	${"  some refactoring "}                                         | ${[2, 3]}
@@ -34,16 +34,16 @@ describe.each`
 	${'revert "fix a nasty bug"'}                                    | ${[0, 1]}
 	${'squash!fixup! revert "Revert "Repair the soft ice machine""'} | ${[14, 15]}
 `(
-	"when the subject line of $subjectLine starts with a lowercase letter",
-	(props: { subjectLine: string; expectedRange: CharacterRange }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+	"when the subject of $subject starts with a lowercase letter",
+	(props: { subject: string; expectedRange: CharacterRange }) => {
+		const commit = fakeCommit({ message: props.subject })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
 
 			it("raises a concern about the first non-capitalised character", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRange }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRange }),
 				])
 			})
 		})
@@ -59,7 +59,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine
+	subject
 	${"Refactor the taxi module"}
 	${" Unsubscribe from the service"}
 	${"Formatting."}
@@ -76,70 +76,8 @@ describe.each`
 	${"Let `SoftIceMachineAdapter` produce the goods that we need"}
 	${'Revert "release the robot butler"'}
 	${'fixup! Revert "Resolve a bug that thought it was a feature"'}
-`(
-	"when the subject line of $subjectLine starts with an uppercase letter",
-	(props: { subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
-
-		describe("and the rule is enabled", () => {
-			const actualConcerns = mapCommitsToConcerns([commit], enabled)
-
-			it("does not raise any concerns", () => {
-				expect(actualConcerns).toEqual<Concerns>([])
-			})
-		})
-
-		describe("and the rule is disabled", () => {
-			const actualConcerns = mapCommitsToConcerns([commit], disabled)
-
-			it("does not raise any concerns", () => {
-				expect(actualConcerns).toEqual<Concerns>([])
-			})
-		})
-	},
-)
-
-describe.each`
-	subjectLine
-	${"..."}
-	${"1337"}
-	${"1 2 3 this is a test"}
-	${"99 reasons to upgrade the framework, but this is not one of them"}
-	${"!wip"}
-	${"_ marks the spot"}
-	${"https://github.com/rainstormy/comet/pull/42 release the robot butler"}
-`(
-	"when the subject line of $subjectLine starts with a non-letter or a hyperlink",
-	(props: { subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
-
-		describe("and the rule is enabled", () => {
-			const actualConcerns = mapCommitsToConcerns([commit], enabled)
-
-			it("does not raise any concerns", () => {
-				expect(actualConcerns).toEqual<Concerns>([])
-			})
-		})
-
-		describe("and the rule is disabled", () => {
-			const actualConcerns = mapCommitsToConcerns([commit], disabled)
-
-			it("does not raise any concerns", () => {
-				expect(actualConcerns).toEqual<Concerns>([])
-			})
-		})
-	},
-)
-
-describe.each`
-	subjectLine
-	${""}
-	${" "}
-	${"\t\t"}
-	${"amend!"}
-	${"#12"}
-`("when the subject line of $subjectLine is blank", (props: { subjectLine: string }) => {
-	const commit = fakeCommit({ message: props.subjectLine })
+`("when the subject of $subject starts with an uppercase letter", (props: { subject: string }) => {
+	const commit = fakeCommit({ message: props.subject })
 
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns([commit], enabled)
@@ -158,7 +96,66 @@ describe.each`
 	})
 })
 
-describe("when verifying a set of multiple commits and some commits have non-capitalised subject lines", () => {
+describe.each`
+	subject
+	${"..."}
+	${"1337"}
+	${"1 2 3 this is a test"}
+	${"99 reasons to upgrade the framework, but this is not one of them"}
+	${"!wip"}
+	${"_ marks the spot"}
+	${"https://github.com/rainstormy/comet/pull/42 release the robot butler"}
+`(
+	"when the subject of $subject starts with a non-letter or a hyperlink",
+	(props: { subject: string }) => {
+		const commit = fakeCommit({ message: props.subject })
+
+		describe("and the rule is enabled", () => {
+			const actualConcerns = mapCommitsToConcerns([commit], enabled)
+
+			it("does not raise any concerns", () => {
+				expect(actualConcerns).toEqual<Concerns>([])
+			})
+		})
+
+		describe("and the rule is disabled", () => {
+			const actualConcerns = mapCommitsToConcerns([commit], disabled)
+
+			it("does not raise any concerns", () => {
+				expect(actualConcerns).toEqual<Concerns>([])
+			})
+		})
+	},
+)
+
+describe.each`
+	subject
+	${""}
+	${" "}
+	${"\t\t"}
+	${"amend!"}
+	${"#12"}
+`("when the subject of $subject is blank", (props: { subject: string }) => {
+	const commit = fakeCommit({ message: props.subject })
+
+	describe("and the rule is enabled", () => {
+		const actualConcerns = mapCommitsToConcerns([commit], enabled)
+
+		it("does not raise any concerns", () => {
+			expect(actualConcerns).toEqual<Concerns>([])
+		})
+	})
+
+	describe("and the rule is disabled", () => {
+		const actualConcerns = mapCommitsToConcerns([commit], disabled)
+
+		it("does not raise any concerns", () => {
+			expect(actualConcerns).toEqual<Concerns>([])
+		})
+	})
+})
+
+describe("when verifying a set of multiple commits and some commits have non-capitalised subjects", () => {
 	const commits: Vector<Commit, 7> = [
 		fakeCommit({ message: "test" }),
 		fakeCommit({ message: "Refactor the taxi module" }),
@@ -174,11 +171,11 @@ describe("when verifying a set of multiple commits and some commits have non-cap
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns(commits, enabled)
 
-		it("raises concerns about the commits with non-capitalised subject lines", () => {
+		it("raises concerns about the commits with non-capitalised subjects", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				subjectLineConcern(rule, commits[0].sha, { range: [0, 1] }),
-				subjectLineConcern(rule, commits[3].sha, { range: [0, 1] }),
-				subjectLineConcern(rule, commits[5].sha, { range: [7, 8] }),
+				subjectConcern(rule, commits[0].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[3].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[5].sha, { range: [7, 8] }),
 			])
 		})
 	})
@@ -192,7 +189,7 @@ describe("when verifying a set of multiple commits and some commits have non-cap
 	})
 })
 
-describe("when verifying a set of multiple commits and all commits have capitalised subject lines", () => {
+describe("when verifying a set of multiple commits and all commits have capitalised subjects", () => {
 	const commits: Vector<Commit, 4> = [
 		fakeCommit({ message: "Always use the newest data" }),
 		fakeCommit({ message: "It works!" }),

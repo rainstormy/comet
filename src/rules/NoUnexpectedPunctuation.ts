@@ -2,7 +2,7 @@ import type { Commits } from "#commits/Commit.ts"
 import { isNotToken, isToken } from "#commits/Token.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 
 const ALLOWED_PUNCTUATION_REGEX =
@@ -10,17 +10,20 @@ const ALLOWED_PUNCTUATION_REGEX =
 const TRAILING_EMOJI_SHORTCODE_REGEX = /:\w+:$/u
 
 /**
- * Rejects subject lines with unexpected trailing punctuation.
+ * Rejects subjects with unexpected trailing punctuation.
  *
  * ## Rationale
  *
- * The subject line acts as the commit title; hence, it does not need a full stop at the end.
+ * The subject is the first line of the commit message.
+ * It is what readers see most often when scanning the commit history.
+ *
+ * It acts as the commit title; hence, it does not need a full stop at the end.
  *
  * Consistent punctuation is predictable and makes the commit history easier to read.
  *
  * ## How to fix
  *
- * Delete the offending punctuation characters in the subject line.
+ * Delete the offending punctuation characters in the subject.
  *
  * ### Command-line interface (CLI)
  *
@@ -36,7 +39,7 @@ const TRAILING_EMOJI_SHORTCODE_REGEX = /:\w+:$/u
  *    reword 7e0ff1ce Welcome to my convenience store.
  *    ```
  *
- * 3. In the commit message editor, delete the offending punctuation characters in the subject line (i.e. the first line).
+ * 3. In the commit message editor, delete the offending punctuation characters in the subject (i.e. the first line).
  *    Then save and close the editor to complete the rebase.
  *
  * 4. Force-push the rewritten branch to the remote repository:
@@ -48,7 +51,7 @@ const TRAILING_EMOJI_SHORTCODE_REGEX = /:\w+:$/u
  * ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
  *
  * 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
- *    Delete the offending punctuation characters in the subject line (i.e. the first line).
+ *    Delete the offending punctuation characters in the subject (i.e. the first line).
  *
  * 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
  *
@@ -133,27 +136,27 @@ export function* noUnexpectedPunctuation(
 	}
 
 	for (const commit of commits) {
-		if (commit.subjectLine.some(isToken("revert"))) {
+		if (commit.subject.some(isToken("revert"))) {
 			continue
 		}
 
-		const lastTokenIndex = commit.subjectLine.findLastIndex(isNotToken("issuelink", "whitespace"))
-		const lastToken = commit.subjectLine[lastTokenIndex]
+		const lastTokenIndex = commit.subject.findLastIndex(isNotToken("issuelink", "whitespace"))
+		const lastToken = commit.subject[lastTokenIndex]
 
 		if (lastToken?.type === "punctuation") {
-			const formattedSubjectLine = commit.subjectLine
+			const formattedSubject = commit.subject
 				.slice(0, lastTokenIndex + 1)
 				.map((token) => token.value)
 				.join("")
 
-			if (!ALLOWED_PUNCTUATION_REGEX.test(formattedSubjectLine)) {
-				const emojiShortcodeMatch = TRAILING_EMOJI_SHORTCODE_REGEX.exec(formattedSubjectLine)
+			if (!ALLOWED_PUNCTUATION_REGEX.test(formattedSubject)) {
+				const emojiShortcodeMatch = TRAILING_EMOJI_SHORTCODE_REGEX.exec(formattedSubject)
 				const concernRange: CharacterRange =
 					emojiShortcodeMatch === null
 						? lastToken.range
 						: [emojiShortcodeMatch.index, emojiShortcodeMatch.index + emojiShortcodeMatch[0].length]
 
-				yield subjectLineConcern(rule, commit.sha, { range: concernRange })
+				yield subjectConcern(rule, commit.sha, { range: concernRange })
 			}
 		}
 	}

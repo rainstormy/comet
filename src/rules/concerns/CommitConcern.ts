@@ -10,7 +10,7 @@ export type CommitConcern = {
 export type CommitConcernRuleKey =
 	| "noExcessiveCommitsPerBranch"
 	| "noMergeCommits"
-	| "noRepeatedSubjectLines"
+	| "noRepeatedSubjects"
 	| "useSignedCommits"
 
 export function commitConcern(rule: CommitConcernRuleKey, commitSha: CommitSha): CommitConcern {

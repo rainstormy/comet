@@ -5,7 +5,7 @@ import { bodyLineConcern } from "#rules/concerns/BodyLineConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Rejects commits whose message body is not separated from the subject line by exactly one empty line.
+ * Rejects commits whose message body is not separated from the subject (i.e. the first line) by exactly one empty line.
  *
  * ## Rationale
  *
@@ -16,7 +16,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * ## How to fix
  *
- * Insert and leave exactly one empty line between the subject line and the remaining message body.
+ * Insert and leave exactly one empty line between the subject and the remaining message body.
  *
  * ### Command-line interface (CLI)
  *
@@ -32,7 +32,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *    reword 7e0ff1ce Welcome to my convenience store
  *    ```
  *
- * 3. In the commit message editor, insert and leave exactly one empty line between the subject line (i.e. the first line) and the remaining message body.
+ * 3. In the commit message editor, insert and leave exactly one empty line between the subject (i.e. the first line) and the remaining message body.
  *    Then save and close the editor to complete the rebase.
  *
  * 4. Force-push the rewritten branch to the remote repository:
@@ -44,7 +44,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
  *
  * 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
- *    Insert and leave exactly one empty line between the subject line (i.e. the first line) and the remaining message body.
+ *    Insert and leave exactly one empty line between the subject (i.e. the first line) and the remaining message body.
  *
  * 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
  *
@@ -59,7 +59,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ```json
  * {
  *   "rules": {
- *     "useEmptyLineBeforeBodyLines": {
+ *     "useEmptyLineBeforeBody": {
  *       "level": "error",
  *       "options": {}
  *     }
@@ -97,11 +97,11 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * Consolidate `BadgeFactory` with `BadgeService` and count to ten
  * ```
  */
-export function* useEmptyLineBeforeBodyLines(
+export function* useEmptyLineBeforeBody(
 	commits: Commits,
 	ruleset: RulesetConfiguration,
 ): Generator<Concern> {
-	const rule: RuleKey = "useEmptyLineBeforeBodyLines"
+	const rule: RuleKey = "useEmptyLineBeforeBody"
 	const configuration = ruleset[rule]
 
 	if (configuration.level === "off") {
@@ -112,10 +112,10 @@ export function* useEmptyLineBeforeBodyLines(
 		for (const [lineNumber, bodyLine] of commit.bodyLines.entries()) {
 			if (bodyLine.some(isNotToken("whitespace"))) {
 				if (lineNumber === 0) {
-					yield bodyLineConcern(rule, commit.sha, { line: 0, range: [0, 1] })
+					yield bodyLineConcern(rule, commit.sha, { lineNumber: 0, range: [0, 1] })
 				}
 				if (lineNumber > 1) {
-					yield bodyLineConcern(rule, commit.sha, { line: lineNumber - 1, range: [0, 1] })
+					yield bodyLineConcern(rule, commit.sha, { lineNumber: lineNumber - 1, range: [0, 1] })
 				}
 				break
 			}

@@ -16,14 +16,14 @@ Define the name and purpose of the new token type. All token type names must be 
 Read `src/commits/Token.ts` and `src/commits/Tokenise.ts` and decide from the existing tokens if the intended kind of text segments is already represented adequately by an existing token type or if the desired name already exists.
 Let me know if the new type overlaps substantially with an existing type, or if its name or boundaries are unclear, and ask whether an existing token should be modified instead.
 
-Identify what kinds of text in subject lines and/or body lines that the token should cover.
+Identify what kinds of text in subjects and/or body lines that the token should cover.
 
 Keep a token on one physical line. A token never spans multiple lines.
 Note that some tokens like `code` and `codeblock` are intentionally opaque and take precedence over most other types of tokens.
 For example, a URL inside a fenced code block remains a part of the `codeblock` token rather than being extracted to a `hyperlink` token.
 The majority of token types, however, have clear boundaries with the three most common types which they never overlap: `word`, `whitespace`, and `punctuation`.
 
-Consider whether the new token type is only valid in a specific context such as the start of a subject line (like `revert` and `squash` tokens) and how the new token type should take precedence over the existing tokens (to avoid overlapping tokens).
+Consider whether the new token type is only valid in a specific context such as the start of a subject (like `revert` and `squash` tokens) and how the new token type should take precedence over the existing tokens (to avoid overlapping tokens).
 
 ## Step 2: Scaffold the token type
 
@@ -45,7 +45,7 @@ Declare a top-level `String.raw` const in `src/commits/Tokenise.ts` (in alphabet
 const HYPERLINK = String.raw`(?<hyperlink>...)`
 ```
 
-Update the prioritised pattern lists in `tokeniseSubjectLine` and `tokeniseBodyLines` to include the new regex pattern (where applicable), taking into account the token type precedence clarified in Step 1.
+Update the prioritised pattern lists in `tokeniseSubject` and `tokeniseBodyLines` to include the new regex pattern (where applicable), taking into account the token type precedence clarified in Step 1.
 If the new token type may appear in trailers in the message body, add it to the regex union in `TRAILERLINE_REGEX`.
 
 If the regex pattern should be user-configurable (like `issuelink` tokens), add a new property to the `TokeniserPatterns` type instead of declaring a top-level const.
@@ -88,49 +88,49 @@ Note that trailers may not contain user-configurable tokens.
 Use `describe.each` in Vitest to cover many test cases easily.
 Add new top-level `describe.each` blocks in Vitest to `src/commits/Tokenise.tests.ts` to cover these scenarios of the new token type (when applicable):
 
-- when the subject line contains one or more tokens of the new type -> it extracts the new tokens
-- when the subject line does not contain any tokens of the new type -> it does not extract the new tokens
+- when the subject contains one or more tokens of the new type -> it extracts the new tokens
+- when the subject does not contain any tokens of the new type -> it does not extract the new tokens
 - when the message body contains one or more tokens of the new type -> it extracts the new tokens
 - when the message body does not contain any tokens of the new type -> it does not extract the new tokens
 
 Assert that `mapCrudeCommitToCommit` produces a commit with the expected tokens.
 
-For example, two simple top-level blocks could look like this for a subject line token type:
+For example, two simple top-level blocks could look like this for a subject token type:
 
 ```ts
 describe.each`
-	subjectLine                                             | expectedTokens
+	subject                                                 | expectedTokens
 	${"https://github.com"}                                 | ${[hyperlink("https://github.com")]}
 	${"Update the footer link to https://home.example.com"} | ${[word("Update"), space(6), word("the", 7), space(10), word("footer", 11), space(17), word("link", 18), space(22), word("to", 23), space(25), hyperlink("https://home.example.com", 26)]}
 	${"!squash links http://unsafe.org/index.html"}         | ${[squash("!squash"), space(7), word("links", 8), space(13), hyperlink("http://unsafe.org/index.html", 14)]}
 `(
-  "when the subject line of $subjectLine contains a hyperlink",
-  (props: { subjectLine: string; expectedTokens: Tokens }) => {
-    const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+  "when the subject of $subject contains a hyperlink",
+  (props: { subject: string; expectedTokens: Tokens }) => {
+    const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
     it("extracts hyperlink tokens", () => {
       expect(props.expectedTokens).toContainToken("hyperlink")
 
       const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-      expect(commit.subjectLine).toEqual(props.expectedTokens)
+      expect(commit.subject).toEqual(props.expectedTokens)
     })
   },
 )
 
 describe.each`
-	subjectLine
+	subject
 	${"No hyperlinks here"}
 	${"https is a must-have"}
 	${"mail:sensei@ninja-academy.com"}
 	${"https:/close.call/"}
 `(
-  "when the subject line of $subjectLine does not contain any hyperlinks",
-  (props: { subjectLine: string }) => {
-    const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+  "when the subject of $subject does not contain any hyperlinks",
+  (props: { subject: string }) => {
+    const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
     it("does not extract any hyperlink tokens", () => {
       const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-      expect(commit.subjectLine).not.toContainToken("hyperlink")
+      expect(commit.subject).not.toContainToken("hyperlink")
     })
   },
 )
@@ -173,7 +173,7 @@ For example, inline code phrases are extracted before words and punctuation so t
 Special behaviour has been implemented for fenced code blocks (i.e. `codeblock` tokens) which are multiline by nature, but split into multiple tokens: one for each body line covered by the code block.
 Instead of using regex patterns, we extract them with stateful, imperative logic in `tokeniseBodyLines`.
 
-Implement an initial regex pattern and implement additional special behaviour in `tokenise`, `tokeniseBodyLines`, and/or `tokeniseSubjectLine` if needed.
+Implement an initial regex pattern and implement additional special behaviour in `tokenise`, `tokeniseBodyLines`, and/or `tokeniseSubject` if needed.
 Do not duplicate the `tokenise` loop, range calculation, or token construction. Prefer a more precise pattern and correct priority over post-hoc changes to emitted tokens.
 For a context-sensitive type, add the smallest possible stateful rule to `tokenise`. Update or reset the state as tokens are consumed so that later text is tokenised normally.
 Keep this exception narrow; patterns that are valid everywhere should remain purely pattern-driven.

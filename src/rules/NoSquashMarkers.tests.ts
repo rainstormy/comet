@@ -4,7 +4,7 @@ import type { Commit } from "#commits/Commit.ts"
 import { emptyRulesetConfiguration } from "#configurations/GetConfiguration.fakes.ts"
 import type { RuleKey } from "#configurations/RulesetConfiguration.ts"
 import { type Concerns, mapCommitsToConcerns } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import type { Vector } from "#types/Vector.ts"
 
@@ -16,7 +16,7 @@ const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
 const fakeCommit = fakeCommitFactory()
 
 describe.each`
-	subjectLine                                             | expectedRange
+	subject                                                 | expectedRange
 	${"fixup!"}                                             | ${[0, 6]}
 	${"amend! Resolve a bug that thought it was a feature"} | ${[0, 6]}
 	${"squash! make the program act like a clown"}          | ${[0, 7]}
@@ -33,16 +33,16 @@ describe.each`
 	${"fixup! FIXUP!! Enforce the linting rules"}           | ${[0, 14]}
 	${" squash! amend!     fixup! long polling"}            | ${[1, 26]}
 `(
-	"when the subject line of $subjectLine contains a squash marker",
-	(props: { subjectLine: string; expectedRange: CharacterRange }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains a squash marker",
+	(props: { subject: string; expectedRange: CharacterRange }) => {
+		const commit = fakeCommit({ message: props.subject })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
 
 			it("raises a concern about the squash marker", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRange }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRange }),
 				])
 			})
 		})
@@ -58,7 +58,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine
+	subject
 	${""}
 	${" "}
 	${"\t\t"}
@@ -82,28 +82,25 @@ describe.each`
 	${"fixup the code"}
 	${"squash the commits"}
 	${"amend the message"}
-`(
-	"when the subject line of $subjectLine does not contain a squash marker",
-	(props: { subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+`("when the subject of $subject does not contain a squash marker", (props: { subject: string }) => {
+	const commit = fakeCommit({ message: props.subject })
 
-		describe("and the rule is enabled", () => {
-			const actualConcerns = mapCommitsToConcerns([commit], enabled)
+	describe("and the rule is enabled", () => {
+		const actualConcerns = mapCommitsToConcerns([commit], enabled)
 
-			it("does not raise any concerns", () => {
-				expect(actualConcerns).toEqual<Concerns>([])
-			})
+		it("does not raise any concerns", () => {
+			expect(actualConcerns).toEqual<Concerns>([])
 		})
+	})
 
-		describe("and the rule is disabled", () => {
-			const actualConcerns = mapCommitsToConcerns([commit], disabled)
+	describe("and the rule is disabled", () => {
+		const actualConcerns = mapCommitsToConcerns([commit], disabled)
 
-			it("does not raise any concerns", () => {
-				expect(actualConcerns).toEqual<Concerns>([])
-			})
+		it("does not raise any concerns", () => {
+			expect(actualConcerns).toEqual<Concerns>([])
 		})
-	},
-)
+	})
+})
 
 describe("when verifying a set of multiple commits and some commits have squash markers", () => {
 	const commits: Vector<Commit, 7> = [
@@ -121,9 +118,9 @@ describe("when verifying a set of multiple commits and some commits have squash 
 
 		it("raises concerns about the commits with squash markers", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				subjectLineConcern(rule, commits[0].sha, { range: [0, 6] }),
-				subjectLineConcern(rule, commits[1].sha, { range: [0, 7] }),
-				subjectLineConcern(rule, commits[4].sha, { range: [1, 7] }),
+				subjectConcern(rule, commits[0].sha, { range: [0, 6] }),
+				subjectConcern(rule, commits[1].sha, { range: [0, 7] }),
+				subjectConcern(rule, commits[4].sha, { range: [1, 7] }),
 			])
 		})
 	})

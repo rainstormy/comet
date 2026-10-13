@@ -4,7 +4,7 @@ import type { Commit } from "#commits/Commit.ts"
 import { emptyRulesetConfiguration } from "#configurations/GetConfiguration.fakes.ts"
 import type { RuleKey } from "#configurations/RulesetConfiguration.ts"
 import { type Concerns, mapCommitsToConcerns } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import type { Vector } from "#types/Vector.ts"
 
@@ -16,7 +16,7 @@ const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
 const fakeCommit = fakeCommitFactory()
 
 describe.each`
-	subjectLine                                          | expectedRange
+	subject                                              | expectedRange
 	${"-"}                                               | ${[0, 1]}
 	${" ... "}                                           | ${[1, 4]}
 	${"??"}                                              | ${[0, 2]}
@@ -53,16 +53,16 @@ describe.each`
 	${"we rule`"}                                        | ${[7, 8]}
 	${"fixup! Reheat the leftovers!"}                    | ${[27, 28]}
 `(
-	"when the subject line of $subjectLine contains unexpected trailing punctuation",
-	(props: { subjectLine: string; expectedRange: CharacterRange }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains unexpected trailing punctuation",
+	(props: { subject: string; expectedRange: CharacterRange }) => {
+		const commit = fakeCommit({ message: props.subject })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
 
 			it("raises a concern about the unexpected punctuation", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRange }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRange }),
 				])
 			})
 		})
@@ -78,7 +78,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine
+	subject
 	${""}
 	${" "}
 	${"Release the robot butler"}
@@ -112,9 +112,9 @@ describe.each`
 	${"squash! squash!"}
 	${'Revert "Release the robot butler!"'}
 `(
-	"when the subject line of $subjectLine does not contain unexpected trailing punctuation",
-	(props: { subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+	"when the subject of $subject does not contain unexpected trailing punctuation",
+	(props: { subject: string }) => {
+		const commit = fakeCommit({ message: props.subject })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
@@ -135,7 +135,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                             | body
+	subject                                 | body
 	${"Document the escape hatch"}          | ${"The fallback now ends with a tidy period."}
 	${"Recalibrate the espresso machine"}   | ${"Does the pressure gauge finally behave?"}
 	${"Tame the release robot"}             | ${"The webhook now announces success!"}
@@ -143,8 +143,8 @@ describe.each`
 	${"Explain the `Tokeniser` contract"}   | ${"Inline `code` remains ordinary prose here."}
 `(
 	"when the message body of $body contains punctuation",
-	(props: { subjectLine: string; body: string }) => {
-		const commit = fakeCommit({ message: `${props.subjectLine}\n${props.body}` })
+	(props: { subject: string; body: string }) => {
+		const commit = fakeCommit({ message: `${props.subject}\n${props.body}` })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
@@ -164,7 +164,7 @@ describe.each`
 	},
 )
 
-describe("when verifying a set of multiple commits and some subject lines contain unexpected trailing punctuation", () => {
+describe("when verifying a set of multiple commits and some subjects contain unexpected trailing punctuation", () => {
 	const commits: Vector<Commit, 6> = [
 		fakeCommit({ message: "Fix the robot." }),
 		fakeCommit({ message: "Keep the robot cheerful" }),
@@ -179,9 +179,9 @@ describe("when verifying a set of multiple commits and some subject lines contai
 
 		it("raises concerns about each unexpected punctuation suffix", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				subjectLineConcern(rule, commits[0].sha, { range: [13, 14] }),
-				subjectLineConcern(rule, commits[2].sha, { range: [20, 21] }),
-				subjectLineConcern(rule, commits[5].sha, { range: [13, 14] }),
+				subjectConcern(rule, commits[0].sha, { range: [13, 14] }),
+				subjectConcern(rule, commits[2].sha, { range: [20, 21] }),
+				subjectConcern(rule, commits[5].sha, { range: [13, 14] }),
 			])
 		})
 	})
@@ -195,7 +195,7 @@ describe("when verifying a set of multiple commits and some subject lines contai
 	})
 })
 
-describe("when verifying a set of multiple commits and no subject lines contain unexpected trailing punctuation", () => {
+describe("when verifying a set of multiple commits and no subjects contain unexpected trailing punctuation", () => {
 	const commits: Vector<Commit, 5> = [
 		fakeCommit({ message: "Fix the robot" }),
 		fakeCommit({ message: "Fix the robot carefully" }),

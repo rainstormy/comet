@@ -5,7 +5,7 @@ import {
 	type TokeniserPatterns,
 	issueLinkPattern,
 	tokeniseBodyLines,
-	tokeniseSubjectLine,
+	tokeniseSubject,
 } from "#commits/Tokenise.ts"
 import type { CommitSha } from "#types/CommitSha.ts"
 
@@ -20,7 +20,7 @@ export type Commit = {
 	committerEmail: string
 	isMergeCommit: boolean
 	hasSignature: boolean
-	subjectLine: Tokens
+	subject: Tokens
 	bodyLines: Array<Tokens>
 }
 
@@ -30,7 +30,7 @@ export function mapCrudeCommitToCommit(
 	crudeCommit: CrudeCommit,
 	configuration: TokenConfiguration,
 ): Commit {
-	const [crudeSubjectLine = "", ...crudeBodyLines] = crudeCommit.message.split("\n")
+	const [crudeSubject = "", ...crudeBodyLines] = crudeCommit.message.split("\n")
 
 	const patterns: TokeniserPatterns = {
 		issueLink: issueLinkPattern(configuration),
@@ -44,7 +44,7 @@ export function mapCrudeCommitToCommit(
 		authorEmail: crudeCommit.authorEmail,
 		committerName: crudeCommit.committerName,
 		committerEmail: crudeCommit.committerEmail,
-		subjectLine: tokeniseSubjectLine(crudeSubjectLine, patterns),
+		subject: tokeniseSubject(crudeSubject, patterns),
 		bodyLines: tokeniseBodyLines(crudeBodyLines, patterns),
 	}
 }

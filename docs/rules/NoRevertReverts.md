@@ -1,6 +1,6 @@
-# noRevertRevertCommits
+# noRevertReverts
 
-Rejects subject lines with more than one revert marker, encouraging cherry-picking the original commit.
+Rejects subjects with more than one revert marker, encouraging cherry-picking the original commit.
 
 ## Rationale
 
@@ -10,7 +10,7 @@ Cherry-picking the original commit preserves its authorship, improving the trace
 
 ## How to fix
 
-Cherry-pick the original commit or replace the subject line with the original commit's subject line.
+Cherry-pick the original commit or replace the subject with the original commit's subject.
 
 ### Command-line interface (CLI)
 
@@ -71,7 +71,7 @@ To restore a reverted change:
 If the nested revert commit already exists:
 
 1. In the Git tool window, right-click it and select **Edit Commit Message...**.
-   Replace the subject line (i.e. the first line) with the original commit's subject line.
+   Replace the subject (i.e. the first line) with the original commit's subject.
 
 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
 
@@ -82,7 +82,7 @@ This rule has no configurable options.
 ```json
 {
   "rules": {
-    "noRevertRevertCommits": {
+    "noRevertReverts": {
       "level": "error",
       "options": {}
     }

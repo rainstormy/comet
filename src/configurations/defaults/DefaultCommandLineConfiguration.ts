@@ -9,9 +9,9 @@ export const DEFAULT_COMMAND_LINE_CONFIGURATION: Configuration = {
 	},
 	rules: deepMerge(DEFAULT_RULESET_CONFIGURATION, {
 		noExcessiveCommitsPerBranch: { level: "off" },
-		noRepeatedSubjectLines: { level: "off" },
+		noRepeatedSubjects: { level: "off" },
 		noRestrictedTrailers: { level: "off" },
-		noRevertRevertCommits: { level: "off" },
+		noRevertReverts: { level: "off" },
 		noSquashMarkers: { level: "off" },
 		useAuthorEmailPatterns: { level: "off" },
 		useAuthorNamePatterns: { level: "off" },

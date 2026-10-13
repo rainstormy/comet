@@ -4,11 +4,11 @@ import type { Commit } from "#commits/Commit.ts"
 import { emptyRulesetConfiguration } from "#configurations/GetConfiguration.fakes.ts"
 import type { RuleKey } from "#configurations/RulesetConfiguration.ts"
 import { type Concerns, mapCommitsToConcerns } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import type { Vector } from "#types/Vector.ts"
 
-const rule: RuleKey = "noBlankSubjectLines"
+const rule: RuleKey = "noBlankSubjects"
 
 const disabled = emptyRulesetConfiguration()
 const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
@@ -16,28 +16,28 @@ const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
 const fakeCommit = fakeCommitFactory()
 
 describe.each`
-	subjectLine | expectedRange
-	${""}       | ${[0, 1]}
-	${" "}      | ${[0, 1]}
-	${"     "}  | ${[0, 5]}
-	${"\t\t"}   | ${[0, 2]}
-	${"_"}      | ${[0, 1]}
-	${"-"}      | ${[0, 1]}
-	${"'"}      | ${[0, 1]}
-	${"??"}     | ${[0, 2]}
-	${"..."}    | ${[0, 3]}
-	${"``"}     | ${[0, 2]}
+	subject    | expectedRange
+	${""}      | ${[0, 1]}
+	${" "}     | ${[0, 1]}
+	${"     "} | ${[0, 5]}
+	${"\t\t"}  | ${[0, 2]}
+	${"_"}     | ${[0, 1]}
+	${"-"}     | ${[0, 1]}
+	${"'"}     | ${[0, 1]}
+	${"??"}    | ${[0, 2]}
+	${"..."}   | ${[0, 3]}
+	${"``"}    | ${[0, 2]}
 `(
-	"when the subject line of $subjectLine only contains whitespace or punctuation characters",
-	(props: { subjectLine: string; expectedRange: CharacterRange }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+	"when the subject of $subject only contains whitespace or punctuation characters",
+	(props: { subject: string; expectedRange: CharacterRange }) => {
+		const commit = fakeCommit({ message: props.subject })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
 
-			it("raises a concern about the first character in the subject line", () => {
+			it("raises a concern about the first character in the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRange }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRange }),
 				])
 			})
 		})
@@ -53,7 +53,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                  | expectedRange
+	subject                                      | expectedRange
 	${"#1"}                                      | ${[2, 3]}
 	${"(GH-17)  "}                               | ${[7, 9]}
 	${"#2 #3 (GL-1)"}                            | ${[12, 13]}
@@ -67,16 +67,16 @@ describe.each`
 	${'amend! Revert " "'}                       | ${[13, 17]}
 	${'squash!fixup! revert " revert " GH-67 "'} | ${[37, 39]}
 `(
-	"when the subject line of $subjectLine starts with insignificant tokens and is blank otherwise",
-	(props: { subjectLine: string; expectedRange: CharacterRange }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+	"when the subject of $subject starts with insignificant tokens and is blank otherwise",
+	(props: { subject: string; expectedRange: CharacterRange }) => {
+		const commit = fakeCommit({ message: props.subject })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
 
 			it("raises a concern about the first character after the insignificant tokens", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRange }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRange }),
 				])
 			})
 		})
@@ -92,7 +92,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine
+	subject
 	${"test"}
 	${"bugfix "}
 	${"`1`"}
@@ -106,8 +106,8 @@ describe.each`
 	${"https://github.com/rainstormy/comet/pull/42"}
 	${"mailto:noreply@github.com"}
 	${"Clone ssh://git@github.com/rainstormy/comet.git"}
-`("when the subject line of $subjectLine is not blank", (props: { subjectLine: string }) => {
-	const commit = fakeCommit({ message: props.subjectLine })
+`("when the subject of $subject is not blank", (props: { subject: string }) => {
+	const commit = fakeCommit({ message: props.subject })
 
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns([commit], enabled)
@@ -126,7 +126,7 @@ describe.each`
 	})
 })
 
-describe("when verifying a set of multiple commits and some commits have blank subject lines", () => {
+describe("when verifying a set of multiple commits and some commits have blank subjects", () => {
 	const commits: Vector<Commit, 6> = [
 		fakeCommit({ message: "" }),
 		fakeCommit({ message: "#29  " }),
@@ -139,11 +139,11 @@ describe("when verifying a set of multiple commits and some commits have blank s
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns(commits, enabled)
 
-		it("raises concerns about the commits with blank subject lines", () => {
+		it("raises concerns about the commits with blank subjects", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				subjectLineConcern(rule, commits[0].sha, { range: [0, 1] }),
-				subjectLineConcern(rule, commits[1].sha, { range: [3, 5] }),
-				subjectLineConcern(rule, commits[4].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[0].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[1].sha, { range: [3, 5] }),
+				subjectConcern(rule, commits[4].sha, { range: [0, 1] }),
 			])
 		})
 	})
@@ -157,7 +157,7 @@ describe("when verifying a set of multiple commits and some commits have blank s
 	})
 })
 
-describe("when verifying a set of multiple commits and no commits have blank subject lines", () => {
+describe("when verifying a set of multiple commits and no commits have blank subjects", () => {
 	const commits: Vector<Commit, 4> = [
 		fakeCommit({ message: "init" }),
 		fakeCommit({ message: "Enable the coffee machine integration tests" }),

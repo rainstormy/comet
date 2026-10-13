@@ -5,7 +5,7 @@ import { emptyRulesetConfiguration } from "#configurations/GetConfiguration.fake
 import type { RuleKey } from "#configurations/RulesetConfiguration.ts"
 import { bodyLineConcern, bodyLineConcerns } from "#rules/concerns/BodyLineConcern.ts"
 import { type Concerns, mapCommitsToConcerns } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern, subjectLineConcerns } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern, subjectConcerns } from "#rules/concerns/SubjectConcern.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import type { Vector } from "#types/Vector.ts"
 
@@ -17,7 +17,7 @@ const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
 const fakeCommit = fakeCommitFactory()
 
 describe.each`
-	message                                                                                 | expectedSubjectLineRanges                                                        | expectedBodyLineRanges
+	message                                                                                 | expectedSubjectRanges                                                            | expectedBodyLineRanges
 	${" "}                                                                                  | ${[[0, 1]]}                                                                      | ${[]}
 	${"         "}                                                                          | ${[[0, 9]]}                                                                      | ${[]}
 	${"\t\t"}                                                                               | ${[[0, 2]]}                                                                      | ${[]}
@@ -40,26 +40,26 @@ describe.each`
 	${'Revert  "Add the  espresso switch"   '}                                              | ${[[6, 8], [16, 18], [34, 37]]}                                                  | ${[]}
 	${' Revert   "Repair the soft ice machine"'}                                            | ${[[0, 1], [7, 10]]}                                                             | ${[]}
 	${"  squash!   #019  butter  chicken  with softice  &&  bearnaise "}                    | ${[[0, 2], [9, 12], [16, 18], [24, 26], [33, 35], [47, 49], [51, 53], [62, 63]]} | ${[]}
-	${"Update the pantry\n\nNeed  tiny adapters"}                                           | ${[]}                                                                            | ${[{ line: 1, range: [4, 6] }]}
-	${"Tune the jukebox\n\nMove sauce  left and bolts   right"}                             | ${[]}                                                                            | ${[{ line: 1, range: [10, 12] }, { line: 1, range: [26, 29] }]}
-	${"Refill the candy drawer\n\nPixel  ghosts appear\nStill okay\nBear  patrol   online"} | ${[]}                                                                            | ${[{ line: 1, range: [5, 7] }, { line: 3, range: [4, 6] }, { line: 3, range: [12, 15] }]}
-	${"Calibrate vending machine\n\nOne line is neat\nTwo  spaces sneak in"}                | ${[]}                                                                            | ${[{ line: 2, range: [3, 5] }]}
-	${"Polish arcade cabinet\n\nLevel  1 starts now"}                                       | ${[]}                                                                            | ${[{ line: 1, range: [5, 7] }]}
-	${"refactor the tea engine\n\nAlpha   beta\nGamma is fine"}                             | ${[]}                                                                            | ${[{ line: 1, range: [5, 8] }]}
-	${"keep logistic bots in sync\n\nClean line\nOops  double  trouble"}                    | ${[]}                                                                            | ${[{ line: 2, range: [4, 6] }, { line: 2, range: [12, 14] }]}
-	${"Ship tiny fix\n\nReviewed-by:  Gon Freecss <rock.paper.scissors@hunters.com>"}       | ${[]}                                                                            | ${[{ line: 1, range: [12, 14] }]}
-	${"Document bolt offsets\n\nCo-authored-by:   Killua Zoldyck <killua@godspeed.net>"}    | ${[]}                                                                            | ${[{ line: 1, range: [15, 18] }]}
-	${"finetune the release script\n\nRef:  #6201"}                                         | ${[]}                                                                            | ${[{ line: 1, range: [4, 6] }]}
-	${"Fix  valves quickly\n\nBody  has trouble"}                                           | ${[[3, 5]]}                                                                      | ${[{ line: 1, range: [4, 6] }]}
-	${"  GH-88  Patch queue\n\nTrailer:  value\nAnother-Trailer:  Another value"}           | ${[[0, 2], [7, 9]]}                                                              | ${[{ line: 1, range: [8, 10] }, { line: 2, range: [16, 18] }]}
-	${"squash!  rewire the drones\n\nOne  two\nSigned-off-by:  Hisoka <no4@phantom.com>"}   | ${[[7, 9]]}                                                                      | ${[{ line: 1, range: [3, 5] }, { line: 2, range: [14, 16] }]}
-	${"Reboot kiosk  nightly\n\nAll good\nBut  not quite"}                                  | ${[[12, 14]]}                                                                    | ${[{ line: 2, range: [3, 5] }]}
+	${"Update the pantry\n\nNeed  tiny adapters"}                                           | ${[]}                                                                            | ${[{ lineNumber: 1, range: [4, 6] }]}
+	${"Tune the jukebox\n\nMove sauce  left and bolts   right"}                             | ${[]}                                                                            | ${[{ lineNumber: 1, range: [10, 12] }, { lineNumber: 1, range: [26, 29] }]}
+	${"Refill the candy drawer\n\nPixel  ghosts appear\nStill okay\nBear  patrol   online"} | ${[]}                                                                            | ${[{ lineNumber: 1, range: [5, 7] }, { lineNumber: 3, range: [4, 6] }, { lineNumber: 3, range: [12, 15] }]}
+	${"Calibrate vending machine\n\nOne line is neat\nTwo  spaces sneak in"}                | ${[]}                                                                            | ${[{ lineNumber: 2, range: [3, 5] }]}
+	${"Polish arcade cabinet\n\nLevel  1 starts now"}                                       | ${[]}                                                                            | ${[{ lineNumber: 1, range: [5, 7] }]}
+	${"refactor the tea engine\n\nAlpha   beta\nGamma is fine"}                             | ${[]}                                                                            | ${[{ lineNumber: 1, range: [5, 8] }]}
+	${"keep logistic bots in sync\n\nClean line\nOops  double  trouble"}                    | ${[]}                                                                            | ${[{ lineNumber: 2, range: [4, 6] }, { lineNumber: 2, range: [12, 14] }]}
+	${"Ship tiny fix\n\nReviewed-by:  Gon Freecss <rock.paper.scissors@hunters.com>"}       | ${[]}                                                                            | ${[{ lineNumber: 1, range: [12, 14] }]}
+	${"Document bolt offsets\n\nCo-authored-by:   Killua Zoldyck <killua@godspeed.net>"}    | ${[]}                                                                            | ${[{ lineNumber: 1, range: [15, 18] }]}
+	${"finetune the release script\n\nRef:  #6201"}                                         | ${[]}                                                                            | ${[{ lineNumber: 1, range: [4, 6] }]}
+	${"Fix  valves quickly\n\nBody  has trouble"}                                           | ${[[3, 5]]}                                                                      | ${[{ lineNumber: 1, range: [4, 6] }]}
+	${"  GH-88  Patch queue\n\nTrailer:  value\nAnother-Trailer:  Another value"}           | ${[[0, 2], [7, 9]]}                                                              | ${[{ lineNumber: 1, range: [8, 10] }, { lineNumber: 2, range: [16, 18] }]}
+	${"squash!  rewire the drones\n\nOne  two\nSigned-off-by:  Hisoka <no4@phantom.com>"}   | ${[[7, 9]]}                                                                      | ${[{ lineNumber: 1, range: [3, 5] }, { lineNumber: 2, range: [14, 16] }]}
+	${"Reboot kiosk  nightly\n\nAll good\nBut  not quite"}                                  | ${[[12, 14]]}                                                                    | ${[{ lineNumber: 2, range: [3, 5] }]}
 `(
 	"when the commit message of $message has excessive whitespace characters",
 	(props: {
 		message: string
-		expectedSubjectLineRanges: Array<CharacterRange>
-		expectedBodyLineRanges: Array<{ line: number; range: CharacterRange }>
+		expectedSubjectRanges: Array<CharacterRange>
+		expectedBodyLineRanges: Array<{ lineNumber: number; range: CharacterRange }>
 	}) => {
 		const commit = fakeCommit({ message: props.message })
 
@@ -68,7 +68,7 @@ describe.each`
 
 			it("raises concerns about the blocks of excessive whitespace characters", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					...subjectLineConcerns(rule, commit.sha, props.expectedSubjectLineRanges),
+					...subjectConcerns(rule, commit.sha, props.expectedSubjectRanges),
 					...bodyLineConcerns(rule, commit.sha, props.expectedBodyLineRanges),
 				])
 			})
@@ -144,14 +144,14 @@ describe("when verifying a set of multiple commits and some commits contain exce
 
 		it("raises concerns about all blocks of excessive whitespace characters", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				subjectLineConcern(rule, commits[1].sha, { range: [0, 3] }),
-				subjectLineConcern(rule, commits[2].sha, { range: [22, 23] }),
-				bodyLineConcern(rule, commits[3].sha, { line: 1, range: [8, 10] }),
-				bodyLineConcern(rule, commits[3].sha, { line: 3, range: [16, 18] }),
-				bodyLineConcern(rule, commits[3].sha, { line: 3, range: [41, 44] }),
-				subjectLineConcern(rule, commits[4].sha, { range: [0, 1] }),
-				subjectLineConcern(rule, commits[4].sha, { range: [4, 6] }),
-				bodyLineConcern(rule, commits[4].sha, { line: 1, range: [5, 7] }),
+				subjectConcern(rule, commits[1].sha, { range: [0, 3] }),
+				subjectConcern(rule, commits[2].sha, { range: [22, 23] }),
+				bodyLineConcern(rule, commits[3].sha, { lineNumber: 1, range: [8, 10] }),
+				bodyLineConcern(rule, commits[3].sha, { lineNumber: 3, range: [16, 18] }),
+				bodyLineConcern(rule, commits[3].sha, { lineNumber: 3, range: [41, 44] }),
+				subjectConcern(rule, commits[4].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[4].sha, { range: [4, 6] }),
+				bodyLineConcern(rule, commits[4].sha, { lineNumber: 1, range: [5, 7] }),
 			])
 		})
 	})

@@ -2,10 +2,10 @@ import type { Commits } from "#commits/Commit.ts"
 import { isNotToken, isToken, tokenRangeEnd } from "#commits/Token.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 
 /**
- * Rejects subject lines without an issue link in the configured position.
+ * Rejects subjects without an issue link in the configured position.
  *
  * ## Rationale
  *
@@ -16,7 +16,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *
  * ## How to fix
  *
- * Change the subject line to include an issue link in the appropriate position.
+ * Change the subject to include an issue link in the appropriate position.
  *
  * ### Command-line interface (CLI)
  *
@@ -32,7 +32,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *    reword 7e0ff1ce Welcome to my convenience store
  *    ```
  *
- * 3. In the commit message editor, change the subject line (i.e. the first line) to include an issue link in the appropriate position.
+ * 3. In the commit message editor, change the subject (i.e. the first line) to include an issue link in the appropriate position.
  *    Then save and close the editor to complete the rebase.
  *
  * 4. Force-push the rewritten branch to the remote repository:
@@ -44,7 +44,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
  *
  * 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
- *    Change the subject line (i.e. the first line) to include an issue link in the appropriate position.
+ *    Change the subject (i.e. the first line) to include an issue link in the appropriate position.
  *
  * 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
  *
@@ -54,13 +54,13 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *
  * - Merge commits, i.e. commits with more than one parent.
  * - Revert commits, e.g. `Revert "..."`.
- * - Commits with dependency versions in the subject line, e.g. `Bump Vite to 2.4.0-beta.1` and `Pin the Node.js image to 4af617c`.
+ * - Commits with dependency versions in the subject, e.g. `Bump Vite to 2.4.0-beta.1` and `Pin the Node.js image to 4af617c`.
  *
  * It only recognises issue links declared in `tokens.issueLinks`; ordinary hyperlinks and `Refs` trailers in the message body will not satisfy the rule.
  *
  * ## Options
  *
- * - `position` (one of `anywhere`, `prefix`, or `suffix`): Accept issue links anywhere in, at the beginning of, or at the end of subject lines. Default value: `anywhere`.
+ * - `position` (one of `anywhere`, `prefix`, or `suffix`): Accept issue links anywhere in, at the beginning of, or at the end of subjects. Default value: `anywhere`.
  *
  * ```json
  * {
@@ -149,17 +149,14 @@ export function* useIssueLinks(
 
 	if (position === "anywhere") {
 		for (const commit of commits) {
-			if (
-				commit.isMergeCommit ||
-				commit.subjectLine.some(isToken("issuelink", "revert", "semver"))
-			) {
+			if (commit.isMergeCommit || commit.subject.some(isToken("issuelink", "revert", "semver"))) {
 				continue
 			}
 
-			const firstToken = commit.subjectLine.find(isNotToken("squash", "whitespace"))
-			const firstStart = firstToken?.range[0] ?? tokenRangeEnd(commit.subjectLine)
+			const firstToken = commit.subject.find(isNotToken("squash", "whitespace"))
+			const firstStart = firstToken?.range[0] ?? tokenRangeEnd(commit.subject)
 
-			yield subjectLineConcern(rule, commit.sha, { range: [firstStart, firstStart + 1] })
+			yield subjectConcern(rule, commit.sha, { range: [firstStart, firstStart + 1] })
 		}
 
 		return
@@ -167,15 +164,15 @@ export function* useIssueLinks(
 
 	if (position === "prefix") {
 		for (const commit of commits) {
-			if (commit.isMergeCommit || commit.subjectLine.some(isToken("revert", "semver"))) {
+			if (commit.isMergeCommit || commit.subject.some(isToken("revert", "semver"))) {
 				continue
 			}
 
-			const firstToken = commit.subjectLine.find(isNotToken("squash", "whitespace"))
+			const firstToken = commit.subject.find(isNotToken("squash", "whitespace"))
 
 			if (firstToken?.type !== "issuelink") {
-				const firstStart = firstToken?.range[0] ?? tokenRangeEnd(commit.subjectLine)
-				yield subjectLineConcern(rule, commit.sha, { range: [firstStart, firstStart + 1] })
+				const firstStart = firstToken?.range[0] ?? tokenRangeEnd(commit.subject)
+				yield subjectConcern(rule, commit.sha, { range: [firstStart, firstStart + 1] })
 			}
 		}
 
@@ -183,15 +180,15 @@ export function* useIssueLinks(
 	}
 
 	for (const commit of commits) {
-		if (commit.isMergeCommit || commit.subjectLine.some(isToken("revert", "semver"))) {
+		if (commit.isMergeCommit || commit.subject.some(isToken("revert", "semver"))) {
 			continue
 		}
 
-		const lastToken = commit.subjectLine.findLast(isNotToken("whitespace"))
+		const lastToken = commit.subject.findLast(isNotToken("whitespace"))
 
 		if (lastToken?.type !== "issuelink") {
-			const lastEnd = tokenRangeEnd(commit.subjectLine)
-			yield subjectLineConcern(rule, commit.sha, { range: [lastEnd, lastEnd + 1] })
+			const lastEnd = tokenRangeEnd(commit.subject)
+			yield subjectConcern(rule, commit.sha, { range: [lastEnd, lastEnd + 1] })
 		}
 	}
 }

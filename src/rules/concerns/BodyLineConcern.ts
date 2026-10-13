@@ -6,24 +6,24 @@ export type BodyLineConcern = {
 	key: `${CommitSha}:L${number}:C${CharacterRange[0]}-${CharacterRange[1]}:${BodyLineConcernRuleKey}`
 	rule: BodyLineConcernRuleKey
 	commitSha: CommitSha
-	line: number
+	lineNumber: number
 	range: CharacterRange
 }
 
 export type BodyLineConcernRuleKey =
 	| "noExcessiveWhitespace"
 	| "noRestrictedTrailers"
-	| "useEmptyLineBeforeBodyLines"
+	| "useEmptyLineBeforeBody"
 	| "useLineWrapping"
 
 export function bodyLineConcern(
 	rule: BodyLineConcernRuleKey,
 	commitSha: CommitSha,
-	props: Pick<BodyLineConcern, "line" | "range">,
+	props: Pick<BodyLineConcern, "lineNumber" | "range">,
 ): BodyLineConcern {
 	return {
 		location: "body-line",
-		key: `${commitSha}:L${props.line}:C${props.range[0]}-${props.range[1]}:${rule}`,
+		key: `${commitSha}:L${props.lineNumber}:C${props.range[0]}-${props.range[1]}:${rule}`,
 		rule,
 		commitSha,
 		...props,
@@ -33,7 +33,7 @@ export function bodyLineConcern(
 export function bodyLineConcerns(
 	rule: BodyLineConcernRuleKey,
 	commitSha: CommitSha,
-	props: Array<Pick<BodyLineConcern, "line" | "range">>,
+	props: Array<Pick<BodyLineConcern, "lineNumber" | "range">>,
 ): Array<BodyLineConcern> {
 	return props.map((range) => bodyLineConcern(rule, commitSha, range))
 }

@@ -23,9 +23,9 @@ const configuration = fakeTokenConfiguration()
 describe("when the commit message is empty", () => {
 	const crudeCommit = fakeCrudeCommit({ message: "" })
 
-	it("has an empty subject line", () => {
+	it("has an empty subject", () => {
 		const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-		expect(commit.subjectLine).toEqual<Tokens>([])
+		expect(commit.subject).toEqual<Tokens>([])
 	})
 
 	it("has no body lines", () => {
@@ -35,7 +35,7 @@ describe("when the commit message is empty", () => {
 })
 
 describe.each`
-	message                                                                                                                                                                                                                                              | expectedSubjectLine                                                                                                                                                                                                              | expectedBodyLines
+	message                                                                                                                                                                                                                                              | expectedSubject                                                                                                                                                                                                                  | expectedBodyLines
 	${" \n "}                                                                                                                                                                                                                                            | ${[space()]}                                                                                                                                                                                                                     | ${[[space()]]}
 	${"refactor the taxi module"}                                                                                                                                                                                                                        | ${[word("refactor"), space(8), word("the", 9), space(12), word("taxi", 13), space(17), word("module", 18)]}                                                                                                                      | ${[]}
 	${"Fix this confusing plate of spaghetti\n"}                                                                                                                                                                                                         | ${[word("Fix"), space(3), word("this", 4), space(8), word("confusing", 9), space(18), word("plate", 19), space(24), word("of", 25), space(27), word("spaghetti", 28)]}                                                           | ${[[]]}
@@ -48,12 +48,12 @@ describe.each`
 	${"Make the code go brrr with fancy updates\n\nThis commit makes the hamsters run faster.\nUpgraded their tiny running wheels.\n\nAdded rocket fuel to hamster food.\nInstalled nitro boosters on wheels.\nNow they're breaking the speed limit.\n"} | ${[word("Make"), space(4), word("the", 5), space(8), word("code", 9), space(13), word("go", 14), space(16), word("brrr", 17), space(21), word("with", 22), space(26), word("fancy", 27), space(32), word("updates", 33)]}        | ${[[], [word("This"), space(4), word("commit", 5), space(11), word("makes", 12), space(17), word("the", 18), space(21), word("hamsters", 22), space(30), word("run", 31), space(34), word("faster", 35), punctuation(".", 41)], [word("Upgraded"), space(8), word("their", 9), space(14), word("tiny", 15), space(19), word("running", 20), space(27), word("wheels", 28), punctuation(".", 34)], [], [word("Added"), space(5), word("rocket", 6), space(12), word("fuel", 13), space(17), word("to", 18), space(20), word("hamster", 21), space(28), word("food", 29), punctuation(".", 33)], [word("Installed"), space(9), word("nitro", 10), space(15), word("boosters", 16), space(24), word("on", 25), space(27), word("wheels", 28), punctuation(".", 34)], [word("Now"), space(3), word("they're", 4), space(11), word("breaking", 12), space(20), word("the", 21), space(24), word("speed", 25), space(30), word("limit", 31), punctuation(".", 36)], []]}
 `(
 	"when the commit message of $message consists of plain text with words, punctuation, and whitespace",
-	(props: { message: string; expectedSubjectLine: Tokens; expectedBodyLines: Array<Tokens> }) => {
+	(props: { message: string; expectedSubject: Tokens; expectedBodyLines: Array<Tokens> }) => {
 		const crudeCommit = fakeCrudeCommit({ message: props.message })
 
-		it("extracts word, whitespace, and punctuation tokens in the subject line", () => {
+		it("extracts word, whitespace, and punctuation tokens in the subject", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).toEqual(props.expectedSubjectLine)
+			expect(commit.subject).toEqual(props.expectedSubject)
 		})
 
 		it("extracts word, whitespace, and punctuation tokens in the body lines", () => {
@@ -64,7 +64,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                                | expectedTokens
+	subject                                                    | expectedTokens
 	${"IT'S OVER 9000!! he shouted"}                           | ${[word("IT'S"), space(4), word("OVER", 5), space(9), word("9000", 10), punctuation("!!", 14), space(16), word("he", 17), space(19), word("shouted", 20)]}
 	${"This one is Lucas'"}                                    | ${[word("This"), space(4), word("one", 5), space(8), word("is", 9), space(11), word("Lucas'", 12)]}
 	${"the mountain- and ocean clouds"}                        | ${[word("the"), space(3), word("mountain-", 4), space(13), word("and", 14), space(17), word("ocean", 18), space(23), word("clouds", 24)]}
@@ -77,19 +77,19 @@ describe.each`
 	${"I'd say don't interrupt O'Neil's presentation"}         | ${[word("I'd"), space(3), word("say", 4), space(7), word("don't", 8), space(13), word("interrupt", 14), space(23), word("O'Neil's", 24), space(32), word("presentation", 33)]}
 	${"Jeanne d'Arc carved a mother-in-law's jack-o'-lantern"} | ${[word("Jeanne"), space(6), word("d'Arc", 7), space(12), word("carved", 13), space(19), word("a", 20), space(21), word("mother-in-law's", 22), space(37), word("jack-o'-lantern", 38)]}
 `(
-	"when the subject line of $subjectLine contains words with hyphens and/or apostrophes",
-	(props: { subjectLine: string; expectedTokens: Tokens }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains words with hyphens and/or apostrophes",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("extracts each compound word as one word token", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).toEqual(props.expectedTokens)
+			expect(commit.subject).toEqual(props.expectedTokens)
 		})
 	},
 )
 
 describe.each`
-	subjectLine                                                                                          | expectedTokens
+	subject                                                                                              | expectedTokens
 	${"https://example.com"}                                                                             | ${[hyperlink("https://example.com")]}
 	${"https://github.com/rainstormy/github-action-validate-commit-messages/pull/100/changes/badf00d"}   | ${[hyperlink("https://github.com/rainstormy/github-action-validate-commit-messages/pull/100/changes/badf00d")]}
 	${"mailto:hello@example.com"}                                                                        | ${[hyperlink("mailto:hello@example.com")]}
@@ -117,21 +117,21 @@ describe.each`
 	${"Use `curl` to fetch https://api.example.com/data"}                                                | ${[word("Use"), space(3), code("`curl`", 4), space(10), word("to", 11), space(13), word("fetch", 14), space(19), hyperlink("https://api.example.com/data", 20)]}
 	${"Upgrade react from 18.3.1 to 19.2.0, see https://react.dev/blog/2024/12/05/react-19"}             | ${[word("Upgrade"), space(7), word("react", 8), space(13), word("from", 14), space(18), semver("18.3.1", 19), space(25), word("to", 26), space(28), semver("19.2.0", 29), punctuation(",", 35), space(36), word("see", 37), space(40), hyperlink("https://react.dev/blog/2024/12/05/react-19", 41)]}
 `(
-	"when the subject line of $subjectLine contains hyperlinks",
-	(props: { subjectLine: string; expectedTokens: Tokens }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains hyperlinks",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("extracts hyperlink tokens", () => {
 			expect(props.expectedTokens).toContainToken("hyperlink")
 
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).toEqual(props.expectedTokens)
+			expect(commit.subject).toEqual(props.expectedTokens)
 		})
 	},
 )
 
 describe.each`
-	subjectLine
+	subject
 	${"https is a must-have"}
 	${"http://example.org/guides/migrate-from-v1"}
 	${"HTTPS://example.com/uses-an-unsupported-scheme-case"}
@@ -148,20 +148,17 @@ describe.each`
 	${"The protocol is https"}
 	${"Use custom://myprotocol for internal links"}
 	${"It costs $5 to register the domain"}
-`(
-	"when the subject line of $subjectLine does not contain hyperlinks",
-	(props: { subjectLine: string }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+`("when the subject of $subject does not contain hyperlinks", (props: { subject: string }) => {
+	const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
-		it("does not extract hyperlink tokens", () => {
-			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("hyperlink")
-		})
-	},
-)
+	it("does not extract hyperlink tokens", () => {
+		const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
+		expect(commit.subject).not.toContainToken("hyperlink")
+	})
+})
 
 describe.each`
-	subjectLine                  | body                                                                                                                                                                                                                                                                                                                            | expectedBodyLines
+	subject                      | body                                                                                                                                                                                                                                                                                                                            | expectedBodyLines
 	${"release process notes"}   | ${"https://github.com/rainstormy/comet/releases/tag/v1.0.0"}                                                                                                                                                                                                                                                                    | ${[[hyperlink("https://github.com/rainstormy/comet/releases/tag/v1.0.0")]]}
 	${"status page overview"}    | ${"a lowercase [note](https://status.example.com/incidents/2026/06/14?component=commit-body&severity=medium)"}                                                                                                                                                                                                                  | ${[[word("a"), space(1), word("lowercase", 2), space(11), punctuation("[", 12), word("note", 13), punctuation("](", 17), hyperlink("https://status.example.com/incidents/2026/06/14?component=commit-body&severity=medium", 19), punctuation(")", 104)]]}
 	${"repository access notes"} | ${"  ssh://git@github.com/rainstormy/comet.git  "}                                                                                                                                                                                                                                                                              | ${[[whitespace("  "), hyperlink("ssh://git@github.com/rainstormy/comet.git", 2), whitespace("  ", 43)]]}
@@ -171,8 +168,8 @@ describe.each`
 	${"release dashboard notes"} | ${"The deployment train is calm.\nRead https://status.comet-lab.test/health.\nCompare https://docs.github.com/en/rest with https://developer.mozilla.org/en-US/docs/Web/JavaScript.\nNotify mailto:ops@comet-lab.test, clone ssh://git@github.com/rainstormy/comet.git, and review https://github.com/rainstormy/comet/pulls."} | ${[[word("The"), space(3), word("deployment", 4), space(14), word("train", 15), space(20), word("is", 21), space(23), word("calm", 24), punctuation(".", 28)], [word("Read"), space(4), hyperlink("https://status.comet-lab.test/health", 5), punctuation(".", 41)], [word("Compare"), space(7), hyperlink("https://docs.github.com/en/rest", 8), space(39), word("with", 40), space(44), hyperlink("https://developer.mozilla.org/en-US/docs/Web/JavaScript", 45), punctuation(".", 100)], [word("Notify"), space(6), hyperlink("mailto:ops@comet-lab.test", 7), punctuation(",", 32), space(33), word("clone", 34), space(39), hyperlink("ssh://git@github.com/rainstormy/comet.git", 40), punctuation(",", 81), space(82), word("and", 83), space(86), word("review", 87), space(93), hyperlink("https://github.com/rainstormy/comet/pulls", 94), punctuation(".", 135)]]}
 `(
 	"when the message body of $body contains hyperlinks",
-	(props: { subjectLine: string; body: string; expectedBodyLines: Array<Tokens> }) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n${props.body}` })
+	(props: { subject: string; body: string; expectedBodyLines: Array<Tokens> }) => {
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
 		it("extracts hyperlink tokens", () => {
 			expect(props.expectedBodyLines).toContainToken("hyperlink")
@@ -184,7 +181,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                        | body
+	subject                            | body
 	${"Describe the dusty bridge"}     | ${"https is still a must-have"}
 	${"dodged a bullet"}               | ${"https:/close.call"}
 	${"Use the correct clone address"} | ${"git://github.com/rainstormy/comet"}
@@ -194,8 +191,8 @@ describe.each`
 	${"custom links"}                  | ${"Use custom://myprotocol for internal links"}
 `(
 	"when the message body of $body does not contain hyperlinks",
-	(props: { subjectLine: string; body: string }) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n${props.body}` })
+	(props: { subject: string; body: string }) => {
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
 		it("does not extract hyperlink tokens", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
@@ -205,13 +202,13 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                        | body
+	subject                            | body
 	${"Quote the API documentation"}   | ${"Keep `https://docs.github.com/en/rest` as an example."}
 	${"links inside a fenced example"} | ${"```text\nhttps://github.com/rainstormy/comet\nmailto:noreply@github.com\n```"}
 `(
 	"when the commit message contains hyperlink-like text inside code",
-	(props: { subjectLine: string; body: string }) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n${props.body}` })
+	(props: { subject: string; body: string }) => {
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
 		it("does not extract hyperlink tokens", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
@@ -221,15 +218,15 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                    | trailer                                                           | expectedBodyLines
+	subject                        | trailer                                                           | expectedBodyLines
 	${"Added docs"}                | ${"Docs: https://github.com/rainstormy/comet/tree/main/docs"}     | ${[[], [trailerkey("Docs"), punctuation(":", 4), space(5), hyperlink("https://github.com/rainstormy/comet/tree/main/docs", 6)]]}
 	${"Record the package mirror"} | ${"Mirror: ssh://git@github.com/rainstormy/comet.git"}            | ${[[], [trailerkey("Mirror"), punctuation(":", 6), space(7), hyperlink("ssh://git@github.com/rainstormy/comet.git", 8)]]}
 	${"publish support contacts"}  | ${"Support: mailto:noreply@github.com"}                           | ${[[], [trailerkey("Support"), punctuation(":", 7), space(8), hyperlink("mailto:noreply@github.com", 9)]]}
 	${"the release notes"}         | ${"  Docs: https://github.com/rainstormy/comet/tree/main/docs  "} | ${[[], [whitespace("  "), trailerkey("Docs", 2), punctuation(":", 6), space(7), hyperlink("https://github.com/rainstormy/comet/tree/main/docs", 8), whitespace("  ", 58)]]}
 `(
 	"when the trailer value of $trailer contains a hyperlink",
-	(props: { subjectLine: string; trailer: string; expectedBodyLines: Array<Tokens> }) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n\n${props.trailer}` })
+	(props: { subject: string; trailer: string; expectedBodyLines: Array<Tokens> }) => {
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n\n${props.trailer}` })
 
 		it("extracts the hyperlink token after the trailer key", () => {
 			expect(props.expectedBodyLines).toContainToken("hyperlink")
@@ -241,7 +238,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                                      | expectedTokens
+	subject                                                          | expectedTokens
 	${"introduce v1.2.3"}                                            | ${[word("introduce"), space(9), semver("v1.2.3", 10)]}
 	${"Install pnpm 10.32.0"}                                        | ${[word("Install"), space(7), word("pnpm", 8), space(12), semver("10.32.0", 13)]}
 	${"Pre-release v10.0.0-beta.1"}                                  | ${[word("Pre-release"), space(11), semver("v10.0.0-beta.1", 12)]}
@@ -260,21 +257,21 @@ describe.each`
 	${"fixup! Bump @typescript-eslint/parser from 5.52.0 to 5.59.1"} | ${[squash("fixup!"), space(6), word("Bump", 7), space(11), punctuation("@", 12), word("typescript-eslint", 13), punctuation("/", 30), word("parser", 31), space(37), word("from", 38), space(42), semver("5.52.0", 43), space(49), word("to", 50), space(52), semver("5.59.1", 53)]}
 	${"amend! Upgrade React to 19.2.0 (#52)"}                        | ${[squash("amend!"), space(6), word("Upgrade", 7), space(14), word("React", 15), space(20), word("to", 21), space(23), semver("19.2.0", 24), space(30), issuelink("(#52)", 31)]}
 `(
-	"when the subject line of $subjectLine contains semantic dependency versions",
-	(props: { subjectLine: string; expectedTokens: Tokens }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains semantic dependency versions",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("extracts semver tokens", () => {
 			expect(props.expectedTokens).toContainToken("semver")
 
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).toEqual(props.expectedTokens)
+			expect(commit.subject).toEqual(props.expectedTokens)
 		})
 	},
 )
 
 describe.each`
-	subjectLine
+	subject
 	${"there's no dependency to be found here"}
 	${"1 more time"}
 	${"Enforce TLS 1.3 for all connections"}
@@ -286,19 +283,19 @@ describe.each`
 	${"badf00d not found"}
 	${" Codename 0ff1ce"}
 `(
-	"when the subject line of $subjectLine does not contain any semantic dependency versions",
-	(props: { subjectLine: string }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject does not contain any semantic dependency versions",
+	(props: { subject: string }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("does not extract any semver tokens", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("semver")
+			expect(commit.subject).not.toContainToken("semver")
 		})
 	},
 )
 
 describe.each`
-	subjectLine                                         | expectedTokens
+	subject                                             | expectedTokens
 	${"``"}                                             | ${[code("``")]}
 	${"`code`"}                                         | ${[code("`code`")]}
 	${"Use `pnpm install` to get started"}              | ${[word("Use"), space(3), code("`pnpm install`", 4), space(18), word("to", 19), space(21), word("get", 22), space(25), word("started", 26)]}
@@ -313,21 +310,21 @@ describe.each`
 	${"Upgrade `react` from 18.3.1 to 19.2.0"}          | ${[word("Upgrade"), space(7), code("`react`", 8), space(15), word("from", 16), space(20), semver("18.3.1", 21), space(27), word("to", 28), space(30), semver("19.2.0", 31)]}
 	${"#42: Replace `<a>` with new `<Link>` component"} | ${[issuelink("#42:"), space(4), word("Replace", 5), space(12), code("`<a>`", 13), space(18), word("with", 19), space(23), word("new", 24), space(27), code("`<Link>`", 28), space(36), word("component", 37)]}
 `(
-	"when the subject line of $subjectLine contains inline code phrases",
-	(props: { subjectLine: string; expectedTokens: Tokens }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains inline code phrases",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("extracts code tokens", () => {
 			expect(props.expectedTokens).toContainToken("code")
 
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).toEqual(props.expectedTokens)
+			expect(commit.subject).toEqual(props.expectedTokens)
 		})
 	},
 )
 
 describe.each`
-	subjectLine                                 | expectedTokens
+	subject                                     | expectedTokens
 	${"Upgrade Vite+ beside C++"}               | ${[word("Upgrade"), space(7), word("Vite+", 8), space(13), word("beside", 14), space(20), word("C++", 21)]}
 	${"Compare C#, F#, F*, and VDM++"}          | ${[word("Compare"), space(7), word("C#", 8), punctuation(",", 10), space(11), word("F#", 12), punctuation(",", 14), space(15), word("F*", 16), punctuation(",", 18), space(19), word("and", 20), space(23), word("VDM++", 24)]}
 	${"Keep (C++) and [F#] documented"}         | ${[word("Keep"), space(4), punctuation("(", 5), word("C++", 6), punctuation(")", 9), space(10), word("and", 11), space(14), punctuation("[", 15), word("F#", 16), punctuation("]", 18), space(19), word("documented", 20)]}
@@ -342,29 +339,29 @@ describe.each`
 	${"Vite+-like toolchain"}                   | ${[word("Vite+-like"), space(10), word("toolchain", 11)]}
 	${"C++-based solution"}                     | ${[word("C++-based"), space(9), word("solution", 10)]}
 `(
-	"when the subject line of $subjectLine contains names with punctuation",
-	(props: { subjectLine: string; expectedTokens: Tokens }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains names with punctuation",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("extracts the names as word tokens", () => {
 			expect(props.expectedTokens).toContainToken("word")
 
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).toEqual(props.expectedTokens)
+			expect(commit.subject).toEqual(props.expectedTokens)
 		})
 	},
 )
 
 describe.each`
-	subjectLine                         | body                                                                                                                       | expectedBodyLines
+	subject                             | body                                                                                                                       | expectedBodyLines
 	${"Document language names"}        | ${"Vite+ and C++ now build.\nC#, F#, F*, and VDM++ all compile.\n.NET, ASP.NET, VB.NET, Node.js, and Next.js all deploy."} | ${[[word("Vite+"), space(5), word("and", 6), space(9), word("C++", 10), space(13), word("now", 14), space(17), word("build", 18), punctuation(".", 23)], [word("C#"), punctuation(",", 2), space(3), word("F#", 4), punctuation(",", 6), space(7), word("F*", 8), punctuation(",", 10), space(11), word("and", 12), space(15), word("VDM++", 16), space(21), word("all", 22), space(25), word("compile", 26), punctuation(".", 33)], [word(".NET"), punctuation(",", 4), space(5), word("ASP.NET", 6), punctuation(",", 13), space(14), word("VB.NET", 15), punctuation(",", 21), space(22), word("Node.js", 23), punctuation(",", 30), space(31), word("and", 32), space(35), word("Next.js", 36), space(43), word("all", 44), space(47), word("deploy", 48), punctuation(".", 54)]]}
 	${"Tidy the web stack"}             | ${"ASP.NET and VB.NET still behave.\nNode.js meets Next.js at the deploy station."}                                        | ${[[word("ASP.NET"), space(7), word("and", 8), space(11), word("VB.NET", 12), space(18), word("still", 19), space(24), word("behave", 25), punctuation(".", 31)], [word("Node.js"), space(7), word("meets", 8), space(13), word("Next.js", 14), space(21), word("at", 22), space(24), word("the", 25), space(28), word("deploy", 29), space(35), word("station", 36), punctuation(".", 43)]]}
 	${"Explain the punctuation parade"} | ${".NET, Vite+, and C++ share a comma.\nF#, F*, and VDM++ share a footnote."}                                              | ${[[word(".NET"), punctuation(",", 4), space(5), word("Vite+", 6), punctuation(",", 11), space(12), word("and", 13), space(16), word("C++", 17), space(20), word("share", 21), space(26), word("a", 27), space(28), word("comma", 29), punctuation(".", 34)], [word("F#"), punctuation(",", 2), space(3), word("F*", 4), punctuation(",", 6), space(7), word("and", 8), space(11), word("VDM++", 12), space(17), word("share", 18), space(23), word("a", 24), space(25), word("footnote", 26), punctuation(".", 34)]]}
 	${"Keep the wrappers polite"}       | ${"(ASP.NET), [VB.NET], Node.js; Next.js!"}                                                                                | ${[[punctuation("("), word("ASP.NET", 1), punctuation("),", 8), space(10), punctuation("[", 11), word("VB.NET", 12), punctuation("],", 18), space(20), word("Node.js", 21), punctuation(";", 28), space(29), word("Next.js", 30), punctuation("!", 37)]]}
 `(
 	"when the message body of $body contains names with punctuation",
-	(props: { subjectLine: string; body: string; expectedBodyLines: Array<Tokens> }) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n${props.body}` })
+	(props: { subject: string; body: string; expectedBodyLines: Array<Tokens> }) => {
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
 		it("extracts the names as word tokens", () => {
 			expect(props.expectedBodyLines).toContainToken("word")
@@ -376,7 +373,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                    | expectedTokens
+	subject                                        | expectedTokens
 	${"The Vite package is unrelated"}             | ${[word("The"), space(3), word("Vite", 4), space(8), word("package", 9), space(16), word("is", 17), space(19), word("unrelated", 20)]}
 	${"The Vite+ish package is experimental"}      | ${[word("The"), space(3), word("Vite", 4), punctuation("+", 8), word("ish", 9), space(12), word("package", 13), space(20), word("is", 21), space(23), word("experimental", 24)]}
 	${"C#sharp is not a standalone name"}          | ${[word("C"), punctuation("#", 1), word("sharp", 2), space(7), word("is", 8), space(10), word("not", 11), space(14), word("a", 15), space(16), word("standalone", 17), space(27), word("name", 28)]}
@@ -387,19 +384,19 @@ describe.each`
 	${"VB.NETx and Node.jsland"}                   | ${[word("VB", 0), punctuation(".", 2), word("NETx", 3), space(7), word("and", 8), space(11), word("Node", 12), punctuation(".", 16), word("jsland", 17)]}
 	${"Next.jscript is nearly the framework name"} | ${[word("Next", 0), punctuation(".", 4), word("jscript", 5), space(12), word("is", 13), space(15), word("nearly", 16), space(22), word("the", 23), space(26), word("framework", 27), space(36), word("name", 37)]}
 `(
-	"when the subject line of $subjectLine contains no standalone recognised name",
-	(props: { subjectLine: string; expectedTokens: Tokens }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains no standalone recognised name",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("extracts only the existing word, punctuation, whitespace, and code tokens", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).toEqual(props.expectedTokens)
+			expect(commit.subject).toEqual(props.expectedTokens)
 		})
 	},
 )
 
 describe.each`
-	subjectLine                                                | expectedTokens
+	subject                                                    | expectedTokens
 	${"`#42`"}                                                 | ${[code("`#42`")]}
 	${"Closes `GL-2`"}                                         | ${[word("Closes"), space(6), code("`GL-2`", 7)]}
 	${"New target: `1.0.0`"}                                   | ${[word("New"), space(3), word("target", 4), punctuation(":", 10), space(11), code("`1.0.0`", 12)]}
@@ -409,40 +406,40 @@ describe.each`
 	${"this looks related to `#92`"}                           | ${[word("this"), space(4), word("looks", 5), space(10), word("related", 11), space(18), word("to", 19), space(21), code("`#92`", 22)]}
 	${'Revert "`Revert` "the malfunctioning coffee machine""'} | ${[revert("Revert"), space(6), punctuation('"', 7), code("`Revert`", 8), space(16), punctuation('"', 17), word("the", 18), space(21), word("malfunctioning", 22), space(36), word("coffee", 37), space(43), word("machine", 44), punctuation('""', 51)]}
 `(
-	"when the subject line of $subjectLine contains inline code phrases that resemble other kinds of tokens",
-	(props: { subjectLine: string; expectedTokens: Tokens }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains inline code phrases that resemble other kinds of tokens",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("extracts code tokens", () => {
 			expect(props.expectedTokens).toContainToken("code")
 
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).toEqual(props.expectedTokens)
+			expect(commit.subject).toEqual(props.expectedTokens)
 		})
 	},
 )
 
 describe.each`
-	subjectLine
+	subject
 	${"Good boy"}
 	${"It's not a backtick issue"}
 	${"Use ` alone"}
 	${"Revert the `unclosed phrase"}
 	${"A backtick at the end `"}
 `(
-	"when the subject line of $subjectLine does not contain any inline code phrases",
-	(props: { subjectLine: string }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject does not contain any inline code phrases",
+	(props: { subject: string }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("does not extract any code tokens", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("code")
+			expect(commit.subject).not.toContainToken("code")
 		})
 	},
 )
 
 describe.each`
-	subjectLine                                                                        | expectedTokens
+	subject                                                                            | expectedTokens
 	${'Revert ""'}                                                                     | ${[revert("Revert"), space(6), punctuation('""', 7)]}
 	${'Revert " "'}                                                                    | ${[revert("Revert"), space(6), punctuation('"', 7), space(8), punctuation('"', 9)]}
 	${'Revert "Revert """'}                                                            | ${[revert("Revert"), space(6), punctuation('"', 7), revert("Revert", 8), space(14), punctuation('"""', 15)]}
@@ -459,21 +456,21 @@ describe.each`
 	${'revert "squash! i blame the previous developer"'}                               | ${[revert("revert"), space(6), punctuation('"', 7), word("squash", 8), punctuation("!", 14), space(15), word("i", 16), space(17), word("blame", 18), space(23), word("the", 24), space(27), word("previous", 28), space(36), word("developer", 37), punctuation('"', 46)]}
 	${'Revert  "Revert "  squash!  fixup! Made the code so clean that it sparkles ""'} | ${[revert("Revert"), whitespace("  ", 6), punctuation('"', 8), revert("Revert", 9), space(15), punctuation('"', 16), whitespace("  ", 17), word("squash", 19), punctuation("!", 25), whitespace("  ", 26), word("fixup", 28), punctuation("!", 33), space(34), word("Made", 35), space(39), word("the", 40), space(43), word("code", 44), space(48), word("so", 49), space(51), word("clean", 52), space(57), word("that", 58), space(62), word("it", 63), space(65), word("sparkles", 66), space(74), punctuation('""', 75)]}
 `(
-	"when the subject line of $subjectLine contains revert markers",
-	(props: { subjectLine: string; expectedTokens: Tokens }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains revert markers",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("extracts revert tokens", () => {
 			expect(props.expectedTokens).toContainToken("revert")
 
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).toEqual(props.expectedTokens)
+			expect(commit.subject).toEqual(props.expectedTokens)
 		})
 	},
 )
 
 describe.each`
-	subjectLine                                                   | expectedTokens
+	subject                                                       | expectedTokens
 	${'Revert "'}                                                 | ${[revert("Revert"), space(6), punctuation('"', 7)]}
 	${'Revert "  '}                                               | ${[revert("Revert"), space(6), punctuation('"', 7), whitespace("  ", 8)]}
 	${'Revert "Repair the soft ice machine'}                      | ${[revert("Revert"), space(6), punctuation('"', 7), word("Repair", 8), space(14), word("the", 15), space(18), word("soft", 19), space(23), word("ice", 24), space(27), word("machine", 28)]}
@@ -484,37 +481,37 @@ describe.each`
 	${'fixup! Revert "Add an amazing feature'}                    | ${[squash("fixup!"), space(6), revert("Revert", 7), space(13), punctuation('"', 14), word("Add", 15), space(18), word("an", 19), space(21), word("amazing", 22), space(29), word("feature", 30)]}
 	${'revert "a mere bugfix attempt"""'}                         | ${[revert("revert"), space(6), punctuation('"', 7), word("a", 8), space(9), word("mere", 10), space(14), word("bugfix", 15), space(21), word("attempt", 22), punctuation('"""', 29)]}
 `(
-	"when the subject line of $subjectLine contains revert markers with inconsistent pairs of quotes",
-	(props: { subjectLine: string; expectedTokens: Tokens }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains revert markers with inconsistent pairs of quotes",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("extracts revert tokens", () => {
 			expect(props.expectedTokens).toContainToken("revert")
 
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).toEqual(props.expectedTokens)
+			expect(commit.subject).toEqual(props.expectedTokens)
 		})
 	},
 )
 
 describe.each`
-	subjectLine
+	subject
 	${'#1 Revert "Add an amazing feature"'}
 	${'GH-45 GL-193 revert "bugfix"'}
 `(
-	"when the subject line of $subjectLine has issue links before potential revert markers",
-	(props: { subjectLine: string }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject has issue links before potential revert markers",
+	(props: { subject: string }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("does not extract any revert tokens", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("revert")
+			expect(commit.subject).not.toContainToken("revert")
 		})
 	},
 )
 
 describe.each`
-	subjectLine
+	subject
 	${"Add a boring feature"}
 	${'Not a Revert "thing"'}
 	${"revert"}
@@ -527,19 +524,19 @@ describe.each`
 	${'I\'ll never revert "this"'}
 	${'Revert Revert "something""'}
 `(
-	"when the subject line of $subjectLine does not contain any revert markers",
-	(props: { subjectLine: string }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject does not contain any revert markers",
+	(props: { subject: string }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("does not extract any revert tokens", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("revert")
+			expect(commit.subject).not.toContainToken("revert")
 		})
 	},
 )
 
 describe.each`
-	subjectLine                                                                        | expectedTokens
+	subject                                                                            | expectedTokens
 	${"amend!"}                                                                        | ${[squash("amend!")]}
 	${" amend!Apply strawberry jam to make the code sweeter"}                          | ${[space(), squash("amend!", 1), word("Apply", 7), space(12), word("strawberry", 13), space(23), word("jam", 24), space(27), word("to", 28), space(30), word("make", 31), space(35), word("the", 36), space(39), word("code", 40), space(44), word("sweeter", 45)]}
 	${" fixup!  "}                                                                     | ${[space(), squash("fixup!", 1), whitespace("  ", 7)]}
@@ -563,40 +560,40 @@ describe.each`
 	${'amend! Revert "fixup!"'}                                                        | ${[squash("amend!"), space(6), revert("Revert", 7), space(13), punctuation('"', 14), word("fixup", 15), punctuation('!"', 20)]}
 	${"!!!amend!!!this"}                                                               | ${[squash("!!!amend"), punctuation("!!!", 8), word("this", 11)]}
 `(
-	"when the subject line of $subjectLine contains a squash marker",
-	(props: { subjectLine: string; expectedTokens: Tokens }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains a squash marker",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("extracts a squash token", () => {
 			expect(props.expectedTokens).toContainToken("squash")
 
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).toEqual(props.expectedTokens)
+			expect(commit.subject).toEqual(props.expectedTokens)
 		})
 	},
 )
 
 describe.each`
-	subjectLine
+	subject
 	${"#1 fixup! Apply some magic"}
 	${"GH-45 GL-193 squash! amend! redo the artistic performance"}
 	${"`Token`squash! need more tokens"}
 	${"[fixup!] #37: fixed it"}
 	${'revert "fixup! add a semicolon for good luck"'}
 `(
-	"when the subject line of $subjectLine has other tokens before a potential squash marker",
-	(props: { subjectLine: string; expectedTokens: Tokens }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	"when the subject of $subject has other tokens before a potential squash marker",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 		it("does not extract any squash tokens", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("squash")
+			expect(commit.subject).not.toContainToken("squash")
 		})
 	},
 )
 
 describe.each`
-	subjectLine
+	subject
 	${"Make the commit scream fixup! again"}
 	${"there's no squash! to see here"}
 	${"wip! Make amend!s"}
@@ -609,17 +606,14 @@ describe.each`
 	${"Squash tennis and pumpkins"}
 	${"Done!"}
 	${"let's go!!"}
-`(
-	"when the subject line of $subjectLine does not contain a squash marker",
-	(props: { subjectLine: string }) => {
-		const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+`("when the subject of $subject does not contain a squash marker", (props: { subject: string }) => {
+	const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
-		it("does not extract any squash tokens", () => {
-			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("squash")
-		})
-	},
-)
+	it("does not extract any squash tokens", () => {
+		const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
+		expect(commit.subject).not.toContainToken("squash")
+	})
+})
 
 describe("when issue link tokenisation accepts GitHub-/GitLab-style prefixes and custom wildcards", () => {
 	const githubIssueLinks = fakeTokenConfiguration({
@@ -630,7 +624,7 @@ describe("when issue link tokenisation accepts GitHub-/GitLab-style prefixes and
 	})
 
 	describe.each`
-		subjectLine                                                        | expectedTokens
+		subject                                                            | expectedTokens
 		${"#1"}                                                            | ${[issuelink("#1")]}
 		${"GH-0"}                                                          | ${[issuelink("GH-0")]}
 		${"GL-4 over the hedge"}                                           | ${[issuelink("GL-4"), space(4), word("over", 5), space(9), word("the", 10), space(13), word("hedge", 14)]}
@@ -658,21 +652,21 @@ describe("when issue link tokenisation accepts GitHub-/GitLab-style prefixes and
 		${"[incident] Skip #42 and UNICORN-8"}                             | ${[issuelink("[incident]"), space(10), word("Skip", 11), space(15), issuelink("#42", 16), space(19), word("and", 20), space(23), word("UNICORN-8", 24)]}
 		${"fixup![incident](no-issue){#621}secure the rail signals"}       | ${[squash("fixup!"), issuelink("[incident]", 6), issuelink("(no-issue)", 16), issuelink("{#621}", 26), word("secure", 32), space(38), word("the", 39), space(42), word("rail", 43), space(47), word("signals", 48)]}
 	`(
-		"and the subject line of $subjectLine contains GitHub-/GitLab-style issue links or wildcards",
-		(props: { subjectLine: string; expectedTokens: Tokens }) => {
-			const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+		"and the subject of $subject contains GitHub-/GitLab-style issue links or wildcards",
+		(props: { subject: string; expectedTokens: Tokens }) => {
+			const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 			it("extracts issuelink tokens", () => {
 				expect(props.expectedTokens).toContainToken("issuelink")
 
 				const commit = mapCrudeCommitToCommit(crudeCommit, githubIssueLinks)
-				expect(commit.subjectLine).toEqual(props.expectedTokens)
+				expect(commit.subject).toEqual(props.expectedTokens)
 			})
 		},
 	)
 
 	describe.each`
-		subjectLine
+		subject
 		${"#"}
 		${"#MAIN"}
 		${"gh-40 Gl-41 have wrong casing"}
@@ -690,13 +684,13 @@ describe("when issue link tokenisation accepts GitHub-/GitLab-style prefixes and
 		${"[Incident] Teach the logs to use their inside voice"}
 		${"just like the outer space incident"}
 	`(
-		"and the subject line of $subjectLine does not contain any GitHub-/GitLab-style issue links or wildcards",
-		(props: { subjectLine: string }) => {
-			const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+		"and the subject of $subject does not contain any GitHub-/GitLab-style issue links or wildcards",
+		(props: { subject: string }) => {
+			const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 			it("does not extract any issuelink tokens", () => {
 				const commit = mapCrudeCommitToCommit(crudeCommit, githubIssueLinks)
-				expect(commit.subjectLine).not.toContainToken("issuelink")
+				expect(commit.subject).not.toContainToken("issuelink")
 			})
 		},
 	)
@@ -708,7 +702,7 @@ describe("when issue link tokenisation accepts Jira-style prefixes and custom wi
 	})
 
 	describe.each`
-		subjectLine                                                                              | expectedTokens
+		subject                                                                                  | expectedTokens
 		${"UNICORN-1"}                                                                           | ${[issuelink("UNICORN-1")]}
 		${"UNICORN-2 Release the robot butler"}                                                  | ${[issuelink("UNICORN-2"), space(9), word("Release", 10), space(17), word("the", 18), space(21), word("robot", 22), space(27), word("butler", 28)]}
 		${"(UNICORN-12) Fix this confusing plate of spaghetti"}                                  | ${[issuelink("(UNICORN-12)"), space(12), word("Fix", 13), space(16), word("this", 17), space(21), word("confusing", 22), space(31), word("plate", 32), space(37), word("of", 38), space(40), word("spaghetti", 41)]}
@@ -725,21 +719,21 @@ describe("when issue link tokenisation accepts Jira-style prefixes and custom wi
 		${"#SECURITY bricked the wifi circuits"}                                                 | ${[issuelink("#SECURITY"), space(9), word("bricked", 10), space(17), word("the", 18), space(21), word("wifi", 22), space(26), word("circuits", 27)]}
 		${"UNICORN-880 stop mixing the toxic chemicals #SECURITY"}                               | ${[issuelink("UNICORN-880"), space(11), word("stop", 12), space(16), word("mixing", 17), space(23), word("the", 24), space(27), word("toxic", 28), space(33), word("chemicals", 34), space(43), issuelink("#SECURITY", 44)]}
 	`(
-		"and the subject line of $subjectLine contains Jira-style issue links or wildcards",
-		(props: { subjectLine: string; expectedTokens: Tokens }) => {
-			const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+		"and the subject of $subject contains Jira-style issue links or wildcards",
+		(props: { subject: string; expectedTokens: Tokens }) => {
+			const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 			it("extracts issuelink tokens", () => {
 				expect(props.expectedTokens).toContainToken("issuelink")
 
 				const commit = mapCrudeCommitToCommit(crudeCommit, jiraIssueLinks)
-				expect(commit.subjectLine).toEqual(props.expectedTokens)
+				expect(commit.subject).toEqual(props.expectedTokens)
 			})
 		},
 	)
 
 	describe.each`
-		subjectLine
+		subject
 		${"UNICORN-"}
 		${"unicorn-40 UnIcOrN-41 have wrong casing"}
 		${"UNICORN-MAIN"}
@@ -751,13 +745,13 @@ describe("when issue link tokenisation accepts Jira-style prefixes and custom wi
 		${"needs a bit more #security"}
 		${"[SECURITY] Upgrade the Unicorn-1337 tech stack to the latest and greatest"}
 	`(
-		"and the subject line of $subjectLine does not contain any Jira-style issue links or wildcards",
-		(props: { subjectLine: string }) => {
-			const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+		"and the subject of $subject does not contain any Jira-style issue links or wildcards",
+		(props: { subject: string }) => {
+			const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 			it("does not extract any issuelink tokens", () => {
 				const commit = mapCrudeCommitToCommit(crudeCommit, jiraIssueLinks)
-				expect(commit.subjectLine).not.toContainToken("issuelink")
+				expect(commit.subject).not.toContainToken("issuelink")
 			})
 		},
 	)
@@ -769,19 +763,19 @@ describe("when issue link tokenisation accepts Jira-style prefixes and no wildca
 	})
 
 	describe.each`
-		subjectLine                                 | expectedTokens
+		subject                                     | expectedTokens
 		${"COMET-42 closes [incident]"}             | ${[issuelink("COMET-42"), space(8), word("closes", 9), space(15), punctuation("[", 16), word("incident", 17), punctuation("]", 25)]}
 		${"[COMET-7]: Make the deploy robot smile"} | ${[issuelink("[COMET-7]:"), space(10), word("Make", 11), space(15), word("the", 16), space(19), word("deploy", 20), space(26), word("robot", 27), space(32), word("smile", 33)]}
 	`(
-		"and the subject line of $subjectLine contains potential issue links",
-		(props: { subjectLine: string; expectedTokens: Tokens }) => {
-			const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+		"and the subject of $subject contains potential issue links",
+		(props: { subject: string; expectedTokens: Tokens }) => {
+			const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 			it("extracts only the configured issuelink tokens", () => {
 				expect(props.expectedTokens).toContainToken("issuelink")
 
 				const commit = mapCrudeCommitToCommit(crudeCommit, noWildcardIssueLinks)
-				expect(commit.subjectLine).toEqual(props.expectedTokens)
+				expect(commit.subject).toEqual(props.expectedTokens)
 			})
 		},
 	)
@@ -793,19 +787,19 @@ describe("when issue link tokenisation accepts wildcards only", () => {
 	})
 
 	describe.each`
-		subjectLine                                   | expectedTokens
+		subject                                       | expectedTokens
 		${"[incident] COMET-42 is queued"}            | ${[issuelink("[incident]"), space(10), word("COMET-42", 11), space(19), word("is", 20), space(22), word("queued", 23)]}
 		${"Warm [incident] gloves before deployment"} | ${[word("Warm"), space(4), issuelink("[incident]", 5), space(15), word("gloves", 16), space(22), word("before", 23), space(29), word("deployment", 30)]}
 	`(
-		"and the subject line of $subjectLine contains potential issue links",
-		(props: { subjectLine: string; expectedTokens: Tokens }) => {
-			const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+		"and the subject of $subject contains potential issue links",
+		(props: { subject: string; expectedTokens: Tokens }) => {
+			const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
 			it("extracts only the configured issuelink tokens", () => {
 				expect(props.expectedTokens).toContainToken("issuelink")
 
 				const commit = mapCrudeCommitToCommit(crudeCommit, wildcardOnlyIssueLinks)
-				expect(commit.subjectLine).toEqual(props.expectedTokens)
+				expect(commit.subject).toEqual(props.expectedTokens)
 			})
 		},
 	)
@@ -817,7 +811,7 @@ describe("when issue link tokenisation is disabled", () => {
 	})
 
 	describe.each`
-		subjectLine
+		subject
 		${"#1"}
 		${"GH-15 GL-392 extra spicy code detected"}
 		${"GH-27 loses its badge"}
@@ -827,29 +821,26 @@ describe("when issue link tokenisation is disabled", () => {
 		${"(UNICORN-12) Fix this confusing plate of spaghetti"}
 		${"(UNICORN-15) UNICORN-30 [UNICORN-45]:  make the program act like a clown UNICORN-60"}
 		${"#SECURITY bricked the wifi circuits"}
-	`(
-		"and the subject line of $subjectLine contains potential issue links",
-		(props: { subjectLine: string }) => {
-			const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+	`("and the subject of $subject contains potential issue links", (props: { subject: string }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
-			it("does not extract any issuelink tokens", () => {
-				const commit = mapCrudeCommitToCommit(crudeCommit, noIssueLinks)
-				expect(commit.subjectLine).not.toContainToken("issuelink")
-			})
-		},
-	)
+		it("does not extract any issuelink tokens", () => {
+			const commit = mapCrudeCommitToCommit(crudeCommit, noIssueLinks)
+			expect(commit.subject).not.toContainToken("issuelink")
+		})
+	})
 })
 
 describe.each`
-	subjectLine                  | body                                                                                           | expectedBodyLines
+	subject                      | body                                                                                           | expectedBodyLines
 	${"Upgrade dependencies"}    | ${"This commit upgrades the following dependency:\n- `@types/node` from 20.19.20 to 20.19.23"} | ${[[word("This"), space(4), word("commit", 5), space(11), word("upgrades", 12), space(20), word("the", 21), space(24), word("following", 25), space(34), word("dependency", 35), punctuation(":", 45)], [punctuation("-"), space(1), code("`@types/node`", 2), space(15), word("from", 16), space(20), word("20", 21), punctuation(".", 23), word("19", 24), punctuation(".", 26), word("20", 27), space(29), word("to", 30), space(32), word("20", 33), punctuation(".", 35), word("19", 36), punctuation(".", 38), word("23", 39)]]}
 	${"Archive tagged snippets"} | ${"Stash `#42 v1.2.3` safely."}                                                                | ${[[word("Stash"), space(5), code("`#42 v1.2.3`", 6), space(18), word("safely", 19), punctuation(".", 25)]]}
 	${"tuned robot inspector"}   | ${"Queue `mise run check` at 03:14."}                                                          | ${[[word("Queue"), space(5), code("`mise run check`", 6), space(22), word("at", 23), space(25), word("03", 26), punctuation(":", 28), word("14", 29), punctuation(".", 31)]]}
 	${"Swap miniature widgets"}  | ${"Trade `alpha`, `beta`, & `gamma`."}                                                         | ${[[word("Trade"), space(5), code("`alpha`", 6), punctuation(",", 13), space(14), code("`beta`", 15), punctuation(",", 21), space(22), punctuation("&", 23), space(24), code("`gamma`", 25), punctuation(".", 32)]]}
 `(
 	"when the message body of $body contains inline code phrases",
-	(props: { subjectLine: string; body: string; expectedBodyLines: Array<Tokens> }) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n${props.body}` })
+	(props: { subject: string; body: string; expectedBodyLines: Array<Tokens> }) => {
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
 		it("extracts code tokens in the message body", () => {
 			expect(props.expectedBodyLines).toContainToken("code")
@@ -861,16 +852,16 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                    | body                                   | expectedBodyLines
+	subject                        | body                                   | expectedBodyLines
 	${"Reconcile patch history"}   | ${'fixup! Revert "2.7.9"'}             | ${[[word("fixup"), punctuation("!", 5), space(6), word("Revert", 7), space(13), punctuation('"', 14), word("2", 15), punctuation(".", 16), word("7", 17), punctuation(".", 18), word("9", 19), punctuation('"', 20)]]}
 	${"lowercase deployment memo"} | ${'amend! revert "0.4.2"'}             | ${[[word("amend"), punctuation("!", 5), space(6), word("revert", 7), space(13), punctuation('"', 14), word("0", 15), punctuation(".", 16), word("4", 17), punctuation(".", 18), word("2", 19), punctuation('"', 20)]]}
 	${"Catalogue odd branches"}    | ${"!squash Update c0ffee42 carefully"} | ${[[punctuation("!"), word("squash", 1), space(7), word("Update", 8), space(14), word("c0ffee42", 15), space(23), word("carefully", 24)]]}
 `(
-	"when the message body of $body contains subject-line-only token patterns",
-	(props: { subjectLine: string; body: string; expectedBodyLines: Array<Tokens> }) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n${props.body}` })
+	"when the message body of $body contains subject-only token patterns",
+	(props: { subject: string; body: string; expectedBodyLines: Array<Tokens> }) => {
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
-		it("keeps them as ordinary body-line tokens", () => {
+		it("keeps them as word and punctuation tokens", () => {
 			expect(props.expectedBodyLines).not.toContainToken("revert", "semver", "squash")
 
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
@@ -880,7 +871,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                     | body                                                                                                                                                     | expectedBodyLines
+	subject                                         | body                                                                                                                                                     | expectedBodyLines
 	${"Teach the parser to carry tiny snippets"}    | ${'The recipe starts here.\n```js\nconst snack = "waffle"\nconsole.log(snack)\n```\nAnd then the prose comes back.'}                                     | ${[[word("The"), space(3), word("recipe", 4), space(10), word("starts", 11), space(17), word("here", 18), punctuation(".", 22)], [codeblock("```js")], [codeblock('const snack = "waffle"')], [codeblock("console.log(snack)")], [codeblock("```")], [word("And"), space(3), word("then", 4), space(8), word("the", 9), space(12), word("prose", 13), space(18), word("comes", 19), space(24), word("back", 25), punctuation(".", 29)]]}
 	${"Keep punctuation-heavy names inside fences"} | ${"```\nVite+ C++ C# F# F* VDM++ .NET ASP.NET VB.NET Node.js Next.js\n```"}                                                                              | ${[[codeblock("```")], [codeblock("Vite+ C++ C# F# F* VDM++ .NET ASP.NET VB.NET Node.js Next.js")], [codeblock("```")]]}
 	${"let the empty block breathe"}                | ${"Before\n```\n```\nAfter"}                                                                                                                             | ${[[word("Before")], [codeblock("```")], [codeblock("```")], [word("After")]]}
@@ -893,12 +884,12 @@ describe.each`
 	${"Close a tiny fence with a bigger one"}       | ${'```\nconst cake = "tiny"\n````\nstill-open: not a trailerkey because fence was not closed properly\nand more prose follows'}                          | ${[[codeblock("```")], [codeblock('const cake = "tiny"')], [codeblock("````")], [codeblock("still-open: not a trailerkey because fence was not closed properly")], [codeblock("and more prose follows")]]}
 `(
 	"when the message body of $body contains triple-backtick fenced code blocks",
-	(props: { subjectLine: string; body: string; expectedBodyLines: Array<Tokens> }) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n${props.body}` })
+	(props: { subject: string; body: string; expectedBodyLines: Array<Tokens> }) => {
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
-		it("does not extract any codeblock tokens in the subject line", () => {
+		it("does not extract any codeblock tokens in the subject", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("codeblock")
+			expect(commit.subject).not.toContainToken("codeblock")
 		})
 
 		it("extracts codeblock tokens in the message body", () => {
@@ -911,19 +902,19 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                     | body                                                                                                                                                                                                                                    | expectedBodyLines
+	subject                                         | body                                                                                                                                                                                                                                    | expectedBodyLines
 	${"nested fences inside bigger fences"}         | ${"````markdown\n```ts\nconst nested = true\n```\n````\nBack to ordinary markdown."}                                                                                                                                                    | ${[[codeblock("````markdown")], [codeblock("```ts")], [codeblock("const nested = true")], [codeblock("```")], [codeblock("````")], [word("Back"), space(4), word("to", 5), space(7), word("ordinary", 8), space(16), word("markdown", 17), punctuation(".", 25)]]}
 	${"Keep triple ticks boring inside four ticks"} | ${"````\n```\nRefs: #111\n```\n````\nReviewed-by: Clipboard Captain <clip@example.com>"}                                                                                                                                                | ${[[codeblock("````")], [codeblock("```")], [codeblock("Refs: #111")], [codeblock("```")], [codeblock("````")], [trailerkey("Reviewed-by"), punctuation(":", 11), space(12), word("Clipboard", 13), space(22), word("Captain", 23), space(30), punctuation("<", 31), word("clip", 32), punctuation("@", 36), word("example", 37), punctuation(".", 44), word("com", 45), punctuation(">", 48)]]}
 	${"calm heredocs around nested fences"}         | ${"````shell\ncat <<EOF > README.md\n```shell\npnpm add imaginary-updraft --filter ./packages/comet\nEOF\n````"}                                                                                                                        | ${[[codeblock("````shell")], [codeblock("cat <<EOF > README.md")], [codeblock("```shell")], [codeblock("pnpm add imaginary-updraft --filter ./packages/comet")], [codeblock("EOF")], [codeblock("````")]]}
 	${"Archived the documentation breadcrumb"}      | ${'````markdown\n[release ledger](https://docs.example.com/products/comet/releases/2026/06/fenced-code-block-tokeniser?view=full&section=body-lines)\n```json\n{ "nested": true, "reason": "documentation copied itself" }\n```\n````'} | ${[[codeblock("````markdown")], [codeblock("[release ledger](https://docs.example.com/products/comet/releases/2026/06/fenced-code-block-tokeniser?view=full&section=body-lines)")], [codeblock("```json")], [codeblock('{ "nested": true, "reason": "documentation copied itself" }')], [codeblock("```")], [codeblock("````")]]}
 `(
 	"when the message body of $body contains quadruple-backtick fenced code blocks",
-	(props: { subjectLine: string; body: string; expectedBodyLines: Array<Tokens> }) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n${props.body}` })
+	(props: { subject: string; body: string; expectedBodyLines: Array<Tokens> }) => {
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
-		it("does not extract any codeblock tokens in the subject line", () => {
+		it("does not extract any codeblock tokens in the subject", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("codeblock")
+			expect(commit.subject).not.toContainToken("codeblock")
 		})
 
 		it("extracts codeblock tokens in the message body", () => {
@@ -936,7 +927,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                   | body
+	subject                                       | body
 	${"indented triple fences"}                   | ${"  ```ts\nconst outside = true\n ```"}
 	${"indented quadruple fences"}                | ${" ````markdown\n ```shell\npnpm add pretend-package\n ````"}
 	${"Inline backticks is plain prose"}          | ${"This mentions ``` without starting at the beginning.\nAnd this line stays normal as well."}
@@ -944,12 +935,12 @@ describe.each`
 	${"Ignore fences after impatient prefixes"}   | ${"prefix ```shell\nprefix ````markdown\ntext before ``` and text before ````"}
 `(
 	"when the message body of $body contains backticks that do not begin a fenced code block",
-	(props: { subjectLine: string; body: string; expectedBodyLines: Array<Tokens> }) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n${props.body}` })
+	(props: { subject: string; body: string; expectedBodyLines: Array<Tokens> }) => {
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
-		it("does not extract any codeblock tokens in the subject line", () => {
+		it("does not extract any codeblock tokens in the subject", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("codeblock")
+			expect(commit.subject).not.toContainToken("codeblock")
 		})
 
 		it("does not extract any codeblock tokens in the message body", () => {
@@ -960,7 +951,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                         | body                                                                                                                                                                                                                                        | expectedSubjectLine                                                                                                                                                                                                                                                            | expectedBodyLines
+	subject                                             | body                                                                                                                                                                                                                                        | expectedSubject                                                                                                                                                                                                                                                                | expectedBodyLines
 	${"Update src/main.ts"}                             | ${"\nCo-Authored-By: Everloving Easter Bunny <everloving.easter.bunny@example.com>"}                                                                                                                                                        | ${[word("Update"), space(6), word("src", 7), punctuation("/", 10), word("main", 11), punctuation(".", 15), word("ts", 16)]}                                                                                                                                                    | ${[[], [trailerkey("Co-Authored-By"), punctuation(":", 14), space(15), word("Everloving", 16), space(26), word("Easter", 27), space(33), word("Bunny", 34), space(39), punctuation("<", 40), word("everloving", 41), punctuation(".", 51), word("easter", 52), punctuation(".", 58), word("bunny", 59), punctuation("@", 64), word("example", 65), punctuation(".", 72), word("com", 73), punctuation(">", 76)]]}
 	${"Teach the changelog to whisper"}                 | ${"\nThe noisy bits moved to the release notes.\n\nFooter: charming"}                                                                                                                                                                       | ${[word("Teach"), space(5), word("the", 6), space(9), word("changelog", 10), space(19), word("to", 20), space(22), word("whisper", 23)]}                                                                                                                                       | ${[[], [word("The"), space(3), word("noisy", 4), space(9), word("bits", 10), space(14), word("moved", 15), space(20), word("to", 21), space(23), word("the", 24), space(27), word("release", 28), space(35), word("notes", 36), punctuation(".", 41)], [], [trailerkey("Footer"), punctuation(":", 6), space(7), word("charming", 8)]]}
 	${"do some pair programming"}                       | ${"\nthis commit is a collab\nco-authored-by: santa claus <santa.claus@example.com>\nco-authored-by  : gingerbread man <gingerbread.man@example.com>\nreported-by: little mermaid <little.mermaid@example.com>"}                            | ${[word("do"), space(2), word("some", 3), space(7), word("pair", 8), space(12), word("programming", 13)]}                                                                                                                                                                      | ${[[], [word("this"), space(4), word("commit", 5), space(11), word("is", 12), space(14), word("a", 15), space(16), word("collab", 17)], [trailerkey("co-authored-by"), punctuation(":", 14), space(15), word("santa", 16), space(21), word("claus", 22), space(27), punctuation("<", 28), word("santa", 29), punctuation(".", 34), word("claus", 35), punctuation("@", 40), word("example", 41), punctuation(".", 48), word("com", 49), punctuation(">", 52)], [trailerkey("co-authored-by"), whitespace("  ", 14), punctuation(":", 16), space(17), word("gingerbread", 18), space(29), word("man", 30), space(33), punctuation("<", 34), word("gingerbread", 35), punctuation(".", 46), word("man", 47), punctuation("@", 50), word("example", 51), punctuation(".", 58), word("com", 59), punctuation(">", 62)], [trailerkey("reported-by"), punctuation(":", 11), space(12), word("little", 13), space(19), word("mermaid", 20), space(27), punctuation("<", 28), word("little", 29), punctuation(".", 35), word("mermaid", 36), punctuation("@", 43), word("example", 44), punctuation(".", 51), word("com", 52), punctuation(">", 55)]]}
@@ -980,16 +971,16 @@ describe.each`
 `(
 	"when the message body of $body contains trailers",
 	(props: {
-		subjectLine: string
+		subject: string
 		body: string
-		expectedSubjectLine: Tokens
+		expectedSubject: Tokens
 		expectedBodyLines: Array<Tokens>
 	}) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n${props.body}` })
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
-		it("does not extract any trailerkey tokens in the subject line", () => {
+		it("does not extract any trailerkey tokens in the subject", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("trailerkey")
+			expect(commit.subject).not.toContainToken("trailerkey")
 		})
 
 		it("extracts trailerkey tokens in the message body", () => {
@@ -1002,7 +993,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                               | body
+	subject                                   | body
 	${"Explain the suspicious label"}         | ${"Refs: This looked official for a moment.\nThen the paragraph kept going."}
 	${"Do some pair programming"}             | ${"\nThis commit is a collab.\n\nCo-authored-by: Gon Freecss <rock.paper.scissors@hunters.com>\nCo-authored-by: Killua Zoldyck <killua@godspeed.net>\n Reported-by: Hisoka <no4@phantom.com>\n\nAll participants had fun.\n"}
 	${"fixup! keep the lowercase memo"}       | ${"Footer: looks real\nthen it keeps talking"}
@@ -1010,12 +1001,12 @@ describe.each`
 	${'Revert "reviewed-by: subject mirage"'} | ${"breaking change: seems important\nbut this paragraph is still alive"}
 `(
 	"when the message body of $body contains trailer-like lines followed by regular lines of text",
-	(props: { subjectLine: string; body: string }) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n${props.body}` })
+	(props: { subject: string; body: string }) => {
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
-		it("does not extract any trailerkey tokens in the subject line", () => {
+		it("does not extract any trailerkey tokens in the subject", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("trailerkey")
+			expect(commit.subject).not.toContainToken("trailerkey")
 		})
 
 		it("does not extract any trailerkey tokens in the message body", () => {
@@ -1026,7 +1017,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                                         | body
+	subject                                                             | body
 	${"bugfix"}                                                         | ${"attempt 2"}
 	${"Refactor the taxi module"}                                       | ${"The roof sign now flashes politely."}
 	${"Resolve the conflicts"}                                          | ${"\nConflicts:\n\n src/grumpy-cat.ts\n src/summer-vacation-plans.ts"}
@@ -1037,12 +1028,12 @@ describe.each`
 	${"Add GPS notes"}                                                  | ${"trailer-like: starts the body\nregular line closes the paragraph"}
 `(
 	"when the message body of $body does not contain any trailers",
-	(props: { subjectLine: string; body: string }) => {
-		const crudeCommit = fakeCrudeCommit({ message: `${props.subjectLine}\n${props.body}` })
+	(props: { subject: string; body: string }) => {
+		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
-		it("does not extract any trailerkey tokens in the subject line", () => {
+		it("does not extract any trailerkey tokens in the subject", () => {
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-			expect(commit.subjectLine).not.toContainToken("trailerkey")
+			expect(commit.subject).not.toContainToken("trailerkey")
 		})
 
 		it("does not extract any trailerkey tokens in the message body", () => {
@@ -1053,19 +1044,19 @@ describe.each`
 )
 
 describe.each`
-	subjectLine
+	subject
 	${"Refs: This looked official for a moment."}
 	${"Signed-off-by: April O'Neil <april.oneil@fastforward.com>"}
 	${"BREAKING CHANGE: The old badge printer retired."}
 	${"Refs: looks official in the subject (#12)"}
 	${"signed-off-by: lowercase subject only"}
 	${"ACKED-BY: SUBJECT ONLY"}
-`("when the subject line looks like a trailer", (props: { subjectLine: string }) => {
-	const crudeCommit = fakeCrudeCommit({ message: props.subjectLine })
+`("when the subject looks like a trailer", (props: { subject: string }) => {
+	const crudeCommit = fakeCrudeCommit({ message: props.subject })
 
-	it("does not extract any trailerkey tokens in the subject line", () => {
+	it("does not extract any trailerkey tokens in the subject", () => {
 		const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
-		expect(commit.subjectLine).not.toContainToken("trailerkey")
+		expect(commit.subject).not.toContainToken("trailerkey")
 	})
 
 	it("has no body lines", () => {

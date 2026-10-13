@@ -5,7 +5,7 @@ import { fakeTokenConfiguration } from "#commits/TokenConfiguration.fakes.ts"
 import { emptyRulesetConfiguration } from "#configurations/GetConfiguration.fakes.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import { type Concerns, mapCommitsToConcerns } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import { fakeCommitSha } from "#types/CommitSha.fakes.ts"
 import type { CommitSha } from "#types/CommitSha.ts"
@@ -40,7 +40,7 @@ const fakeCommit = fakeCommitFactory(
 )
 
 describe.each`
-	subjectLine                                                  | expectedRangeAnywhere | expectedRangePrefix | expectedRangeSuffix
+	subject                                                      | expectedRangeAnywhere | expectedRangePrefix | expectedRangeSuffix
 	${"bugfix"}                                                  | ${[0, 1]}             | ${[0, 1]}           | ${[6, 7]}
 	${"Convince the office printer to print in colour"}          | ${[0, 1]}             | ${[0, 1]}           | ${[46, 47]}
 	${"accept `pseudocode:` as a valid keyword in the compiler"} | ${[0, 1]}             | ${[0, 1]}           | ${[55, 56]}
@@ -48,21 +48,21 @@ describe.each`
 	${"fixup! Smoothen the rough edges"}                         | ${[7, 8]}             | ${[7, 8]}           | ${[31, 32]}
 	${"Read https://github.com/rainstormy/comet/pull/42"}        | ${[0, 1]}             | ${[0, 1]}           | ${[48, 49]}
 `(
-	"when the subject line of $subjectLine does not contain an issue link",
+	"when the subject of $subject does not contain an issue link",
 	(props: {
-		subjectLine: string
+		subject: string
 		expectedRangeAnywhere: CharacterRange
 		expectedRangePrefix: CharacterRange
 		expectedRangeSuffix: CharacterRange
 	}) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+		const commit = fakeCommit({ message: props.subject })
 
 		describe("and the rule is enabled with position 'anywhere'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledAnywhere)
 
-			it("raises a concern about the beginning of the subject line", () => {
+			it("raises a concern about the beginning of the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRangeAnywhere }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRangeAnywhere }),
 				])
 			})
 		})
@@ -70,9 +70,9 @@ describe.each`
 		describe("and the rule is enabled with position 'prefix'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledPrefix)
 
-			it("raises a concern about the beginning of the subject line", () => {
+			it("raises a concern about the beginning of the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRangePrefix }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRangePrefix }),
 				])
 			})
 		})
@@ -80,9 +80,9 @@ describe.each`
 		describe("and the rule is enabled with position 'suffix'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledSuffix)
 
-			it("raises a concern about the end of the subject line", () => {
+			it("raises a concern about the end of the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRangeSuffix }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRangeSuffix }),
 				])
 			})
 		})
@@ -98,7 +98,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                                       | expectedRangeSuffix
+	subject                                                           | expectedRangeSuffix
 	${"(GH-7) hotfix"}                                                | ${[13, 14]}
 	${"#42 Convince the office printer to print in colour"}           | ${[50, 51]}
 	${"GL-1024 keep the hamsters on the wheel"}                       | ${[38, 39]}
@@ -107,9 +107,9 @@ describe.each`
 	${"#1 #2 three go"}                                               | ${[14, 15]}
 	${"fixup! GH-88 is the issue that explains why this code exists"} | ${[60, 61]}
 `(
-	"when the subject line of $subjectLine starts with an issue link",
-	(props: { subjectLine: string; expectedRangeSuffix: CharacterRange }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+	"when the subject of $subject starts with an issue link",
+	(props: { subject: string; expectedRangeSuffix: CharacterRange }) => {
+		const commit = fakeCommit({ message: props.subject })
 
 		describe("and the rule is enabled with position 'anywhere'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledAnywhere)
@@ -130,9 +130,9 @@ describe.each`
 		describe("and the rule is enabled with position 'suffix'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledSuffix)
 
-			it("raises a concern about the end of the subject line", () => {
+			it("raises a concern about the end of the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRangeSuffix }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRangeSuffix }),
 				])
 			})
 		})
@@ -148,7 +148,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                                        | expectedRangePrefix
+	subject                                                            | expectedRangePrefix
 	${"hotfix (GH-7)"}                                                 | ${[0, 1]}
 	${"Convince the office printer to print in colour #42"}            | ${[0, 1]}
 	${"keep the hamsters on the wheel GL-1024"}                        | ${[0, 1]}
@@ -157,9 +157,9 @@ describe.each`
 	${"insufficient funds [incident]"}                                 | ${[0, 1]}
 	${"squash! the issue that explains why this code exists is GH-88"} | ${[8, 9]}
 `(
-	"when the subject line of $subjectLine ends with an issue link",
-	(props: { subjectLine: string; expectedRangePrefix: CharacterRange }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+	"when the subject of $subject ends with an issue link",
+	(props: { subject: string; expectedRangePrefix: CharacterRange }) => {
+		const commit = fakeCommit({ message: props.subject })
 
 		describe("and the rule is enabled with position 'anywhere'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledAnywhere)
@@ -172,9 +172,9 @@ describe.each`
 		describe("and the rule is enabled with position 'prefix'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledPrefix)
 
-			it("raises a concern about the start of the subject line", () => {
+			it("raises a concern about the start of the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRangePrefix }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRangePrefix }),
 				])
 			})
 		})
@@ -198,20 +198,20 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                              | expectedRangePrefix | expectedRangeSuffix
+	subject                                                  | expectedRangePrefix | expectedRangeSuffix
 	${"Replace GH-42 the hamster wheel with a turbine"}      | ${[0, 1]}           | ${[46, 47]}
 	${"promote #7 from staging to production on a friday"}   | ${[0, 1]}           | ${[49, 50]}
 	${"fixup! Override GL-88 by shouting at the monitor"}    | ${[7, 8]}           | ${[48, 49]}
 	${"there is (no-issue) here"}                            | ${[0, 1]}           | ${[24, 25]}
 	${"squash! Fixed the [incident] in a matter of seconds"} | ${[8, 9]}           | ${[51, 52]}
 `(
-	"when the subject line of $subjectLine has an issue link in the middle",
+	"when the subject of $subject has an issue link in the middle",
 	(props: {
-		subjectLine: string
+		subject: string
 		expectedRangePrefix: CharacterRange
 		expectedRangeSuffix: CharacterRange
 	}) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+		const commit = fakeCommit({ message: props.subject })
 
 		describe("and the rule is enabled with position 'anywhere'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledAnywhere)
@@ -224,9 +224,9 @@ describe.each`
 		describe("and the rule is enabled with position 'prefix'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledPrefix)
 
-			it("raises a concern about the start of the subject line", () => {
+			it("raises a concern about the start of the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRangePrefix }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRangePrefix }),
 				])
 			})
 		})
@@ -234,9 +234,9 @@ describe.each`
 		describe("and the rule is enabled with position 'suffix'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledSuffix)
 
-			it("raises a concern about the end of the subject line", () => {
+			it("raises a concern about the end of the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRangeSuffix }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRangeSuffix }),
 				])
 			})
 		})
@@ -252,15 +252,15 @@ describe.each`
 )
 
 describe.each`
-	subjectLine
+	subject
 	${"#7 polish the rough edges off the api GH-7"}
 	${"(GH-42) Admit that the bug was intentional all along [#50]"}
 	${"amend! GL-9 Deploy to production on a wing and a prayer GL-9"}
 	${"[incident] resolved #58"}
 `(
-	"when the subject line of $subjectLine starts and ends with an issue link",
-	(props: { subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+	"when the subject of $subject starts and ends with an issue link",
+	(props: { subject: string }) => {
+		const commit = fakeCommit({ message: props.subject })
 
 		describe.each`
 			rules
@@ -289,7 +289,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine
+	subject
 	${"Bump vite from 4.1.1-beta.0 to 4.3.2"}
 	${"Upgrade tsgo to 7.0.0-dev.20260131.1"}
 	${"squash! Downgrade the grumpy cat module from 3.1.4 to 3.0.0"}
@@ -302,9 +302,9 @@ describe.each`
 	${'fixup! revert "keep the lowercase story around long enough to exceed the limit"'}
 	${'Revert "Upgrade nginx image digest to 9d739ff1ada6"'}
 `(
-	"when the subject line of $subjectLine contains a dependency version or a revert marker",
-	(props: { subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains a dependency version or a revert marker",
+	(props: { subject: string }) => {
+		const commit = fakeCommit({ message: props.subject })
 
 		describe.each`
 			rules
@@ -333,14 +333,14 @@ describe.each`
 )
 
 describe.each`
-	parents                                                | subjectLine
+	parents                                                | subject
 	${[fakeCommitSha(), fakeCommitSha()]}                  | ${"Merge branch 'main' into feature/time-machine"}
 	${[fakeCommitSha(), fakeCommitSha(), fakeCommitSha()]} | ${"Merge branch 'feature/robot-butler' into feature/office-overhaul"}
 	${[fakeCommitSha(), fakeCommitSha()]}                  | ${"Keep the branch up to date (no ticket required)"}
 `(
-	"when the commit is a merge commit with $parents.length parents and has a subject line of $subjectLine",
-	(props: { parents: Array<CommitSha>; subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine, parents: props.parents })
+	"when the commit is a merge commit with $parents.length parents and has a subject of $subject",
+	(props: { parents: Array<CommitSha>; subject: string }) => {
+		const commit = fakeCommit({ message: props.subject, parents: props.parents })
 
 		describe.each`
 			rules
@@ -389,8 +389,8 @@ describe("when verifying a set of multiple commits and some commits are missing 
 
 		it("raises concerns about commits without an issue link", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				subjectLineConcern(rule, commits[1].sha, { range: [0, 1] }),
-				subjectLineConcern(rule, commits[5].sha, { range: [8, 9] }),
+				subjectConcern(rule, commits[1].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[5].sha, { range: [8, 9] }),
 			])
 		})
 	})
@@ -400,10 +400,10 @@ describe("when verifying a set of multiple commits and some commits are missing 
 
 		it("raises concerns about commits whose issue link is not at the prefix", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				subjectLineConcern(rule, commits[1].sha, { range: [0, 1] }),
-				subjectLineConcern(rule, commits[5].sha, { range: [8, 9] }),
-				subjectLineConcern(rule, commits[6].sha, { range: [0, 1] }),
-				subjectLineConcern(rule, commits[8].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[1].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[5].sha, { range: [8, 9] }),
+				subjectConcern(rule, commits[6].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[8].sha, { range: [0, 1] }),
 			])
 		})
 	})
@@ -413,12 +413,12 @@ describe("when verifying a set of multiple commits and some commits are missing 
 
 		it("raises concerns about commits whose issue link is not at the suffix", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				subjectLineConcern(rule, commits[0].sha, { range: [50, 51] }),
-				subjectLineConcern(rule, commits[1].sha, { range: [47, 48] }),
-				subjectLineConcern(rule, commits[3].sha, { range: [46, 47] }),
-				subjectLineConcern(rule, commits[4].sha, { range: [53, 54] }),
-				subjectLineConcern(rule, commits[5].sha, { range: [63, 64] }),
-				subjectLineConcern(rule, commits[8].sha, { range: [44, 45] }),
+				subjectConcern(rule, commits[0].sha, { range: [50, 51] }),
+				subjectConcern(rule, commits[1].sha, { range: [47, 48] }),
+				subjectConcern(rule, commits[3].sha, { range: [46, 47] }),
+				subjectConcern(rule, commits[4].sha, { range: [53, 54] }),
+				subjectConcern(rule, commits[5].sha, { range: [63, 64] }),
+				subjectConcern(rule, commits[8].sha, { range: [44, 45] }),
 			])
 		})
 	})
@@ -466,11 +466,11 @@ describe("when verifying a set of multiple commits and all commits start with an
 
 		it("raises concerns about commits whose issue link is not at the suffix", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				subjectLineConcern(rule, commits[0].sha, { range: [49, 50] }),
-				subjectLineConcern(rule, commits[1].sha, { range: [54, 55] }),
-				subjectLineConcern(rule, commits[2].sha, { range: [46, 47] }),
-				subjectLineConcern(rule, commits[4].sha, { range: [40, 41] }),
-				subjectLineConcern(rule, commits[6].sha, { range: [52, 53] }),
+				subjectConcern(rule, commits[0].sha, { range: [49, 50] }),
+				subjectConcern(rule, commits[1].sha, { range: [54, 55] }),
+				subjectConcern(rule, commits[2].sha, { range: [46, 47] }),
+				subjectConcern(rule, commits[4].sha, { range: [40, 41] }),
+				subjectConcern(rule, commits[6].sha, { range: [52, 53] }),
 			])
 		})
 	})
@@ -518,11 +518,11 @@ describe("when verifying a set of multiple commits and all commits end with an i
 
 		it("raises concerns about commits whose issue link is not at the prefix", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				subjectLineConcern(rule, commits[1].sha, { range: [0, 1] }),
-				subjectLineConcern(rule, commits[2].sha, { range: [0, 1] }),
-				subjectLineConcern(rule, commits[3].sha, { range: [7, 8] }),
-				subjectLineConcern(rule, commits[5].sha, { range: [0, 1] }),
-				subjectLineConcern(rule, commits[6].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[1].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[2].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[3].sha, { range: [7, 8] }),
+				subjectConcern(rule, commits[5].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[6].sha, { range: [0, 1] }),
 			])
 		})
 	})
@@ -541,28 +541,28 @@ const fakeJiraStyleCommit = fakeCommitFactory(
 )
 
 describe.each`
-	subjectLine                                                     | expectedRangeAnywhere | expectedRangePrefix | expectedRangeSuffix
+	subject                                                         | expectedRangeAnywhere | expectedRangePrefix | expectedRangeSuffix
 	${"#1 bugfix"}                                                  | ${[0, 1]}             | ${[0, 1]}           | ${[9, 10]}
 	${"Convince the office printer to print in colour #2"}          | ${[0, 1]}             | ${[0, 1]}           | ${[49, 50]}
 	${"#3 accept `pseudocode:` as a valid keyword in the compiler"} | ${[0, 1]}             | ${[0, 1]}           | ${[58, 59]}
 	${" squash! "}                                                  | ${[9, 10]}            | ${[9, 10]}          | ${[9, 10]}
 	${"fixup! #41 Smoothen the rough edges #42"}                    | ${[7, 8]}             | ${[7, 8]}           | ${[39, 40]}
 `(
-	"when the subject line of $subjectLine does not contain a Jira-style issue link",
+	"when the subject of $subject does not contain a Jira-style issue link",
 	(props: {
-		subjectLine: string
+		subject: string
 		expectedRangeAnywhere: CharacterRange
 		expectedRangePrefix: CharacterRange
 		expectedRangeSuffix: CharacterRange
 	}) => {
-		const commit = fakeJiraStyleCommit({ message: props.subjectLine })
+		const commit = fakeJiraStyleCommit({ message: props.subject })
 
 		describe("and the rule is enabled with position 'anywhere'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledAnywhere)
 
-			it("raises a concern about the beginning of the subject line", () => {
+			it("raises a concern about the beginning of the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRangeAnywhere }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRangeAnywhere }),
 				])
 			})
 		})
@@ -570,9 +570,9 @@ describe.each`
 		describe("and the rule is enabled with position 'prefix'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledPrefix)
 
-			it("raises a concern about the beginning of the subject line", () => {
+			it("raises a concern about the beginning of the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRangePrefix }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRangePrefix }),
 				])
 			})
 		})
@@ -580,9 +580,9 @@ describe.each`
 		describe("and the rule is enabled with position 'suffix'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledSuffix)
 
-			it("raises a concern about the end of the subject line", () => {
+			it("raises a concern about the end of the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRangeSuffix }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRangeSuffix }),
 				])
 			})
 		})
@@ -598,16 +598,16 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                                            | expectedRangeSuffix
+	subject                                                                | expectedRangeSuffix
 	${"(UNICORN-7) hotfix"}                                                | ${[18, 19]}
 	${"UNICORN-42 Convince the office printer to print in colour"}         | ${[57, 58]}
 	${"UNICORN-1024 keep the hamsters on the wheel"}                       | ${[43, 44]}
 	${"UNICORN-1 UNICORN-2 three go"}                                      | ${[28, 29]}
 	${"fixup! UNICORN-88 is the issue that explains why this code exists"} | ${[65, 66]}
 `(
-	"when the subject line of $subjectLine starts with a Jira-style issue link",
-	(props: { subjectLine: string; expectedRangeSuffix: CharacterRange }) => {
-		const commit = fakeJiraStyleCommit({ message: props.subjectLine })
+	"when the subject of $subject starts with a Jira-style issue link",
+	(props: { subject: string; expectedRangeSuffix: CharacterRange }) => {
+		const commit = fakeJiraStyleCommit({ message: props.subject })
 
 		describe("and the rule is enabled with position 'anywhere'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledAnywhere)
@@ -628,9 +628,9 @@ describe.each`
 		describe("and the rule is enabled with position 'suffix'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledSuffix)
 
-			it("raises a concern about the end of the subject line", () => {
+			it("raises a concern about the end of the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRangeSuffix }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRangeSuffix }),
 				])
 			})
 		})
@@ -646,16 +646,16 @@ describe.each`
 )
 
 describe.each`
-	subjectLine                                                             | expectedRangePrefix
+	subject                                                                 | expectedRangePrefix
 	${"hotfix (UNICORN-7)"}                                                 | ${[0, 1]}
 	${"Convince the office printer to print in colour UNICORN-42"}          | ${[0, 1]}
 	${"keep the hamsters on the wheel UNICORN-1024"}                        | ${[0, 1]}
 	${"one two UNICORN-3 UNICORN-4"}                                        | ${[0, 1]}
 	${"squash! the issue that explains why this code exists is UNICORN-88"} | ${[8, 9]}
 `(
-	"when the subject line of $subjectLine ends with a Jira-style issue link",
-	(props: { subjectLine: string; expectedRangePrefix: CharacterRange }) => {
-		const commit = fakeJiraStyleCommit({ message: props.subjectLine })
+	"when the subject of $subject ends with a Jira-style issue link",
+	(props: { subject: string; expectedRangePrefix: CharacterRange }) => {
+		const commit = fakeJiraStyleCommit({ message: props.subject })
 
 		describe("and the rule is enabled with position 'anywhere'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledAnywhere)
@@ -668,9 +668,9 @@ describe.each`
 		describe("and the rule is enabled with position 'prefix'", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabledPrefix)
 
-			it("raises a concern about the start of the subject line", () => {
+			it("raises a concern about the start of the subject", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRangePrefix }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRangePrefix }),
 				])
 			})
 		})

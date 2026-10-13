@@ -2,16 +2,19 @@ import type { Commits } from "#commits/Commit.ts"
 import { isNotToken, isToken } from "#commits/Token.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import { isNotEmptyString } from "#utilities/Arrays.ts"
 import { isImperativeVerb } from "#utilities/Verbs.ts"
 
 /**
- * Rejects subject lines that do not start with a verb in the imperative mood.
+ * Rejects subjects that do not start with a verb in the imperative mood.
  *
  * ## Rationale
  *
- * An imperative subject line completes the sentence 'If applied, this commit will ...', e.g. 'Add a new feature' or 'Refactor a module'.
+ * The subject is the first line of the commit message.
+ * It is what readers see most often when scanning the commit history.
+ *
+ * An imperative subject completes the sentence 'If applied, this commit will ...', e.g. 'Add a new feature' or 'Refactor a module'.
  *
  * Consistent phrasing is predictable and makes the commit history easier to read.
  *
@@ -23,7 +26,7 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  *
  * ## How to fix
  *
- * Change the subject line to start with an imperative verb.
+ * Change the subject to start with an imperative verb.
  *
  * ### Command-line interface (CLI)
  *
@@ -39,7 +42,7 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  *    reword 7e0ff1ce Oh! Welcome to my convenience store
  *    ```
  *
- * 3. In the commit message editor, change the subject line (i.e. the first line) to start with an imperative verb, preserving any issue links and squash markers (e.g. `fixup!`) as is.
+ * 3. In the commit message editor, change the subject (i.e. the first line) to start with an imperative verb, preserving any issue links and squash markers (e.g. `fixup!`) as is.
  *    Then save and close the editor to complete the rebase.
  *
  * 4. Force-push the rewritten branch to the remote repository:
@@ -51,7 +54,7 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  * ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
  *
  * 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
- *    Change the subject line (i.e. the first line) to start with an imperative verb, preserving any issue links and squash markers (e.g. `fixup!`) as is.
+ *    Change the subject (i.e. the first line) to start with an imperative verb, preserving any issue links and squash markers (e.g. `fixup!`) as is.
  *
  * 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
  *
@@ -74,7 +77,7 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  * ```json
  * {
  *   "rules": {
- *     "useImperativeSubjectLines": {
+ *     "useImperativeSubjects": {
  *       "level": "error",
  *       "options": {
  *         "whitelist": []
@@ -128,11 +131,11 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  * Chatify the release notes
  * ```
  */
-export function* useImperativeSubjectLines(
+export function* useImperativeSubjects(
 	commits: Commits,
 	ruleset: RulesetConfiguration,
 ): Generator<Concern> {
-	const rule: RuleKey = "useImperativeSubjectLines"
+	const rule: RuleKey = "useImperativeSubjects"
 	const configuration = ruleset[rule]
 
 	if (configuration.level === "off") {
@@ -146,12 +149,11 @@ export function* useImperativeSubjectLines(
 	)
 
 	for (const commit of commits) {
-		if (commit.subjectLine.some(isToken("revert"))) {
+		if (commit.subject.some(isToken("revert"))) {
 			continue
 		}
 
-		const firstToken =
-			commit.subjectLine.find(isNotToken("issuelink", "squash", "whitespace")) ?? null
+		const firstToken = commit.subject.find(isNotToken("issuelink", "squash", "whitespace")) ?? null
 
 		if (firstToken !== null) {
 			const canonicalFirstWord = firstToken.value.toLowerCase()
@@ -160,7 +162,7 @@ export function* useImperativeSubjectLines(
 				firstToken.type !== "word" ||
 				!(whitelist.has(canonicalFirstWord) || isImperativeVerb(canonicalFirstWord))
 			) {
-				yield subjectLineConcern(rule, commit.sha, { range: firstToken.range })
+				yield subjectConcern(rule, commit.sha, { range: firstToken.range })
 			}
 		}
 	}

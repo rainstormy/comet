@@ -1,6 +1,6 @@
 # noExcessiveWhitespace
 
-Rejects subject lines with leading, trailing, or consecutive whitespace characters, and body lines with consecutive whitespace characters.
+Rejects subjects with leading, trailing, or consecutive whitespace characters, and body lines with consecutive whitespace characters.
 
 ## Rationale
 

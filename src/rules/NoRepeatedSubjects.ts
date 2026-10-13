@@ -5,19 +5,22 @@ import { commitConcern } from "#rules/concerns/CommitConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Rejects subject lines equal to a previous subject line in the current branch.
+ * Rejects subjects equal to a previous subject in the current branch.
  *
  * ## Rationale
  *
- * A unique subject line makes the commit distinguishable from other commits.
+ * The subject is the first line of the commit message.
+ * It is what readers see most often when scanning the commit history.
+ *
+ * A unique subject makes the commit distinguishable from other commits.
  * This keeps the commit history readable and makes the commit easier to find.
  *
- * Sometimes, a duplicated subject line is meant to amend a previous commit.
+ * Sometimes, a duplicated subject is meant to amend a previous commit.
  * In those cases, it should start with a squash marker such as `amend!`, `fixup!`, or `squash!` to make the intent clear and to enable tools for interactive rebasing.
  *
  * ## How to fix
  *
- * Change the subject line to be unique in the current branch or add `fixup!` at the beginning.
+ * Change the subject to be unique in the current branch or add `fixup!` at the beginning.
  *
  * ### Command-line interface (CLI)
  *
@@ -39,7 +42,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *    fixup 7e0ff1ce Welcome to my convenience store
  *    ```
  *
- * 3. For `reword`, in the commit message editor, change the subject line (i.e. the first line) to be unique in the current branch or add `fixup!` at the beginning.
+ * 3. For `reword`, in the commit message editor, change the subject (i.e. the first line) to be unique in the current branch or add `fixup!` at the beginning.
  *    Then save and close the editor to complete the rebase.
  *
  * 4. Force-push the rewritten branch to the remote repository:
@@ -51,7 +54,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
  *
  * 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
- *    Change the subject line (i.e. the first line) to be unique in the current branch or add `fixup!` at the beginning.
+ *    Change the subject (i.e. the first line) to be unique in the current branch or add `fixup!` at the beginning.
  *
  * 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
  *
@@ -72,7 +75,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ```json
  * {
  *   "rules": {
- *     "noRepeatedSubjectLines": {
+ *     "noRepeatedSubjects": {
  *       "level": "error",
  *       "options": {}
  *     }
@@ -114,34 +117,34 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *    Teach the kettle to apologise
  *    ```
  */
-export function* noRepeatedSubjectLines(
+export function* noRepeatedSubjects(
 	commits: Commits,
 	ruleset: RulesetConfiguration,
 ): Generator<Concern> {
-	const rule: RuleKey = "noRepeatedSubjectLines"
+	const rule: RuleKey = "noRepeatedSubjects"
 	const configuration = ruleset[rule]
 
 	if (configuration.level === "off") {
 		return
 	}
 
-	const previousSubjectLines = new Set<string>()
+	const previousSubjects = new Set<string>()
 
 	for (const commit of commits) {
-		if (commit.subjectLine.some(isToken("revert", "squash"))) {
+		if (commit.subject.some(isToken("revert", "squash"))) {
 			continue
 		}
 
-		const canonicalSubjectLine = commit.subjectLine
+		const canonicalSubject = commit.subject
 			.filter(isNotToken("whitespace"))
 			.map((token) => token.value)
 			.join("")
 			.toLowerCase()
 
-		if (previousSubjectLines.has(canonicalSubjectLine) && !commit.isMergeCommit) {
+		if (previousSubjects.has(canonicalSubject) && !commit.isMergeCommit) {
 			yield commitConcern(rule, commit.sha)
 		}
 
-		previousSubjectLines.add(canonicalSubjectLine)
+		previousSubjects.add(canonicalSubject)
 	}
 }

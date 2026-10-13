@@ -2,22 +2,23 @@ import type { Commits } from "#commits/Commit.ts"
 import { isToken, tokenRangeEnd } from "#commits/Token.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
 
 /**
- * Rejects subject lines without any alphanumeric characters.
+ * Rejects subjects without any alphanumeric characters.
  *
  * ## Rationale
  *
- * The subject line is the part of a commit that readers see most often when scanning the commit history.
+ * The subject is the first line of the commit message.
+ * It is what readers see most often when scanning the commit history.
  *
- * A meaningful subject line makes the commit distinguishable from other commits.
+ * A meaningful subject makes the commit distinguishable from other commits.
  * This keeps the commit history readable and makes the commit easier to find.
  *
  * ## How to fix
  *
- * Change the subject line to contain at least one alphanumeric character.
+ * Change the subject to contain at least one alphanumeric character.
  *
  * ### Command-line interface (CLI)
  *
@@ -33,7 +34,7 @@ import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
  *    reword 7e0ff1ce ...
  *    ```
  *
- * 3. In the commit message editor, change the subject line (i.e. the first line) to contain at least one alphanumeric character.
+ * 3. In the commit message editor, change the subject (i.e. the first line) to contain at least one alphanumeric character.
  *    Then save and close the editor to complete the rebase.
  *
  * 4. Force-push the rewritten branch to the remote repository:
@@ -45,7 +46,7 @@ import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
  * ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
  *
  * 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
- *    Change the subject line (i.e. the first line) to contain at least one alphanumeric character.
+ *    Change the subject (i.e. the first line) to contain at least one alphanumeric character.
  *
  * 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
  *
@@ -64,7 +65,7 @@ import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
  * ```json
  * {
  *   "rules": {
- *     "noBlankSubjectLines": {
+ *     "noBlankSubjects": {
  *       "level": "error",
  *       "options": {}
  *     }
@@ -112,13 +113,13 @@ import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
  *
  * ## Related rules
  *
- * - [noSingleWordSubjectLines](./NoSingleWordSubjectLines.md)
+ * - [noSingleWordSubjects](./NoSingleWordSubjects.md)
  */
-export function* noBlankSubjectLines(
+export function* noBlankSubjects(
 	commits: Commits,
 	ruleset: RulesetConfiguration,
 ): Generator<Concern> {
-	const rule: RuleKey = "noBlankSubjectLines"
+	const rule: RuleKey = "noBlankSubjects"
 	const configuration = ruleset[rule]
 
 	if (configuration.level === "off") {
@@ -127,19 +128,19 @@ export function* noBlankSubjectLines(
 
 	for (const commit of commits) {
 		if (
-			commit.subjectLine.some(isToken("hyperlink", "semver", "word")) ||
-			commit.subjectLine.some((token) => token.type === "code" && token.value !== "``")
+			commit.subject.some(isToken("hyperlink", "semver", "word")) ||
+			commit.subject.some((token) => token.type === "code" && token.value !== "``")
 		) {
 			continue
 		}
 
 		const firstBlankIndex =
-			commit.subjectLine.findLastIndex(isToken("issuelink", "revert", "squash")) + 1
+			commit.subject.findLastIndex(isToken("issuelink", "revert", "squash")) + 1
 
-		const blankEnd = tokenRangeEnd(commit.subjectLine)
+		const blankEnd = tokenRangeEnd(commit.subject)
 		const blankStart =
-			firstBlankIndex !== -1 ? (commit.subjectLine[firstBlankIndex]?.range[0] ?? blankEnd) : 0
+			firstBlankIndex !== -1 ? (commit.subject[firstBlankIndex]?.range[0] ?? blankEnd) : 0
 
-		yield subjectLineConcern(rule, commit.sha, { range: nonEmptyRangeOf(blankStart, blankEnd) })
+		yield subjectConcern(rule, commit.sha, { range: nonEmptyRangeOf(blankStart, blankEnd) })
 	}
 }
