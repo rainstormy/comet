@@ -290,48 +290,48 @@ function subjectRuleMessage(
 
 	switch (rule) {
 		case "noBlankSubjects": {
-			return ruleMessage("Subjects must contain at least one alphanumeric character.")
+			return ruleMessage("Include a descriptive subject.")
 		}
 		case "noExcessiveWhitespace": {
-			const positionPhrase =
+			const violation =
 				concern.range[0] === 0
-					? "start with"
+					? "Delete leading whitespace."
 					: concern.range[1] === tokenRangeEnd(commit.subject)
-						? "end with"
-						: "contain excessive"
-			return ruleMessage(`Subjects must not ${positionPhrase} whitespace.`)
+						? "Delete trailing whitespace."
+						: "Delete excessive whitespace."
+			return ruleMessage(violation)
 		}
 		case "noRevertReverts": {
 			return ruleMessage("Cherry-pick the original commit instead of reverting it over.")
 		}
 		case "noSingleWordSubjects": {
-			return ruleMessage("Subjects must contain at least two words.")
+			return ruleMessage("Use at least two words in the subject.")
 		}
 		case "noSquashMarkers": {
-			return ruleMessage("Combine squash commits with their ancestors.")
+			return ruleMessage("Rebase interactively to combine this commit with its target commit.")
 		}
 		case "noUnexpectedPunctuation": {
-			return ruleMessage("Subjects must not end with punctuation.")
+			return ruleMessage("Remove trailing punctuation.")
 		}
 		case "useCapitalisedSubjects": {
-			return ruleMessage("The first letter in subjects must be in uppercase.")
+			return ruleMessage("Change the first letter to uppercase.")
 		}
 		case "useConciseSubjects": {
 			const options = getRuleOptions(rule, configuration)
-			const characterPhrase = formatCount(options.maxLength, "character", "characters")
-			return ruleMessage(`Subjects must not exceed ${characterPhrase}.`)
+			const characterPhrase = formatCount(options.maxLength, "character", "characters or less")
+			return ruleMessage(`Shorten the subject to ${characterPhrase}.`)
 		}
 		case "useImperativeSubjects": {
-			return ruleMessage("Subjects must start with a verb in the imperative mood.")
+			return ruleMessage("Start the subject with a verb in the imperative mood.")
 		}
 		case "useIssueLinks": {
 			const options = getRuleOptions(rule, configuration)
-			const positionPhrase =
+			const instruction =
 				options.position === "prefix"
-					? "start with"
+					? "Start the subject with an issue link."
 					: options.position === "suffix"
-						? "end with"
-						: "include"
+						? "End the subject with an issue link."
+						: "Include an issue link in the subject."
 
 			const prefixes = configuration.tokens.issueLinks.prefixes
 			const wildcards = configuration.tokens.issueLinks.wildcards
@@ -339,7 +339,7 @@ function subjectRuleMessage(
 			const examplePhrase = pluralise(examples.length, "Example")
 
 			return ruleMessage(
-				`Subjects must ${positionPhrase} an issue link.`,
+				instruction,
 				examples.length > 0 ? `${examplePhrase}: ${examples.join(", ")}` : "",
 			)
 		}
@@ -355,12 +355,12 @@ function bodyLineRuleMessage(concern: BodyLineConcern, configuration: Configurat
 
 	switch (rule) {
 		case "noExcessiveWhitespace": {
-			return ruleMessage("Message bodies must not contain excessive whitespace.")
+			return ruleMessage("Delete excessive whitespace.")
 		}
 		case "noRestrictedTrailers": {
 			const options = getRuleOptions(rule, configuration)
 			return ruleMessage(
-				"Message bodies must not contain disallowed trailers.",
+				"Delete disallowed trailers.",
 				formatList(
 					"Disallowed trailers:",
 					[...options.restrictedKeys]
@@ -372,12 +372,12 @@ function bodyLineRuleMessage(concern: BodyLineConcern, configuration: Configurat
 			)
 		}
 		case "useEmptyLineBeforeBody": {
-			return ruleMessage("Subjects and message bodies must be separated by exactly one empty line.")
+			return ruleMessage("Separate the subject and message body with one blank line.")
 		}
 		case "useLineWrapping": {
 			const options = getRuleOptions(rule, configuration)
-			const characterPhrase = formatCount(options.maxLength, "character", "characters")
-			return ruleMessage(`Message body lines must not exceed ${characterPhrase}.`)
+			const characterPhrase = formatCount(options.maxLength, "character", "characters or less")
+			return ruleMessage(`Wrap message body lines at ${characterPhrase}.`)
 		}
 	}
 }
@@ -392,17 +392,20 @@ function commitRuleMessage(concern: CommitConcern, configuration: Configuration)
 	switch (rule) {
 		case "noExcessiveCommitsPerBranch": {
 			const options = getRuleOptions(rule, configuration)
-			const commitPhrase = formatCount(options.maxCommits, "commit", "commits")
-			return ruleMessage(`Branches must not contain more than ${commitPhrase}.`)
+			return ruleMessage(
+				options.maxCommits > 1
+					? `Split the branch or reduce it to ${options.maxCommits} commits or fewer.`
+					: `Reduce the branch to 1 commit.`,
+			)
 		}
 		case "noMergeCommits": {
-			return ruleMessage("Merge commits are not allowed.")
+			return ruleMessage("Rebase the branch and drop the merge commits.")
 		}
 		case "noRepeatedSubjects": {
-			return ruleMessage("Commits must have unique subjects within a branch.")
+			return ruleMessage("Use a unique subject.")
 		}
 		case "useSignedCommits": {
-			return ruleMessage("Commits must be signed cryptographically with a signing key.")
+			return ruleMessage("Sign this commit cryptographically with your signing key.")
 		}
 	}
 }
@@ -421,28 +424,28 @@ function userIdentityRuleMessage(
 		case "useAuthorEmailPatterns": {
 			const options = getRuleOptions(rule, configuration)
 			return ruleMessage(
-				"Email addresses of commit authors must match an accepted pattern.",
+				"Use an author email address that matches an accepted pattern.",
 				formatList("Accepted patterns:", options.patterns),
 			)
 		}
 		case "useAuthorNamePatterns": {
 			const options = getRuleOptions(rule, configuration)
 			return ruleMessage(
-				"Names of commit authors must match an accepted pattern.",
+				"Use an author name that matches an accepted pattern.",
 				formatList("Accepted patterns:", options.patterns),
 			)
 		}
 		case "useCommitterEmailPatterns": {
 			const options = getRuleOptions(rule, configuration)
 			return ruleMessage(
-				"Email addresses of committers must match an accepted pattern.",
+				"Use a committer email address that matches an accepted pattern.",
 				formatList("Accepted patterns:", options.patterns),
 			)
 		}
 		case "useCommitterNamePatterns": {
 			const options = getRuleOptions(rule, configuration)
 			return ruleMessage(
-				"Names of committers must match an accepted pattern.",
+				"Use a committer name that matches an accepted pattern.",
 				formatList("Accepted patterns:", options.patterns),
 			)
 		}

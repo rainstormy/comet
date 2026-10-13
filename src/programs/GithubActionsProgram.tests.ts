@@ -221,17 +221,17 @@ describe("when there is 1 commit that raises concerns in the default configurati
 			`
 ${grey`98634c1`} fix!
         ${red`┬`}
-        ${red`╰─ The first letter in subjects must be in uppercase.`}
+        ${red`╰─ Change the first letter to uppercase.`}
         ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 ${grey`98634c1`} fix!
         ${red`─┬─`}
-         ${red`╰─ Subjects must contain at least two words.`}
+         ${red`╰─ Use at least two words in the subject.`}
          ${red`   ${ruleLink("noSingleWordSubjects")}`}
 
 ${grey`98634c1`} fix!
            ${red`┬`}
-           ${red`╰─ Subjects must not end with punctuation.`}
+           ${red`╰─ Remove trailing punctuation.`}
            ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
 
 Found 3 concerns in 1 commit.`.trim(),
@@ -271,7 +271,7 @@ ${grey`61a95da`} Document the tea set
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} A  small note
     ${grey`· `} ${red`┬─`}
-    ${grey`· `} ${red`╰─ Message bodies must not contain excessive whitespace.`}
+    ${grey`· `} ${red`╰─ Delete excessive whitespace.`}
     ${grey`· `} ${red`   ${ruleLink("noExcessiveWhitespace")}`}
     ${grey`╰──`}
 
@@ -280,7 +280,7 @@ ${grey`d677c31`} Review the tea set
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} This body line is intentionally longer than the default seventy-two character wrapping limit
     ${grey`· `}                                                                        ${red`──────────┬─────────`}
-    ${grey`· `}                               ${red`Message body lines must not exceed 72 characters. ─╯`}
+    ${grey`· `}                               ${red`Wrap message body lines at 72 characters or less. ─╯`}
     ${grey`· `}                               ${red`${ruleLink("useLineWrapping")}`}
     ${grey`╰──`}
 
@@ -322,7 +322,7 @@ describe("when there are 3 commits that raise concerns in the default configurat
 			`
 ${grey`335aee6`} polish the tea set
         ${red`┬`}
-        ${red`╰─ The first letter in subjects must be in uppercase.`}
+        ${red`╰─ Change the first letter to uppercase.`}
         ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 ${grey`6f8dafa`} Document the tea set
@@ -330,13 +330,13 @@ ${grey`6f8dafa`} Document the tea set
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} A  small note
     ${grey`· `} ${red`┬─`}
-    ${grey`· `} ${red`╰─ Message bodies must not contain excessive whitespace.`}
+    ${grey`· `} ${red`╰─ Delete excessive whitespace.`}
     ${grey`· `} ${red`   ${ruleLink("noExcessiveWhitespace")}`}
     ${grey`╰──`}
 
 ${grey`b58de17`} Sign the pantry inventory
       ${red`╭──────────────────────────`}
-      ${red`╰─ Commits must be signed cryptographically with a signing key.`}
+      ${red`╰─ Sign this commit cryptographically with your signing key.`}
       ${red`   ${ruleLink("useSignedCommits")}`}
 
 Found 3 concerns in 3 commits.`.trim(),
@@ -385,38 +385,38 @@ describe("when there are 6 commits where 4 of them raise concerns in the default
 			`
 ${grey`b676d38`} fixup! polish the tea set!
         ${red`──┬───`}
-          ${red`╰─ Combine squash commits with their ancestors.`}
+          ${red`╰─ Rebase interactively to combine this commit with its target commit.`}
           ${red`   ${ruleLink("noSquashMarkers")}`}
 
 ${grey`b676d38`} fixup! polish the tea set!
                ${red`┬`}
-               ${red`╰─ The first letter in subjects must be in uppercase.`}
+               ${red`╰─ Change the first letter to uppercase.`}
                ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 ${grey`b676d38`} fixup! polish the tea set!
                                  ${red`┬`}
-                                 ${red`╰─ Subjects must not end with punctuation.`}
-                                 ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
+   ${red`Remove trailing punctuation. ─╯`}
+   ${red`${ruleLink("noUnexpectedPunctuation")}`}
 
 ${grey`3cfe8b3`} Document the tea set
     ${grey`╭──`}
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} A  small note
     ${grey`· `} ${red`┬─`}
-    ${grey`· `} ${red`╰─ Message bodies must not contain excessive whitespace.`}
+    ${grey`· `} ${red`╰─ Delete excessive whitespace.`}
     ${grey`· `} ${red`   ${ruleLink("noExcessiveWhitespace")}`}
     ${grey`╰──`}
 
 ${grey`41a0e1d`} Review the tea set
       ${red`╭───────────────────`}
-      ${red`╰─ Commits must be signed cryptographically with a signing key.`}
+      ${red`╰─ Sign this commit cryptographically with your signing key.`}
       ${red`   ${ruleLink("useSignedCommits")}`}
 
 ${grey`41a0e1d`} Review the tea set
     ${grey`╭──`}
 ${red`•`} ${grey`${bold`1`} │`} Well well well would you look at this.
     ${grey`· `}${red`┬`}
-    ${grey`· `}${red`╰─ Subjects and message bodies must be separated by exactly one empty line.`}
+    ${grey`· `}${red`╰─ Separate the subject and message body with one blank line.`}
     ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBody")}`}
   ${grey`2 │ `}
     ${grey`╰──`}
@@ -426,14 +426,14 @@ ${grey`41a0e1d`} Review the tea set
   ${grey`2 │ `}
 ${red`•`} ${grey`${bold`3`} │`} This body line is _also_ a bit longer than the default seventy-two character wrapping limit
     ${grey`· `}                                                                        ${red`─────────┬─────────`}
-    ${grey`· `}                              ${red`Message body lines must not exceed 72 characters. ─╯`}
+    ${grey`· `}                              ${red`Wrap message body lines at 72 characters or less. ─╯`}
     ${grey`· `}                              ${red`${ruleLink("useLineWrapping")}`}
   ${grey`4 │ We'll have to fix that, don't we?`}
     ${grey`╰──`}
 
 ${grey`7f811b2`} Merge the old tea ledger
       ${red`╭─────────────────────────`}
-      ${red`╰─ Merge commits are not allowed.`}
+      ${red`╰─ Rebase the branch and drop the merge commits.`}
       ${red`   ${ruleLink("noMergeCommits")}`}
 
 Found 8 concerns in 4 commits.`.trim(),
@@ -742,7 +742,7 @@ ${grey`98634c1`} Authenticate the library cards
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} Co-authored-by: Ada Lovelace <ada@example.com>
     ${grey`· `}${red`──────┬───────`}
-    ${grey`· `}      ${red`╰─ Message bodies must not contain disallowed trailers.`}
+    ${grey`· `}      ${red`╰─ Delete disallowed trailers.`}
     ${grey`· `}      ${red`   ${ruleLink("noRestrictedTrailers")}`}
     ${grey`· `}      ${red`   `}
     ${grey`· `}      ${red`   Disallowed trailers:`}
@@ -794,7 +794,7 @@ describe("when there are 2 commits where 1 of them raises concerns in the custom
 ${grey`61a95da`} Map the paper trail
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
-              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`╰─ Use an author name that matches an accepted pattern.`}
               ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
@@ -850,17 +850,17 @@ describe("when there are 4 commits where 3 of them raise concerns in the custom 
 			`
 ${grey`6f8dafa`} Add the cinnamon telemetry
       ${red`╭───────────────────────────`}
-      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`╰─ Reduce the branch to 1 commit.`}
       ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 ${grey`b58de17`} Wire the oat milk alert
       ${red`╭────────────────────────`}
-      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`╰─ Reduce the branch to 1 commit.`}
       ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 ${grey`9f1a1b2`} Test the emergency toaster
       ${red`╭───────────────────────────`}
-      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`╰─ Reduce the branch to 1 commit.`}
       ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 Found 3 concerns in 3 commits.`.trim(),
@@ -916,27 +916,27 @@ describe("when there are 5 commits that raise concerns in the custom 'comet.json
 			`
 ${grey`3cfe8b3`} Calibrate the midnight bell
                               ${red`──┬──`}
-                                ${red`╰─ Subjects must not exceed 22 characters.`}
+                                ${red`╰─ Shorten the subject to 22 characters or less.`}
                                 ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`41a0e1d`} Document the curious dial
                               ${red`─┬─`}
-                               ${red`╰─ Subjects must not exceed 22 characters.`}
+                               ${red`╰─ Shorten the subject to 22 characters or less.`}
                                ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`7f811b2`} Rehearse the evacuation waltz
                               ${red`───┬───`}
-                                 ${red`╰─ Subjects must not exceed 22 characters.`}
+                                 ${red`╰─ Shorten the subject to 22 characters or less.`}
                                  ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`a43a3f3`} Replace the ceremonial switch
                               ${red`───┬───`}
-                                 ${red`╰─ Subjects must not exceed 22 characters.`}
+                                 ${red`╰─ Shorten the subject to 22 characters or less.`}
                                  ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`c0ffee1`} Untangle the improbable cables
                               ${red`───┬────`}
-                                 ${red`╰─ Subjects must not exceed 22 characters.`}
+                                 ${red`╰─ Shorten the subject to 22 characters or less.`}
                                  ${red`   ${ruleLink("useConciseSubjects")}`}
 
 Found 5 concerns in 5 commits.`.trim(),
@@ -1018,12 +1018,12 @@ describe("when there are 3 commits where 2 of them raise concerns in the custom 
 			`
 ${grey`6f8dafa`} Add the cinnamon telemetry
       ${red`╭───────────────────────────`}
-      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`╰─ Reduce the branch to 1 commit.`}
       ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 ${grey`b58de17`} Wire the oat milk alert
       ${red`╭────────────────────────`}
-      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`╰─ Reduce the branch to 1 commit.`}
       ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 Found 2 concerns in 2 commits.`.trim(),
@@ -1119,7 +1119,7 @@ describe("when both 'comet.json' and 'comet.jsonc' are present", () => {
 ${grey`e6f1b4a`} Document the extremely important tea ceremony
 ${grey`╰─ authored by:`} anonymous
               ${red`╭──────────`}
-              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`╰─ Use an author name that matches an accepted pattern.`}
               ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
@@ -1128,16 +1128,16 @@ ${grey`╰─ authored by:`} anonymous
               ${red`     ∙ renovate\\[bot\\]`}
 
 ${grey`e6f1b4a`} Document the extremely important tea ceremony
-                                 ${red`──────────┬─────────`}
-  ${red`Subjects must not exceed 25 characters. ─╯`}
-  ${red`${ruleLink("useConciseSubjects")}`}
+                                 ${red`─────────┬──────────`}
+                                          ${red`╰─ Shorten the subject to 25 characters or less.`}
+                                          ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`f7a2c5b`} Review the tiny blueprint
     ${grey`╭──`}
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} A line that is deliberately much longer than twenty-four characters to fit the rendered concern annotation.
     ${grey`· `}                        ${red`─────────────────────────────────────────┬─────────────────────────────────────────`}
-    ${grey`· `}              ${red`Message body lines must not exceed 24 characters. ─╯`}
+    ${grey`· `}              ${red`Wrap message body lines at 24 characters or less. ─╯`}
     ${grey`· `}              ${red`${ruleLink("useLineWrapping")}`}
   ${grey`3 │ Short note.`}
     ${grey`╰──`}
@@ -1147,14 +1147,14 @@ ${grey`f7a2c5b`} Review the tiny blueprint
   ${grey`3 │ Short note.`}
 ${red`•`} ${grey`${bold`4`} │`} Note with  spaces.
     ${grey`· `}         ${red`┬─`}
-    ${grey`· `}         ${red`╰─ Message bodies must not contain excessive whitespace.`}
+    ${grey`· `}         ${red`╰─ Delete excessive whitespace.`}
     ${grey`· `}         ${red`   ${ruleLink("noExcessiveWhitespace")}`}
   ${grey`5 │ Final note.`}
     ${grey`╰──`}
 
 ${grey`a8b3d6c`} Merge the old tea ledger
       ${red`╭─────────────────────────`}
-      ${red`╰─ Branches must not contain more than 2 commits.`}
+      ${red`╰─ Split the branch or reduce it to 2 commits or fewer.`}
       ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 Found 5 concerns in 3 commits.`.trim(),
@@ -1367,7 +1367,7 @@ describe("when there is 1 commit that raises concerns in the custom configuratio
 ${grey`98634c1`} Refactor the signal lantern
 ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
                ${red`╭───────────────────────────────────────────────`}
-               ${red`╰─ Email addresses of committers must match an accepted pattern.`}
+               ${red`╰─ Use a committer email address that matches an accepted pattern.`}
                ${red`   ${ruleLink("useCommitterEmailPatterns")}`}
                ${red`   `}
                ${red`   Accepted patterns:`}
@@ -1433,7 +1433,7 @@ describe("when there are 2 commits that raise concerns in the custom configurati
 ${grey`61a95da`} Patch the rain gauge
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
-              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`╰─ Use an author name that matches an accepted pattern.`}
               ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
@@ -1441,7 +1441,7 @@ ${grey`╰─ authored by:`} Master Splinter
 
 ${grey`d677c31`} Tune the observatory clock
       ${red`╭───────────────────────────`}
-      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`╰─ Reduce the branch to 1 commit.`}
       ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 Found 2 concerns in 2 commits.`.trim(),
@@ -1514,7 +1514,7 @@ ${grey`6f8dafa`} Document the emergency lantern
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} Reviewed-by: Grace Hopper <grace@example.com>
     ${grey`· `}${red`─────┬─────`}
-    ${grey`· `}     ${red`╰─ Message bodies must not contain disallowed trailers.`}
+    ${grey`· `}     ${red`╰─ Delete disallowed trailers.`}
     ${grey`· `}     ${red`   ${ruleLink("noRestrictedTrailers")}`}
     ${grey`· `}     ${red`   `}
     ${grey`· `}     ${red`   Disallowed trailers:`}
@@ -1527,13 +1527,13 @@ ${grey`b58de17`} Calibrate the wind tunnel
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} The flight path is deliberately long enough to outgrow the tiny configured wrapping limit.
     ${grey`· `}                                ${red`─────────────────────────────┬────────────────────────────`}
-    ${grey`· `}          ${red`Message body lines must not exceed 32 characters. ─╯`}
+    ${grey`· `}          ${red`Wrap message body lines at 32 characters or less. ─╯`}
     ${grey`· `}          ${red`${ruleLink("useLineWrapping")}`}
     ${grey`╰──`}
 
 ${grey`a43a3f3`} Archive the noisy bell!
                               ${red`┬`}
-                              ${red`╰─ Subjects must not end with punctuation.`}
+                              ${red`╰─ Remove trailing punctuation.`}
                               ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
 
 Found 3 concerns in 3 commits.`.trim(),
@@ -1683,7 +1683,7 @@ describe("when there are 3 commits where 2 of them raise concerns in the custom 
 ${grey`61a95da`} Map the paper trail
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
-              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`╰─ Use an author name that matches an accepted pattern.`}
               ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
@@ -1692,7 +1692,7 @@ ${grey`╰─ authored by:`} Master Splinter
 ${grey`b58de17`} Calibrate the wind tunnel
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
-              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`╰─ Use an author name that matches an accepted pattern.`}
               ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}

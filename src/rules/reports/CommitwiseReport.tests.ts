@@ -41,7 +41,7 @@ describe("when 'noBlankSubjects' has a concern about characters 0-1 of the subje
 			`
 ${grey`52f07a2`} 
         ${red`┬`}
-        ${red`╰─ Subjects must contain at least one alphanumeric character.`}
+        ${red`╰─ Include a descriptive subject.`}
         ${red`   ${ruleLink("noBlankSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -65,7 +65,7 @@ describe("when 'noBlankSubjects' has a concern about characters 13-17 of the sub
 			`
 ${grey`2ba57d6`} amend! Revert " "
                      ${red`─┬──`}
-                      ${red`╰─ Subjects must contain at least one alphanumeric character.`}
+                      ${red`╰─ Include a descriptive subject.`}
                       ${red`   ${ruleLink("noBlankSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -91,7 +91,7 @@ describe("when 'noExcessiveCommitsPerBranch' has a concern about an excessive co
 			`
 ${grey`9a7e6aa`} invite the parser to brunch
       ${red`╭────────────────────────────`}
-      ${red`╰─ Branches must not contain more than 1 commit.`}
+      ${red`╰─ Reduce the branch to 1 commit.`}
       ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -117,7 +117,7 @@ describe("when 'noExcessiveCommitsPerBranch' has a concern about an excessive co
 			`
 ${grey`75bedf8`} Refactor the jam queue
       ${red`╭───────────────────────`}
-      ${red`╰─ Branches must not contain more than 3 commits.`}
+      ${red`╰─ Split the branch or reduce it to 3 commits or fewer.`}
       ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -143,7 +143,7 @@ describe("when 'noExcessiveCommitsPerBranch' has a concern about an excessive co
 			`
 ${grey`f753a24`} last minute fix
       ${red`╭────────────────`}
-      ${red`╰─ Branches must not contain more than 10 commits.`}
+      ${red`╰─ Split the branch or reduce it to 10 commits or fewer.`}
       ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -167,7 +167,7 @@ describe("when 'noExcessiveWhitespace' has a concern about characters 0-1 of the
 			`
 ${grey`47722cd`}  Recalibrate the espresso machine
         ${red`┬`}
-        ${red`╰─ Subjects must not start with whitespace.`}
+        ${red`╰─ Delete leading whitespace.`}
         ${red`   ${ruleLink("noExcessiveWhitespace")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -191,8 +191,8 @@ describe("when 'noExcessiveWhitespace' has a concern about characters 39-40 of t
 			`
 ${grey`067ab0c`} make the office fern require less water 
                                                ${red`┬`}
-       ${red`Subjects must not end with whitespace. ─╯`}
-       ${red`${ruleLink("noExcessiveWhitespace")}`}
+                  ${red`Delete trailing whitespace. ─╯`}
+                  ${red`${ruleLink("noExcessiveWhitespace")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -215,7 +215,7 @@ describe("when 'noExcessiveWhitespace' has a concern about characters 18-20 of t
 			`
 ${grey`50bd2cc`} taught the toaster  to write haiku
                           ${red`┬─`}
-                          ${red`╰─ Subjects must not contain excessive whitespace.`}
+                          ${red`╰─ Delete excessive whitespace.`}
                           ${red`   ${ruleLink("noExcessiveWhitespace")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -239,8 +239,8 @@ describe("when 'noExcessiveWhitespace' has a concern about characters 23-26 of t
 			`
 ${grey`c687be9`} Install tiny disco ball   in build room
                                ${red`─┬─`}
-                                ${red`╰─ Subjects must not contain excessive whitespace.`}
-                                ${red`   ${ruleLink("noExcessiveWhitespace")}`}
+  ${red`Delete excessive whitespace. ─╯`}
+  ${red`${ruleLink("noExcessiveWhitespace")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -266,7 +266,7 @@ ${grey`4154880`} Polish the arcade cabinet
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} The prize   counter now accepts coupons.
     ${grey`· `}         ${red`─┬─`}
-    ${grey`· `}          ${red`╰─ Message bodies must not contain excessive whitespace.`}
+    ${grey`· `}          ${red`╰─ Delete excessive whitespace.`}
     ${grey`· `}          ${red`   ${ruleLink("noExcessiveWhitespace")}`}
     ${grey`╰──`}
 
@@ -295,7 +295,7 @@ ${grey`1006346`} Map the museum heist
   ${grey`2 │ First note is perfectly ordinary.`}
 ${red`•`} ${grey`${bold`3`} │`} The blue vault    needs a quieter alarm.
     ${grey`· `}              ${red`─┬──`}
-    ${grey`· `}               ${red`╰─ Message bodies must not contain excessive whitespace.`}
+    ${grey`· `}               ${red`╰─ Delete excessive whitespace.`}
     ${grey`· `}               ${red`   ${ruleLink("noExcessiveWhitespace")}`}
   ${grey`4 │ Last note keeps watch.`}
     ${grey`╰──`}
@@ -322,7 +322,7 @@ describe("when 'noMergeCommits' has a concern about the commit", () => {
 			`
 ${grey`507c835`} Merge branch 'main' into bugfix/dance-party-playlist
       ${red`╭─────────────────────────────────────────────────────`}
-      ${red`╰─ Merge commits are not allowed.`}
+      ${red`╰─ Rebase the branch and drop the merge commits.`}
       ${red`   ${ruleLink("noMergeCommits")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -347,7 +347,7 @@ describe("when 'noMergeCommits' has a concern about the commit with a long subje
 			`
 ${grey`71516e1`} amend! Merge branch 'feature/new-coffee-machine' into feature/office-overhaul
       ${red`╭──────────────────────────────────────────────────────────────────────────────`}
-      ${red`╰─ Merge commits are not allowed.`}
+      ${red`╰─ Rebase the branch and drop the merge commits.`}
       ${red`   ${ruleLink("noMergeCommits")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -371,7 +371,7 @@ describe("when 'noRepeatedSubjects' has a concern about the commit", () => {
 			`
 ${grey`8c1fbd4`} test
       ${red`╭─────`}
-      ${red`╰─ Commits must have unique subjects within a branch.`}
+      ${red`╰─ Use a unique subject.`}
       ${red`   ${ruleLink("noRepeatedSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -396,7 +396,7 @@ describe("when 'noRepeatedSubjects' has a concern about the commit with a long s
 			`
 ${grey`f3359c9`} GH-246 Replace guesswork with a tiny chart and upgrade the \`ButterflyService\` to 8.0.31
       ${red`╭────────────────────────────────────────────────────────────────────────────────────────`}
-      ${red`╰─ Commits must have unique subjects within a branch.`}
+      ${red`╰─ Use a unique subject.`}
       ${red`   ${ruleLink("noRepeatedSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -428,7 +428,7 @@ ${grey`a04ada4`} Wire the release breadcrumb trail
   ${grey`2 │ Reviewed-By: April O'Neil <april.oneil@fastforward.com>`}
 ${red`•`} ${grey`${bold`3`} │`} Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
     ${grey`· `}${red`──────┬───────`}
-    ${grey`· `}      ${red`╰─ Message bodies must not contain disallowed trailers.`}
+    ${grey`· `}      ${red`╰─ Delete disallowed trailers.`}
     ${grey`· `}      ${red`   ${ruleLink("noRestrictedTrailers")}`}
     ${grey`· `}      ${red`   `}
     ${grey`· `}      ${red`   Disallowed trailers:`}
@@ -466,7 +466,7 @@ ${grey`344eaa9`} one link and two notes
   ${grey`5 │   signed-off-by: baxter.stockman <baxter.stockman@fastforward.com>`}
 ${red`•`} ${grey`${bold`6`} │`}   refs: #668182
     ${grey`· `}  ${red`─┬──`}
-    ${grey`· `}   ${red`╰─ Message bodies must not contain disallowed trailers.`}
+    ${grey`· `}   ${red`╰─ Delete disallowed trailers.`}
     ${grey`· `}   ${red`   ${ruleLink("noRestrictedTrailers")}`}
     ${grey`· `}   ${red`   `}
     ${grey`· `}   ${red`   Disallowed trailers:`}
@@ -546,7 +546,7 @@ describe("when 'noSingleWordSubjects' has a concern about characters 0-3 of the 
 			`
 ${grey`964bce7`} WIP
         ${red`─┬─`}
-         ${red`╰─ Subjects must contain at least two words.`}
+         ${red`╰─ Use at least two words in the subject.`}
          ${red`   ${ruleLink("noSingleWordSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -570,7 +570,7 @@ describe("when 'noSingleWordSubjects' has a concern about characters 11-17 of th
 			`
 ${grey`a4b6d0e`} fixup! #17 bugfix
                    ${red`──┬───`}
-                     ${red`╰─ Subjects must contain at least two words.`}
+                     ${red`╰─ Use at least two words in the subject.`}
                      ${red`   ${ruleLink("noSingleWordSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -594,7 +594,7 @@ describe("when 'noSquashMarkers' has a concern about characters 0-6 of the subje
 			`
 ${grey`ffebad1`} amend!Apply strawberry jam to make the code sweeter
         ${red`──┬───`}
-          ${red`╰─ Combine squash commits with their ancestors.`}
+          ${red`╰─ Rebase interactively to combine this commit with its target commit.`}
           ${red`   ${ruleLink("noSquashMarkers")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -618,7 +618,7 @@ describe("when 'noSquashMarkers' has a concern about characters 1-14 of the subj
 			`
 ${grey`56c750b`}  fixup! fixup! found a funny easter egg
          ${red`──────┬──────`}
-               ${red`╰─ Combine squash commits with their ancestors.`}
+               ${red`╰─ Rebase interactively to combine this commit with its target commit.`}
                ${red`   ${ruleLink("noSquashMarkers")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -642,7 +642,7 @@ describe("when 'noUnexpectedPunctuation' has a concern about characters 8-9 of t
 			`
 ${grey`41c3cb1`} fixed it!
                 ${red`┬`}
-                ${red`╰─ Subjects must not end with punctuation.`}
+                ${red`╰─ Remove trailing punctuation.`}
                 ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -666,7 +666,7 @@ describe("when 'noUnexpectedPunctuation' has a concern about characters 10-11 of
 			`
 ${grey`9b83d7c`} Formatting.
                   ${red`┬`}
-                  ${red`╰─ Subjects must not end with punctuation.`}
+                  ${red`╰─ Remove trailing punctuation.`}
                   ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -690,7 +690,7 @@ describe("when 'noUnexpectedPunctuation' has a concern about characters 14-16 of
 			`
 ${grey`94486b7`} the old route -> 
                       ${red`┬─`}
-                      ${red`╰─ Subjects must not end with punctuation.`}
+                      ${red`╰─ Remove trailing punctuation.`}
                       ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -714,8 +714,8 @@ describe("when 'noUnexpectedPunctuation' has a concern about characters 57-62 of
 			`
 ${grey`f67544d`} a cheerful easter egg is hiding somewhere in this commit :joy:
                                                                  ${red`──┬──`}
-                          ${red`Subjects must not end with punctuation. ─╯`}
-                          ${red`${ruleLink("noUnexpectedPunctuation")}`}
+                                     ${red`Remove trailing punctuation. ─╯`}
+                                     ${red`${ruleLink("noUnexpectedPunctuation")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -737,9 +737,9 @@ describe("when 'noUnexpectedPunctuation' has a concern about characters 27-31 of
 		expect(actualOutput).toBe(
 			`
 ${grey`926af33`} the moon laser is operating!!!! #42
-                                   ${red`─┬──`}
-                                    ${red`╰─ Subjects must not end with punctuation.`}
-                                    ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
+                                   ${red`──┬─`}
+       ${red`Remove trailing punctuation. ─╯`}
+       ${red`${ruleLink("noUnexpectedPunctuation")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -770,7 +770,7 @@ describe("when 'useAuthorEmailPatterns' has a concern about a missing author ema
 ${grey`87c2ab2`} Upgrade the workshop espresso workflow
 ${grey`╰─ authored by:`} 
               ${red`╭─`}
-              ${red`╰─ Email addresses of commit authors must match an accepted pattern.`}
+              ${red`╰─ Use an author email address that matches an accepted pattern.`}
               ${red`   ${ruleLink("useAuthorEmailPatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
@@ -810,7 +810,7 @@ describe("when 'useAuthorEmailPatterns' has a concern about the author's email a
 ${grey`4014427`} Teach the sleigh to parallel park
 ${grey`╰─ authored by:`} claus@santasworkshop.com
               ${red`╭─────────────────────────`}
-              ${red`╰─ Email addresses of commit authors must match an accepted pattern.`}
+              ${red`╰─ Use an author email address that matches an accepted pattern.`}
               ${red`   ${ruleLink("useAuthorEmailPatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
@@ -846,7 +846,7 @@ describe("when 'useAuthorNamePatterns' has a concern about a missing author name
 ${grey`f16fc9f`} overpowered code
 ${grey`╰─ authored by:`} 
               ${red`╭─`}
-              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`╰─ Use an author name that matches an accepted pattern.`}
               ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
@@ -881,7 +881,7 @@ describe("when 'useAuthorNamePatterns' has a concern about the author's name", (
 ${grey`e4236bf`} I’m not lazy, I’m on energy-saving mode
 ${grey`╰─ authored by:`} santa.claus
               ${red`╭────────────`}
-              ${red`╰─ Names of commit authors must match an accepted pattern.`}
+              ${red`╰─ Use an author name that matches an accepted pattern.`}
               ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
@@ -909,7 +909,7 @@ describe("when 'useCapitalisedSubjects' has a concern about characters 0-1 of th
 			`
 ${grey`497de39`} release the robot butler
         ${red`┬`}
-        ${red`╰─ The first letter in subjects must be in uppercase.`}
+        ${red`╰─ Change the first letter to uppercase.`}
         ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -933,7 +933,7 @@ describe("when 'useCapitalisedSubjects' has a concern about characters 7-8 of th
 			`
 ${grey`92d6b11`} fixup! resolve a bug that thought it was a feature
                ${red`┬`}
-               ${red`╰─ The first letter in subjects must be in uppercase.`}
+               ${red`╰─ Change the first letter to uppercase.`}
                ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -965,7 +965,7 @@ describe("when 'useCommitterEmailPatterns' has a concern about a missing committ
 ${grey`28a5bed`} Remove stale confetti from the deployment logs
 ${grey`╰─ committed by:`} 
                ${red`╭─`}
-               ${red`╰─ Email addresses of committers must match an accepted pattern.`}
+               ${red`╰─ Use a committer email address that matches an accepted pattern.`}
                ${red`   ${ruleLink("useCommitterEmailPatterns")}`}
                ${red`   `}
                ${red`   Accepted patterns:`}
@@ -1005,7 +1005,7 @@ describe("when 'useCommitterEmailPatterns' has a concern about the committer's e
 ${grey`55ef98a`} Teach the release notes to speak plainly
 ${grey`╰─ committed by:`} noreply@tmnt.com
                ${red`╭─────────────────`}
-               ${red`╰─ Email addresses of committers must match an accepted pattern.`}
+               ${red`╰─ Use a committer email address that matches an accepted pattern.`}
                ${red`   ${ruleLink("useCommitterEmailPatterns")}`}
                ${red`   `}
                ${red`   Accepted patterns:`}
@@ -1041,7 +1041,7 @@ describe("when 'useCommitterNamePatterns' has a concern about a missing committe
 ${grey`307ce5e`} retune the tiny deployment bell
 ${grey`╰─ committed by:`} 
                ${red`╭─`}
-               ${red`╰─ Names of committers must match an accepted pattern.`}
+               ${red`╰─ Use a committer name that matches an accepted pattern.`}
                ${red`   ${ruleLink("useCommitterNamePatterns")}`}
                ${red`   `}
                ${red`   Accepted patterns:`}
@@ -1083,7 +1083,7 @@ describe("when 'useCommitterNamePatterns' has a concern about the committer's na
 ${grey`61a6e53`} Make the changelog less mysterious
 ${grey`╰─ committed by:`} master splinter
                ${red`╭────────────────`}
-               ${red`╰─ Names of committers must match an accepted pattern.`}
+               ${red`╰─ Use a committer name that matches an accepted pattern.`}
                ${red`   ${ruleLink("useCommitterNamePatterns")}`}
                ${red`   `}
                ${red`   Accepted patterns:`}
@@ -1115,7 +1115,7 @@ describe("when 'useConciseSubjects' has a concern about characters 20-25 of the 
 			`
 ${grey`68e9216`} Remove redundant call to \`wrapper\`
                             ${red`──┬──`}
-                              ${red`╰─ Subjects must not exceed 20 characters.`}
+                              ${red`╰─ Shorten the subject to 20 characters or less.`}
                               ${red`   ${ruleLink("useConciseSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -1141,8 +1141,8 @@ describe("when 'useConciseSubjects' has a concern about characters 20-67 of the 
 			`
 ${grey`9bed522`} revisit the boolean properties in the \`IceCreamMachine\` constructor
                             ${red`───────────────────────┬───────────────────────`}
-          ${red`Subjects must not exceed 20 characters. ─╯`}
-          ${red`${ruleLink("useConciseSubjects")}`}
+    ${red`Shorten the subject to 20 characters or less. ─╯`}
+    ${red`${ruleLink("useConciseSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -1167,8 +1167,8 @@ describe("when 'useConciseSubjects' has a concern about characters 50-52 of the 
 			`
 ${grey`e8c95d6`} Retrieve data from the exclusive third-party service
                                                           ${red`─┬`}
-                  ${red`Subjects must not exceed 50 characters. ─╯`}
-                  ${red`${ruleLink("useConciseSubjects")}`}
+            ${red`Shorten the subject to 50 characters or less. ─╯`}
+            ${red`${ruleLink("useConciseSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -1193,8 +1193,8 @@ describe("when 'useConciseSubjects' has a concern about characters 72-76 of the 
 			`
 ${grey`be86674`} make a genuine attempt to fix the bugs that the users were complaining about
                                                                                 ${red`──┬─`}
-                                         ${red`Subjects must not exceed 72 characters. ─╯`}
-                                         ${red`${ruleLink("useConciseSubjects")}`}
+                                   ${red`Shorten the subject to 72 characters or less. ─╯`}
+                                   ${red`${ruleLink("useConciseSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -1222,7 +1222,7 @@ ${grey`f163851`} Install a quieter keyboard
     ${grey`╭──`}
 ${red`•`} ${grey`${bold`1`} │`} The old one sounded like hail.
     ${grey`· `}${red`┬`}
-    ${grey`· `}${red`╰─ Subjects and message bodies must be separated by exactly one empty line.`}
+    ${grey`· `}${red`╰─ Separate the subject and message body with one blank line.`}
     ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBody")}`}
     ${grey`╰──`}
 
@@ -1253,7 +1253,7 @@ ${grey`30fd57b`} Clean the tiny dashboard
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} 
     ${grey`· `}${red`┬`}
-    ${grey`· `}${red`╰─ Subjects and message bodies must be separated by exactly one empty line.`}
+    ${grey`· `}${red`╰─ Separate the subject and message body with one blank line.`}
     ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBody")}`}
   ${grey`3 │ The widgets sparkle.`}
     ${grey`╰──`}
@@ -1279,7 +1279,7 @@ describe("when 'useImperativeSubjects' has a concern about characters 0-5 of the
 			`
 ${grey`9e45e09`} Added a feature that should have stayed on the whiteboard
         ${red`──┬──`}
-          ${red`╰─ Subjects must start with a verb in the imperative mood.`}
+          ${red`╰─ Start the subject with a verb in the imperative mood.`}
           ${red`   ${ruleLink("useImperativeSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -1303,7 +1303,7 @@ describe("when 'useImperativeSubjects' has a concern about characters 14-18 of t
 			`
 ${grey`339b6fc`} amend! GH-55: made the console less dramatic
                       ${red`─┬──`}
-                       ${red`╰─ Subjects must start with a verb in the imperative mood.`}
+                       ${red`╰─ Start the subject with a verb in the imperative mood.`}
                        ${red`   ${ruleLink("useImperativeSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -1329,7 +1329,7 @@ describe("when 'useIssueLinks' with position 'anywhere' has a concern about char
 			`
 ${grey`c861aea`} Organise the robot uprising without a ticket
         ${red`┬`}
-        ${red`╰─ Subjects must include an issue link.`}
+        ${red`╰─ Include an issue link in the subject.`}
         ${red`   ${ruleLink("useIssueLinks")}`}
         ${red`   `}
         ${red`   Examples: #123, GH-123, GL-123`}
@@ -1357,7 +1357,7 @@ describe("when 'useIssueLinks' with position 'prefix' has a concern about charac
 			`
 ${grey`fb10023`} amend! Teach the unit tests to write themselves
                ${red`┬`}
-               ${red`╰─ Subjects must start with an issue link.`}
+               ${red`╰─ Start the subject with an issue link.`}
                ${red`   ${ruleLink("useIssueLinks")}`}
                ${red`   `}
                ${red`   Examples: #123, GH-123, GL-123`}
@@ -1385,10 +1385,10 @@ describe("when 'useIssueLinks' with position 'suffix' has a concern about charac
 			`
 ${grey`d9a30bb`} make the automated tests question their existence
                                                          ${red`┬`}
-                  ${red`Subjects must end with an issue link. ─╯`}
-                  ${red`${ruleLink("useIssueLinks")}`}
-                  ${red``}
-                  ${red`Examples: #123, GH-123, GL-123`}
+                    ${red`End the subject with an issue link. ─╯`}
+                    ${red`${ruleLink("useIssueLinks")}`}
+                    ${red``}
+                    ${red`Examples: #123, GH-123, GL-123`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -1413,7 +1413,7 @@ describe("when 'useIssueLinks' with position 'suffix' has a concern about charac
 			`
 ${grey`5761bad`} Cooked this commit at 3 AM
                                   ${red`┬`}
-                                  ${red`╰─ Subjects must end with an issue link.`}
+                                  ${red`╰─ End the subject with an issue link.`}
                                   ${red`   ${ruleLink("useIssueLinks")}`}
                                   ${red`   `}
                                   ${red`   Examples: #123, GH-123, GL-123`}
@@ -1442,7 +1442,7 @@ describe("when 'useIssueLinks' with position 'anywhere' and a wildcard has a con
 			`
 ${grey`ca745a7`} attend the acoustic show
         ${red`┬`}
-        ${red`╰─ Subjects must include an issue link.`}
+        ${red`╰─ Include an issue link in the subject.`}
         ${red`   ${ruleLink("useIssueLinks")}`}
         ${red`   `}
         ${red`   Examples: #123, (no-issue)`}
@@ -1471,7 +1471,7 @@ describe("when 'useIssueLinks' with position 'anywhere' and Jira-style issue lin
 			`
 ${grey`d0709d2`}  squash!  made the code so clean that it sparkles
                   ${red`┬`}
-                  ${red`╰─ Subjects must include an issue link.`}
+                  ${red`╰─ Include an issue link in the subject.`}
                   ${red`   ${ruleLink("useIssueLinks")}`}
                   ${red`   `}
                   ${red`   Example: ABC-123`}
@@ -1500,7 +1500,7 @@ describe("when 'useIssueLinks' with position 'prefix' and custom-style issue lin
 			`
 ${grey`f6fc239`} Refactored code, now it’s overpowered
         ${red`┬`}
-        ${red`╰─ Subjects must start with an issue link.`}
+        ${red`╰─ Start the subject with an issue link.`}
         ${red`   ${ruleLink("useIssueLinks")}`}
         ${red`   `}
         ${red`   Examples: test#123, experiment#123, [incident]`}
@@ -1529,10 +1529,10 @@ describe("when 'useIssueLinks' with position 'suffix' and Jira-style issue links
 			`
 ${grey`cccee2c`} Fixed a bad typo in comment (yes, really)
                                                  ${red`┬`}
-          ${red`Subjects must end with an issue link. ─╯`}
-          ${red`${ruleLink("useIssueLinks")}`}
-          ${red``}
-          ${red`Examples: AWESOME-123, UNICORN-123, PROJECT-123`}
+            ${red`End the subject with an issue link. ─╯`}
+            ${red`${ruleLink("useIssueLinks")}`}
+            ${red``}
+            ${red`Examples: AWESOME-123, UNICORN-123, PROJECT-123`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -1560,7 +1560,7 @@ ${grey`646e471`} Tidy the note
   ${grey`2 │ Before this note.`}
 ${red`•`} ${grey`${bold`3`} │`} A tiny note runs long.
     ${grey`· `}                    ${red`┬─`}
-    ${grey`· `}                    ${red`╰─ Message body lines must not exceed 20 characters.`}
+    ${grey`· `}                    ${red`╰─ Wrap message body lines at 20 characters or less.`}
     ${grey`· `}                    ${red`   ${ruleLink("useLineWrapping")}`}
   ${grey`4 │ After this note.`}
     ${grey`╰──`}
@@ -1592,7 +1592,7 @@ ${grey`7756d37`} Record the migration
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} The pager now points to the correct team before sunrise.
     ${grey`· `}                    ${red`─────────────────┬──────────────────`}
-    ${grey`· `}                                     ${red`╰─ Message body lines must not exceed 20 characters.`}
+    ${grey`· `}                                     ${red`╰─ Wrap message body lines at 20 characters or less.`}
     ${grey`· `}                                     ${red`   ${ruleLink("useLineWrapping")}`}
   ${grey`3 │ `}
     ${grey`╰──`}
@@ -1624,7 +1624,7 @@ ${grey`df31f7e`} squash! refine the deploy notes
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} the deploy bot left a very long note about sandwiches and spectral keyboards.
     ${grey`· `}                                                  ${red`─────────────┬─────────────`}
-    ${grey`· `}            ${red`Message body lines must not exceed 50 characters. ─╯`}
+    ${grey`· `}            ${red`Wrap message body lines at 50 characters or less. ─╯`}
     ${grey`· `}            ${red`${ruleLink("useLineWrapping")}`}
   ${grey`3 │ the release train leaves at noon with snacks.`}
     ${grey`╰──`}
@@ -1656,7 +1656,7 @@ ${grey`e0121c8`} Ship to production
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} It was just a matter of time before it would cause customers to complain.
     ${grey`· `}                                                                        ${red`┬`}
-    ${grey`· `}                     ${red`Message body lines must not exceed 72 characters. ─╯`}
+    ${grey`· `}                     ${red`Wrap message body lines at 72 characters or less. ─╯`}
     ${grey`· `}                     ${red`${ruleLink("useLineWrapping")}`}
     ${grey`╰──`}
 
@@ -1687,7 +1687,7 @@ ${grey`14c415e`} Audit the migration
   ${grey` 9 │ \`\`\``}
 ${red`•`} ${grey`${bold`10`} │`} The tenth body line is intentionally long so the report shows its two-digit gutter clearly.
      ${grey`· `}                                                                        ${red`─────────┬─────────`}
-     ${grey`· `}                              ${red`Message body lines must not exceed 72 characters. ─╯`}
+     ${grey`· `}                              ${red`Wrap message body lines at 72 characters or less. ─╯`}
      ${grey`· `}                              ${red`${ruleLink("useLineWrapping")}`}
      ${grey`╰──`}
 
@@ -1718,7 +1718,7 @@ ${grey`2376812`} Audit the deployment
   ${grey`11 │ \`\`\``}
 ${red`•`} ${grey`${bold`12`} │`} The twelfth body line is also intentionally too long for the report to show a two-digit gutter.
      ${grey`· `}                                                                        ${red`───────────┬───────────`}
-     ${grey`· `}                                ${red`Message body lines must not exceed 72 characters. ─╯`}
+     ${grey`· `}                                ${red`Wrap message body lines at 72 characters or less. ─╯`}
      ${grey`· `}                                ${red`${ruleLink("useLineWrapping")}`}
   ${grey`13 │ more info goes here...`}
      ${grey`╰──`}
@@ -1750,7 +1750,7 @@ ${grey`a5fa821`} Document the audit breadcrumb
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} Read https://github.com/rainstormy/comet/pull/42 and keep the \`ReleaseLedger\` adapter available while the robots inspect the quiet archive before sunrise.
     ${grey`· `}                                                                                                                                  ${red`────────────┬───────────`}
-    ${grey`· `}                                                                                           ${red`Message body lines must not exceed 72 characters. ─╯`}
+    ${grey`· `}                                                                                           ${red`Wrap message body lines at 72 characters or less. ─╯`}
     ${grey`· `}                                                                                           ${red`${ruleLink("useLineWrapping")}`}
     ${grey`╰──`}
 
@@ -1784,7 +1784,7 @@ ${grey`62f9aae`} Polish the release notes
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} The first migration note is intentionally too long for this tiny limit.
     ${grey`· `}                    ${red`─────────────────────────┬─────────────────────────`}
-    ${grey`· `}                                             ${red`╰─ Message body lines must not exceed 20 characters.`}
+    ${grey`· `}                                             ${red`╰─ Wrap message body lines at 20 characters or less.`}
     ${grey`· `}                                             ${red`   ${ruleLink("useLineWrapping")}`}
   ${grey`3 │ The second note also runs beyond twenty characters for comparison.`}
     ${grey`╰──`}
@@ -1794,7 +1794,7 @@ ${grey`62f9aae`} Polish the release notes
   ${grey`2 │ The first migration note is intentionally too long for this tiny limit.`}
 ${red`•`} ${grey`${bold`3`} │`} The second note also runs beyond twenty characters for comparison.
     ${grey`· `}                    ${red`──────────────────────┬───────────────────────`}
-    ${grey`· `}                                          ${red`╰─ Message body lines must not exceed 20 characters.`}
+    ${grey`· `}                                          ${red`╰─ Wrap message body lines at 20 characters or less.`}
     ${grey`· `}                                          ${red`   ${ruleLink("useLineWrapping")}`}
   ${grey`4 │ Short.`}
     ${grey`╰──`}
@@ -1821,7 +1821,7 @@ describe("when 'useSignedCommits' has a concern about the commit", () => {
 			`
 ${grey`9b9e2ab`} Sign the pantry inventory app
       ${red`╭──────────────────────────────`}
-      ${red`╰─ Commits must be signed cryptographically with a signing key.`}
+      ${red`╰─ Sign this commit cryptographically with your signing key.`}
       ${red`   ${ruleLink("useSignedCommits")}`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -1846,7 +1846,7 @@ describe("when 'useSignedCommits' has a concern about the commit with a long sub
 			`
 ${grey`42cefd1`} fixup! GH-692 it's raining gold everywhere we go
       ${red`╭─────────────────────────────────────────────────`}
-      ${red`╰─ Commits must be signed cryptographically with a signing key.`}
+      ${red`╰─ Sign this commit cryptographically with your signing key.`}
       ${red`   ${ruleLink("useSignedCommits")}`}
 
 Found 1 concern in 1 commit.`.trim(),
