@@ -126,7 +126,7 @@ function formatBodyLineConcern(
 	const [rangeStart, rangeEnd] = concern.range
 	const length = rangeEnd - rangeStart
 
-	const gutterWidth = Math.ceil(Math.log10(concern.line + 2)) + 3
+	const gutterWidth = Math.ceil(Math.log10(concern.lineNumber + 2)) + 3
 	const concernGutter = indentString(grey`· `, gutterWidth)
 
 	const offset = gutterWidth + 2 + rangeStart
@@ -139,10 +139,10 @@ function formatBodyLineConcern(
 	const shortSha = getShortSha(commit)
 	const subject = formatTokens(commit.subject)
 
-	const precedingBodyLine = getBodyLine(commit.bodyLines, concern.line - 1, gutterWidth)
+	const precedingBodyLine = getBodyLine(commit.bodyLines, concern.lineNumber - 1, gutterWidth)
 	const blockHeadLines = `${indentString(grey`╭──`, gutterWidth)}\n${precedingBodyLine}`
 
-	const concernedBodyLine = getBodyLine(commit.bodyLines, concern.line, gutterWidth, true)
+	const concernedBodyLine = getBodyLine(commit.bodyLines, concern.lineNumber, gutterWidth, true)
 
 	const rangeLine = `${concernGutter}${indentString(
 		formatRange(concern.range, anchoredRight),
@@ -153,7 +153,7 @@ function formatBodyLineConcern(
 		? getMessageLines(message, rangeStart + longHalfLength - violationLength, true)
 		: getMessageLines(message, rangeStart + shortHalfLength)
 
-	const succeedingBodyLine = getBodyLine(commit.bodyLines, concern.line + 1, gutterWidth)
+	const succeedingBodyLine = getBodyLine(commit.bodyLines, concern.lineNumber + 1, gutterWidth)
 	const blockTailLines = `${succeedingBodyLine}${indentString(grey`╰──`, gutterWidth)}`
 
 	return `${shortSha} ${subject}\n${blockHeadLines}${concernedBodyLine}${rangeLine}\n${prefixStringLines(succeedingBodyLine === "" ? messageLines.trimEnd() : messageLines, concernGutter)}\n${blockTailLines}`

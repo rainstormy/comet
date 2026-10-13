@@ -255,7 +255,10 @@ describe("when 'noExcessiveWhitespace' has a concern about characters 9-12 of a 
 		sha: "41548802d6bb14a3032403e6fc0fcc69534e22e4",
 		message: "Polish the arcade cabinet\n\nThe prize   counter now accepts coupons.",
 	})
-	const concern = bodyLineConcern("noExcessiveWhitespace", commit.sha, { line: 1, range: [9, 12] })
+	const concern = bodyLineConcern("noExcessiveWhitespace", commit.sha, {
+		lineNumber: 1,
+		range: [9, 12],
+	})
 
 	it("describes the rule violation in the body line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -284,7 +287,10 @@ describe("when 'noExcessiveWhitespace' has a concern about characters 14-18 of a
 		message:
 			"Map the museum heist\n\nFirst note is perfectly ordinary.\nThe blue vault    needs a quieter alarm.\nLast note keeps watch.",
 	})
-	const concern = bodyLineConcern("noExcessiveWhitespace", commit.sha, { line: 2, range: [14, 18] })
+	const concern = bodyLineConcern("noExcessiveWhitespace", commit.sha, {
+		lineNumber: 2,
+		range: [14, 18],
+	})
 
 	it("describes the rule violation in the body line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -417,7 +423,10 @@ describe("when 'noRestrictedTrailers' has a concern about a body line with a 'Co
 		message:
 			"Wire the release breadcrumb trail\n\nReviewed-By: April O'Neil <april.oneil@fastforward.com>\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>\nSigned-Off-By: Hamato Yoshi <hamato@nycsewers.com>\nRefs: #123",
 	})
-	const concern = bodyLineConcern("noRestrictedTrailers", commit.sha, { line: 2, range: [0, 14] })
+	const concern = bodyLineConcern("noRestrictedTrailers", commit.sha, {
+		lineNumber: 2,
+		range: [0, 14],
+	})
 
 	it("describes the rule violation in the body line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -455,7 +464,10 @@ describe("when 'noRestrictedTrailers' has a concern about a body line with a 'Re
 		message:
 			"one link and two notes\nwith overpowered statements\nno one can beat us now hahaha\n\n  change-id: deadbeef\n  signed-off-by: baxter.stockman <baxter.stockman@fastforward.com>\n  refs: #668182",
 	})
-	const concern = bodyLineConcern("noRestrictedTrailers", commit.sha, { line: 5, range: [2, 6] })
+	const concern = bodyLineConcern("noRestrictedTrailers", commit.sha, {
+		lineNumber: 5,
+		range: [2, 6],
+	})
 
 	it("describes the rule violation in the body line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1210,7 +1222,7 @@ describe("when 'useEmptyLineBeforeBody' has a concern about the first body line"
 		message: "Install a quieter keyboard\nThe old one sounded like hail.",
 	})
 	const concern = bodyLineConcern("useEmptyLineBeforeBody", commit.sha, {
-		line: 0,
+		lineNumber: 0,
 		range: [0, 1],
 	})
 
@@ -1240,7 +1252,7 @@ describe("when 'useEmptyLineBeforeBody' has a concern about an extra empty body 
 		message: "Clean the tiny dashboard\n\n\nThe widgets sparkle.\nAnd the birds are joyful.",
 	})
 	const concern = bodyLineConcern("useEmptyLineBeforeBody", commit.sha, {
-		line: 1,
+		lineNumber: 1,
 		range: [0, 1],
 	})
 
@@ -1549,7 +1561,7 @@ describe("when 'useLineWrapping' has a concern about characters 20-22 of a body 
 		sha: "646e47176db1f754a924ffed3ab6f8249c38b5cb",
 		message: "Tidy the note\n\nBefore this note.\nA tiny note runs long.\nAfter this note.",
 	})
-	const concern = bodyLineConcern("useLineWrapping", commit.sha, { line: 2, range: [20, 22] })
+	const concern = bodyLineConcern("useLineWrapping", commit.sha, { lineNumber: 2, range: [20, 22] })
 
 	it("describes the rule violation in the body line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1581,7 +1593,7 @@ describe("when 'useLineWrapping' has a concern about characters 20-56 of a body 
 		message:
 			"Record the migration\n\nThe pager now points to the correct team before sunrise.\n\n```text\nThis fenced explanation is long but should not be marked.\nAnother fenced line keeps the sample readable.\n```",
 	})
-	const concern = bodyLineConcern("useLineWrapping", commit.sha, { line: 1, range: [20, 56] })
+	const concern = bodyLineConcern("useLineWrapping", commit.sha, { lineNumber: 1, range: [20, 56] })
 
 	it("describes the rule violation in the body line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1613,7 +1625,7 @@ describe("when 'useLineWrapping' has a concern about characters 50-77 of a body 
 		message:
 			"squash! refine the deploy notes\n\nthe deploy bot left a very long note about sandwiches and spectral keyboards.\nthe release train leaves at noon with snacks.",
 	})
-	const concern = bodyLineConcern("useLineWrapping", commit.sha, { line: 1, range: [50, 77] })
+	const concern = bodyLineConcern("useLineWrapping", commit.sha, { lineNumber: 1, range: [50, 77] })
 
 	it("describes the rule violation in the body line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1645,7 +1657,7 @@ describe("when 'useLineWrapping' has a concern about characters 72-73 of a body 
 		message:
 			"Ship to production\n\nIt was just a matter of time before it would cause customers to complain.",
 	})
-	const concern = bodyLineConcern("useLineWrapping", commit.sha, { line: 1, range: [72, 73] })
+	const concern = bodyLineConcern("useLineWrapping", commit.sha, { lineNumber: 1, range: [72, 73] })
 
 	it("describes the rule violation in the body line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1676,7 +1688,7 @@ describe("when 'useLineWrapping' has a concern about characters 72-91 of a body 
 		message:
 			"Audit the migration\n\nFirst note.\nSecond note.\nThird note.\nFourth note.\nFifth note.\n```text\nA fenced example can span several lines.\n```\nThe tenth body line is intentionally long so the report shows its two-digit gutter clearly.",
 	})
-	const concern = bodyLineConcern("useLineWrapping", commit.sha, { line: 9, range: [72, 91] })
+	const concern = bodyLineConcern("useLineWrapping", commit.sha, { lineNumber: 9, range: [72, 91] })
 
 	it("describes the rule violation in the body line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1707,7 +1719,10 @@ describe("when 'useLineWrapping' has a concern about characters 72-95 of a body 
 		message:
 			"Audit the deployment\n\nFirst.\nSecond.\nThird.\nFourth.\nFifth.\nSixth.\n```text\nA fenced example occupies one line.\nThe second fenced line keeps the robot amused.\n```\nThe twelfth body line is also intentionally too long for the report to show a two-digit gutter.\nmore info goes here...",
 	})
-	const concern = bodyLineConcern("useLineWrapping", commit.sha, { line: 11, range: [72, 95] })
+	const concern = bodyLineConcern("useLineWrapping", commit.sha, {
+		lineNumber: 11,
+		range: [72, 95],
+	})
 
 	it("describes the rule violation in the body line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1739,7 +1754,10 @@ describe("when 'useLineWrapping' has a concern about characters 130-154 of a bod
 		message:
 			"Document the audit breadcrumb\n\nRead https://github.com/rainstormy/comet/pull/42 and keep the `ReleaseLedger` adapter available while the robots inspect the quiet archive before sunrise.",
 	})
-	const concern = bodyLineConcern("useLineWrapping", commit.sha, { line: 1, range: [130, 154] })
+	const concern = bodyLineConcern("useLineWrapping", commit.sha, {
+		lineNumber: 1,
+		range: [130, 154],
+	})
 
 	it("describes the rule violation in the body line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1771,8 +1789,8 @@ describe("when 'useLineWrapping' has concerns about two body lines", () => {
 			"Polish the release notes\n\nThe first migration note is intentionally too long for this tiny limit.\nThe second note also runs beyond twenty characters for comparison.\nShort.",
 	})
 	const concerns = [
-		bodyLineConcern("useLineWrapping", commit.sha, { line: 1, range: [20, 71] }),
-		bodyLineConcern("useLineWrapping", commit.sha, { line: 2, range: [20, 66] }),
+		bodyLineConcern("useLineWrapping", commit.sha, { lineNumber: 1, range: [20, 71] }),
+		bodyLineConcern("useLineWrapping", commit.sha, { lineNumber: 2, range: [20, 66] }),
 	]
 
 	it("describes the rule violations in the body lines", () => {

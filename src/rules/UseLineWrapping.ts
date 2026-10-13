@@ -166,7 +166,7 @@ export function* useLineWrapping(
 			)
 
 			if (overflowRange !== null) {
-				yield bodyLineConcern(rule, commit.sha, { line: lineNumber, range: overflowRange })
+				yield bodyLineConcern(rule, commit.sha, { lineNumber, range: overflowRange })
 			}
 		}
 	}

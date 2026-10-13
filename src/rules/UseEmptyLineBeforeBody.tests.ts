@@ -5,7 +5,6 @@ import { emptyRulesetConfiguration } from "#configurations/GetConfiguration.fake
 import type { RuleKey } from "#configurations/RulesetConfiguration.ts"
 import { bodyLineConcern } from "#rules/concerns/BodyLineConcern.ts"
 import { type Concerns, mapCommitsToConcerns } from "#rules/concerns/Concern.ts"
-import type { CharacterRange } from "#types/CharacterRange.ts"
 import type { Vector } from "#types/Vector.ts"
 
 const rule: RuleKey = "useEmptyLineBeforeBody"
@@ -72,17 +71,17 @@ describe.each`
 })
 
 describe.each`
-	message                                                                                                             | expectedLine | expectedRange
-	${"bugfix #614\nattempt 2"}                                                                                         | ${0}         | ${[0, 1]}
-	${"Write unit tests\n Finally..."}                                                                                  | ${0}         | ${[0, 1]}
-	${"Refactor the taxi module\nThe roof sign now flashes politely."}                                                  | ${0}         | ${[0, 1]}
-	${"Install React\n```\npnpm add --save \\\n  @types/react \\\n  @types/react-dom \\\n  react \\\n  react-dom\n```"} | ${0}         | ${[0, 1]}
-	${'Revert "Repair the soft ice machine"\nThis commit undoes the changes made in revision 6227ca0.'}                 | ${0}         | ${[0, 1]}
-	${"squash! serve the tiny sandwiches\n guests get fewer crumbs in the keyboard"}                                    | ${0}         | ${[0, 1]}
-	${"Release the notes\nhttps://github.com/rainstormy/comet/releases"}                                                | ${0}         | ${[0, 1]}
+	message
+	${"bugfix #614\nattempt 2"}
+	${"Write unit tests\n Finally..."}
+	${"Refactor the taxi module\nThe roof sign now flashes politely."}
+	${"Install React\n```\npnpm add --save \\\n  @types/react \\\n  @types/react-dom \\\n  react \\\n  react-dom\n```"}
+	${'Revert "Repair the soft ice machine"\nThis commit undoes the changes made in revision 6227ca0.'}
+	${"squash! serve the tiny sandwiches\n guests get fewer crumbs in the keyboard"}
+	${"Release the notes\nhttps://github.com/rainstormy/comet/releases"}
 `(
 	"when the commit message $message does not have an empty line before the body",
-	(props: { message: string; expectedLine: number; expectedRange: CharacterRange }) => {
+	(props: { message: string }) => {
 		const commit = fakeCommit({ message: props.message })
 
 		describe("and the rule is enabled", () => {
@@ -90,10 +89,7 @@ describe.each`
 
 			it("raises a concern about the first body line", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					bodyLineConcern(rule, commit.sha, {
-						line: props.expectedLine,
-						range: props.expectedRange,
-					}),
+					bodyLineConcern(rule, commit.sha, { lineNumber: 0, range: [0, 1] }),
 				])
 			})
 		})
@@ -109,16 +105,16 @@ describe.each`
 )
 
 describe.each`
-	message                                                                                                                                                                                                                                                                                                                                                                                                         | expectedLine | expectedRange
-	${"Bring it   on  \n\n\nThe code is prepared for anything."}                                                                                                                                                                                                                                                                                                                                                    | ${1}         | ${[0, 1]}
-	${"Replace guesswork with a chart\n\n\n\nThe chart uses three excellent dots."}                                                                                                                                                                                                                                                                                                                                 | ${2}         | ${[0, 1]}
-	${"Update src/main.ts\n \n \nCo-Authored-By: Everloving Easter Bunny <everloving.easter.bunny@example.com>"}                                                                                                                                                                                                                                                                                                    | ${1}         | ${[0, 1]}
-	${"Bump @typescript-eslint/parser from 5.52.0 to 5.59.1\n\n\n\n\nBumps [@typescript-eslint/parser](https://github.com/typescript-eslint/typescript-eslint/tree/HEAD/packages/parser) from 5.52.0 to 5.59.1.\n- [Release notes](https://github.com/typescript-eslint/typescript-eslint/releases)\n- [Changelog](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/parser/CHANGELOG.md)"} | ${3}         | ${[0, 1]}
-	${"transport the fragile and expensive goods\n\n\n\n   \n\nThis commit moves the goods from one place to another via the `RapidTransportService`."}                                                                                                                                                                                                                                                             | ${4}         | ${[0, 1]}
-	${"Install Vite\n\n\n```shell\npnpm add --save-dev vite\n```\n\nThis commit also uses Vite as bundler."}                                                                                                                                                                                                                                                                                                        | ${1}         | ${[0, 1]}
+	message                                                                                                                                                                                                                                                                                                                                                                                                         | expectedLineNumber
+	${"Bring it   on  \n\n\nThe code is prepared for anything."}                                                                                                                                                                                                                                                                                                                                                    | ${1}
+	${"Replace guesswork with a chart\n\n\n\nThe chart uses three excellent dots."}                                                                                                                                                                                                                                                                                                                                 | ${2}
+	${"Update src/main.ts\n \n \nCo-Authored-By: Everloving Easter Bunny <everloving.easter.bunny@example.com>"}                                                                                                                                                                                                                                                                                                    | ${1}
+	${"Bump @typescript-eslint/parser from 5.52.0 to 5.59.1\n\n\n\n\nBumps [@typescript-eslint/parser](https://github.com/typescript-eslint/typescript-eslint/tree/HEAD/packages/parser) from 5.52.0 to 5.59.1.\n- [Release notes](https://github.com/typescript-eslint/typescript-eslint/releases)\n- [Changelog](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/parser/CHANGELOG.md)"} | ${3}
+	${"transport the fragile and expensive goods\n\n\n\n   \n\nThis commit moves the goods from one place to another via the `RapidTransportService`."}                                                                                                                                                                                                                                                             | ${4}
+	${"Install Vite\n\n\n```shell\npnpm add --save-dev vite\n```\n\nThis commit also uses Vite as bundler."}                                                                                                                                                                                                                                                                                                        | ${1}
 `(
 	"when the commit message $message has multiple blank lines before the body",
-	(props: { message: string; expectedLine: number; expectedRange: CharacterRange }) => {
+	(props: { message: string; expectedLineNumber: number }) => {
 		const commit = fakeCommit({ message: props.message })
 
 		describe("and the rule is enabled", () => {
@@ -127,8 +123,8 @@ describe.each`
 			it("raises a concern about the first non-blank body line", () => {
 				expect(actualConcerns).toEqual<Concerns>([
 					bodyLineConcern(rule, commit.sha, {
-						line: props.expectedLine,
-						range: props.expectedRange,
+						lineNumber: props.expectedLineNumber,
+						range: [0, 1],
 					}),
 				])
 			})
@@ -187,8 +183,8 @@ describe("when verifying a set of multiple commits and some commits do not have 
 
 		it("raises concerns about the commits with unexpected body lines", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				bodyLineConcern(rule, commits[1].sha, { line: 0, range: [0, 1] }),
-				bodyLineConcern(rule, commits[3].sha, { line: 1, range: [0, 1] }),
+				bodyLineConcern(rule, commits[1].sha, { lineNumber: 0, range: [0, 1] }),
+				bodyLineConcern(rule, commits[3].sha, { lineNumber: 1, range: [0, 1] }),
 			])
 		})
 	})

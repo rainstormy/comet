@@ -861,7 +861,7 @@ describe.each`
 	(props: { subject: string; body: string; expectedBodyLines: Array<Tokens> }) => {
 		const crudeCommit = fakeCrudeCommit({ message: `${props.subject}\n${props.body}` })
 
-		it("keeps them as ordinary body-line tokens", () => {
+		it("keeps them as word and punctuation tokens", () => {
 			expect(props.expectedBodyLines).not.toContainToken("revert", "semver", "squash")
 
 			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)

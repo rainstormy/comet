@@ -138,7 +138,7 @@ export function* noRestrictedTrailers(
 			const key = bodyLine.find(isToken("trailerkey")) ?? null
 
 			if (key !== null && restrictedKeys.has(key.value.toLowerCase())) {
-				yield bodyLineConcern(rule, commit.sha, { line: lineNumber, range: key.range })
+				yield bodyLineConcern(rule, commit.sha, { lineNumber, range: key.range })
 			}
 		}
 	}

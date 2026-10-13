@@ -123,7 +123,7 @@ export function* noExcessiveWhitespace(
 
 		for (const [lineNumber, bodyLine] of commit.bodyLines.entries()) {
 			for (const token of getConsecutiveWhitespaceTokens(bodyLine)) {
-				yield bodyLineConcern(rule, commit.sha, { line: lineNumber, range: token.range })
+				yield bodyLineConcern(rule, commit.sha, { lineNumber, range: token.range })
 			}
 		}
 	}
