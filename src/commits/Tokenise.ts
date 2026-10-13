@@ -23,7 +23,7 @@ const PUNCTUATION = String.raw`(?<punctuation>[\p{P}\p{S}])`
 
 /**
  * Matches a revert marker literal, following by optional whitespace and a double quote character.
- * The tokeniser ensures that revert tokens only appear at the start of the subject line.
+ * The tokeniser ensures that revert tokens only appear at the start of the subject.
  */
 // language=jsunicoderegexp
 const REVERT = String.raw`(?<revert>(?i:revert))(?=\s*")`
@@ -34,7 +34,7 @@ const REVERT = String.raw`(?<revert>(?i:revert))(?=\s*")`
  * - SHA code of 7 or more lowercase hexadecimal characters (e.g. a Docker image digest or a Git commit).
  * - Semantic version number (SemVer): `<major.minor.patch[-prerelease][+buildinfo]>` with an optional `v` prefix.
  *
- * It must be surrounded by whitespace or appear at the end of the subject line.
+ * It must be surrounded by whitespace or appear at the end of the subject.
  *
  * @see https://semver.org
  */
@@ -43,7 +43,7 @@ const SEMVER = String.raw`(?<=\s)(?<semver>[0-9a-f]{7,}|v?(?:0|[1-9]\d*)\.(?:0|[
 
 /**
  * Matches a squash marker literal with one or more leading or trailing exclamation marks, optionally preceded by whitespace.
- * The tokeniser ensures that squash tokens only appear at the start of the subject line.
+ * The tokeniser ensures that squash tokens only appear at the start of the subject.
  */
 // language=jsunicoderegexp
 const SQUASH = String.raw`(?<squash>(?i:amend!+|fixup!+|squash!+|!+amend\b|!+fixup\b|!+squash\b))`
@@ -108,7 +108,7 @@ export function issueLinkPattern(configuration: TokenConfiguration): string {
 	return String.raw`(?<issuelink>${regexUnion([numericIssueLinks, wildcards])})`
 }
 
-export function tokeniseSubjectLine(crudeSubjectLine: string, patterns: TokeniserPatterns): Tokens {
+export function tokeniseSubject(crudeSubject: string, patterns: TokeniserPatterns): Tokens {
 	const prioritisedPatterns: Array<string> = [
 		SQUASH,
 		REVERT,
@@ -122,7 +122,7 @@ export function tokeniseSubjectLine(crudeSubjectLine: string, patterns: Tokenise
 	]
 	const regex = new RegExp(regexUnion(prioritisedPatterns, { preserveCapturingGroups: true }), "gu")
 
-	return tokenise(crudeSubjectLine, regex)
+	return tokenise(crudeSubject, regex)
 }
 
 export function tokeniseBodyLines(

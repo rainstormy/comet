@@ -6,7 +6,7 @@ import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfi
 import type { BodyLineConcern } from "#rules/concerns/BodyLineConcern.ts"
 import type { CommitConcern } from "#rules/concerns/CommitConcern.ts"
 import type { Concern, Concerns } from "#rules/concerns/Concern.ts"
-import type { SubjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import type { SubjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import type { UserIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { normaliseTrailerKey } from "#rules/NoRestrictedTrailers.ts"
 import { ruleLink } from "#rules/reports/RuleLink.ts"
@@ -55,8 +55,8 @@ function formatConcern(concern: Concern, commit: Commit, configuration: Configur
 		case "commit": {
 			return formatCommitConcern(concern, commit, configuration)
 		}
-		case "subject-line": {
-			return formatSubjectLineConcern(concern, commit, configuration)
+		case "subject": {
+			return formatSubjectConcern(concern, commit, configuration)
 		}
 		case "user-identity": {
 			return formatUserIdentityConcern(concern, commit, configuration)
@@ -78,22 +78,22 @@ function formatCommitConcern(
 	const message = commitRuleMessage(concern, configuration)
 
 	const shortSha = getShortSha(commit)
-	const subjectLine = getSubjectLine(commit)
+	const subject = getSubject(commit)
 	const rangeLine = indentString(
-		red`${RANGE_PREFIX + "─".repeat(subjectLine.length)}`,
+		red`${RANGE_PREFIX + "─".repeat(subject.length)}`,
 		SHORT_SHA_LENGTH - RANGE_PREFIX.length + 1,
 	)
 	const messageLines = getMessageLines(message, SHORT_SHA_LENGTH - MESSAGE_PREFIX.length + 1)
 
-	return `${shortSha} ${subjectLine}\n${rangeLine}\n${messageLines}`
+	return `${shortSha} ${subject}\n${rangeLine}\n${messageLines}`
 }
 
-function formatSubjectLineConcern(
-	concern: SubjectLineConcern,
+function formatSubjectConcern(
+	concern: SubjectConcern,
 	commit: Commit,
 	configuration: Configuration,
 ): string {
-	const message = subjectLineRuleMessage(concern, commit, configuration)
+	const message = subjectRuleMessage(concern, commit, configuration)
 
 	const [rangeStart, rangeEnd] = concern.range
 	const length = rangeEnd - rangeStart
@@ -106,14 +106,14 @@ function formatSubjectLineConcern(
 	const anchoredRight = violationLength < offset + longHalfLength
 
 	const shortSha = getShortSha(commit)
-	const subjectLine = formatTokens(commit.subjectLine)
+	const subject = formatTokens(commit.subject)
 
 	const rangeLine = indentString(formatRange(concern.range, anchoredRight), offset)
 	const messageLines = anchoredRight
 		? getMessageLines(message, offset + longHalfLength - violationLength, true)
 		: getMessageLines(message, offset + shortHalfLength)
 
-	return `${shortSha} ${subjectLine}\n${rangeLine}\n${messageLines}`
+	return `${shortSha} ${subject}\n${rangeLine}\n${messageLines}`
 }
 
 function formatBodyLineConcern(
@@ -137,7 +137,7 @@ function formatBodyLineConcern(
 	const anchoredRight = violationLength < offset + longHalfLength
 
 	const shortSha = getShortSha(commit)
-	const subjectLine = formatTokens(commit.subjectLine)
+	const subject = formatTokens(commit.subject)
 
 	const precedingBodyLine = getBodyLine(commit.bodyLines, concern.line - 1, gutterWidth)
 	const blockHeadLines = `${indentString(grey`╭──`, gutterWidth)}\n${precedingBodyLine}`
@@ -156,7 +156,7 @@ function formatBodyLineConcern(
 	const succeedingBodyLine = getBodyLine(commit.bodyLines, concern.line + 1, gutterWidth)
 	const blockTailLines = `${succeedingBodyLine}${indentString(grey`╰──`, gutterWidth)}`
 
-	return `${shortSha} ${subjectLine}\n${blockHeadLines}${concernedBodyLine}${rangeLine}\n${prefixStringLines(succeedingBodyLine === "" ? messageLines.trimEnd() : messageLines, concernGutter)}\n${blockTailLines}`
+	return `${shortSha} ${subject}\n${blockHeadLines}${concernedBodyLine}${rangeLine}\n${prefixStringLines(succeedingBodyLine === "" ? messageLines.trimEnd() : messageLines, concernGutter)}\n${blockTailLines}`
 }
 
 function getBodyLine(
@@ -190,7 +190,7 @@ function formatUserIdentityConcern(
 	const message = userIdentityRuleMessage(concern, configuration)
 
 	const shortSha = getShortSha(commit)
-	const subjectLine = getSubjectLine(commit)
+	const subject = getSubject(commit)
 	const identityKey = getIdentityKey(concern)
 	const identityValue = getIdentityValue(concern, commit)
 
@@ -201,15 +201,15 @@ function formatUserIdentityConcern(
 	)
 	const messageLines = getMessageLines(message, identityOffset)
 
-	return `${shortSha} ${subjectLine}\n${grey`${identityKey}`} ${identityValue}\n${rangeLine}\n${messageLines}`
+	return `${shortSha} ${subject}\n${grey`${identityKey}`} ${identityValue}\n${rangeLine}\n${messageLines}`
 }
 
 function getShortSha(commit: Commit): string {
 	return grey`${commit.sha.slice(0, SHORT_SHA_LENGTH)}`
 }
 
-function getSubjectLine(commit: Commit): string {
-	return formatTokens(commit.subjectLine)
+function getSubject(commit: Commit): string {
+	return formatTokens(commit.subject)
 }
 
 function getIdentityKey(concern: UserIdentityConcern): string {
@@ -277,8 +277,8 @@ type RuleMessage = {
 	sidenote: string
 }
 
-function subjectLineRuleMessage(
-	concern: SubjectLineConcern,
+function subjectRuleMessage(
+	concern: SubjectConcern,
 	commit: Commit,
 	configuration: Configuration,
 ): RuleMessage {
@@ -290,39 +290,39 @@ function subjectLineRuleMessage(
 
 	switch (rule) {
 		case "noBlankSubjects": {
-			return ruleMessage("Subject lines must contain at least one alphanumeric character.")
+			return ruleMessage("Subjects must contain at least one alphanumeric character.")
 		}
 		case "noExcessiveWhitespace": {
 			const positionPhrase =
 				concern.range[0] === 0
 					? "start with"
-					: concern.range[1] === tokenRangeEnd(commit.subjectLine)
+					: concern.range[1] === tokenRangeEnd(commit.subject)
 						? "end with"
 						: "contain excessive"
-			return ruleMessage(`Subject lines must not ${positionPhrase} whitespace.`)
+			return ruleMessage(`Subjects must not ${positionPhrase} whitespace.`)
 		}
 		case "noRevertReverts": {
 			return ruleMessage("Cherry-pick the original commit instead of reverting it over.")
 		}
 		case "noSingleWordSubjects": {
-			return ruleMessage("Subject lines must contain at least two words.")
+			return ruleMessage("Subjects must contain at least two words.")
 		}
 		case "noSquashMarkers": {
 			return ruleMessage("Combine squash commits with their ancestors.")
 		}
 		case "noUnexpectedPunctuation": {
-			return ruleMessage("Subject lines must not end with punctuation.")
+			return ruleMessage("Subjects must not end with punctuation.")
 		}
 		case "useCapitalisedSubjects": {
-			return ruleMessage("The first letter in subject lines must be in uppercase.")
+			return ruleMessage("The first letter in subjects must be in uppercase.")
 		}
 		case "useConciseSubjects": {
 			const options = getRuleOptions(rule, configuration)
 			const characterPhrase = formatCount(options.maxLength, "character", "characters")
-			return ruleMessage(`Subject lines must not exceed ${characterPhrase}.`)
+			return ruleMessage(`Subjects must not exceed ${characterPhrase}.`)
 		}
 		case "useImperativeSubjects": {
-			return ruleMessage("Subject lines must start with a verb in the imperative mood.")
+			return ruleMessage("Subjects must start with a verb in the imperative mood.")
 		}
 		case "useIssueLinks": {
 			const options = getRuleOptions(rule, configuration)
@@ -339,7 +339,7 @@ function subjectLineRuleMessage(
 			const examplePhrase = pluralise(examples.length, "Example")
 
 			return ruleMessage(
-				`Subject lines must ${positionPhrase} an issue link.`,
+				`Subjects must ${positionPhrase} an issue link.`,
 				examples.length > 0 ? `${examplePhrase}: ${examples.join(", ")}` : "",
 			)
 		}
@@ -372,9 +372,7 @@ function bodyLineRuleMessage(concern: BodyLineConcern, configuration: Configurat
 			)
 		}
 		case "useEmptyLineBeforeBody": {
-			return ruleMessage(
-				"Subject lines and message bodies must be separated by exactly one empty line.",
-			)
+			return ruleMessage("Subjects and message bodies must be separated by exactly one empty line.")
 		}
 		case "useLineWrapping": {
 			const options = getRuleOptions(rule, configuration)
@@ -401,7 +399,7 @@ function commitRuleMessage(concern: CommitConcern, configuration: Configuration)
 			return ruleMessage("Merge commits are not allowed.")
 		}
 		case "noRepeatedSubjects": {
-			return ruleMessage("Commits must have unique subject lines within a branch.")
+			return ruleMessage("Commits must have unique subjects within a branch.")
 		}
 		case "useSignedCommits": {
 			return ruleMessage("Commits must be signed cryptographically with a signing key.")

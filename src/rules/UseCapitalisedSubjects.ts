@@ -2,16 +2,19 @@ import type { Commits } from "#commits/Commit.ts"
 import { type Token, isToken } from "#commits/Token.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 
 /**
- * Rejects subject lines that start with a lowercase letter.
+ * Rejects subjects that start with a lowercase letter.
  *
  * ## Rationale
  *
+ * The subject is the first line of the commit message.
+ * It is what readers see most often when scanning the commit history.
+ *
  * Consistent capitalisation is predictable and makes the commit history easier to read.
  *
- * Git itself and GitHub use capitalised subject lines when they generate the following kinds of commits:
+ * Git itself and GitHub use capitalised subjects when they generate the following kinds of commits:
  *
  * - Merge commits, e.g. `Merge branch ...` and `Merge pull request #1 from ...`.
  * - Revert commits, e.g. `Revert "..."` and `Reapply "..."`.
@@ -19,7 +22,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *
  * ## How to fix
  *
- * Capitalise the first proper word in the subject line.
+ * Capitalise the first proper word in the subject.
  *
  * ### Command-line interface (CLI)
  *
@@ -35,7 +38,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *    reword 7e0ff1ce welcome to my convenience store
  *    ```
  *
- * 3. In the commit message editor, capitalise the first proper word in the subject line (i.e. the first line), preserving any issue links and squash markers (e.g. `fixup!`) as is.
+ * 3. In the commit message editor, capitalise the first proper word in the subject (i.e. the first line), preserving any issue links and squash markers (e.g. `fixup!`) as is.
  *    Then save and close the editor to complete the rebase.
  *
  * 4. Force-push the rewritten branch to the remote repository:
@@ -47,7 +50,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
  *
  * 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
- *    Capitalise the first proper word in the subject line (i.e. the first line), preserving any issue links and squash markers (e.g. `fixup!`) as is.
+ *    Capitalise the first proper word in the subject (i.e. the first line), preserving any issue links and squash markers (e.g. `fixup!`) as is.
  *
  * 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
  *
@@ -124,13 +127,11 @@ export function* useCapitalisedSubjects(
 	}
 
 	for (const commit of commits) {
-		const firstToken = commit.subjectLine.find(
-			isToken("hyperlink", "punctuation", "revert", "word"),
-		)
+		const firstToken = commit.subject.find(isToken("hyperlink", "punctuation", "revert", "word"))
 
 		if (firstToken && firstToken.type !== "hyperlink" && startsWithLowercaseLetter(firstToken)) {
 			const rangeStart = firstToken.range[0]
-			yield subjectLineConcern(rule, commit.sha, { range: [rangeStart, rangeStart + 1] })
+			yield subjectConcern(rule, commit.sha, { range: [rangeStart, rangeStart + 1] })
 		}
 	}
 }

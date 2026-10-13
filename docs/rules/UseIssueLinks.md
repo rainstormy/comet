@@ -1,6 +1,6 @@
 # useIssueLinks
 
-Rejects subject lines without an issue link in the configured position.
+Rejects subjects without an issue link in the configured position.
 
 ## Rationale
 
@@ -11,7 +11,7 @@ Consistent positioning of issue links is predictable and makes the commit histor
 
 ## How to fix
 
-Change the subject line to include an issue link in the appropriate position.
+Change the subject to include an issue link in the appropriate position.
 
 ### Command-line interface (CLI)
 
@@ -27,7 +27,7 @@ Change the subject line to include an issue link in the appropriate position.
    reword 7e0ff1ce Welcome to my convenience store
    ```
 
-3. In the commit message editor, change the subject line (i.e. the first line) to include an issue link in the appropriate position.
+3. In the commit message editor, change the subject (i.e. the first line) to include an issue link in the appropriate position.
    Then save and close the editor to complete the rebase.
 
 4. Force-push the rewritten branch to the remote repository:
@@ -39,7 +39,7 @@ Change the subject line to include an issue link in the appropriate position.
 ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
 
 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
-   Change the subject line (i.e. the first line) to include an issue link in the appropriate position.
+   Change the subject (i.e. the first line) to include an issue link in the appropriate position.
 
 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
 
@@ -49,13 +49,13 @@ The following kinds of commits are always accepted:
 
 - Merge commits, i.e. commits with more than one parent.
 - Revert commits, e.g. `Revert "..."`.
-- Commits with dependency versions in the subject line, e.g. `Bump Vite to 2.4.0-beta.1` and `Pin the Node.js image to 4af617c`.
+- Commits with dependency versions in the subject, e.g. `Bump Vite to 2.4.0-beta.1` and `Pin the Node.js image to 4af617c`.
 
 It only recognises issue links declared in `tokens.issueLinks`; ordinary hyperlinks and `Refs` trailers in the message body will not satisfy the rule.
 
 ## Options
 
-- `position` (one of `anywhere`, `prefix`, or `suffix`): Accept issue links anywhere in, at the beginning of, or at the end of subject lines. Default value: `anywhere`.
+- `position` (one of `anywhere`, `prefix`, or `suffix`): Accept issue links anywhere in, at the beginning of, or at the end of subjects. Default value: `anywhere`.
 
 ```json
 {

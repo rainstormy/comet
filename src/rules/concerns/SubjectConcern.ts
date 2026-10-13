@@ -1,15 +1,15 @@
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import type { CommitSha } from "#types/CommitSha.ts"
 
-export type SubjectLineConcern = {
-	location: "subject-line"
-	key: `${CommitSha}:C${CharacterRange[0]}-${CharacterRange[1]}:${SubjectLineConcernRuleKey}`
-	rule: SubjectLineConcernRuleKey
+export type SubjectConcern = {
+	location: "subject"
+	key: `${CommitSha}:C${CharacterRange[0]}-${CharacterRange[1]}:${SubjectConcernRuleKey}`
+	rule: SubjectConcernRuleKey
 	commitSha: CommitSha
 	range: CharacterRange
 }
 
-export type SubjectLineConcernRuleKey =
+export type SubjectConcernRuleKey =
 	| "noBlankSubjects"
 	| "noExcessiveWhitespace"
 	| "noRevertReverts"
@@ -21,13 +21,13 @@ export type SubjectLineConcernRuleKey =
 	| "useImperativeSubjects"
 	| "useIssueLinks"
 
-export function subjectLineConcern(
-	rule: SubjectLineConcernRuleKey,
+export function subjectConcern(
+	rule: SubjectConcernRuleKey,
 	commitSha: CommitSha,
-	props: Pick<SubjectLineConcern, "range">,
-): SubjectLineConcern {
+	props: Pick<SubjectConcern, "range">,
+): SubjectConcern {
 	return {
-		location: "subject-line",
+		location: "subject",
 		key: `${commitSha}:C${props.range[0]}-${props.range[1]}:${rule}`,
 		rule,
 		commitSha,
@@ -35,10 +35,10 @@ export function subjectLineConcern(
 	}
 }
 
-export function subjectLineConcerns(
-	rule: SubjectLineConcernRuleKey,
+export function subjectConcerns(
+	rule: SubjectConcernRuleKey,
 	commitSha: CommitSha,
 	ranges: Array<CharacterRange>,
-): Array<SubjectLineConcern> {
-	return ranges.map((range) => subjectLineConcern(rule, commitSha, { range }))
+): Array<SubjectConcern> {
+	return ranges.map((range) => subjectConcern(rule, commitSha, { range }))
 }

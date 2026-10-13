@@ -2,19 +2,22 @@ import type { Commits } from "#commits/Commit.ts"
 import { isToken } from "#commits/Token.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 
 /**
- * Rejects subject lines that contain only one word.
+ * Rejects subjects that contain only one word.
  *
  * ## Rationale
  *
- * A descriptive subject line makes the commit distinguishable from other commits.
+ * The subject is the first line of the commit message.
+ * It is what readers see most often when scanning the commit history.
+ *
+ * A descriptive subject makes the commit distinguishable from other commits.
  * This keeps the commit history readable and makes the commit easier to find.
  *
  * ## How to fix
  *
- * Change the subject line to contain at least two words.
+ * Change the subject to contain at least two words.
  *
  * ### Command-line interface (CLI)
  *
@@ -30,7 +33,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *    reword 7e0ff1ce Welcome
  *    ```
  *
- * 3. In the commit message editor, change the subject line (i.e. the first line) to contain at least two words.
+ * 3. In the commit message editor, change the subject (i.e. the first line) to contain at least two words.
  *    Then save and close the editor to complete the rebase.
  *
  * 4. Force-push the rewritten branch to the remote repository:
@@ -42,7 +45,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
  *
  * 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
- *    Change the subject line (i.e. the first line) to contain at least two words.
+ *    Change the subject (i.e. the first line) to contain at least two words.
  *
  * 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
  *
@@ -126,15 +129,15 @@ export function* noSingleWordSubjects(
 	}
 
 	for (const commit of commits) {
-		if (commit.subjectLine.some(isToken("revert"))) {
+		if (commit.subject.some(isToken("revert"))) {
 			continue
 		}
 
-		const wordLikeTokens = commit.subjectLine.filter(isToken("code", "hyperlink", "semver", "word"))
+		const wordLikeTokens = commit.subject.filter(isToken("code", "hyperlink", "semver", "word"))
 		const soloWord = wordLikeTokens.length === 1 ? wordLikeTokens[0] : null
 
 		if (soloWord) {
-			yield subjectLineConcern(rule, commit.sha, { range: soloWord.range })
+			yield subjectConcern(rule, commit.sha, { range: soloWord.range })
 		}
 	}
 }

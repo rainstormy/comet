@@ -5,7 +5,7 @@ import { emptyRulesetConfiguration } from "#configurations/GetConfiguration.fake
 import type { RuleKey } from "#configurations/RulesetConfiguration.ts"
 import { bodyLineConcern, bodyLineConcerns } from "#rules/concerns/BodyLineConcern.ts"
 import { type Concerns, mapCommitsToConcerns } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern, subjectLineConcerns } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern, subjectConcerns } from "#rules/concerns/SubjectConcern.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import type { Vector } from "#types/Vector.ts"
 
@@ -17,7 +17,7 @@ const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
 const fakeCommit = fakeCommitFactory()
 
 describe.each`
-	message                                                                                 | expectedSubjectLineRanges                                                        | expectedBodyLineRanges
+	message                                                                                 | expectedSubjectRanges                                                            | expectedBodyLineRanges
 	${" "}                                                                                  | ${[[0, 1]]}                                                                      | ${[]}
 	${"         "}                                                                          | ${[[0, 9]]}                                                                      | ${[]}
 	${"\t\t"}                                                                               | ${[[0, 2]]}                                                                      | ${[]}
@@ -58,7 +58,7 @@ describe.each`
 	"when the commit message of $message has excessive whitespace characters",
 	(props: {
 		message: string
-		expectedSubjectLineRanges: Array<CharacterRange>
+		expectedSubjectRanges: Array<CharacterRange>
 		expectedBodyLineRanges: Array<{ line: number; range: CharacterRange }>
 	}) => {
 		const commit = fakeCommit({ message: props.message })
@@ -68,7 +68,7 @@ describe.each`
 
 			it("raises concerns about the blocks of excessive whitespace characters", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					...subjectLineConcerns(rule, commit.sha, props.expectedSubjectLineRanges),
+					...subjectConcerns(rule, commit.sha, props.expectedSubjectRanges),
 					...bodyLineConcerns(rule, commit.sha, props.expectedBodyLineRanges),
 				])
 			})
@@ -144,13 +144,13 @@ describe("when verifying a set of multiple commits and some commits contain exce
 
 		it("raises concerns about all blocks of excessive whitespace characters", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				subjectLineConcern(rule, commits[1].sha, { range: [0, 3] }),
-				subjectLineConcern(rule, commits[2].sha, { range: [22, 23] }),
+				subjectConcern(rule, commits[1].sha, { range: [0, 3] }),
+				subjectConcern(rule, commits[2].sha, { range: [22, 23] }),
 				bodyLineConcern(rule, commits[3].sha, { line: 1, range: [8, 10] }),
 				bodyLineConcern(rule, commits[3].sha, { line: 3, range: [16, 18] }),
 				bodyLineConcern(rule, commits[3].sha, { line: 3, range: [41, 44] }),
-				subjectLineConcern(rule, commits[4].sha, { range: [0, 1] }),
-				subjectLineConcern(rule, commits[4].sha, { range: [4, 6] }),
+				subjectConcern(rule, commits[4].sha, { range: [0, 1] }),
+				subjectConcern(rule, commits[4].sha, { range: [4, 6] }),
 				bodyLineConcern(rule, commits[4].sha, { line: 1, range: [5, 7] }),
 			])
 		})

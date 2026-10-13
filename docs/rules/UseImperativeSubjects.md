@@ -1,10 +1,13 @@
 # useImperativeSubjects
 
-Rejects subject lines that do not start with a verb in the imperative mood.
+Rejects subjects that do not start with a verb in the imperative mood.
 
 ## Rationale
 
-An imperative subject line completes the sentence 'If applied, this commit will ...', e.g. 'Add a new feature' or 'Refactor a module'.
+The subject is the first line of the commit message.
+It is what readers see most often when scanning the commit history.
+
+An imperative subject completes the sentence 'If applied, this commit will ...', e.g. 'Add a new feature' or 'Refactor a module'.
 
 Consistent phrasing is predictable and makes the commit history easier to read.
 
@@ -16,7 +19,7 @@ Git itself and GitHub use imperative verbs when they generate the following kind
 
 ## How to fix
 
-Change the subject line to start with an imperative verb.
+Change the subject to start with an imperative verb.
 
 ### Command-line interface (CLI)
 
@@ -32,7 +35,7 @@ Change the subject line to start with an imperative verb.
    reword 7e0ff1ce Oh! Welcome to my convenience store
    ```
 
-3. In the commit message editor, change the subject line (i.e. the first line) to start with an imperative verb, preserving any issue links and squash markers (e.g. `fixup!`) as is.
+3. In the commit message editor, change the subject (i.e. the first line) to start with an imperative verb, preserving any issue links and squash markers (e.g. `fixup!`) as is.
    Then save and close the editor to complete the rebase.
 
 4. Force-push the rewritten branch to the remote repository:
@@ -44,7 +47,7 @@ Change the subject line to start with an imperative verb.
 ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
 
 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
-   Change the subject line (i.e. the first line) to start with an imperative verb, preserving any issue links and squash markers (e.g. `fixup!`) as is.
+   Change the subject (i.e. the first line) to start with an imperative verb, preserving any issue links and squash markers (e.g. `fixup!`) as is.
 
 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
 

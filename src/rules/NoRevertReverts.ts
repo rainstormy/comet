@@ -2,11 +2,11 @@ import type { Commits } from "#commits/Commit.ts"
 import { isToken } from "#commits/Token.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import { rangeBetween } from "#types/CharacterRange.ts"
 
 /**
- * Rejects subject lines with more than one revert marker, encouraging cherry-picking the original commit.
+ * Rejects subjects with more than one revert marker, encouraging cherry-picking the original commit.
  *
  * ## Rationale
  *
@@ -16,7 +16,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  *
  * ## How to fix
  *
- * Cherry-pick the original commit or replace the subject line with the original commit's subject line.
+ * Cherry-pick the original commit or replace the subject with the original commit's subject.
  *
  * ### Command-line interface (CLI)
  *
@@ -77,7 +77,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  * If the nested revert commit already exists:
  *
  * 1. In the Git tool window, right-click it and select **Edit Commit Message...**.
- *    Replace the subject line (i.e. the first line) with the original commit's subject line.
+ *    Replace the subject (i.e. the first line) with the original commit's subject.
  *
  * 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
  *
@@ -142,11 +142,11 @@ export function* noRevertReverts(
 	}
 
 	for (const commit of commits) {
-		const firstRevertToken = commit.subjectLine.find(isToken("revert"))
-		const lastRevertToken = commit.subjectLine.findLast(isToken("revert"))
+		const firstRevertToken = commit.subject.find(isToken("revert"))
+		const lastRevertToken = commit.subject.findLast(isToken("revert"))
 
 		if (firstRevertToken && lastRevertToken && firstRevertToken !== lastRevertToken) {
-			yield subjectLineConcern(rule, commit.sha, {
+			yield subjectConcern(rule, commit.sha, {
 				range: rangeBetween(firstRevertToken.range, lastRevertToken.range),
 			})
 		}

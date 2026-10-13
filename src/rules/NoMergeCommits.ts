@@ -59,7 +59,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * ## Remarks
  *
- * The number of parent commits is the only thing that matters; it disregards the subject line.
+ * The number of parent commits is the only thing that matters; it disregards the subject.
  *
  * Merge commits created by GitHub upon merging pull requests are always accepted.
  *

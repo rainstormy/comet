@@ -3,10 +3,10 @@ import { type Tokens, isToken } from "#commits/Token.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import { bodyLineConcern } from "#rules/concerns/BodyLineConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 
 /**
- * Rejects subject lines with leading, trailing, or consecutive whitespace characters, and body lines with consecutive whitespace characters.
+ * Rejects subjects with leading, trailing, or consecutive whitespace characters, and body lines with consecutive whitespace characters.
  *
  * ## Rationale
  *
@@ -106,19 +106,19 @@ export function* noExcessiveWhitespace(
 	}
 
 	for (const commit of commits) {
-		const firstToken = commit.subjectLine[0]
-		const lastToken = commit.subjectLine.at(-1)
+		const firstToken = commit.subject[0]
+		const lastToken = commit.subject.at(-1)
 
 		if (firstToken?.type === "whitespace") {
-			yield subjectLineConcern(rule, commit.sha, { range: firstToken.range })
+			yield subjectConcern(rule, commit.sha, { range: firstToken.range })
 		}
 
-		for (const token of getConsecutiveWhitespaceTokens(commit.subjectLine)) {
-			yield subjectLineConcern(rule, commit.sha, { range: token.range })
+		for (const token of getConsecutiveWhitespaceTokens(commit.subject)) {
+			yield subjectConcern(rule, commit.sha, { range: token.range })
 		}
 
 		if (lastToken?.type === "whitespace") {
-			yield subjectLineConcern(rule, commit.sha, { range: lastToken.range })
+			yield subjectConcern(rule, commit.sha, { range: lastToken.range })
 		}
 
 		for (const [lineNumber, bodyLine] of commit.bodyLines.entries()) {

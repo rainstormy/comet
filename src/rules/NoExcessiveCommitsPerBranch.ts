@@ -120,7 +120,7 @@ export function* noExcessiveCommitsPerBranch(
 	let commitCount = 0
 
 	for (const commit of commits) {
-		if (commit.isMergeCommit || commit.subjectLine.some(isToken("squash"))) {
+		if (commit.isMergeCommit || commit.subject.some(isToken("squash"))) {
 			continue
 		}
 

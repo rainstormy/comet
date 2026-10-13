@@ -1,18 +1,21 @@
 # noRepeatedSubjects
 
-Rejects subject lines equal to a previous subject line in the current branch.
+Rejects subjects equal to a previous subject in the current branch.
 
 ## Rationale
 
-A unique subject line makes the commit distinguishable from other commits.
+The subject is the first line of the commit message.
+It is what readers see most often when scanning the commit history.
+
+A unique subject makes the commit distinguishable from other commits.
 This keeps the commit history readable and makes the commit easier to find.
 
-Sometimes, a duplicated subject line is meant to amend a previous commit.
+Sometimes, a duplicated subject is meant to amend a previous commit.
 In those cases, it should start with a squash marker such as `amend!`, `fixup!`, or `squash!` to make the intent clear and to enable tools for interactive rebasing.
 
 ## How to fix
 
-Change the subject line to be unique in the current branch or add `fixup!` at the beginning.
+Change the subject to be unique in the current branch or add `fixup!` at the beginning.
 
 ### Command-line interface (CLI)
 
@@ -34,7 +37,7 @@ Change the subject line to be unique in the current branch or add `fixup!` at th
    fixup 7e0ff1ce Welcome to my convenience store
    ```
 
-3. For `reword`, in the commit message editor, change the subject line (i.e. the first line) to be unique in the current branch or add `fixup!` at the beginning.
+3. For `reword`, in the commit message editor, change the subject (i.e. the first line) to be unique in the current branch or add `fixup!` at the beginning.
    Then save and close the editor to complete the rebase.
 
 4. Force-push the rewritten branch to the remote repository:
@@ -46,7 +49,7 @@ Change the subject line to be unique in the current branch or add `fixup!` at th
 ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
 
 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
-   Change the subject line (i.e. the first line) to be unique in the current branch or add `fixup!` at the beginning.
+   Change the subject (i.e. the first line) to be unique in the current branch or add `fixup!` at the beginning.
 
 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
 

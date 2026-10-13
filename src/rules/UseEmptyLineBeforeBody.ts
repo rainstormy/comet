@@ -5,7 +5,7 @@ import { bodyLineConcern } from "#rules/concerns/BodyLineConcern.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 
 /**
- * Rejects commits whose message body is not separated from the subject line by exactly one empty line.
+ * Rejects commits whose message body is not separated from the subject (i.e. the first line) by exactly one empty line.
  *
  * ## Rationale
  *
@@ -16,7 +16,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * ## How to fix
  *
- * Insert and leave exactly one empty line between the subject line and the remaining message body.
+ * Insert and leave exactly one empty line between the subject and the remaining message body.
  *
  * ### Command-line interface (CLI)
  *
@@ -32,7 +32,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *    reword 7e0ff1ce Welcome to my convenience store
  *    ```
  *
- * 3. In the commit message editor, insert and leave exactly one empty line between the subject line (i.e. the first line) and the remaining message body.
+ * 3. In the commit message editor, insert and leave exactly one empty line between the subject (i.e. the first line) and the remaining message body.
  *    Then save and close the editor to complete the rebase.
  *
  * 4. Force-push the rewritten branch to the remote repository:
@@ -44,7 +44,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
  *
  * 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
- *    Insert and leave exactly one empty line between the subject line (i.e. the first line) and the remaining message body.
+ *    Insert and leave exactly one empty line between the subject (i.e. the first line) and the remaining message body.
  *
  * 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
  *

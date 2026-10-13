@@ -4,7 +4,7 @@ import type { Commit } from "#commits/Commit.ts"
 import { emptyRulesetConfiguration } from "#configurations/GetConfiguration.fakes.ts"
 import type { RuleKey } from "#configurations/RulesetConfiguration.ts"
 import { type Concerns, mapCommitsToConcerns } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import type { Vector } from "#types/Vector.ts"
 
@@ -16,7 +16,7 @@ const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
 const fakeCommit = fakeCommitFactory()
 
 describe.each`
-	subjectLine                                       | expectedRange
+	subject                                           | expectedRange
 	${"WIP"}                                          | ${[0, 3]}
 	${"wip!"}                                         | ${[0, 3]}
 	${"init"}                                         | ${[0, 4]}
@@ -42,16 +42,16 @@ describe.each`
 	${"fixup! fixup! Restored"}                       | ${[14, 22]}
 	${" https://github.com/rainstormy/comet/pull/42"} | ${[1, 44]}
 `(
-	"when the subject line of $subjectLine contains exactly one significant word",
-	(props: { subjectLine: string; expectedRange: CharacterRange }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+	"when the subject of $subject contains exactly one significant word",
+	(props: { subject: string; expectedRange: CharacterRange }) => {
+		const commit = fakeCommit({ message: props.subject })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
 
 			it("raises a concern about the single word", () => {
 				expect(actualConcerns).toEqual<Concerns>([
-					subjectLineConcern(rule, commit.sha, { range: props.expectedRange }),
+					subjectConcern(rule, commit.sha, { range: props.expectedRange }),
 				])
 			})
 		})
@@ -67,7 +67,7 @@ describe.each`
 )
 
 describe.each`
-	subjectLine
+	subject
 	${""}
 	${" "}
 	${"\t\t"}
@@ -79,9 +79,9 @@ describe.each`
 	${"  amend!"}
 	${"fixup! fixup! "}
 `(
-	"when the subject line of $subjectLine is blank or contains only insignificant tokens",
-	(props: { subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+	"when the subject of $subject is blank or contains only insignificant tokens",
+	(props: { subject: string }) => {
+		const commit = fakeCommit({ message: props.subject })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
@@ -102,37 +102,34 @@ describe.each`
 )
 
 describe.each`
-	subjectLine
+	subject
 	${'revert ""'}
 	${'Revert "dadada"'}
 	${'Revert "Revert "release""'}
 	${'amend! Revert " redacted"'}
 	${'squash!fixup! revert " revert " GH-67 cleanup"'}
-`(
-	"when the subject line of $subjectLine contains a revert marker",
-	(props: { subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+`("when the subject of $subject contains a revert marker", (props: { subject: string }) => {
+	const commit = fakeCommit({ message: props.subject })
 
-		describe("and the rule is enabled", () => {
-			const actualConcerns = mapCommitsToConcerns([commit], enabled)
+	describe("and the rule is enabled", () => {
+		const actualConcerns = mapCommitsToConcerns([commit], enabled)
 
-			it("does not raise any concerns", () => {
-				expect(actualConcerns).toEqual<Concerns>([])
-			})
+		it("does not raise any concerns", () => {
+			expect(actualConcerns).toEqual<Concerns>([])
 		})
+	})
 
-		describe("and the rule is disabled", () => {
-			const actualConcerns = mapCommitsToConcerns([commit], disabled)
+	describe("and the rule is disabled", () => {
+		const actualConcerns = mapCommitsToConcerns([commit], disabled)
 
-			it("does not raise any concerns", () => {
-				expect(actualConcerns).toEqual<Concerns>([])
-			})
+		it("does not raise any concerns", () => {
+			expect(actualConcerns).toEqual<Concerns>([])
 		})
-	},
-)
+	})
+})
 
 describe.each`
-	subjectLine
+	subject
 	${"Add a search feature for the recipe database"}
 	${"Fix authentication bug in login flow"}
 	${"init project"}
@@ -145,30 +142,27 @@ describe.each`
 	${"release 1.0.0"}
 	${"amend! Upgrade React to 19.2.0 (#52)"}
 	${"merged https://github.com/rainstormy/comet/pull/42"}
-`(
-	"when the subject line of $subjectLine contains more than one word",
-	(props: { subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine })
+`("when the subject of $subject contains more than one word", (props: { subject: string }) => {
+	const commit = fakeCommit({ message: props.subject })
 
-		describe("and the rule is enabled", () => {
-			const actualConcerns = mapCommitsToConcerns([commit], enabled)
+	describe("and the rule is enabled", () => {
+		const actualConcerns = mapCommitsToConcerns([commit], enabled)
 
-			it("does not raise any concerns", () => {
-				expect(actualConcerns).toEqual<Concerns>([])
-			})
+		it("does not raise any concerns", () => {
+			expect(actualConcerns).toEqual<Concerns>([])
 		})
+	})
 
-		describe("and the rule is disabled", () => {
-			const actualConcerns = mapCommitsToConcerns([commit], disabled)
+	describe("and the rule is disabled", () => {
+		const actualConcerns = mapCommitsToConcerns([commit], disabled)
 
-			it("does not raise any concerns", () => {
-				expect(actualConcerns).toEqual<Concerns>([])
-			})
+		it("does not raise any concerns", () => {
+			expect(actualConcerns).toEqual<Concerns>([])
 		})
-	},
-)
+	})
+})
 
-describe("when verifying a set of multiple commits and some commits have single-word subject lines", () => {
+describe("when verifying a set of multiple commits and some commits have single-word subjects", () => {
 	const commits: Vector<Commit, 8> = [
 		fakeCommit({ message: "init" }),
 		fakeCommit({ message: "WIP!!" }),
@@ -183,12 +177,12 @@ describe("when verifying a set of multiple commits and some commits have single-
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns(commits, enabled)
 
-		it("raises concerns about the commits with single-word subject lines", () => {
+		it("raises concerns about the commits with single-word subjects", () => {
 			expect(actualConcerns).toEqual<Concerns>([
-				subjectLineConcern(rule, commits[0].sha, { range: [0, 4] }),
-				subjectLineConcern(rule, commits[1].sha, { range: [0, 3] }),
-				subjectLineConcern(rule, commits[3].sha, { range: [1, 9] }),
-				subjectLineConcern(rule, commits[5].sha, { range: [0, 7] }),
+				subjectConcern(rule, commits[0].sha, { range: [0, 4] }),
+				subjectConcern(rule, commits[1].sha, { range: [0, 3] }),
+				subjectConcern(rule, commits[3].sha, { range: [1, 9] }),
+				subjectConcern(rule, commits[5].sha, { range: [0, 7] }),
 			])
 		})
 	})
@@ -202,7 +196,7 @@ describe("when verifying a set of multiple commits and some commits have single-
 	})
 })
 
-describe("when verifying a set of multiple commits and no commits have single-word subject lines", () => {
+describe("when verifying a set of multiple commits and no commits have single-word subjects", () => {
 	const commits: Vector<Commit, 4> = [
 		fakeCommit({ message: "Establish the repository" }),
 		fakeCommit({ message: "Enable the coffee machine integration tests" }),

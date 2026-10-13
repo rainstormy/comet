@@ -542,17 +542,17 @@ describe("when there is 1 commit that raises concerns in the default configurati
 			`
 ${grey`98634c1`} fix!
         ${red`┬`}
-        ${red`╰─ The first letter in subject lines must be in uppercase.`}
+        ${red`╰─ The first letter in subjects must be in uppercase.`}
         ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 ${grey`98634c1`} fix!
         ${red`─┬─`}
-         ${red`╰─ Subject lines must contain at least two words.`}
+         ${red`╰─ Subjects must contain at least two words.`}
          ${red`   ${ruleLink("noSingleWordSubjects")}`}
 
 ${grey`98634c1`} fix!
            ${red`┬`}
-           ${red`╰─ Subject lines must not end with punctuation.`}
+           ${red`╰─ Subjects must not end with punctuation.`}
            ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
 
 Found 3 concerns in 1 commit.`.trim(),
@@ -643,7 +643,7 @@ describe("when there are 3 commits that raise concerns in the default configurat
 			`
 ${grey`335aee6`} polish the tea set
         ${red`┬`}
-        ${red`╰─ The first letter in subject lines must be in uppercase.`}
+        ${red`╰─ The first letter in subjects must be in uppercase.`}
         ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 ${grey`6f8dafa`} Document the tea set
@@ -706,12 +706,12 @@ describe("when there are 6 commits where 4 of them raise concerns in the default
 			`
 ${grey`7e63a37`} polish the tea set!
         ${red`┬`}
-        ${red`╰─ The first letter in subject lines must be in uppercase.`}
+        ${red`╰─ The first letter in subjects must be in uppercase.`}
         ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 ${grey`7e63a37`} polish the tea set!
                           ${red`┬`}
-                          ${red`╰─ Subject lines must not end with punctuation.`}
+                          ${red`╰─ Subjects must not end with punctuation.`}
                           ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
 
 ${grey`3cfe8b3`} Document the tea set
@@ -732,7 +732,7 @@ ${grey`41a0e1d`} Review the tea set
     ${grey`╭──`}
 ${red`•`} ${grey`${bold`1`} │`} Well well well would you look at this.
     ${grey`· `}${red`┬`}
-    ${grey`· `}${red`╰─ Subject lines and message bodies must be separated by exactly one empty line.`}
+    ${grey`· `}${red`╰─ Subjects and message bodies must be separated by exactly one empty line.`}
     ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBody")}`}
   ${grey`2 │ `}
     ${grey`╰──`}
@@ -1249,27 +1249,27 @@ describe("when there are 5 commits that raise concerns in the custom 'comet.json
 			`
 ${grey`3cfe8b3`} Calibrate the midnight bell
                               ${red`──┬──`}
-                                ${red`╰─ Subject lines must not exceed 22 characters.`}
+                                ${red`╰─ Subjects must not exceed 22 characters.`}
                                 ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`41a0e1d`} Document the curious dial
                               ${red`─┬─`}
-                               ${red`╰─ Subject lines must not exceed 22 characters.`}
+                               ${red`╰─ Subjects must not exceed 22 characters.`}
                                ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`7f811b2`} Rehearse the evacuation waltz
                               ${red`───┬───`}
-                                 ${red`╰─ Subject lines must not exceed 22 characters.`}
+                                 ${red`╰─ Subjects must not exceed 22 characters.`}
                                  ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`a43a3f3`} Replace the ceremonial switch
                               ${red`───┬───`}
-                                 ${red`╰─ Subject lines must not exceed 22 characters.`}
+                                 ${red`╰─ Subjects must not exceed 22 characters.`}
                                  ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`c0ffee1`} Untangle the improbable cables
                               ${red`───┬────`}
-                                 ${red`╰─ Subject lines must not exceed 22 characters.`}
+                                 ${red`╰─ Subjects must not exceed 22 characters.`}
                                  ${red`   ${ruleLink("useConciseSubjects")}`}
 
 Found 5 concerns in 5 commits.`.trim(),
@@ -1461,9 +1461,9 @@ ${grey`╰─ authored by:`} anonymous
               ${red`     ∙ renovate\\[bot\\]`}
 
 ${grey`e6f1b4a`} Document the extremely important tea ceremony
-                                 ${red`─────────┬──────────`}
-                                          ${red`╰─ Subject lines must not exceed 25 characters.`}
-                                          ${red`   ${ruleLink("useConciseSubjects")}`}
+                                 ${red`──────────┬─────────`}
+  ${red`Subjects must not exceed 25 characters. ─╯`}
+  ${red`${ruleLink("useConciseSubjects")}`}
 
 ${grey`f7a2c5b`} Review the tiny blueprint
     ${grey`╭──`}
@@ -1858,7 +1858,7 @@ ${red`•`} ${grey`${bold`2`} │`} The flight path is deliberately long enough 
 
 ${grey`a43a3f3`} Archive the noisy bell!
                               ${red`┬`}
-                              ${red`╰─ Subject lines must not end with punctuation.`}
+                              ${red`╰─ Subjects must not end with punctuation.`}
                               ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
 
 Found 3 concerns in 3 commits.`.trim(),
@@ -2296,12 +2296,12 @@ describe("when there are 4 commits where 3 of them raise concerns from the last 
 			`
 ${grey`335aee6`} added feature, removed my coworkers' sanity
         ${red`┬`}
-        ${red`╰─ The first letter in subject lines must be in uppercase.`}
+        ${red`╰─ The first letter in subjects must be in uppercase.`}
         ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 ${grey`335aee6`} added feature, removed my coworkers' sanity
         ${red`──┬──`}
-          ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
+          ${red`╰─ Subjects must start with a verb in the imperative mood.`}
           ${red`   ${ruleLink("useImperativeSubjects")}`}
 
 ${grey`6f8dafa`} Oops, forgot to save before commit
@@ -2311,7 +2311,7 @@ ${grey`6f8dafa`} Oops, forgot to save before commit
 
 ${grey`6f8dafa`} Oops, forgot to save before commit
         ${red`─┬──`}
-         ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
+         ${red`╰─ Subjects must start with a verb in the imperative mood.`}
          ${red`   ${ruleLink("useImperativeSubjects")}`}
 
 ${grey`b58de17`} Not sure why this works, but it does
@@ -2321,7 +2321,7 @@ ${grey`b58de17`} Not sure why this works, but it does
 
 ${grey`b58de17`} Not sure why this works, but it does
         ${red`─┬─`}
-         ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
+         ${red`╰─ Subjects must start with a verb in the imperative mood.`}
          ${red`   ${ruleLink("useImperativeSubjects")}`}
 
 ${grey`9f1a1b2`} This commit is a lie
@@ -2331,7 +2331,7 @@ ${grey`9f1a1b2`} This commit is a lie
 
 ${grey`9f1a1b2`} This commit is a lie
         ${red`─┬──`}
-         ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
+         ${red`╰─ Subjects must start with a verb in the imperative mood.`}
          ${red`   ${ruleLink("useImperativeSubjects")}`}
 
 Found 8 concerns in 4 commits.`.trim(),

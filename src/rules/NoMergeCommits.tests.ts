@@ -17,15 +17,15 @@ const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
 const fakeCommit = fakeCommitFactory()
 
 describe.each`
-	parents                                                | subjectLine
+	parents                                                | subject
 	${[fakeCommitSha(), fakeCommitSha()]}                  | ${"Merge branch 'main' into bugfix/dance-party-playlist"}
 	${[fakeCommitSha(), fakeCommitSha()]}                  | ${"Merge pull request #440 from renovate/battle-shell-7.x"}
 	${[fakeCommitSha(), fakeCommitSha(), fakeCommitSha()]} | ${"amend! Merge branch 'feature/new-coffee-machine' into feature/office-overhaul"}
 	${[fakeCommitSha(), fakeCommitSha(), fakeCommitSha()]} | ${"Keep my branch up to date"}
 `(
-	"when the commit is a merge commit with $parents.length parents and has a subject line of $subjectLine",
-	(props: { parents: Array<CommitSha>; subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine, parents: props.parents })
+	"when the commit is a merge commit with $parents.length parents and has a subject of $subject",
+	(props: { parents: Array<CommitSha>; subject: string }) => {
+		const commit = fakeCommit({ message: props.subject, parents: props.parents })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
@@ -46,15 +46,15 @@ describe.each`
 )
 
 describe.each`
-	parents              | subjectLine
+	parents              | subject
 	${[]}                | ${"init"}
 	${[]}                | ${"Establish the repository"}
 	${[fakeCommitSha()]} | ${"just an ordinary commit"}
 	${[fakeCommitSha()]} | ${"Release the robot butler"}
 `(
-	"when the commit is not a merge commit and has a subject line of $subjectLine",
-	(props: { parents: Array<CommitSha>; subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine, parents: props.parents })
+	"when the commit is not a merge commit and has a subject of $subject",
+	(props: { parents: Array<CommitSha>; subject: string }) => {
+		const commit = fakeCommit({ message: props.subject, parents: props.parents })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)

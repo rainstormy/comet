@@ -2,11 +2,11 @@ import type { Commits } from "#commits/Commit.ts"
 import { isToken } from "#commits/Token.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
-import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import { rangeBetween } from "#types/CharacterRange.ts"
 
 /**
- * Rejects subject lines beginning with a squash marker like `amend!`, `fixup!`, and `squash!`, reminding you to squash temporary commits before merging pull requests.
+ * Rejects subjects beginning with a squash marker like `amend!`, `fixup!`, and `squash!`, reminding you to squash temporary commits before merging pull requests.
  *
  * ## Rationale
  *
@@ -35,7 +35,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  *    fixup cafebeef fixup! Welcome to my convenience store
  *    ```
  *
- * 3. For `squash` actions, in the commit message editor, delete the squash markers and change the subject line (i.e. the first line) to describe the combined change.
+ * 3. For `squash` actions, in the commit message editor, delete the squash markers and change the subject (i.e. the first line) to describe the combined change.
  *    Then save and close the editor to complete the rebase. Resolve any merge conflicts that arise.
  *
  * 4. Force-push the rewritten branch to the remote repository:
@@ -49,7 +49,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  * 1. In the Git tool window, right-click the original commit and select **Interactively Rebase from Here...**.
  *
  * 2. Ensure that each temporary commit follows its target commit and has a matching action, e.g. `fixup` or `squash`.
- *    For `squash` actions, delete the squash markers and change the subject line (i.e. the first line) to describe the combined change.
+ *    For `squash` actions, delete the squash markers and change the subject (i.e. the first line) to describe the combined change.
  *    Then start the rebase and resolve any merge conflicts that arise.
  *
  * 3. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
@@ -111,12 +111,12 @@ export function* noSquashMarkers(
 	}
 
 	for (const commit of commits) {
-		const firstSquashToken = commit.subjectLine.find(isToken("squash"))
+		const firstSquashToken = commit.subject.find(isToken("squash"))
 
 		if (firstSquashToken) {
-			const lastSquashToken = commit.subjectLine.findLast(isToken("squash")) ?? firstSquashToken
+			const lastSquashToken = commit.subject.findLast(isToken("squash")) ?? firstSquashToken
 
-			yield subjectLineConcern(rule, commit.sha, {
+			yield subjectConcern(rule, commit.sha, {
 				range: rangeBetween(firstSquashToken.range, lastSquashToken.range),
 			})
 		}

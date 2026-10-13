@@ -2,7 +2,7 @@ import type { Commits } from "#commits/Commit.ts"
 import type { RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import type { BodyLineConcern } from "#rules/concerns/BodyLineConcern.ts"
 import type { CommitConcern } from "#rules/concerns/CommitConcern.ts"
-import type { SubjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
+import type { SubjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import type { UserIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { noBlankSubjects } from "#rules/NoBlankSubjects.ts"
 import { noExcessiveCommitsPerBranch } from "#rules/NoExcessiveCommitsPerBranch.ts"
@@ -28,7 +28,7 @@ import { useSignedCommits } from "#rules/UseSignedCommits.ts"
 import { type Comparator, uniqueItemsByKey } from "#utilities/Arrays.ts"
 import { requireNotNullish } from "#utilities/Assertions.ts"
 
-export type Concern = BodyLineConcern | CommitConcern | SubjectLineConcern | UserIdentityConcern
+export type Concern = BodyLineConcern | CommitConcern | SubjectConcern | UserIdentityConcern
 export type Concerns = Array<Concern>
 
 export function mapCommitsToConcerns(commits: Commits, ruleset: RulesetConfiguration): Concerns {

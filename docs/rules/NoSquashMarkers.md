@@ -1,6 +1,6 @@
 # noSquashMarkers
 
-Rejects subject lines beginning with a squash marker like `amend!`, `fixup!`, and `squash!`, reminding you to squash temporary commits before merging pull requests.
+Rejects subjects beginning with a squash marker like `amend!`, `fixup!`, and `squash!`, reminding you to squash temporary commits before merging pull requests.
 
 ## Rationale
 
@@ -29,7 +29,7 @@ Rebase interactively and squash the temporary commits into the original commit.
    fixup cafebeef fixup! Welcome to my convenience store
    ```
 
-3. For `squash` actions, in the commit message editor, delete the squash markers and change the subject line (i.e. the first line) to describe the combined change.
+3. For `squash` actions, in the commit message editor, delete the squash markers and change the subject (i.e. the first line) to describe the combined change.
    Then save and close the editor to complete the rebase. Resolve any merge conflicts that arise.
 
 4. Force-push the rewritten branch to the remote repository:
@@ -43,7 +43,7 @@ Rebase interactively and squash the temporary commits into the original commit.
 1. In the Git tool window, right-click the original commit and select **Interactively Rebase from Here...**.
 
 2. Ensure that each temporary commit follows its target commit and has a matching action, e.g. `fixup` or `squash`.
-   For `squash` actions, delete the squash markers and change the subject line (i.e. the first line) to describe the combined change.
+   For `squash` actions, delete the squash markers and change the subject (i.e. the first line) to describe the combined change.
    Then start the rebase and resolve any merge conflicts that arise.
 
 3. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.

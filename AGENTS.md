@@ -22,7 +22,9 @@ Always use `vpr` to install dependencies and run tasks. Never use npm, npx, pnpm
 ## Concepts
 
 - **Crude commit:** Platform-agnostic metadata of a Git commit such as SHA, parents, commit message, author, and signature. Mapped from DTOs retrieved from the local Git client or the GitHub REST API.
-- **Commit:** Refined from a crude commit with tokenised subject line and body lines.
+- **Commit:** Refined from a crude commit with tokenised subject and body lines.
+- **Subject:** The first line of a commit message.
+- **Body:** The remaining lines of the commit message after the subject.
 - **Token:** A text segment of a commit message of a particular class such as word, whitespace, issuelink, squash, or code. Enriched with string start index and end index (character range). Never multi-line. Never overlaps with other tokens.
 - **Rule:** Logic to evaluate a commit and raise a list of concerns. Some rules accept customisable parameters for fine-tuned behaviour.
 - **Concern:** Describes how and where a commit violates the policy enforced by a rule. May overlap with other concerns.
@@ -78,6 +80,6 @@ Read only the relevant skill guides for the task at hand:
 - Keep changes and diffs small and focused.
 - Rebase your branch onto `main` instead of merging `main` into your branch.
 - Comet enforces some of its commit message standards on itself:
-  - Write concise subject lines in commit messages. Add additional context in the commit message body.
-  - Separate the subject line and the first body line with an empty line.
-  - Start the subject line with a capitalised verb in the imperative mood.
+  - Write concise subjects in commit messages. Add additional context in the commit message body.
+  - Separate the subject and the first body line with an empty line.
+  - Start the subject with a capitalised verb in the imperative mood.

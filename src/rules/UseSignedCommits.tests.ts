@@ -15,13 +15,13 @@ const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
 const fakeCommit = fakeCommitFactory()
 
 describe.each`
-	subjectLine
+	subject
 	${"Teach the coffee machine to stop judging mugs"}
 	${"shipping a tiny fix before lunch"}
 `(
-	"when the commit does not have a signature and has a subject line of $subjectLine",
-	(props: { subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine, signature: "" })
+	"when the commit does not have a signature and has a subject of $subject",
+	(props: { subject: string }) => {
+		const commit = fakeCommit({ message: props.subject, signature: "" })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
@@ -42,13 +42,13 @@ describe.each`
 )
 
 describe.each`
-	signature                                                                                                                                                           | subjectLine
+	signature                                                                                                                                                           | subject
 	${"-----BEGIN SSH SIGNATURE-----\nNWNhOTk2MWQtMWZiZS00NTg4LThiMmUtNzEzMmExMjJiM2Q5\n-----END SSH SIGNATURE-----"}                                                   | ${"Give the release notes a sensible haircut"}
 	${"-----BEGIN PGP SIGNATURE-----\n\nOTI4Zjk0OWMtNjJhOS00OTk1LTkwYzEtNmU1MWYxYWE0MzdkNThmMDM4NGQtOGFjYS00ZDk5LWJjYjMtZmRiNWI1NmEzNTU4\n-----END PGP SIGNATURE-----"} | ${"put the changelog back where it belongs"}
 `(
-	"when the commit has a signature and has a subject line of $subjectLine",
-	(props: { signature: string; subjectLine: string }) => {
-		const commit = fakeCommit({ message: props.subjectLine, signature: props.signature })
+	"when the commit has a signature and has a subject of $subject",
+	(props: { signature: string; subject: string }) => {
+		const commit = fakeCommit({ message: props.subject, signature: props.signature })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
