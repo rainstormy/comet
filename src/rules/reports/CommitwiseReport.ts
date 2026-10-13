@@ -9,6 +9,7 @@ import type { Concern, Concerns } from "#rules/concerns/Concern.ts"
 import type { SubjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 import type { UserIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { normaliseTrailerKey } from "#rules/NoRestrictedTrailers.ts"
+import { ruleLink } from "#rules/reports/RuleLink.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import { ALPHABETICALLY, isNotEmptyString } from "#utilities/Arrays.ts"
 import { requireNotNullish } from "#utilities/Assertions.ts"
@@ -25,9 +26,18 @@ export function commitwiseReport(
 	commits: Commits,
 	configuration: Configuration,
 ): string {
-	return concerns
+	if (concerns.length === 0) {
+		return ""
+	}
+
+	const formattedConcerns = concerns
 		.map((concern) => formatConcern(concern, getConcernedCommit(concern, commits), configuration))
 		.join("\n\n")
+
+	const concernedCommitCount = new Set(concerns.map(({ commitSha }) => commitSha)).size
+	const totalConcerns = `Found ${formatCount(concerns.length, "concern", "concerns")} in ${formatCount(concernedCommitCount, "commit", "commits")}.`
+
+	return `${formattedConcerns}\n\n${totalConcerns}`
 }
 
 function getConcernedCommit(concern: Concern, commits: Commits): Commit {
@@ -251,7 +261,7 @@ function formatRange(range: CharacterRange, anchoredRight: boolean): string {
 }
 
 function getMessageLines(message: RuleMessage, offset: number, anchoredRight = false): string {
-	const sidenotes = `(${message.rule})${message.sidenote ? `\n\n${message.sidenote}` : ""}`
+	const sidenotes = `${ruleLink(message.rule)}${message.sidenote ? `\n\n${message.sidenote}` : ""}`
 
 	return anchoredRight
 		? indentString(red`${message.violation} ${MESSAGE_SUFFIX}\n${sidenotes}`, offset)

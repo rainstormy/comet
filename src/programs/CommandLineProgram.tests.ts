@@ -7,6 +7,7 @@ import {
 	commandLineProgram,
 	getHelpText,
 } from "#programs/CommandLineProgram.ts"
+import { ruleLink } from "#rules/reports/RuleLink.ts"
 import { fakeCommitSha } from "#types/CommitSha.fakes.ts"
 import {
 	ALL_EXIT_CODES,
@@ -542,18 +543,19 @@ describe("when there is 1 commit that raises concerns in the default configurati
 ${grey`98634c1`} fix!
         ${red`┬`}
         ${red`╰─ The first letter in subject lines must be in uppercase.`}
-        ${red`   (useCapitalisedSubjectLines)`}
+        ${red`   ${ruleLink("useCapitalisedSubjectLines")}`}
 
 ${grey`98634c1`} fix!
         ${red`─┬─`}
          ${red`╰─ Subject lines must contain at least two words.`}
-         ${red`   (noSingleWordSubjectLines)`}
+         ${red`   ${ruleLink("noSingleWordSubjectLines")}`}
 
 ${grey`98634c1`} fix!
            ${red`┬`}
            ${red`╰─ Subject lines must not end with punctuation.`}
-           ${red`   (noUnexpectedPunctuation)`}
-`.trim(),
+           ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
+
+Found 3 concerns in 1 commit.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -591,7 +593,7 @@ ${grey`61a95da`} Document the tea set
 ${red`•`} ${grey`${bold`2`} │`} A  small note
     ${grey`· `} ${red`┬─`}
     ${grey`· `} ${red`╰─ Message bodies must not contain excessive whitespace.`}
-    ${grey`· `} ${red`   (noExcessiveWhitespace)`}
+    ${grey`· `} ${red`   ${ruleLink("noExcessiveWhitespace")}`}
     ${grey`╰──`}
 
 ${grey`d677c31`} Review the tea set
@@ -600,9 +602,10 @@ ${grey`d677c31`} Review the tea set
 ${red`•`} ${grey`${bold`2`} │`} This body line is intentionally longer than the default seventy-two character wrapping limit
     ${grey`· `}                                                                        ${red`──────────┬─────────`}
     ${grey`· `}                               ${red`Message body lines must not exceed 72 characters. ─╯`}
-    ${grey`· `}                               ${red`(useLineWrapping)`}
+    ${grey`· `}                               ${red`${ruleLink("useLineWrapping")}`}
     ${grey`╰──`}
-`.trim(),
+
+Found 2 concerns in 2 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -641,7 +644,7 @@ describe("when there are 3 commits that raise concerns in the default configurat
 ${grey`335aee6`} polish the tea set
         ${red`┬`}
         ${red`╰─ The first letter in subject lines must be in uppercase.`}
-        ${red`   (useCapitalisedSubjectLines)`}
+        ${red`   ${ruleLink("useCapitalisedSubjectLines")}`}
 
 ${grey`6f8dafa`} Document the tea set
     ${grey`╭──`}
@@ -649,14 +652,15 @@ ${grey`6f8dafa`} Document the tea set
 ${red`•`} ${grey`${bold`2`} │`} A  small note
     ${grey`· `} ${red`┬─`}
     ${grey`· `} ${red`╰─ Message bodies must not contain excessive whitespace.`}
-    ${grey`· `} ${red`   (noExcessiveWhitespace)`}
+    ${grey`· `} ${red`   ${ruleLink("noExcessiveWhitespace")}`}
     ${grey`╰──`}
 
 ${grey`b58de17`} Sign the pantry inventory
       ${red`╭──────────────────────────`}
       ${red`╰─ Commits must be signed cryptographically with a signing key.`}
-      ${red`   (useSignedCommits)`}
-`.trim(),
+      ${red`   ${ruleLink("useSignedCommits")}`}
+
+Found 3 concerns in 3 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -703,12 +707,12 @@ describe("when there are 6 commits where 4 of them raise concerns in the default
 ${grey`7e63a37`} polish the tea set!
         ${red`┬`}
         ${red`╰─ The first letter in subject lines must be in uppercase.`}
-        ${red`   (useCapitalisedSubjectLines)`}
+        ${red`   ${ruleLink("useCapitalisedSubjectLines")}`}
 
 ${grey`7e63a37`} polish the tea set!
                           ${red`┬`}
                           ${red`╰─ Subject lines must not end with punctuation.`}
-                          ${red`   (noUnexpectedPunctuation)`}
+                          ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
 
 ${grey`3cfe8b3`} Document the tea set
     ${grey`╭──`}
@@ -716,20 +720,20 @@ ${grey`3cfe8b3`} Document the tea set
 ${red`•`} ${grey`${bold`2`} │`} A  small note
     ${grey`· `} ${red`┬─`}
     ${grey`· `} ${red`╰─ Message bodies must not contain excessive whitespace.`}
-    ${grey`· `} ${red`   (noExcessiveWhitespace)`}
+    ${grey`· `} ${red`   ${ruleLink("noExcessiveWhitespace")}`}
     ${grey`╰──`}
 
 ${grey`41a0e1d`} Review the tea set
       ${red`╭───────────────────`}
       ${red`╰─ Commits must be signed cryptographically with a signing key.`}
-      ${red`   (useSignedCommits)`}
+      ${red`   ${ruleLink("useSignedCommits")}`}
 
 ${grey`41a0e1d`} Review the tea set
     ${grey`╭──`}
 ${red`•`} ${grey`${bold`1`} │`} Well well well would you look at this.
     ${grey`· `}${red`┬`}
     ${grey`· `}${red`╰─ Subject lines and message bodies must be separated by exactly one empty line.`}
-    ${grey`· `}${red`   (useEmptyLineBeforeBodyLines)`}
+    ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBodyLines")}`}
   ${grey`2 │ `}
     ${grey`╰──`}
 
@@ -739,15 +743,16 @@ ${grey`41a0e1d`} Review the tea set
 ${red`•`} ${grey`${bold`3`} │`} This body line is _also_ a bit longer than the default seventy-two character wrapping limit
     ${grey`· `}                                                                        ${red`─────────┬─────────`}
     ${grey`· `}                              ${red`Message body lines must not exceed 72 characters. ─╯`}
-    ${grey`· `}                              ${red`(useLineWrapping)`}
+    ${grey`· `}                              ${red`${ruleLink("useLineWrapping")}`}
   ${grey`4 │ We'll have to fix that, don't we?`}
     ${grey`╰──`}
 
 ${grey`7f811b2`} Merge the old tea ledger
       ${red`╭─────────────────────────`}
       ${red`╰─ Merge commits are not allowed.`}
-      ${red`   (noMergeCommits)`}
-`.trim(),
+      ${red`   ${ruleLink("noMergeCommits")}`}
+
+Found 7 concerns in 4 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -1071,14 +1076,15 @@ ${grey`98634c1`} Authenticate the library cards
 ${red`•`} ${grey`${bold`2`} │`} Co-authored-by: Ada Lovelace <ada@example.com>
     ${grey`· `}${red`──────┬───────`}
     ${grey`· `}      ${red`╰─ Message bodies must not contain disallowed trailers.`}
-    ${grey`· `}      ${red`   (noRestrictedTrailers)`}
+    ${grey`· `}      ${red`   ${ruleLink("noRestrictedTrailers")}`}
     ${grey`· `}      ${red`   `}
     ${grey`· `}      ${red`   Disallowed trailers:`}
     ${grey`· `}      ${red`     ∙ Co-authored-by`}
     ${grey`· `}      ${red`     ∙ Reviewed-by`}
     ${grey`· `}      ${red`   `}
     ${grey`╰──`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -1122,12 +1128,13 @@ ${grey`61a95da`} Map the paper trail
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
               ${red`╰─ Names of commit authors must match an accepted pattern.`}
-              ${red`   (useAuthorNamePatterns)`}
+              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ Leonardo da Vinci`}
               ${red`     ∙ Ada Lovelace`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -1177,18 +1184,19 @@ describe("when there are 4 commits where 3 of them raise concerns in the custom 
 ${grey`6f8dafa`} Add the cinnamon telemetry
       ${red`╭───────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
-      ${red`   (noExcessiveCommitsPerBranch)`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 ${grey`b58de17`} Wire the oat milk alert
       ${red`╭────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
-      ${red`   (noExcessiveCommitsPerBranch)`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 ${grey`9f1a1b2`} Test the emergency toaster
       ${red`╭───────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
-      ${red`   (noExcessiveCommitsPerBranch)`}
-`.trim(),
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
+
+Found 3 concerns in 3 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -1242,28 +1250,29 @@ describe("when there are 5 commits that raise concerns in the custom 'comet.json
 ${grey`3cfe8b3`} Calibrate the midnight bell
                               ${red`──┬──`}
                                 ${red`╰─ Subject lines must not exceed 22 characters.`}
-                                ${red`   (useConciseSubjectLines)`}
+                                ${red`   ${ruleLink("useConciseSubjectLines")}`}
 
 ${grey`41a0e1d`} Document the curious dial
                               ${red`─┬─`}
                                ${red`╰─ Subject lines must not exceed 22 characters.`}
-                               ${red`   (useConciseSubjectLines)`}
+                               ${red`   ${ruleLink("useConciseSubjectLines")}`}
 
 ${grey`7f811b2`} Rehearse the evacuation waltz
                               ${red`───┬───`}
                                  ${red`╰─ Subject lines must not exceed 22 characters.`}
-                                 ${red`   (useConciseSubjectLines)`}
+                                 ${red`   ${ruleLink("useConciseSubjectLines")}`}
 
 ${grey`a43a3f3`} Replace the ceremonial switch
                               ${red`───┬───`}
                                  ${red`╰─ Subject lines must not exceed 22 characters.`}
-                                 ${red`   (useConciseSubjectLines)`}
+                                 ${red`   ${ruleLink("useConciseSubjectLines")}`}
 
 ${grey`c0ffee1`} Untangle the improbable cables
                               ${red`───┬────`}
                                  ${red`╰─ Subject lines must not exceed 22 characters.`}
-                                 ${red`   (useConciseSubjectLines)`}
-`.trim(),
+                                 ${red`   ${ruleLink("useConciseSubjectLines")}`}
+
+Found 5 concerns in 5 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -1343,13 +1352,14 @@ describe("when there are 3 commits where 2 of them raise concerns in the custom 
 ${grey`6f8dafa`} Add the cinnamon telemetry
       ${red`╭───────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
-      ${red`   (noExcessiveCommitsPerBranch)`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 ${grey`b58de17`} Wire the oat milk alert
       ${red`╭────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
-      ${red`   (noExcessiveCommitsPerBranch)`}
-`.trim(),
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
+
+Found 2 concerns in 2 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -1443,7 +1453,7 @@ ${grey`e6f1b4a`} Document the extremely important tea ceremony
 ${grey`╰─ authored by:`} anonymous
               ${red`╭──────────`}
               ${red`╰─ Names of commit authors must match an accepted pattern.`}
-              ${red`   (useAuthorNamePatterns)`}
+              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ \\p{Lu}.*\\s.+`}
@@ -1453,7 +1463,7 @@ ${grey`╰─ authored by:`} anonymous
 ${grey`e6f1b4a`} Document the extremely important tea ceremony
                                  ${red`─────────┬──────────`}
                                           ${red`╰─ Subject lines must not exceed 25 characters.`}
-                                          ${red`   (useConciseSubjectLines)`}
+                                          ${red`   ${ruleLink("useConciseSubjectLines")}`}
 
 ${grey`f7a2c5b`} Review the tiny blueprint
     ${grey`╭──`}
@@ -1461,7 +1471,7 @@ ${grey`f7a2c5b`} Review the tiny blueprint
 ${red`•`} ${grey`${bold`2`} │`} A line that is deliberately much longer than twenty-four characters to fit the rendered concern annotation.
     ${grey`· `}                        ${red`─────────────────────────────────────────┬─────────────────────────────────────────`}
     ${grey`· `}              ${red`Message body lines must not exceed 24 characters. ─╯`}
-    ${grey`· `}              ${red`(useLineWrapping)`}
+    ${grey`· `}              ${red`${ruleLink("useLineWrapping")}`}
   ${grey`3 │ Short note.`}
     ${grey`╰──`}
 
@@ -1471,15 +1481,16 @@ ${grey`f7a2c5b`} Review the tiny blueprint
 ${red`•`} ${grey`${bold`4`} │`} Note with  spaces.
     ${grey`· `}         ${red`┬─`}
     ${grey`· `}         ${red`╰─ Message bodies must not contain excessive whitespace.`}
-    ${grey`· `}         ${red`   (noExcessiveWhitespace)`}
+    ${grey`· `}         ${red`   ${ruleLink("noExcessiveWhitespace")}`}
   ${grey`5 │ Final note.`}
     ${grey`╰──`}
 
 ${grey`a8b3d6c`} Merge the old tea ledger
       ${red`╭─────────────────────────`}
       ${red`╰─ Branches must not contain more than 2 commits.`}
-      ${red`   (noExcessiveCommitsPerBranch)`}
-`.trim(),
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
+
+Found 5 concerns in 3 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -1684,11 +1695,12 @@ ${grey`98634c1`} Refactor the signal lantern
 ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
                ${red`╭───────────────────────────────────────────────`}
                ${red`╰─ Email addresses of committers must match an accepted pattern.`}
-               ${red`   (useCommitterEmailPatterns)`}
+               ${red`   ${ruleLink("useCommitterEmailPatterns")}`}
                ${red`   `}
                ${red`   Accepted patterns:`}
                ${red`     ∙ .+@fastforward\\.com`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -1748,7 +1760,7 @@ ${grey`61a95da`} Patch the rain gauge
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
               ${red`╰─ Names of commit authors must match an accepted pattern.`}
-              ${red`   (useAuthorNamePatterns)`}
+              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ Ada Lovelace`}
@@ -1756,8 +1768,9 @@ ${grey`╰─ authored by:`} Master Splinter
 ${grey`d677c31`} Tune the observatory clock
       ${red`╭───────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
-      ${red`   (noExcessiveCommitsPerBranch)`}
-`.trim(),
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
+
+Found 2 concerns in 2 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -1827,7 +1840,7 @@ ${grey`6f8dafa`} Document the emergency lantern
 ${red`•`} ${grey`${bold`2`} │`} Reviewed-by: Grace Hopper <grace@example.com>
     ${grey`· `}${red`─────┬─────`}
     ${grey`· `}     ${red`╰─ Message bodies must not contain disallowed trailers.`}
-    ${grey`· `}     ${red`   (noRestrictedTrailers)`}
+    ${grey`· `}     ${red`   ${ruleLink("noRestrictedTrailers")}`}
     ${grey`· `}     ${red`   `}
     ${grey`· `}     ${red`   Disallowed trailers:`}
     ${grey`· `}     ${red`     ∙ Reviewed-by`}
@@ -1840,14 +1853,15 @@ ${grey`b58de17`} Calibrate the wind tunnel
 ${red`•`} ${grey`${bold`2`} │`} The flight path is deliberately long enough to outgrow the tiny configured wrapping limit.
     ${grey`· `}                                ${red`─────────────────────────────┬────────────────────────────`}
     ${grey`· `}          ${red`Message body lines must not exceed 32 characters. ─╯`}
-    ${grey`· `}          ${red`(useLineWrapping)`}
+    ${grey`· `}          ${red`${ruleLink("useLineWrapping")}`}
     ${grey`╰──`}
 
 ${grey`a43a3f3`} Archive the noisy bell!
                               ${red`┬`}
                               ${red`╰─ Subject lines must not end with punctuation.`}
-                              ${red`   (noUnexpectedPunctuation)`}
-`.trim(),
+                              ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
+
+Found 3 concerns in 3 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -1908,8 +1922,9 @@ describe("when there are 5 commits where 1 of them raises concerns in the custom
 ${grey`7f811b2`} Revert "Revert "Disable the alarm""
         ${red`──────┬───────`}
               ${red`╰─ Cherry-pick the original commit instead of reverting it over.`}
-              ${red`   (noRevertRevertCommits)`}
-`.trim(),
+              ${red`   ${ruleLink("noRevertRevertCommits")}`}
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -1991,7 +2006,7 @@ ${grey`61a95da`} Map the paper trail
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
               ${red`╰─ Names of commit authors must match an accepted pattern.`}
-              ${red`   (useAuthorNamePatterns)`}
+              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ Ada Lovelace`}
@@ -2000,11 +2015,12 @@ ${grey`b58de17`} Calibrate the wind tunnel
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
               ${red`╰─ Names of commit authors must match an accepted pattern.`}
-              ${red`   (useAuthorNamePatterns)`}
+              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ Ada Lovelace`}
-`.trim(),
+
+Found 2 concerns in 2 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -2066,11 +2082,12 @@ ${grey`98634c1`} Refactor the signal lantern
 ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
                ${red`╭───────────────────────────────────────────────`}
                ${red`╰─ Email addresses of committers must match an accepted pattern.`}
-               ${red`   (useCommitterEmailPatterns)`}
+               ${red`   ${ruleLink("useCommitterEmailPatterns")}`}
                ${red`   `}
                ${red`   Accepted patterns:`}
                ${red`     ∙ .+@fastforward\\.com`}
-`.trim(),
+
+Found 1 concern in 1 commit.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -2130,7 +2147,7 @@ ${grey`61a95da`} Map the paper trail
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
               ${red`╰─ Names of commit authors must match an accepted pattern.`}
-              ${red`   (useAuthorNamePatterns)`}
+              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ Ada Lovelace`}
@@ -2139,11 +2156,12 @@ ${grey`b58de17`} Calibrate the wind tunnel
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
               ${red`╰─ Names of commit authors must match an accepted pattern.`}
-              ${red`   (useAuthorNamePatterns)`}
+              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ Ada Lovelace`}
-`.trim(),
+
+Found 2 concerns in 2 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -2199,13 +2217,14 @@ describe("when there are 3 commits where 2 of them raise concerns from the first
 ${grey`6f8dafa`} Add the cinnamon telemetry
       ${red`╭───────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
-      ${red`   (noExcessiveCommitsPerBranch)`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 ${grey`b58de17`} Wire the oat milk alert
       ${red`╭────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
-      ${red`   (noExcessiveCommitsPerBranch)`}
-`.trim(),
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
+
+Found 2 concerns in 2 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
@@ -2278,43 +2297,44 @@ describe("when there are 4 commits where 3 of them raise concerns from the last 
 ${grey`335aee6`} added feature, removed my coworkers' sanity
         ${red`┬`}
         ${red`╰─ The first letter in subject lines must be in uppercase.`}
-        ${red`   (useCapitalisedSubjectLines)`}
+        ${red`   ${ruleLink("useCapitalisedSubjectLines")}`}
 
 ${grey`335aee6`} added feature, removed my coworkers' sanity
         ${red`──┬──`}
           ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
-          ${red`   (useImperativeSubjectLines)`}
+          ${red`   ${ruleLink("useImperativeSubjectLines")}`}
 
 ${grey`6f8dafa`} Oops, forgot to save before commit
       ${red`╭───────────────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
-      ${red`   (noExcessiveCommitsPerBranch)`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 ${grey`6f8dafa`} Oops, forgot to save before commit
         ${red`─┬──`}
          ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
-         ${red`   (useImperativeSubjectLines)`}
+         ${red`   ${ruleLink("useImperativeSubjectLines")}`}
 
 ${grey`b58de17`} Not sure why this works, but it does
       ${red`╭─────────────────────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
-      ${red`   (noExcessiveCommitsPerBranch)`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 ${grey`b58de17`} Not sure why this works, but it does
         ${red`─┬─`}
          ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
-         ${red`   (useImperativeSubjectLines)`}
+         ${red`   ${ruleLink("useImperativeSubjectLines")}`}
 
 ${grey`9f1a1b2`} This commit is a lie
       ${red`╭─────────────────────`}
       ${red`╰─ Branches must not contain more than 1 commit.`}
-      ${red`   (noExcessiveCommitsPerBranch)`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
 
 ${grey`9f1a1b2`} This commit is a lie
         ${red`─┬──`}
          ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
-         ${red`   (useImperativeSubjectLines)`}
-`.trim(),
+         ${red`   ${ruleLink("useImperativeSubjectLines")}`}
+
+Found 8 concerns in 4 commits.`.trim(),
 		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 		expect(printCommandLineWarning).not.toHaveBeenCalled()
