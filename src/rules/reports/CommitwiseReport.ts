@@ -129,12 +129,12 @@ function formatBodyLineConcern(
 	const gutterWidth = Math.ceil(Math.log10(concern.lineNumber + 2)) + 3
 	const concernGutter = indentString(grey`· `, gutterWidth)
 
-	const offset = gutterWidth + 2 + rangeStart
 	const longHalfLength = Math.trunc(length / 2)
 	const shortHalfLength = length - longHalfLength - 1
 
 	const violationLength = message.violation.length + MESSAGE_SUFFIX.length
-	const anchoredRight = violationLength < offset + longHalfLength
+	const rightMessageOffset = rangeStart + longHalfLength - violationLength
+	const anchoredRight = rightMessageOffset >= 0
 
 	const shortSha = getShortSha(commit)
 	const subject = formatTokens(commit.subject)
@@ -150,7 +150,7 @@ function formatBodyLineConcern(
 	)}`
 
 	const messageLines = anchoredRight
-		? getMessageLines(message, rangeStart + longHalfLength - violationLength, true)
+		? getMessageLines(message, rightMessageOffset, true)
 		: getMessageLines(message, rangeStart + shortHalfLength)
 
 	const succeedingBodyLine = getBodyLine(commit.bodyLines, concern.lineNumber + 1, gutterWidth)

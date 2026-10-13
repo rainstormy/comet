@@ -10,7 +10,9 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import { userIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { commitwiseReport } from "#rules/reports/CommitwiseReport.ts"
 import { ruleLink } from "#rules/reports/RuleLink.ts"
+import type { CharacterRange } from "#types/CharacterRange.ts"
 import { fakeCommitSha } from "#types/CommitSha.fakes.ts"
+import { vectorOf } from "#types/Vector.ts"
 import { mockPackageVersion } from "#utilities/package/Package.fakes.ts"
 
 describe("when there are no concerns", () => {
@@ -1891,3 +1893,52 @@ describe("when a rule has a concern", () => {
 		expect(actualOutput).toContain(expectedRuleLink)
 	})
 })
+
+describe.each`
+	bodyLine                                    | range       | expectedRangeMarker | expectedMessageIndent | expectedMessage
+	${"Keep the robot cheerful  today."}        | ${[23, 25]} | ${"┬─"}             | ${23}                 | ${"╰─ Delete excessive whitespace."}
+	${"Keep the robots cheerful  today."}       | ${[24, 26]} | ${"┬─"}             | ${24}                 | ${"╰─ Delete excessive whitespace."}
+	${"Keep the robot very cheerful  today."}   | ${[28, 30]} | ${"┬─"}             | ${28}                 | ${"╰─ Delete excessive whitespace."}
+	${"Keep the robot extra cheerful  today."}  | ${[29, 31]} | ${"─┬"}             | ${0}                  | ${"Delete excessive whitespace. ─╯"}
+	${"Keep the robots extra cheerful  today."} | ${[30, 32]} | ${"─┬"}             | ${1}                  | ${"Delete excessive whitespace. ─╯"}
+`(
+	"when excessive whitespace in $bodyLine is near the message anchoring boundary",
+	(props: {
+		bodyLine: string
+		range: CharacterRange
+		expectedRangeMarker: string
+		expectedMessageIndent: number
+		expectedMessage: string
+	}) => {
+		const configuration = fakeConfiguration()
+		const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+		describe.each`
+			lineNumber | expectedGutter
+			${1}       | ${"    "}
+			${9}       | ${"     "}
+		`(
+			"and the concerned body line index is $lineNumber",
+			(lineProps: { lineNumber: number; expectedGutter: string }) => {
+				it("keeps the instruction inside the body gutter and aligns its connector with the concern", () => {
+					const precedingBodyLines = vectorOf(lineProps.lineNumber, () => "")
+					const commit = fakeCommit({
+						message: ["Fix the parser", ...precedingBodyLines, props.bodyLine].join("\n"),
+					})
+
+					const concern = bodyLineConcern("noExcessiveWhitespace", commit.sha, {
+						lineNumber: lineProps.lineNumber,
+						range: props.range,
+					})
+
+					const actualOutput = commitwiseReport([concern], [commit], configuration)
+
+					const gutter = `${lineProps.expectedGutter}${grey`· `}`
+					expect(actualOutput).toContain(
+						`${gutter}${" ".repeat(props.range[0])}${red`${props.expectedRangeMarker}`}\n${gutter}${" ".repeat(props.expectedMessageIndent)}${red`${props.expectedMessage}`}`,
+					)
+				})
+			},
+		)
+	},
+)
