@@ -66,7 +66,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * ```json
  * {
  *   "rules": {
- *     "useCapitalisedSubjectLines": {
+ *     "useCapitalisedSubjects": {
  *       "level": "error",
  *       "options": {}
  *     }
@@ -112,11 +112,11 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * 99 reasons to upgrade the framework
  * ```
  */
-export function* useCapitalisedSubjectLines(
+export function* useCapitalisedSubjects(
 	commits: Commits,
 	ruleset: RulesetConfiguration,
 ): Generator<Concern> {
-	const rule: RuleKey = "useCapitalisedSubjectLines"
+	const rule: RuleKey = "useCapitalisedSubjects"
 	const configuration = ruleset[rule]
 
 	if (configuration.level === "off") {

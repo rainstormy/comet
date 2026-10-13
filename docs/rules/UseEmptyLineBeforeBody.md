@@ -1,4 +1,4 @@
-# useEmptyLineBeforeBodyLines
+# useEmptyLineBeforeBody
 
 Rejects commits whose message body is not separated from the subject line by exactly one empty line.
 
@@ -54,7 +54,7 @@ This rule has no configurable options.
 ```json
 {
   "rules": {
-    "useEmptyLineBeforeBodyLines": {
+    "useEmptyLineBeforeBody": {
       "level": "error",
       "options": {}
     }

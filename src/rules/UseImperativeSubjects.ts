@@ -74,7 +74,7 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  * ```json
  * {
  *   "rules": {
- *     "useImperativeSubjectLines": {
+ *     "useImperativeSubjects": {
  *       "level": "error",
  *       "options": {
  *         "whitelist": []
@@ -128,11 +128,11 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  * Chatify the release notes
  * ```
  */
-export function* useImperativeSubjectLines(
+export function* useImperativeSubjects(
 	commits: Commits,
 	ruleset: RulesetConfiguration,
 ): Generator<Concern> {
-	const rule: RuleKey = "useImperativeSubjectLines"
+	const rule: RuleKey = "useImperativeSubjects"
 	const configuration = ruleset[rule]
 
 	if (configuration.level === "off") {

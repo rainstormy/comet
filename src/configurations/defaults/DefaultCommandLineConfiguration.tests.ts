@@ -9,18 +9,18 @@ it("does not tokenise issue links", () => {
 })
 
 it.each`
-	enabledRuleKey                   | expectedRuleOptions
-	${"noBlankSubjectLines"}         | ${{}}
-	${"noExcessiveWhitespace"}       | ${{}}
-	${"noMergeCommits"}              | ${{}}
-	${"noSingleWordSubjectLines"}    | ${{}}
-	${"noUnexpectedPunctuation"}     | ${{}}
-	${"useCapitalisedSubjectLines"}  | ${{}}
-	${"useConciseSubjectLines"}      | ${{ maxLength: 50 }}
-	${"useEmptyLineBeforeBodyLines"} | ${{}}
-	${"useImperativeSubjectLines"}   | ${{ whitelist: [] }}
-	${"useLineWrapping"}             | ${{ maxLength: 72 }}
-	${"useSignedCommits"}            | ${{}}
+	enabledRuleKey               | expectedRuleOptions
+	${"noBlankSubjects"}         | ${{}}
+	${"noExcessiveWhitespace"}   | ${{}}
+	${"noMergeCommits"}          | ${{}}
+	${"noSingleWordSubjects"}    | ${{}}
+	${"noUnexpectedPunctuation"} | ${{}}
+	${"useCapitalisedSubjects"}  | ${{}}
+	${"useConciseSubjects"}      | ${{ maxLength: 50 }}
+	${"useEmptyLineBeforeBody"}  | ${{}}
+	${"useImperativeSubjects"}   | ${{ whitelist: [] }}
+	${"useLineWrapping"}         | ${{ maxLength: 72 }}
+	${"useSignedCommits"}        | ${{}}
 `("enables $enabledRuleKey", (props: { enabledRuleKey: RuleKey; expectedRuleOptions: object }) => {
 	const rule = configuration.rules[props.enabledRuleKey]
 	expect(rule).toEqual({ level: "error", options: props.expectedRuleOptions })
@@ -29,9 +29,9 @@ it.each`
 it.each`
 	disabledRuleKey                  | expectedRuleOptions
 	${"noExcessiveCommitsPerBranch"} | ${{ maxCommits: 10 }}
-	${"noRepeatedSubjectLines"}      | ${{}}
+	${"noRepeatedSubjects"}          | ${{}}
 	${"noRestrictedTrailers"}        | ${{ restrictedKeys: [] }}
-	${"noRevertRevertCommits"}       | ${{}}
+	${"noRevertReverts"}             | ${{}}
 	${"noSquashMarkers"}             | ${{}}
 	${"useAuthorEmailPatterns"}      | ${{ patterns: [] }}
 	${"useAuthorNamePatterns"}       | ${{ patterns: [] }}

@@ -10,19 +10,19 @@ it("does not tokenise issue links", () => {
 
 it.each`
 	enabledRuleKey                   | expectedRuleOptions
-	${"noBlankSubjectLines"}         | ${{}}
+	${"noBlankSubjects"}             | ${{}}
 	${"noExcessiveCommitsPerBranch"} | ${{ maxCommits: 10 }}
 	${"noExcessiveWhitespace"}       | ${{}}
 	${"noMergeCommits"}              | ${{}}
-	${"noRepeatedSubjectLines"}      | ${{}}
-	${"noRevertRevertCommits"}       | ${{}}
-	${"noSingleWordSubjectLines"}    | ${{}}
+	${"noRepeatedSubjects"}          | ${{}}
+	${"noRevertReverts"}             | ${{}}
+	${"noSingleWordSubjects"}        | ${{}}
 	${"noSquashMarkers"}             | ${{}}
 	${"noUnexpectedPunctuation"}     | ${{}}
-	${"useCapitalisedSubjectLines"}  | ${{}}
-	${"useConciseSubjectLines"}      | ${{ maxLength: 50 }}
-	${"useEmptyLineBeforeBodyLines"} | ${{}}
-	${"useImperativeSubjectLines"}   | ${{ whitelist: [] }}
+	${"useCapitalisedSubjects"}      | ${{}}
+	${"useConciseSubjects"}          | ${{ maxLength: 50 }}
+	${"useEmptyLineBeforeBody"}      | ${{}}
+	${"useImperativeSubjects"}       | ${{ whitelist: [] }}
 	${"useLineWrapping"}             | ${{ maxLength: 72 }}
 	${"useSignedCommits"}            | ${{}}
 `("enables $enabledRuleKey", (props: { enabledRuleKey: RuleKey; expectedRuleOptions: object }) => {

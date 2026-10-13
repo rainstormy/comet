@@ -157,7 +157,7 @@ Look at the existing default values and rule configurations for inspiration. Usu
 Due to their nature, some rules like `noRestrictedTrailers` and `useAuthorEmailPatterns` depend entirely on their configuration in order to know when to raise concerns.
 They use empty arrays in their default values; hence, they never raise any concerns if they are enabled with default values. Such rules are usually disabled by default in all entrypoints to improve performance.
 
-Note that other rules like `useImperativeSubjectLines` (and `noTypos` in our example) may also use empty arrays in their default values, but they are not entirely dependent on their configuration to raise concerns.
+Note that other rules like `useImperativeSubjects` (and `noTypos` in our example) may also use empty arrays in their default values, but they are not entirely dependent on their configuration to raise concerns.
 They are still able to raise concerns even if the configured array is empty. They should not necessarily be disabled by default.
 
 ## Step 4: Outline unit tests
@@ -330,7 +330,7 @@ The JSDoc comment immediately above the exported generator function is the sourc
 The `vpr build` task generates the corresponding Markdown file in `docs/rules/`, for example `docs/rules/NoTypos.md`.
 Always make documentation changes in the `.ts` file that contains the rule implementation and JSDoc comment.
 
-Read the documentation of a similar existing rule for guidance, for example `src/rules/UseImperativeSubjectLines.ts` for a message rule or `src/rules/UseAuthorEmailPatterns.ts` for an identity rule.
+Read the documentation of a similar existing rule for guidance, for example `src/rules/UseImperativeSubjects.ts` for a message rule or `src/rules/UseAuthorEmailPatterns.ts` for an identity rule.
 
 Always begin with 'Rejects' and state the intent and scope of the rule as clarified in Step 1, including whether it validates subject lines, body lines, identities, commits, or whole branches.
 

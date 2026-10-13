@@ -8,7 +8,7 @@ import { type Concerns, mapCommitsToConcerns } from "#rules/concerns/Concern.ts"
 import { fakeCommitSha } from "#types/CommitSha.fakes.ts"
 import type { Vector } from "#types/Vector.ts"
 
-const rule: RuleKey = "noRepeatedSubjectLines"
+const rule: RuleKey = "noRepeatedSubjects"
 
 const disabled = emptyRulesetConfiguration()
 const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })

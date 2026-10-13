@@ -8,7 +8,7 @@ import { type Concerns, mapCommitsToConcerns } from "#rules/concerns/Concern.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import type { Vector } from "#types/Vector.ts"
 
-const rule: RuleKey = "useEmptyLineBeforeBodyLines"
+const rule: RuleKey = "useEmptyLineBeforeBody"
 
 const disabled = emptyRulesetConfiguration()
 const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })

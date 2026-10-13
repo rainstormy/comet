@@ -150,10 +150,10 @@ describe("a configuration file with some rules configured as 'error'", () => {
 	beforeEach(() => {
 		mockJsonFile<JsonConfigurationDto>(path, {
 			rules: {
-				noBlankSubjectLines: "error",
+				noBlankSubjects: "error",
 				noMergeCommits: "error",
-				useConciseSubjectLines: "error",
-				useImperativeSubjectLines: "error",
+				useConciseSubjects: "error",
+				useImperativeSubjects: "error",
 			},
 		})
 	})
@@ -163,10 +163,10 @@ describe("a configuration file with some rules configured as 'error'", () => {
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
 			git: {},
 			rules: {
-				noBlankSubjectLines: { level: "error" },
+				noBlankSubjects: { level: "error" },
 				noMergeCommits: { level: "error" },
-				useConciseSubjectLines: { level: "error" },
-				useImperativeSubjectLines: { level: "error" },
+				useConciseSubjects: { level: "error" },
+				useImperativeSubjects: { level: "error" },
 			},
 			tokens: {},
 		})
@@ -178,8 +178,8 @@ describe("a configuration file with some rules configured as 'off'", () => {
 		mockJsonFile<JsonConfigurationDto>(path, {
 			rules: {
 				noExcessiveCommitsPerBranch: "off",
-				noRepeatedSubjectLines: "off",
-				useCapitalisedSubjectLines: "off",
+				noRepeatedSubjects: "off",
+				useCapitalisedSubjects: "off",
 				useLineWrapping: "off",
 			},
 		})
@@ -191,8 +191,8 @@ describe("a configuration file with some rules configured as 'off'", () => {
 			git: {},
 			rules: {
 				noExcessiveCommitsPerBranch: { level: "off" },
-				noRepeatedSubjectLines: { level: "off" },
-				useCapitalisedSubjectLines: { level: "off" },
+				noRepeatedSubjects: { level: "off" },
+				useCapitalisedSubjects: { level: "off" },
 				useLineWrapping: { level: "off" },
 			},
 			tokens: {},
@@ -208,7 +208,7 @@ describe("a configuration file with some rules configured as objects", () => {
 					level: "error",
 					options: { maxCommits: 7 },
 				},
-				noRepeatedSubjectLines: {
+				noRepeatedSubjects: {
 					level: "error",
 					options: {},
 				},
@@ -233,7 +233,7 @@ describe("a configuration file with some rules configured as objects", () => {
 					level: "error",
 					options: { maxCommits: 7 },
 				},
-				noRepeatedSubjectLines: {
+				noRepeatedSubjects: {
 					level: "error",
 					options: {},
 				},
@@ -259,8 +259,8 @@ describe.each`
 	${"useAuthorNamePatterns"}       | ${{ patterns: ["Ada Lovelace", String.raw`Grace .+`] }}
 	${"useCommitterEmailPatterns"}   | ${{ patterns: [String.raw`automation@.+\.dev`] }}
 	${"useCommitterNamePatterns"}    | ${{ patterns: ["Release Robot", String.raw`Dependabot .+`] }}
-	${"useConciseSubjectLines"}      | ${{ maxLength: 64 }}
-	${"useImperativeSubjectLines"}   | ${{ whitelist: ["Revert", "Release"] }}
+	${"useConciseSubjects"}          | ${{ maxLength: 64 }}
+	${"useImperativeSubjects"}       | ${{ whitelist: ["Revert", "Release"] }}
 	${"useIssueLinks"}               | ${{ position: "anywhere" }}
 	${"useIssueLinks"}               | ${{ position: "prefix" }}
 	${"useIssueLinks"}               | ${{ position: "suffix" }}
@@ -293,13 +293,13 @@ describe("a configuration file with a mixed ruleset of valid options", () => {
 	beforeEach(() => {
 		mockJsonFile<JsonConfigurationDto>(path, {
 			rules: {
-				noBlankSubjectLines: "off",
+				noBlankSubjects: "off",
 				noExcessiveCommitsPerBranch: {
 					level: "error",
 					options: { maxCommits: 5 },
 				},
-				useConciseSubjectLines: "error",
-				useImperativeSubjectLines: {
+				useConciseSubjects: "error",
+				useImperativeSubjects: {
 					level: "error",
 					options: { whitelist: ["chatify"] },
 				},
@@ -316,13 +316,13 @@ describe("a configuration file with a mixed ruleset of valid options", () => {
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
 			git: {},
 			rules: {
-				noBlankSubjectLines: { level: "off" },
+				noBlankSubjects: { level: "off" },
 				noExcessiveCommitsPerBranch: {
 					level: "error",
 					options: { maxCommits: 5 },
 				},
-				useConciseSubjectLines: { level: "error" },
-				useImperativeSubjectLines: {
+				useConciseSubjects: { level: "error" },
+				useImperativeSubjects: {
 					level: "error",
 					options: { whitelist: ["chatify"] },
 				},
@@ -342,7 +342,7 @@ describe("a complete configuration file", () => {
 			$schema: "https://example.com/schema.json",
 			git: { defaultBranch: "github/main" },
 			rules: {
-				noBlankSubjectLines: "error",
+				noBlankSubjects: "error",
 				noExcessiveCommitsPerBranch: {
 					level: "error",
 					options: { maxCommits: 7 },
@@ -352,13 +352,13 @@ describe("a complete configuration file", () => {
 					options: {},
 				},
 				noMergeCommits: "off",
-				noRepeatedSubjectLines: "error",
+				noRepeatedSubjects: "error",
 				noRestrictedTrailers: {
 					level: "error",
 					options: { restrictedKeys: ["Co-authored-by"] },
 				},
-				noRevertRevertCommits: "off",
-				noSingleWordSubjectLines: {
+				noRevertReverts: "off",
+				noSingleWordSubjects: {
 					level: "error",
 					options: {},
 				},
@@ -372,7 +372,7 @@ describe("a complete configuration file", () => {
 					level: "error",
 					options: { patterns: ["Ada Lovelace"] },
 				},
-				useCapitalisedSubjectLines: "error",
+				useCapitalisedSubjects: "error",
 				useCommitterEmailPatterns: {
 					level: "off",
 					options: { patterns: [String.raw`automation@.+\.dev`] },
@@ -381,12 +381,12 @@ describe("a complete configuration file", () => {
 					level: "off",
 					options: { patterns: ["Release Robot"] },
 				},
-				useConciseSubjectLines: {
+				useConciseSubjects: {
 					level: "error",
 					options: { maxLength: 64 },
 				},
-				useEmptyLineBeforeBodyLines: "off",
-				useImperativeSubjectLines: {
+				useEmptyLineBeforeBody: "off",
+				useImperativeSubjects: {
 					level: "error",
 					options: { whitelist: ["Revert"] },
 				},
@@ -414,20 +414,20 @@ describe("a complete configuration file", () => {
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
 			git: { defaultBranch: "github/main" },
 			rules: {
-				noBlankSubjectLines: { level: "error" },
+				noBlankSubjects: { level: "error" },
 				noExcessiveCommitsPerBranch: {
 					level: "error",
 					options: { maxCommits: 7 },
 				},
 				noExcessiveWhitespace: { level: "off", options: {} },
 				noMergeCommits: { level: "off" },
-				noRepeatedSubjectLines: { level: "error" },
+				noRepeatedSubjects: { level: "error" },
 				noRestrictedTrailers: {
 					level: "error",
 					options: { restrictedKeys: ["Co-authored-by"] },
 				},
-				noRevertRevertCommits: { level: "off" },
-				noSingleWordSubjectLines: { level: "error", options: {} },
+				noRevertReverts: { level: "off" },
+				noSingleWordSubjects: { level: "error", options: {} },
 				noSquashMarkers: { level: "error" },
 				noUnexpectedPunctuation: { level: "off" },
 				useAuthorEmailPatterns: {
@@ -438,7 +438,7 @@ describe("a complete configuration file", () => {
 					level: "error",
 					options: { patterns: ["Ada Lovelace"] },
 				},
-				useCapitalisedSubjectLines: { level: "error" },
+				useCapitalisedSubjects: { level: "error" },
 				useCommitterEmailPatterns: {
 					level: "off",
 					options: { patterns: [String.raw`automation@.+\.dev`] },
@@ -447,12 +447,12 @@ describe("a complete configuration file", () => {
 					level: "off",
 					options: { patterns: ["Release Robot"] },
 				},
-				useConciseSubjectLines: {
+				useConciseSubjects: {
 					level: "error",
 					options: { maxLength: 64 },
 				},
-				useEmptyLineBeforeBodyLines: { level: "off" },
-				useImperativeSubjectLines: {
+				useEmptyLineBeforeBody: { level: "off" },
+				useImperativeSubjects: {
 					level: "error",
 					options: { whitelist: ["Revert"] },
 				},
@@ -551,7 +551,7 @@ describe("a configuration file that extends another file that extends a third fi
 					level: "error",
 					options: { maxCommits: 5 },
 				},
-				noRepeatedSubjectLines: "error",
+				noRepeatedSubjects: "error",
 			},
 		})
 		mockJsonFile<JsonConfigurationDto>(path, {
@@ -577,7 +577,7 @@ describe("a configuration file that extends another file that extends a third fi
 					options: { maxCommits: 3 },
 				},
 				noMergeCommits: { level: "off" },
-				noRepeatedSubjectLines: { level: "error" },
+				noRepeatedSubjects: { level: "error" },
 				noSquashMarkers: { level: "off" },
 			},
 			tokens: {},
@@ -712,7 +712,7 @@ describe("a large configuration file that extends another large file that extend
 					level: "error",
 					options: { maxCommits: 5 },
 				},
-				noRepeatedSubjectLines: "error",
+				noRepeatedSubjects: "error",
 				useAuthorEmailPatterns: {
 					level: "error",
 					options: { patterns: [String.raw`.+@team\.example\.com`] },
@@ -737,7 +737,7 @@ describe("a large configuration file that extends another large file that extend
 					options: { maxCommits: 3 },
 				},
 				noSquashMarkers: "off",
-				useConciseSubjectLines: {
+				useConciseSubjects: {
 					level: "error",
 					options: { maxLength: 72 },
 				},
@@ -756,7 +756,7 @@ describe("a large configuration file that extends another large file that extend
 					options: { maxCommits: 3 },
 				},
 				noMergeCommits: { level: "off" },
-				noRepeatedSubjectLines: { level: "error" },
+				noRepeatedSubjects: { level: "error" },
 				noSquashMarkers: { level: "off" },
 				useAuthorEmailPatterns: {
 					level: "error",
@@ -764,7 +764,7 @@ describe("a large configuration file that extends another large file that extend
 						patterns: [String.raw`.+@example\.com`, String.raw`.+@team\.example\.com`],
 					},
 				},
-				useConciseSubjectLines: {
+				useConciseSubjects: {
 					level: "error",
 					options: { maxLength: 72 },
 				},
@@ -834,7 +834,7 @@ describe("a complex JSONC configuration file with line and block comments", () =
 	},
 	"rules": {
 		"useSignedCommits": "error", // Company requirement.
-		"noBlankSubjectLines": "error",
+		"noBlankSubjects": "error",
 		"noExcessiveCommitsPerBranch": {
 			"level": "error",
 			// We've agreed on the limit in our team to keep pull requests small.
@@ -845,7 +845,7 @@ describe("a complex JSONC configuration file with line and block comments", () =
 			"options": { }
 		},
 		"noMergeCommits": "error",
-		"noRepeatedSubjectLines": "error",
+		"noRepeatedSubjects": "error",
 		"noRestrictedTrailers": {
 			"level": "error",
 			"options": { 
@@ -855,8 +855,8 @@ describe("a complex JSONC configuration file with line and block comments", () =
 				]
 			}
 		},
-		"noRevertRevertCommits": "error",
-		"noSingleWordSubjectLines": {
+		"noRevertReverts": "error",
+		"noSingleWordSubjects": {
 			"level": "error",
 			"options": { }
 		},
@@ -864,15 +864,15 @@ describe("a complex JSONC configuration file with line and block comments", () =
 		"noUnexpectedPunctuation": "off",
 		"useAuthorEmailPatterns": "off",
 		"useAuthorNamePatterns": "off",
-		"useCapitalisedSubjectLines": "error",
+		"useCapitalisedSubjects": "error",
 		"useCommitterEmailPatterns": "off",
 		"useCommitterNamePatterns": "off",
-		"useConciseSubjectLines": {
+		"useConciseSubjects": {
 			"level": "off", // temporarily disabled
 			"options": { "maxLength": 72 }
 		},
-		"useEmptyLineBeforeBodyLines": "off",
-		"useImperativeSubjectLines": {
+		"useEmptyLineBeforeBody": "off",
+		"useImperativeSubjects": {
 			"level": "error",
 			"options": { "whitelist": ["chatify", "dockerise"] }
 		},
@@ -894,7 +894,7 @@ describe("a complex JSONC configuration file with line and block comments", () =
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
 			git: {},
 			rules: {
-				noBlankSubjectLines: { level: "error" },
+				noBlankSubjects: { level: "error" },
 				noExcessiveCommitsPerBranch: {
 					level: "error",
 					options: { maxCommits: 2 },
@@ -904,15 +904,15 @@ describe("a complex JSONC configuration file with line and block comments", () =
 					options: {},
 				},
 				noMergeCommits: { level: "error" },
-				noRepeatedSubjectLines: { level: "error" },
+				noRepeatedSubjects: { level: "error" },
 				noRestrictedTrailers: {
 					level: "error",
 					options: {
 						restrictedKeys: ["Co-authored-by"],
 					},
 				},
-				noRevertRevertCommits: { level: "error" },
-				noSingleWordSubjectLines: {
+				noRevertReverts: { level: "error" },
+				noSingleWordSubjects: {
 					level: "error",
 					options: {},
 				},
@@ -920,15 +920,15 @@ describe("a complex JSONC configuration file with line and block comments", () =
 				noUnexpectedPunctuation: { level: "off" },
 				useAuthorEmailPatterns: { level: "off" },
 				useAuthorNamePatterns: { level: "off" },
-				useCapitalisedSubjectLines: { level: "error" },
+				useCapitalisedSubjects: { level: "error" },
 				useCommitterEmailPatterns: { level: "off" },
 				useCommitterNamePatterns: { level: "off" },
-				useConciseSubjectLines: {
+				useConciseSubjects: {
 					level: "off", // temporarily disabled
 					options: { maxLength: 72 },
 				},
-				useEmptyLineBeforeBodyLines: { level: "off" },
-				useImperativeSubjectLines: {
+				useEmptyLineBeforeBody: { level: "off" },
+				useImperativeSubjects: {
 					level: "error",
 					options: { whitelist: ["chatify", "dockerise"] },
 				},
@@ -983,7 +983,7 @@ describe("a JSONC configuration file that extends another JSONC configuration fi
 	},
 	"rules": {
 		"noMergeCommits": "error",
-		"noRepeatedSubjectLines": "error",
+		"noRepeatedSubjects": "error",
 		"useAuthorEmailPatterns": {
 			"level": "error",
 			"options": { "patterns": [".+@team.example.com"] }
@@ -1021,7 +1021,7 @@ describe("a JSONC configuration file that extends another JSONC configuration fi
 			git: {},
 			rules: {
 				noMergeCommits: { level: "off" },
-				noRepeatedSubjectLines: { level: "error" },
+				noRepeatedSubjects: { level: "error" },
 				noSquashMarkers: { level: "off" },
 				useAuthorEmailPatterns: {
 					level: "off",
@@ -1159,7 +1159,7 @@ describe("a JSON configuration file that extends a JSONC configuration file", ()
 					level: "off",
 					options: { restrictedKeys: ["Reviewed-by"] },
 				},
-				noSingleWordSubjectLines: "off",
+				noSingleWordSubjects: "off",
 				useAuthorNamePatterns: "off",
 				useSignedCommits: "off",
 			},
@@ -1175,7 +1175,7 @@ describe("a JSON configuration file that extends a JSONC configuration file", ()
 					level: "off",
 					options: { restrictedKeys: ["Co-authored-by", "Reviewed-by"] },
 				},
-				noSingleWordSubjectLines: { level: "off" },
+				noSingleWordSubjects: { level: "off" },
 				useAuthorNamePatterns: {
 					level: "off",
 					options: { patterns: ["Ada Lovelace"] },
@@ -1292,9 +1292,9 @@ describe("a configuration file with some rules configured as 'warn'", () => {
 	beforeEach(() => {
 		mockJsonFile(path, {
 			rules: {
-				noBlankSubjectLines: "warn",
-				noRepeatedSubjectLines: "off",
-				useCapitalisedSubjectLines: "warn",
+				noBlankSubjects: "warn",
+				noRepeatedSubjects: "off",
+				useCapitalisedSubjects: "warn",
 				useLineWrapping: "error",
 				useSignedCommits: "off",
 			},
@@ -1303,7 +1303,7 @@ describe("a configuration file with some rules configured as 'warn'", () => {
 
 	it("raises an error about the first invalid rule", async () => {
 		await expect(getConfiguration(path)).rejects.toThrow(
-			`Failed to parse 'comet.json' as a Comet configuration: 'noBlankSubjectLines' must be 'error', 'off', or an object of 'level' and 'options', but it is a string: warn`,
+			`Failed to parse 'comet.json' as a Comet configuration: 'noBlankSubjects' must be 'error', 'off', or an object of 'level' and 'options', but it is a string: warn`,
 		)
 	})
 })
@@ -1331,14 +1331,14 @@ describe("a configuration file with a rule object that has no level", () => {
 	beforeEach(() => {
 		mockJsonFile(path, {
 			rules: {
-				useConciseSubjectLines: { options: {} },
+				useConciseSubjects: { options: {} },
 			},
 		})
 	})
 
 	it("raises an error", async () => {
 		await expect(getConfiguration(path)).rejects.toThrow(
-			"Failed to parse 'comet.json' as a Comet configuration: 'level' is missing in 'useConciseSubjectLines'",
+			"Failed to parse 'comet.json' as a Comet configuration: 'level' is missing in 'useConciseSubjects'",
 		)
 	})
 })
@@ -1347,14 +1347,14 @@ describe("a configuration file with a rule object that has a level of 'warn'", (
 	beforeEach(() => {
 		mockJsonFile(path, {
 			rules: {
-				noRevertRevertCommits: { level: "warn", options: {} },
+				noRevertReverts: { level: "warn", options: {} },
 			},
 		})
 	})
 
 	it("raises an error", async () => {
 		await expect(getConfiguration(path)).rejects.toThrow(
-			`Failed to parse 'comet.json' as a Comet configuration: 'level' of 'noRevertRevertCommits' must be 'error' or 'off', but it is a string: warn`,
+			`Failed to parse 'comet.json' as a Comet configuration: 'level' of 'noRevertReverts' must be 'error' or 'off', but it is a string: warn`,
 		)
 	})
 })
@@ -1363,14 +1363,14 @@ describe("a configuration file with a rule object that has a level being a numbe
 	beforeEach(() => {
 		mockJsonFile(path, {
 			rules: {
-				useCapitalisedSubjectLines: { level: 0, options: {} },
+				useCapitalisedSubjects: { level: 0, options: {} },
 			},
 		})
 	})
 
 	it("raises an error", async () => {
 		await expect(getConfiguration(path)).rejects.toThrow(
-			"Failed to parse 'comet.json' as a Comet configuration: 'level' of 'useCapitalisedSubjectLines' must be 'error' or 'off', but it is a number: 0",
+			"Failed to parse 'comet.json' as a Comet configuration: 'level' of 'useCapitalisedSubjects' must be 'error' or 'off', but it is a number: 0",
 		)
 	})
 })
@@ -1399,9 +1399,9 @@ describe.each`
 	${"useAuthorNamePatterns"}       | ${{ patterns: 512 }}                   | ${"'patterns' of 'useAuthorNamePatterns' must be an array of strings, but it is a number: 512"}
 	${"useCommitterEmailPatterns"}   | ${{ patterns: "hello world" }}         | ${`'patterns' of 'useCommitterEmailPatterns' must be an array of strings, but it is a string: hello world`}
 	${"useCommitterNamePatterns"}    | ${{ patterns: { untold: "message" } }} | ${`'patterns' of 'useCommitterNamePatterns' must be an array of strings, but it is an object: { "untold": "message" }`}
-	${"useConciseSubjectLines"}      | ${{ maxLength: -5 }}                   | ${"'maxLength' of 'useConciseSubjectLines' must be a positive integer, but it is a number: -5"}
-	${"useConciseSubjectLines"}      | ${{}}                                  | ${"'maxLength' of 'useConciseSubjectLines' is missing"}
-	${"useImperativeSubjectLines"}   | ${{ whitelist: false }}                | ${"'whitelist' of 'useImperativeSubjectLines' must be an array of strings, but it is a boolean: false"}
+	${"useConciseSubjects"}          | ${{ maxLength: -5 }}                   | ${"'maxLength' of 'useConciseSubjects' must be a positive integer, but it is a number: -5"}
+	${"useConciseSubjects"}          | ${{}}                                  | ${"'maxLength' of 'useConciseSubjects' is missing"}
+	${"useImperativeSubjects"}       | ${{ whitelist: false }}                | ${"'whitelist' of 'useImperativeSubjects' must be an array of strings, but it is a boolean: false"}
 	${"useIssueLinks"}               | ${{ position: "middle" }}              | ${`'position' of 'useIssueLinks' must be 'anywhere', 'prefix', or 'suffix', but it is a string: middle`}
 	${"useLineWrapping"}             | ${{ maxLength: 1.5 }}                  | ${"'maxLength' of 'useLineWrapping' must be a positive integer, but it is a number: 1.5"}
 `(
@@ -1448,7 +1448,7 @@ describe("a configuration file with a rule object containing an unknown option",
 	beforeEach(() => {
 		mockJsonFile(path, {
 			rules: {
-				useEmptyLineBeforeBodyLines: {
+				useEmptyLineBeforeBody: {
 					level: "off",
 					options: { unknownOption: true },
 				},
@@ -1458,7 +1458,7 @@ describe("a configuration file with a rule object containing an unknown option",
 
 	it("raises an error", async () => {
 		await expect(getConfiguration(path)).rejects.toThrow(
-			"Failed to parse 'comet.json' as a Comet configuration: 'unknownOption' is not a valid option of 'useEmptyLineBeforeBodyLines'",
+			"Failed to parse 'comet.json' as a Comet configuration: 'unknownOption' is not a valid option of 'useEmptyLineBeforeBody'",
 		)
 	})
 })

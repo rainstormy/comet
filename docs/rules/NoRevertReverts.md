@@ -1,4 +1,4 @@
-# noRevertRevertCommits
+# noRevertReverts
 
 Rejects subject lines with more than one revert marker, encouraging cherry-picking the original commit.
 
@@ -82,7 +82,7 @@ This rule has no configurable options.
 ```json
 {
   "rules": {
-    "noRevertRevertCommits": {
+    "noRevertReverts": {
       "level": "error",
       "options": {}
     }

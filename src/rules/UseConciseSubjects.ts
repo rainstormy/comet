@@ -69,7 +69,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * ```json
  * {
  *   "rules": {
- *     "useConciseSubjectLines": {
+ *     "useConciseSubjects": {
  *       "level": "error",
  *       "options": {
  *         "maxLength": 50
@@ -123,11 +123,11 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *
  * - [useLineWrapping](./UseLineWrapping.md)
  */
-export function* useConciseSubjectLines(
+export function* useConciseSubjects(
 	commits: Commits,
 	ruleset: RulesetConfiguration,
 ): Generator<Concern> {
-	const rule: RuleKey = "useConciseSubjectLines"
+	const rule: RuleKey = "useConciseSubjects"
 	const configuration = ruleset[rule]
 
 	if (configuration.level === "off") {

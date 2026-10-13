@@ -222,12 +222,12 @@ describe("when there is 1 commit that raises concerns in the default configurati
 ${grey`98634c1`} fix!
         ${red`┬`}
         ${red`╰─ The first letter in subject lines must be in uppercase.`}
-        ${red`   ${ruleLink("useCapitalisedSubjectLines")}`}
+        ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 ${grey`98634c1`} fix!
         ${red`─┬─`}
          ${red`╰─ Subject lines must contain at least two words.`}
-         ${red`   ${ruleLink("noSingleWordSubjectLines")}`}
+         ${red`   ${ruleLink("noSingleWordSubjects")}`}
 
 ${grey`98634c1`} fix!
            ${red`┬`}
@@ -323,7 +323,7 @@ describe("when there are 3 commits that raise concerns in the default configurat
 ${grey`335aee6`} polish the tea set
         ${red`┬`}
         ${red`╰─ The first letter in subject lines must be in uppercase.`}
-        ${red`   ${ruleLink("useCapitalisedSubjectLines")}`}
+        ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 ${grey`6f8dafa`} Document the tea set
     ${grey`╭──`}
@@ -391,7 +391,7 @@ ${grey`b676d38`} fixup! polish the tea set!
 ${grey`b676d38`} fixup! polish the tea set!
                ${red`┬`}
                ${red`╰─ The first letter in subject lines must be in uppercase.`}
-               ${red`   ${ruleLink("useCapitalisedSubjectLines")}`}
+               ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 ${grey`b676d38`} fixup! polish the tea set!
                                  ${red`┬`}
@@ -417,7 +417,7 @@ ${grey`41a0e1d`} Review the tea set
 ${red`•`} ${grey`${bold`1`} │`} Well well well would you look at this.
     ${grey`· `}${red`┬`}
     ${grey`· `}${red`╰─ Subject lines and message bodies must be separated by exactly one empty line.`}
-    ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBodyLines")}`}
+    ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBody")}`}
   ${grey`2 │ `}
     ${grey`╰──`}
 
@@ -590,7 +590,7 @@ describe("when there are no commits in the custom 'comet.json' configuration", (
 					level: "error",
 					options: { maxCommits: 3 },
 				},
-				noRepeatedSubjectLines: "error",
+				noRepeatedSubjects: "error",
 				useIssueLinks: {
 					level: "error",
 					options: { position: "suffix" },
@@ -624,8 +624,8 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 	beforeEach(async () => {
 		mockJsonFile("comet.json", {
 			rules: {
-				noRepeatedSubjectLines: "error",
-				useImperativeSubjectLines: {
+				noRepeatedSubjects: "error",
+				useImperativeSubjects: {
 					level: "error",
 					options: { whitelist: ["deployify"] },
 				},
@@ -876,7 +876,7 @@ describe("when there are 5 commits that raise concerns in the custom 'comet.json
 	beforeEach(async () => {
 		mockJsonFile("comet.json", {
 			rules: {
-				useConciseSubjectLines: {
+				useConciseSubjects: {
 					level: "error",
 					options: { maxLength: 22 },
 				},
@@ -917,27 +917,27 @@ describe("when there are 5 commits that raise concerns in the custom 'comet.json
 ${grey`3cfe8b3`} Calibrate the midnight bell
                               ${red`──┬──`}
                                 ${red`╰─ Subject lines must not exceed 22 characters.`}
-                                ${red`   ${ruleLink("useConciseSubjectLines")}`}
+                                ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`41a0e1d`} Document the curious dial
                               ${red`─┬─`}
                                ${red`╰─ Subject lines must not exceed 22 characters.`}
-                               ${red`   ${ruleLink("useConciseSubjectLines")}`}
+                               ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`7f811b2`} Rehearse the evacuation waltz
                               ${red`───┬───`}
                                  ${red`╰─ Subject lines must not exceed 22 characters.`}
-                                 ${red`   ${ruleLink("useConciseSubjectLines")}`}
+                                 ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`a43a3f3`} Replace the ceremonial switch
                               ${red`───┬───`}
                                  ${red`╰─ Subject lines must not exceed 22 characters.`}
-                                 ${red`   ${ruleLink("useConciseSubjectLines")}`}
+                                 ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`c0ffee1`} Untangle the improbable cables
                               ${red`───┬────`}
                                  ${red`╰─ Subject lines must not exceed 22 characters.`}
-                                 ${red`   ${ruleLink("useConciseSubjectLines")}`}
+                                 ${red`   ${ruleLink("useConciseSubjects")}`}
 
 Found 5 concerns in 5 commits.`.trim(),
 		)
@@ -956,7 +956,7 @@ describe("when there is 1 commit that raises no concerns in the custom 'comet.js
 			`{
 	// Release commit subjects are intentionally lower-case in this repository.
 	"rules": {
-		"useCapitalisedSubjectLines": "off"
+		"useCapitalisedSubjects": "off"
 	}
 }`,
 		)
@@ -1053,7 +1053,7 @@ describe("when both 'comet.json' and 'comet.jsonc' are present", () => {
 						],
 					},
 				},
-				useConciseSubjectLines: {
+				useConciseSubjects: {
 					level: "error",
 					options: { maxLength: 25 },
 				},
@@ -1079,7 +1079,7 @@ describe("when both 'comet.json' and 'comet.jsonc' are present", () => {
 			"level": "error",
 			"options": { "patterns": ["anonymous"] }
 		},
-		"useConciseSubjectLines": {
+		"useConciseSubjects": {
 			"level": "error",
 			"options": { "maxLength": 50 }
 		},
@@ -1130,7 +1130,7 @@ ${grey`╰─ authored by:`} anonymous
 ${grey`e6f1b4a`} Document the extremely important tea ceremony
                                  ${red`─────────┬──────────`}
                                           ${red`╰─ Subject lines must not exceed 25 characters.`}
-                                          ${red`   ${ruleLink("useConciseSubjectLines")}`}
+                                          ${red`   ${ruleLink("useConciseSubjects")}`}
 
 ${grey`f7a2c5b`} Review the tiny blueprint
     ${grey`╭──`}
@@ -1171,8 +1171,8 @@ describe("when there are no commits in the custom configuration from 'configs/st
 		mockGithubEnv({ configPath: "configs/strict-comet.json" })
 		mockJsonFile("comet.json", {
 			rules: {
-				noRepeatedSubjectLines: "off",
-				useCapitalisedSubjectLines: "error",
+				noRepeatedSubjects: "off",
+				useCapitalisedSubjects: "error",
 				useIssueLinks: "off",
 			},
 			tokens: {
@@ -1187,7 +1187,7 @@ describe("when there are no commits in the custom configuration from 'configs/st
 					level: "error",
 					options: { restrictedKeys: ["Signed-off-by"] },
 				},
-				noRevertRevertCommits: "error",
+				noRevertReverts: "error",
 				useIssueLinks: {
 					level: "error",
 					options: { position: "suffix" },
@@ -1222,8 +1222,8 @@ describe("when there is 1 commit that raises no concerns in the custom configura
 		mockGithubEnv({ configPath: "configs/strict-comet.json" })
 		mockJsonFile("comet.json", {
 			rules: {
-				noRepeatedSubjectLines: "off",
-				useCapitalisedSubjectLines: "error",
+				noRepeatedSubjects: "off",
+				useCapitalisedSubjects: "error",
 				useIssueLinks: "off",
 			},
 			tokens: {
@@ -1276,8 +1276,8 @@ describe("when there are 7 commits that raise no concerns in the custom configur
 		mockGithubEnv({ configPath: "configs/strict-comet.json" })
 		mockJsonFile("comet.json", {
 			rules: {
-				noRepeatedSubjectLines: "off",
-				useCapitalisedSubjectLines: "error",
+				noRepeatedSubjects: "off",
+				useCapitalisedSubjects: "error",
 				useIssueLinks: "off",
 			},
 			tokens: {
@@ -1288,7 +1288,7 @@ describe("when there are 7 commits that raise no concerns in the custom configur
 		})
 		mockJsonFile("configs/strict-comet.json", {
 			rules: {
-				noRepeatedSubjectLines: "error",
+				noRepeatedSubjects: "error",
 				noExcessiveCommitsPerBranch: {
 					level: "error",
 					options: { maxCommits: 4 },
@@ -1330,8 +1330,8 @@ describe("when there is 1 commit that raises concerns in the custom configuratio
 		mockGithubEnv({ configPath: "configs/strict-comet.json" })
 		mockJsonFile("comet.json", {
 			rules: {
-				noRepeatedSubjectLines: "off",
-				useCapitalisedSubjectLines: "error",
+				noRepeatedSubjects: "off",
+				useCapitalisedSubjects: "error",
 				useIssueLinks: "off",
 			},
 			tokens: {
@@ -1387,8 +1387,8 @@ describe("when there are 2 commits that raise concerns in the custom configurati
 		mockGithubEnv({ configPath: "configs/strict-comet.json" })
 		mockJsonFile("comet.json", {
 			rules: {
-				noRepeatedSubjectLines: "off",
-				useCapitalisedSubjectLines: "error",
+				noRepeatedSubjects: "off",
+				useCapitalisedSubjects: "error",
 				useIssueLinks: "off",
 			},
 			tokens: {
@@ -1458,8 +1458,8 @@ describe("when there are 4 commits where 3 of them raise concerns in the custom 
 		mockGithubEnv({ configPath: "configs/strict-comet.json" })
 		mockJsonFile("comet.json", {
 			rules: {
-				noRepeatedSubjectLines: "off",
-				useCapitalisedSubjectLines: "error",
+				noRepeatedSubjects: "off",
+				useCapitalisedSubjects: "error",
 				useIssueLinks: "off",
 			},
 			tokens: {
@@ -1550,8 +1550,8 @@ describe("when there are 5 commits where 1 of them raises concerns in the custom
 		mockGithubEnv({ configPath: "configs/strict-comet.json" })
 		mockJsonFile("comet.json", {
 			rules: {
-				noRepeatedSubjectLines: "off",
-				useCapitalisedSubjectLines: "error",
+				noRepeatedSubjects: "off",
+				useCapitalisedSubjects: "error",
 				useIssueLinks: "off",
 			},
 			tokens: {
@@ -1562,7 +1562,7 @@ describe("when there are 5 commits where 1 of them raises concerns in the custom
 		})
 		mockJsonFile("configs/strict-comet.json", {
 			rules: {
-				noRevertRevertCommits: "error",
+				noRevertReverts: "error",
 				useIssueLinks: {
 					level: "error",
 					options: { position: "prefix" },
@@ -1598,7 +1598,7 @@ describe("when there are 5 commits where 1 of them raises concerns in the custom
 ${grey`7f811b2`} Revert "Revert "Disable the alarm""
         ${red`──────┬───────`}
               ${red`╰─ Cherry-pick the original commit instead of reverting it over.`}
-              ${red`   ${ruleLink("noRevertRevertCommits")}`}
+              ${red`   ${ruleLink("noRevertReverts")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -1618,7 +1618,7 @@ describe("when there is 1 commit that raises no concerns in the custom configura
 			`{
 	/* Automated release subjects retain the legacy lower-case convention. */
 	"rules": {
-		"useCapitalisedSubjectLines": "off"
+		"useCapitalisedSubjects": "off"
 	}
 }`,
 		)
@@ -1819,14 +1819,14 @@ describe.each`
 	${["OBFUSCATE", "abjure"]}                                      | ${"obfuscate, abjure"}
 	${[" ABJURE ", "StReAmLiNe", "obfuscate", "abjure", "chatify"]} | ${"abjure, streamline, obfuscate"}
 `(
-	"when 'useImperativeSubjectLines' is enabled with a whitelist of $whitelist that contains redundant words",
+	"when 'useImperativeSubjects' is enabled with a whitelist of $whitelist that contains redundant words",
 	(props: { whitelist: Array<string>; expectedRedundantWordsList: string }) => {
 		let exitCode: ExitCode
 
 		beforeEach(async () => {
 			mockJsonFile("comet.json", {
 				rules: {
-					useImperativeSubjectLines: {
+					useImperativeSubjects: {
 						level: "error",
 						options: { whitelist: props.whitelist },
 					},
@@ -1842,7 +1842,7 @@ describe.each`
 
 		it("prints a configuration warning", () => {
 			expect(printGithubActionsWarning).toHaveBeenCalledExactlyOnceWith(
-				`${bold`1 issue detected in the Comet configuration:`}\n- 'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: ${props.expectedRedundantWordsList}\n`,
+				`${bold`1 issue detected in the Comet configuration:`}\n- 'whitelist' of 'useImperativeSubjects' contains words that are already recognised as imperative verbs: ${props.expectedRedundantWordsList}\n`,
 			)
 			expect(printMessage).not.toHaveBeenCalled()
 			expect(printGithubActionsError).not.toHaveBeenCalled()
@@ -1855,14 +1855,14 @@ describe.each`
 	${[]}
 	${["chatify", "deployify"]}
 `(
-	"when 'useImperativeSubjectLines' is enabled with a whitelist of $whitelist that does not contain any redundant words",
+	"when 'useImperativeSubjects' is enabled with a whitelist of $whitelist that does not contain any redundant words",
 	(props: { whitelist: Array<string> }) => {
 		let exitCode: ExitCode
 
 		beforeEach(async () => {
 			mockJsonFile("comet.json", {
 				rules: {
-					useImperativeSubjectLines: {
+					useImperativeSubjects: {
 						level: "error",
 						options: { whitelist: props.whitelist },
 					},
@@ -1884,13 +1884,13 @@ describe.each`
 	},
 )
 
-describe("when 'useImperativeSubjectLines' is disabled a whitelist that contains redundant words", () => {
+describe("when 'useImperativeSubjects' is disabled a whitelist that contains redundant words", () => {
 	let exitCode: ExitCode
 
 	beforeEach(async () => {
 		mockJsonFile("comet.json", {
 			rules: {
-				useImperativeSubjectLines: {
+				useImperativeSubjects: {
 					level: "off",
 					options: { whitelist: [" DISCOMBOBULATE ", "abjure"] },
 				},
@@ -1917,7 +1917,7 @@ describe("when the configuration has multiple issues", () => {
 	beforeEach(async () => {
 		mockJsonFile("comet.json", {
 			rules: {
-				useImperativeSubjectLines: {
+				useImperativeSubjects: {
 					level: "error",
 					options: { whitelist: ["release"] },
 				},
@@ -1934,7 +1934,7 @@ describe("when the configuration has multiple issues", () => {
 
 	it("prints all configuration issues in a single warning", () => {
 		expect(printGithubActionsWarning).toHaveBeenCalledExactlyOnceWith(
-			`${bold`2 issues detected in the Comet configuration:`}\n- 'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: release\n- 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled\n`,
+			`${bold`2 issues detected in the Comet configuration:`}\n- 'whitelist' of 'useImperativeSubjects' contains words that are already recognised as imperative verbs: release\n- 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled\n`,
 		)
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printGithubActionsError).not.toHaveBeenCalled()

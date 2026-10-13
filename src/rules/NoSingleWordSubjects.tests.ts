@@ -8,7 +8,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import type { Vector } from "#types/Vector.ts"
 
-const rule: RuleKey = "noSingleWordSubjectLines"
+const rule: RuleKey = "noSingleWordSubjects"
 
 const disabled = emptyRulesetConfiguration()
 const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })

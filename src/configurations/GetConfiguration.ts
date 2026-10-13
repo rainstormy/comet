@@ -159,8 +159,8 @@ export function formatConfigurationIssues(configuration: DeepPartial<Configurati
 }
 
 function* validateConfiguration(configuration: DeepPartial<Configuration>): Generator<string> {
-	if (configuration.rules?.useImperativeSubjectLines?.level === "error") {
-		const whitelist = configuration.rules.useImperativeSubjectLines.options?.whitelist ?? []
+	if (configuration.rules?.useImperativeSubjects?.level === "error") {
+		const whitelist = configuration.rules.useImperativeSubjects.options?.whitelist ?? []
 
 		if (whitelist.length > 0) {
 			const redundantWords = uniqueItems(
@@ -171,7 +171,7 @@ function* validateConfiguration(configuration: DeepPartial<Configuration>): Gene
 			)
 
 			if (redundantWords.length > 0) {
-				yield `'whitelist' of 'useImperativeSubjectLines' contains words that are already recognised as imperative verbs: ${redundantWords.join(", ")}`
+				yield `'whitelist' of 'useImperativeSubjects' contains words that are already recognised as imperative verbs: ${redundantWords.join(", ")}`
 			}
 		}
 	}

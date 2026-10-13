@@ -79,7 +79,7 @@ ${grey`{
     "rules": {
         "noMergeCommits": "error",
         "noSquashCommits": "error",
-        "useConciseSubjectLines": {
+        "useConciseSubjects": {
             "level": "error",
             "options": { "maxLength": 50 }
         },

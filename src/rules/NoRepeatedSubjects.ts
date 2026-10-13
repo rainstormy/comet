@@ -72,7 +72,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ```json
  * {
  *   "rules": {
- *     "noRepeatedSubjectLines": {
+ *     "noRepeatedSubjects": {
  *       "level": "error",
  *       "options": {}
  *     }
@@ -114,11 +114,11 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *    Teach the kettle to apologise
  *    ```
  */
-export function* noRepeatedSubjectLines(
+export function* noRepeatedSubjects(
 	commits: Commits,
 	ruleset: RulesetConfiguration,
 ): Generator<Concern> {
-	const rule: RuleKey = "noRepeatedSubjectLines"
+	const rule: RuleKey = "noRepeatedSubjects"
 	const configuration = ruleset[rule]
 
 	if (configuration.level === "off") {

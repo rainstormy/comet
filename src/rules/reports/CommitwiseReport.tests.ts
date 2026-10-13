@@ -25,7 +25,7 @@ describe("when there are no concerns", () => {
 	})
 })
 
-describe("when 'noBlankSubjectLines' has a concern about characters 0-1 of the subject line", () => {
+describe("when 'noBlankSubjects' has a concern about characters 0-1 of the subject line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -33,7 +33,7 @@ describe("when 'noBlankSubjectLines' has a concern about characters 0-1 of the s
 		sha: "52f07a2d665e6d3b3b50b8fca2af298c100ac804",
 		message: "",
 	})
-	const concern = subjectLineConcern("noBlankSubjectLines", commit.sha, { range: [0, 1] })
+	const concern = subjectLineConcern("noBlankSubjects", commit.sha, { range: [0, 1] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -42,14 +42,14 @@ describe("when 'noBlankSubjectLines' has a concern about characters 0-1 of the s
 ${grey`52f07a2`} 
         ${red`┬`}
         ${red`╰─ Subject lines must contain at least one alphanumeric character.`}
-        ${red`   ${ruleLink("noBlankSubjectLines")}`}
+        ${red`   ${ruleLink("noBlankSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
 
-describe("when 'noBlankSubjectLines' has a concern about characters 13-17 of the subject line", () => {
+describe("when 'noBlankSubjects' has a concern about characters 13-17 of the subject line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -57,7 +57,7 @@ describe("when 'noBlankSubjectLines' has a concern about characters 13-17 of the
 		sha: "2ba57d6e3490324db1bacf22ae2884831357ef5c",
 		message: 'amend! Revert " "',
 	})
-	const concern = subjectLineConcern("noBlankSubjectLines", commit.sha, { range: [13, 17] })
+	const concern = subjectLineConcern("noBlankSubjects", commit.sha, { range: [13, 17] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -66,7 +66,7 @@ describe("when 'noBlankSubjectLines' has a concern about characters 13-17 of the
 ${grey`2ba57d6`} amend! Revert " "
                      ${red`─┬──`}
                       ${red`╰─ Subject lines must contain at least one alphanumeric character.`}
-                      ${red`   ${ruleLink("noBlankSubjectLines")}`}
+                      ${red`   ${ruleLink("noBlankSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -355,7 +355,7 @@ Found 1 concern in 1 commit.`.trim(),
 	})
 })
 
-describe("when 'noRepeatedSubjectLines' has a concern about the commit", () => {
+describe("when 'noRepeatedSubjects' has a concern about the commit", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -363,7 +363,7 @@ describe("when 'noRepeatedSubjectLines' has a concern about the commit", () => {
 		sha: "8c1fbd48d21686c574a01fd2d5db4be1c991d897",
 		message: "test",
 	})
-	const concern = commitConcern("noRepeatedSubjectLines", commit.sha)
+	const concern = commitConcern("noRepeatedSubjects", commit.sha)
 
 	it("describes the rule violation in the commit", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -372,14 +372,14 @@ describe("when 'noRepeatedSubjectLines' has a concern about the commit", () => {
 ${grey`8c1fbd4`} test
       ${red`╭─────`}
       ${red`╰─ Commits must have unique subject lines within a branch.`}
-      ${red`   ${ruleLink("noRepeatedSubjectLines")}`}
+      ${red`   ${ruleLink("noRepeatedSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
 
-describe("when 'noRepeatedSubjectLines' has a concern about the commit with a long subject line", () => {
+describe("when 'noRepeatedSubjects' has a concern about the commit with a long subject line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -388,7 +388,7 @@ describe("when 'noRepeatedSubjectLines' has a concern about the commit with a lo
 		message:
 			"GH-246 Replace guesswork with a tiny chart and upgrade the `ButterflyService` to 8.0.31",
 	})
-	const concern = commitConcern("noRepeatedSubjectLines", commit.sha)
+	const concern = commitConcern("noRepeatedSubjects", commit.sha)
 
 	it("describes the rule violation in the commit", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -397,7 +397,7 @@ describe("when 'noRepeatedSubjectLines' has a concern about the commit with a lo
 ${grey`f3359c9`} GH-246 Replace guesswork with a tiny chart and upgrade the \`ButterflyService\` to 8.0.31
       ${red`╭────────────────────────────────────────────────────────────────────────────────────────`}
       ${red`╰─ Commits must have unique subject lines within a branch.`}
-      ${red`   ${ruleLink("noRepeatedSubjectLines")}`}
+      ${red`   ${ruleLink("noRepeatedSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -482,7 +482,7 @@ Found 1 concern in 1 commit.`.trim(),
 	})
 })
 
-describe("when 'noRevertRevertCommits' has a concern about characters 0-14 of the subject line", () => {
+describe("when 'noRevertReverts' has a concern about characters 0-14 of the subject line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -490,7 +490,7 @@ describe("when 'noRevertRevertCommits' has a concern about characters 0-14 of th
 		sha: "d4e7a978cea34b727ea52f90c92a78fd535e4aee",
 		message: 'Revert "Revert "Make the program act like a clown""',
 	})
-	const concern = subjectLineConcern("noRevertRevertCommits", commit.sha, { range: [0, 14] })
+	const concern = subjectLineConcern("noRevertReverts", commit.sha, { range: [0, 14] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -499,14 +499,14 @@ describe("when 'noRevertRevertCommits' has a concern about characters 0-14 of th
 ${grey`d4e7a97`} Revert "Revert "Make the program act like a clown""
         ${red`──────┬───────`}
               ${red`╰─ Cherry-pick the original commit instead of reverting it over.`}
-              ${red`   ${ruleLink("noRevertRevertCommits")}`}
+              ${red`   ${ruleLink("noRevertReverts")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
 
-describe("when 'noRevertRevertCommits' has a concern about characters 1-24 of the subject line", () => {
+describe("when 'noRevertReverts' has a concern about characters 1-24 of the subject line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -514,7 +514,7 @@ describe("when 'noRevertRevertCommits' has a concern about characters 1-24 of th
 		sha: "34aa41b818c40682cabeecd562e3dfe51df7a4a5",
 		message: ' revert "revert  "revert "repair the soft ice machine """',
 	})
-	const concern = subjectLineConcern("noRevertRevertCommits", commit.sha, { range: [1, 24] })
+	const concern = subjectLineConcern("noRevertReverts", commit.sha, { range: [1, 24] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -523,14 +523,14 @@ describe("when 'noRevertRevertCommits' has a concern about characters 1-24 of th
 ${grey`34aa41b`}  revert "revert  "revert "repair the soft ice machine """
          ${red`───────────┬───────────`}
                     ${red`╰─ Cherry-pick the original commit instead of reverting it over.`}
-                    ${red`   ${ruleLink("noRevertRevertCommits")}`}
+                    ${red`   ${ruleLink("noRevertReverts")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
 
-describe("when 'noSingleWordSubjectLines' has a concern about characters 0-3 of the subject line", () => {
+describe("when 'noSingleWordSubjects' has a concern about characters 0-3 of the subject line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -538,7 +538,7 @@ describe("when 'noSingleWordSubjectLines' has a concern about characters 0-3 of 
 		sha: "964bce7ef85bb434b57a0882c5d43c8cece4938f",
 		message: "WIP",
 	})
-	const concern = subjectLineConcern("noSingleWordSubjectLines", commit.sha, { range: [0, 3] })
+	const concern = subjectLineConcern("noSingleWordSubjects", commit.sha, { range: [0, 3] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -547,14 +547,14 @@ describe("when 'noSingleWordSubjectLines' has a concern about characters 0-3 of 
 ${grey`964bce7`} WIP
         ${red`─┬─`}
          ${red`╰─ Subject lines must contain at least two words.`}
-         ${red`   ${ruleLink("noSingleWordSubjectLines")}`}
+         ${red`   ${ruleLink("noSingleWordSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
 
-describe("when 'noSingleWordSubjectLines' has a concern about characters 11-17 of the subject line", () => {
+describe("when 'noSingleWordSubjects' has a concern about characters 11-17 of the subject line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -562,7 +562,7 @@ describe("when 'noSingleWordSubjectLines' has a concern about characters 11-17 o
 		sha: "a4b6d0e1aee11f7bc39dfd68858257e236256fbf",
 		message: "fixup! #17 bugfix",
 	})
-	const concern = subjectLineConcern("noSingleWordSubjectLines", commit.sha, { range: [11, 17] })
+	const concern = subjectLineConcern("noSingleWordSubjects", commit.sha, { range: [11, 17] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -571,7 +571,7 @@ describe("when 'noSingleWordSubjectLines' has a concern about characters 11-17 o
 ${grey`a4b6d0e`} fixup! #17 bugfix
                    ${red`──┬───`}
                      ${red`╰─ Subject lines must contain at least two words.`}
-                     ${red`   ${ruleLink("noSingleWordSubjectLines")}`}
+                     ${red`   ${ruleLink("noSingleWordSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -893,7 +893,7 @@ Found 1 concern in 1 commit.`.trim(),
 	})
 })
 
-describe("when 'useCapitalisedSubjectLines' has a concern about characters 0-1 of the subject line", () => {
+describe("when 'useCapitalisedSubjects' has a concern about characters 0-1 of the subject line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -901,7 +901,7 @@ describe("when 'useCapitalisedSubjectLines' has a concern about characters 0-1 o
 		sha: "497de39943643a56f7a69d3d19723e3035318644",
 		message: "release the robot butler",
 	})
-	const concern = subjectLineConcern("useCapitalisedSubjectLines", commit.sha, { range: [0, 1] })
+	const concern = subjectLineConcern("useCapitalisedSubjects", commit.sha, { range: [0, 1] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -910,14 +910,14 @@ describe("when 'useCapitalisedSubjectLines' has a concern about characters 0-1 o
 ${grey`497de39`} release the robot butler
         ${red`┬`}
         ${red`╰─ The first letter in subject lines must be in uppercase.`}
-        ${red`   ${ruleLink("useCapitalisedSubjectLines")}`}
+        ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
 
-describe("when 'useCapitalisedSubjectLines' has a concern about characters 7-8 of the subject line", () => {
+describe("when 'useCapitalisedSubjects' has a concern about characters 7-8 of the subject line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -925,7 +925,7 @@ describe("when 'useCapitalisedSubjectLines' has a concern about characters 7-8 o
 		sha: "92d6b11650c6b63d64fd77522241e45b7f50ff5b",
 		message: "fixup! resolve a bug that thought it was a feature",
 	})
-	const concern = subjectLineConcern("useCapitalisedSubjectLines", commit.sha, { range: [7, 8] })
+	const concern = subjectLineConcern("useCapitalisedSubjects", commit.sha, { range: [7, 8] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -934,7 +934,7 @@ describe("when 'useCapitalisedSubjectLines' has a concern about characters 7-8 o
 ${grey`92d6b11`} fixup! resolve a bug that thought it was a feature
                ${red`┬`}
                ${red`╰─ The first letter in subject lines must be in uppercase.`}
-               ${red`   ${ruleLink("useCapitalisedSubjectLines")}`}
+               ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -1097,9 +1097,9 @@ Found 1 concern in 1 commit.`.trim(),
 	})
 })
 
-describe("when 'useConciseSubjectLines' has a concern about characters 20-25 of the subject line", () => {
+describe("when 'useConciseSubjects' has a concern about characters 20-25 of the subject line", () => {
 	const configuration = fakeConfiguration({
-		useConciseSubjectLines: { options: { maxLength: 20 } },
+		useConciseSubjects: { options: { maxLength: 20 } },
 	})
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -1107,7 +1107,7 @@ describe("when 'useConciseSubjectLines' has a concern about characters 20-25 of 
 		sha: "68e921648c4a19e93d72f42a5ed39c3eba704e41",
 		message: "Remove redundant call to `wrapper`",
 	})
-	const concern = subjectLineConcern("useConciseSubjectLines", commit.sha, { range: [20, 25] })
+	const concern = subjectLineConcern("useConciseSubjects", commit.sha, { range: [20, 25] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1116,16 +1116,16 @@ describe("when 'useConciseSubjectLines' has a concern about characters 20-25 of 
 ${grey`68e9216`} Remove redundant call to \`wrapper\`
                             ${red`──┬──`}
                               ${red`╰─ Subject lines must not exceed 20 characters.`}
-                              ${red`   ${ruleLink("useConciseSubjectLines")}`}
+                              ${red`   ${ruleLink("useConciseSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
 
-describe("when 'useConciseSubjectLines' has a concern about characters 20-67 of the subject line", () => {
+describe("when 'useConciseSubjects' has a concern about characters 20-67 of the subject line", () => {
 	const configuration = fakeConfiguration({
-		useConciseSubjectLines: { options: { maxLength: 20 } },
+		useConciseSubjects: { options: { maxLength: 20 } },
 	})
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -1133,7 +1133,7 @@ describe("when 'useConciseSubjectLines' has a concern about characters 20-67 of 
 		sha: "9bed522bd48f0aee7b7574635bb23f5decdc4999",
 		message: "revisit the boolean properties in the `IceCreamMachine` constructor",
 	})
-	const concern = subjectLineConcern("useConciseSubjectLines", commit.sha, { range: [20, 67] })
+	const concern = subjectLineConcern("useConciseSubjects", commit.sha, { range: [20, 67] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1142,16 +1142,16 @@ describe("when 'useConciseSubjectLines' has a concern about characters 20-67 of 
 ${grey`9bed522`} revisit the boolean properties in the \`IceCreamMachine\` constructor
                             ${red`───────────────────────┬───────────────────────`}
      ${red`Subject lines must not exceed 20 characters. ─╯`}
-     ${red`${ruleLink("useConciseSubjectLines")}`}
+     ${red`${ruleLink("useConciseSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
 
-describe("when 'useConciseSubjectLines' has a concern about characters 50-52 of the subject line", () => {
+describe("when 'useConciseSubjects' has a concern about characters 50-52 of the subject line", () => {
 	const configuration = fakeConfiguration({
-		useConciseSubjectLines: { options: { maxLength: 50 } },
+		useConciseSubjects: { options: { maxLength: 50 } },
 	})
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -1159,7 +1159,7 @@ describe("when 'useConciseSubjectLines' has a concern about characters 50-52 of 
 		sha: "e8c95d69587a51685070837aaf3a28746e3cbba8",
 		message: "Retrieve data from the exclusive third-party service",
 	})
-	const concern = subjectLineConcern("useConciseSubjectLines", commit.sha, { range: [50, 52] })
+	const concern = subjectLineConcern("useConciseSubjects", commit.sha, { range: [50, 52] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1168,16 +1168,16 @@ describe("when 'useConciseSubjectLines' has a concern about characters 50-52 of 
 ${grey`e8c95d6`} Retrieve data from the exclusive third-party service
                                                           ${red`─┬`}
              ${red`Subject lines must not exceed 50 characters. ─╯`}
-             ${red`${ruleLink("useConciseSubjectLines")}`}
+             ${red`${ruleLink("useConciseSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
 
-describe("when 'useConciseSubjectLines' has a concern about characters 72-76 of the subject line", () => {
+describe("when 'useConciseSubjects' has a concern about characters 72-76 of the subject line", () => {
 	const configuration = fakeConfiguration({
-		useConciseSubjectLines: { options: { maxLength: 72 } },
+		useConciseSubjects: { options: { maxLength: 72 } },
 	})
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -1185,7 +1185,7 @@ describe("when 'useConciseSubjectLines' has a concern about characters 72-76 of 
 		sha: "be86674322213fb408d176589fadb452cd44a2df",
 		message: "make a genuine attempt to fix the bugs that the users were complaining about",
 	})
-	const concern = subjectLineConcern("useConciseSubjectLines", commit.sha, { range: [72, 76] })
+	const concern = subjectLineConcern("useConciseSubjects", commit.sha, { range: [72, 76] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1194,14 +1194,14 @@ describe("when 'useConciseSubjectLines' has a concern about characters 72-76 of 
 ${grey`be86674`} make a genuine attempt to fix the bugs that the users were complaining about
                                                                                 ${red`──┬─`}
                                     ${red`Subject lines must not exceed 72 characters. ─╯`}
-                                    ${red`${ruleLink("useConciseSubjectLines")}`}
+                                    ${red`${ruleLink("useConciseSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
 
-describe("when 'useEmptyLineBeforeBodyLines' has a concern about the first body line", () => {
+describe("when 'useEmptyLineBeforeBody' has a concern about the first body line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -1209,7 +1209,7 @@ describe("when 'useEmptyLineBeforeBodyLines' has a concern about the first body 
 		sha: "f163851c187a568acc631fff402fcca43f41968d",
 		message: "Install a quieter keyboard\nThe old one sounded like hail.",
 	})
-	const concern = bodyLineConcern("useEmptyLineBeforeBodyLines", commit.sha, {
+	const concern = bodyLineConcern("useEmptyLineBeforeBody", commit.sha, {
 		line: 0,
 		range: [0, 1],
 	})
@@ -1223,7 +1223,7 @@ ${grey`f163851`} Install a quieter keyboard
 ${red`•`} ${grey`${bold`1`} │`} The old one sounded like hail.
     ${grey`· `}${red`┬`}
     ${grey`· `}${red`╰─ Subject lines and message bodies must be separated by exactly one empty line.`}
-    ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBodyLines")}`}
+    ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBody")}`}
     ${grey`╰──`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -1231,7 +1231,7 @@ Found 1 concern in 1 commit.`.trim(),
 	})
 })
 
-describe("when 'useEmptyLineBeforeBodyLines' has a concern about an extra empty body line", () => {
+describe("when 'useEmptyLineBeforeBody' has a concern about an extra empty body line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -1239,7 +1239,7 @@ describe("when 'useEmptyLineBeforeBodyLines' has a concern about an extra empty 
 		sha: "30fd57b19c55b3746a157f5981838e26865637f2",
 		message: "Clean the tiny dashboard\n\n\nThe widgets sparkle.\nAnd the birds are joyful.",
 	})
-	const concern = bodyLineConcern("useEmptyLineBeforeBodyLines", commit.sha, {
+	const concern = bodyLineConcern("useEmptyLineBeforeBody", commit.sha, {
 		line: 1,
 		range: [0, 1],
 	})
@@ -1254,7 +1254,7 @@ ${grey`30fd57b`} Clean the tiny dashboard
 ${red`•`} ${grey`${bold`2`} │`} 
     ${grey`· `}${red`┬`}
     ${grey`· `}${red`╰─ Subject lines and message bodies must be separated by exactly one empty line.`}
-    ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBodyLines")}`}
+    ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBody")}`}
   ${grey`3 │ The widgets sparkle.`}
     ${grey`╰──`}
 
@@ -1263,7 +1263,7 @@ Found 1 concern in 1 commit.`.trim(),
 	})
 })
 
-describe("when 'useImperativeSubjectLines' has a concern about characters 0-5 of the subject line", () => {
+describe("when 'useImperativeSubjects' has a concern about characters 0-5 of the subject line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -1271,7 +1271,7 @@ describe("when 'useImperativeSubjectLines' has a concern about characters 0-5 of
 		sha: "9e45e097a594deaf39b360c7fb285be38b5b68a2",
 		message: "Added a feature that should have stayed on the whiteboard",
 	})
-	const concern = subjectLineConcern("useImperativeSubjectLines", commit.sha, { range: [0, 5] })
+	const concern = subjectLineConcern("useImperativeSubjects", commit.sha, { range: [0, 5] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1280,14 +1280,14 @@ describe("when 'useImperativeSubjectLines' has a concern about characters 0-5 of
 ${grey`9e45e09`} Added a feature that should have stayed on the whiteboard
         ${red`──┬──`}
           ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
-          ${red`   ${ruleLink("useImperativeSubjectLines")}`}
+          ${red`   ${ruleLink("useImperativeSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
 	})
 })
 
-describe("when 'useImperativeSubjectLines' has a concern about characters 14-18 of the subject line", () => {
+describe("when 'useImperativeSubjects' has a concern about characters 14-18 of the subject line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
@@ -1295,7 +1295,7 @@ describe("when 'useImperativeSubjectLines' has a concern about characters 14-18 
 		sha: "339b6fcb8aedbe7b19443e39bcc1e24f615287a7",
 		message: "amend! GH-55: made the console less dramatic",
 	})
-	const concern = subjectLineConcern("useImperativeSubjectLines", commit.sha, { range: [14, 18] })
+	const concern = subjectLineConcern("useImperativeSubjects", commit.sha, { range: [14, 18] })
 
 	it("describes the rule violation in the subject line", () => {
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
@@ -1304,7 +1304,7 @@ describe("when 'useImperativeSubjectLines' has a concern about characters 14-18 
 ${grey`339b6fc`} amend! GH-55: made the console less dramatic
                       ${red`─┬──`}
                        ${red`╰─ Subject lines must start with a verb in the imperative mood.`}
-                       ${red`   ${ruleLink("useImperativeSubjectLines")}`}
+                       ${red`   ${ruleLink("useImperativeSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -1859,15 +1859,15 @@ describe("when a rule has a concern", () => {
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
 
 	const commit = fakeCommit({ message: "release the robot butler" })
-	const concern = subjectLineConcern("useCapitalisedSubjectLines", commit.sha, { range: [0, 1] })
+	const concern = subjectLineConcern("useCapitalisedSubjects", commit.sha, { range: [0, 1] })
 
 	it("links the rule key to its documentation under the current package version tag", () => {
 		mockPackageVersion("3.4.5-beta.2")
 
 		const actualOutput = commitwiseReport([concern], [commit], configuration)
 		const expectedRuleLink = link(
-			"https://github.com/rainstormy/comet/blob/v3.4.5-beta.2/docs/rules/UseCapitalisedSubjectLines.md",
-			"(useCapitalisedSubjectLines)",
+			"https://github.com/rainstormy/comet/blob/v3.4.5-beta.2/docs/rules/UseCapitalisedSubjects.md",
+			"(useCapitalisedSubjects)",
 		)
 
 		expect(actualOutput).toContain(expectedRuleLink)

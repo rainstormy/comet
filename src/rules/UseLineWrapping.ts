@@ -135,7 +135,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * ## Related rules
  *
- * - [useConciseSubjectLines](./UseConciseSubjectLines.md)
+ * - [useConciseSubjects](./UseConciseSubjects.md)
  */
 export function* useLineWrapping(
 	commits: Commits,

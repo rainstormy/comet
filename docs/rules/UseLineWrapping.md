@@ -130,4 +130,4 @@ Signed-off-by: Hamato Yoshi <hamato@nycsewers.com>
 
 ## Related rules
 
-- [useConciseSubjectLines](./UseConciseSubjectLines.md)
+- [useConciseSubjects](./UseConciseSubjects.md)

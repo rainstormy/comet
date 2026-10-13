@@ -1,4 +1,4 @@
-# noRepeatedSubjectLines
+# noRepeatedSubjects
 
 Rejects subject lines equal to a previous subject line in the current branch.
 
@@ -67,7 +67,7 @@ This rule has no configurable options.
 ```json
 {
   "rules": {
-    "noRepeatedSubjectLines": {
+    "noRepeatedSubjects": {
       "level": "error",
       "options": {}
     }

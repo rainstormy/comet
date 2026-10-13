@@ -13,7 +13,7 @@ export type BodyLineConcern = {
 export type BodyLineConcernRuleKey =
 	| "noExcessiveWhitespace"
 	| "noRestrictedTrailers"
-	| "useEmptyLineBeforeBodyLines"
+	| "useEmptyLineBeforeBody"
 	| "useLineWrapping"
 
 export function bodyLineConcern(

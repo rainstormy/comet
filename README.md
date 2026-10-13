@@ -24,24 +24,24 @@ pnpm add --save-dev @rainstormy/comet
 ## Rules
 | Key                                                                        |
 |----------------------------------------------------------------------------|
-| [`noBlankSubjectLines`](docs/rules/NoBlankSubjectLines.md)                 |
+| [`noBlankSubjects`](docs/rules/NoBlankSubjects.md)                         |
 | [`noExcessiveCommitsPerBranch`](docs/rules/NoExcessiveCommitsPerBranch.md) |
 | [`noExcessiveWhitespace`](docs/rules/NoExcessiveWhitespace.md)             |
 | [`noMergeCommits`](docs/rules/NoMergeCommits.md)                           |
-| [`noRepeatedSubjectLines`](docs/rules/NoRepeatedSubjectLines.md)           |
+| [`noRepeatedSubjects`](docs/rules/NoRepeatedSubjects.md)                   |
 | [`noRestrictedTrailers`](docs/rules/NoRestrictedTrailers.md)               |
-| [`noRevertRevertCommits`](docs/rules/NoRevertRevertCommits.md)             |
-| [`noSingleWordSubjectLines`](docs/rules/NoSingleWordSubjectLines.md)       |
+| [`noRevertReverts`](docs/rules/NoRevertReverts.md)                         |
+| [`noSingleWordSubjects`](docs/rules/NoSingleWordSubjects.md)               |
 | [`noSquashMarkers`](docs/rules/NoSquashMarkers.md)                         |
 | [`noUnexpectedPunctuation`](docs/rules/NoUnexpectedPunctuation.md)         |
 | [`useAuthorEmailPatterns`](docs/rules/UseAuthorEmailPatterns.md)           |
 | [`useAuthorNamePatterns`](docs/rules/UseAuthorNamePatterns.md)             |
-| [`useCapitalisedSubjectLines`](docs/rules/UseCapitalisedSubjectLines.md)   |
+| [`useCapitalisedSubjects`](docs/rules/UseCapitalisedSubjects.md)           |
 | [`useCommitterEmailPatterns`](docs/rules/UseCommitterEmailPatterns.md)     |
 | [`useCommitterNamePatterns`](docs/rules/UseCommitterNamePatterns.md)       |
-| [`useConciseSubjectLines`](docs/rules/UseConciseSubjectLines.md)           |
-| [`useEmptyLineBeforeBodyLines`](docs/rules/UseEmptyLineBeforeBodyLines.md) |
-| [`useImperativeSubjectLines`](docs/rules/UseImperativeSubjectLines.md)     |
+| [`useConciseSubjects`](docs/rules/UseConciseSubjects.md)                   |
+| [`useEmptyLineBeforeBody`](docs/rules/UseEmptyLineBeforeBody.md)           |
+| [`useImperativeSubjects`](docs/rules/UseImperativeSubjects.md)             |
 | [`useIssueLinks`](docs/rules/UseIssueLinks.md)                             |
 | [`useLineWrapping`](docs/rules/UseLineWrapping.md)                         |
 | [`useSignedCommits`](docs/rules/UseSignedCommits.md)                       |

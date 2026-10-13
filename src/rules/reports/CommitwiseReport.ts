@@ -289,7 +289,7 @@ function subjectLineRuleMessage(
 	}
 
 	switch (rule) {
-		case "noBlankSubjectLines": {
+		case "noBlankSubjects": {
 			return ruleMessage("Subject lines must contain at least one alphanumeric character.")
 		}
 		case "noExcessiveWhitespace": {
@@ -301,10 +301,10 @@ function subjectLineRuleMessage(
 						: "contain excessive"
 			return ruleMessage(`Subject lines must not ${positionPhrase} whitespace.`)
 		}
-		case "noRevertRevertCommits": {
+		case "noRevertReverts": {
 			return ruleMessage("Cherry-pick the original commit instead of reverting it over.")
 		}
-		case "noSingleWordSubjectLines": {
+		case "noSingleWordSubjects": {
 			return ruleMessage("Subject lines must contain at least two words.")
 		}
 		case "noSquashMarkers": {
@@ -313,15 +313,15 @@ function subjectLineRuleMessage(
 		case "noUnexpectedPunctuation": {
 			return ruleMessage("Subject lines must not end with punctuation.")
 		}
-		case "useCapitalisedSubjectLines": {
+		case "useCapitalisedSubjects": {
 			return ruleMessage("The first letter in subject lines must be in uppercase.")
 		}
-		case "useConciseSubjectLines": {
+		case "useConciseSubjects": {
 			const options = getRuleOptions(rule, configuration)
 			const characterPhrase = formatCount(options.maxLength, "character", "characters")
 			return ruleMessage(`Subject lines must not exceed ${characterPhrase}.`)
 		}
-		case "useImperativeSubjectLines": {
+		case "useImperativeSubjects": {
 			return ruleMessage("Subject lines must start with a verb in the imperative mood.")
 		}
 		case "useIssueLinks": {
@@ -371,7 +371,7 @@ function bodyLineRuleMessage(concern: BodyLineConcern, configuration: Configurat
 				),
 			)
 		}
-		case "useEmptyLineBeforeBodyLines": {
+		case "useEmptyLineBeforeBody": {
 			return ruleMessage(
 				"Subject lines and message bodies must be separated by exactly one empty line.",
 			)
@@ -400,7 +400,7 @@ function commitRuleMessage(concern: CommitConcern, configuration: Configuration)
 		case "noMergeCommits": {
 			return ruleMessage("Merge commits are not allowed.")
 		}
-		case "noRepeatedSubjectLines": {
+		case "noRepeatedSubjects": {
 			return ruleMessage("Commits must have unique subject lines within a branch.")
 		}
 		case "useSignedCommits": {

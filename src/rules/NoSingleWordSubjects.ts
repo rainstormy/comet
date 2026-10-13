@@ -64,7 +64,7 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  * ```json
  * {
  *   "rules": {
- *     "noSingleWordSubjectLines": {
+ *     "noSingleWordSubjects": {
  *       "level": "error",
  *       "options": {}
  *     }
@@ -112,13 +112,13 @@ import { subjectLineConcern } from "#rules/concerns/SubjectLineConcern.ts"
  *
  * ## Related rules
  *
- * - [noBlankSubjectLines](./NoBlankSubjectLines.md)
+ * - [noBlankSubjects](./NoBlankSubjects.md)
  */
-export function* noSingleWordSubjectLines(
+export function* noSingleWordSubjects(
 	commits: Commits,
 	ruleset: RulesetConfiguration,
 ): Generator<Concern> {
-	const rule: RuleKey = "noSingleWordSubjectLines"
+	const rule: RuleKey = "noSingleWordSubjects"
 	const configuration = ruleset[rule]
 
 	if (configuration.level === "off") {

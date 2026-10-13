@@ -1,4 +1,4 @@
-# useCapitalisedSubjectLines
+# useCapitalisedSubjects
 
 Rejects subject lines that start with a lowercase letter.
 
@@ -61,7 +61,7 @@ This rule has no configurable options.
 ```json
 {
   "rules": {
-    "useCapitalisedSubjectLines": {
+    "useCapitalisedSubjects": {
       "level": "error",
       "options": {}
     }

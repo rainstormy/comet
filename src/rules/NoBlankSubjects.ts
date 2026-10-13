@@ -64,7 +64,7 @@ import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
  * ```json
  * {
  *   "rules": {
- *     "noBlankSubjectLines": {
+ *     "noBlankSubjects": {
  *       "level": "error",
  *       "options": {}
  *     }
@@ -112,13 +112,13 @@ import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
  *
  * ## Related rules
  *
- * - [noSingleWordSubjectLines](./NoSingleWordSubjectLines.md)
+ * - [noSingleWordSubjects](./NoSingleWordSubjects.md)
  */
-export function* noBlankSubjectLines(
+export function* noBlankSubjects(
 	commits: Commits,
 	ruleset: RulesetConfiguration,
 ): Generator<Concern> {
-	const rule: RuleKey = "noBlankSubjectLines"
+	const rule: RuleKey = "noBlankSubjects"
 	const configuration = ruleset[rule]
 
 	if (configuration.level === "off") {

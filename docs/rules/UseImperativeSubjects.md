@@ -1,4 +1,4 @@
-# useImperativeSubjectLines
+# useImperativeSubjects
 
 Rejects subject lines that do not start with a verb in the imperative mood.
 
@@ -67,7 +67,7 @@ If Comet does not recognise a verb, add it to the `whitelist`.
 ```json
 {
   "rules": {
-    "useImperativeSubjectLines": {
+    "useImperativeSubjects": {
       "level": "error",
       "options": {
         "whitelist": []

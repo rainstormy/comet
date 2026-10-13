@@ -88,7 +88,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  * ```json
  * {
  *   "rules": {
- *     "noRevertRevertCommits": {
+ *     "noRevertReverts": {
  *       "level": "error",
  *       "options": {}
  *     }
@@ -130,11 +130,11 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  * Reverted some secret stuff
  * ```
  */
-export function* noRevertRevertCommits(
+export function* noRevertReverts(
 	commits: Commits,
 	ruleset: RulesetConfiguration,
 ): Generator<Concern> {
-	const rule: RuleKey = "noRevertRevertCommits"
+	const rule: RuleKey = "noRevertReverts"
 	const configuration = ruleset[rule]
 
 	if (configuration.level === "off") {

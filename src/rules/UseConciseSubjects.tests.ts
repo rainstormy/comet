@@ -10,7 +10,7 @@ import { fakeCommitSha } from "#types/CommitSha.fakes.ts"
 import type { CommitSha } from "#types/CommitSha.ts"
 import type { Vector } from "#types/Vector.ts"
 
-const rule: RuleKey = "useConciseSubjectLines"
+const rule: RuleKey = "useConciseSubjects"
 
 const disabled = emptyRulesetConfiguration()
 const enabled20 = emptyRulesetConfiguration({
@@ -281,7 +281,7 @@ describe.each`
 			${enabled50}
 			${enabled72}
 		`(
-			"and the rule is enabled with a maximum length of $rules.useConciseSubjectLines.maxLength characters",
+			"and the rule is enabled with a maximum length of $rules.useConciseSubjects.maxLength characters",
 			(configProps: { rules: RulesetConfiguration }) => {
 				const actualConcerns = mapCommitsToConcerns([commit], configProps.rules)
 
@@ -316,7 +316,7 @@ describe.each`
 			${enabled50}
 			${enabled72}
 		`(
-			"and the rule is enabled with a maximum length of $rules.useConciseSubjectLines.maxLength characters",
+			"and the rule is enabled with a maximum length of $rules.useConciseSubjects.maxLength characters",
 			(configProps: { rules: RulesetConfiguration }) => {
 				const actualConcerns = mapCommitsToConcerns([commit], configProps.rules)
 
@@ -360,7 +360,7 @@ describe.each`
 			${enabled50}
 			${enabled72}
 		`(
-			"and the rule is enabled with a maximum length of $rules.useConciseSubjectLines.maxLength characters",
+			"and the rule is enabled with a maximum length of $rules.useConciseSubjects.maxLength characters",
 			(configProps: { rules: RulesetConfiguration }) => {
 				const actualConcerns = mapCommitsToConcerns([commit], configProps.rules)
 
@@ -470,7 +470,7 @@ describe("when verifying a set of multiple commits and all commits have concise 
 		${enabled50}
 		${enabled72}
 	`(
-		"and the rule is enabled with a maximum length of $rules.useConciseSubjectLines.maxLength characters",
+		"and the rule is enabled with a maximum length of $rules.useConciseSubjects.maxLength characters",
 		(configProps: { rules: RulesetConfiguration }) => {
 			const actualConcerns = mapCommitsToConcerns(commits, configProps.rules)
 

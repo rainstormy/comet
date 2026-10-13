@@ -1,4 +1,4 @@
-# useConciseSubjectLines
+# useConciseSubjects
 
 Rejects subject lines longer than the configured character limit.
 
@@ -64,7 +64,7 @@ The following kinds of tokens do _not_ count towards the character limit:
 ```json
 {
   "rules": {
-    "useConciseSubjectLines": {
+    "useConciseSubjects": {
       "level": "error",
       "options": {
         "maxLength": 50

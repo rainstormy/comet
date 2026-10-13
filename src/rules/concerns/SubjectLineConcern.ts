@@ -10,15 +10,15 @@ export type SubjectLineConcern = {
 }
 
 export type SubjectLineConcernRuleKey =
-	| "noBlankSubjectLines"
+	| "noBlankSubjects"
 	| "noExcessiveWhitespace"
-	| "noRevertRevertCommits"
-	| "noSingleWordSubjectLines"
+	| "noRevertReverts"
+	| "noSingleWordSubjects"
 	| "noSquashMarkers"
 	| "noUnexpectedPunctuation"
-	| "useCapitalisedSubjectLines"
-	| "useConciseSubjectLines"
-	| "useImperativeSubjectLines"
+	| "useCapitalisedSubjects"
+	| "useConciseSubjects"
+	| "useImperativeSubjects"
 	| "useIssueLinks"
 
 export function subjectLineConcern(

@@ -59,7 +59,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ```json
  * {
  *   "rules": {
- *     "useEmptyLineBeforeBodyLines": {
+ *     "useEmptyLineBeforeBody": {
  *       "level": "error",
  *       "options": {}
  *     }
@@ -97,11 +97,11 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * Consolidate `BadgeFactory` with `BadgeService` and count to ten
  * ```
  */
-export function* useEmptyLineBeforeBodyLines(
+export function* useEmptyLineBeforeBody(
 	commits: Commits,
 	ruleset: RulesetConfiguration,
 ): Generator<Concern> {
-	const rule: RuleKey = "useEmptyLineBeforeBodyLines"
+	const rule: RuleKey = "useEmptyLineBeforeBody"
 	const configuration = ruleset[rule]
 
 	if (configuration.level === "off") {
