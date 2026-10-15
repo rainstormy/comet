@@ -42,6 +42,10 @@ jobs:
     runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
     permissions:
+      # To check out the repository.
+      # https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
+      contents: read
+      #
       # To review the commit messages in the pull request.
       # https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#list-commits-on-a-pull-request
       pull-requests: read

@@ -60,7 +60,7 @@ comet \
   [--skip-missing-configs]
 ```
 
-You can also define a custom task in `package.json` or `vite.config.ts` (with Vite+):
+You can also define a custom task in `package.json` or `vite.config.ts` (with [Vite+](https://viteplus.dev)):
 
 ```json
 {
@@ -70,7 +70,7 @@ You can also define a custom task in `package.json` or `vite.config.ts` (with Vi
 }
 ```
 
-Run it with your package manager, for example:
+Run it with your package manager:
 
 ```shell
 pnpm run lint-commits
@@ -81,6 +81,8 @@ Or with Vite+:
 ```shell
 vpr lint-commits
 ```
+
+You can also run this task in a `pre-push` Git hook to block pushes that contain poorly formatted commit messages.
 
 ### Usage with Deno
 
@@ -106,8 +108,10 @@ It must run in workflows triggered by `pull_request` events.
 
 The `github-token` needs `pull-requests: read` permissions to allow Comet to [list the pull request's commits](https://docs.github.com/en/rest/pulls/pulls?apiVersion=2026-03-10#list-commits-on-a-pull-request).
 
-To load a configuration file, it needs `contents: read` permissions and an `actions/checkout` step before the `rainstormy/comet` step.
+To load a configuration file, include an `actions/checkout` step before the `rainstormy/comet` step and grant `contents: read` permissions to the `github-token`.
 Use `config-path` to specify a custom configuration file path.
+
+Example:
 
 ```yaml
 name: CI
@@ -116,15 +120,17 @@ on: pull_request
 
 jobs:
   commit-messages:
+    # if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    timeout-minutes: 1
     permissions:
       contents: read
       pull-requests: read
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: rainstormy/comet@v2.0.0-beta.1
+      - uses: rainstormy/comet@10ac994454c2a81e76a4ff48f3d015086e708674 # v2.0.0-rc.0
         with:
           github-token: ${{ github.token }}
           config-path: .github/comet.jsonc
