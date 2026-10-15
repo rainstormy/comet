@@ -19,7 +19,7 @@ Change the subject to be unique in the current branch or add `fixup!` at the beg
 
 ### Command-line interface (CLI)
 
-1. Rebase interactively from (the parent of) the commit SHA, for example:
+1. Rebase interactively from (the parent of) the commit SHA, for instance:
 
    ```shell
    git rebase --interactive '7e0ff1ce^'

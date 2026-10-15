@@ -12,13 +12,13 @@ Rebase the current branch onto the main branch while [dropping merge commits](ht
 
 ### Command-line interface (CLI)
 
-1. Refresh branch information from the remote, for example:
+1. Refresh branch information from the remote, for instance:
 
    ```shell
    git fetch origin
    ```
 
-2. Rebase onto the main branch, for example `origin/main`, while dropping merge commits:
+2. Rebase onto the main branch, e.g. `origin/main`, while dropping merge commits:
 
    ```shell
    git rebase --no-rebase-merges 'origin/main'
@@ -45,7 +45,7 @@ Rebase the current branch onto the main branch while [dropping merge commits](ht
 
 1. Select **Git** > **Fetch** to refresh branch information from the remote.
 
-2. Select **Git** > **Rebase...** and use the main branch as base, for example `origin/main`.
+2. Select **Git** > **Rebase...** and use the main branch as base, e.g. `origin/main`.
    Leave the `--rebase-merges` option disabled to drop the merge commits.
 
 3. Start the rebase and resolve any merge conflicts that arise.

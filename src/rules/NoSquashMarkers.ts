@@ -22,7 +22,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  *
  * ### Command-line interface (CLI)
  *
- * 1. Rebase interactively from (the parent of) the original commit, with [auto-squashing enabled](https://git-scm.com/docs/git-rebase#Documentation/git-rebase.txt---autosquash), for example:
+ * 1. Rebase interactively from (the parent of) the original commit, with [auto-squashing enabled](https://git-scm.com/docs/git-rebase#Documentation/git-rebase.txt---autosquash), for instance:
  *
  *    ```shell
  *    git rebase --interactive --autosquash '7e0ff1ce^'

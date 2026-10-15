@@ -16,7 +16,7 @@ Cherry-pick the original commit or replace the subject with the original commit'
 
 To restore a reverted change:
 
-1. Cherry-pick the original commit, for example:
+1. Cherry-pick the original commit, for instance:
 
    ```shell
    git cherry-pick 'cafebeef'
@@ -30,7 +30,7 @@ To restore a reverted change:
 
 If the nested revert commit already exists:
 
-1. Rebase interactively from (the parent of) the nested revert's SHA, for example:
+1. Rebase interactively from (the parent of) the nested revert's SHA, for instance:
 
    ```shell
    git rebase --interactive '7e0ff1ce^'

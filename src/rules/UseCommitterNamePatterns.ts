@@ -21,7 +21,7 @@ import { regexUnion } from "#utilities/Regexes.ts"
  *
  * ### Command-line interface (CLI)
  *
- * 1. Change your Git name to match one of the configured patterns, for example:
+ * 1. Change your Git name to match one of the configured patterns, for instance:
  *
  *    ```shell
  *    git config --global user.name 'Santa Claus'
@@ -29,7 +29,7 @@ import { regexUnion } from "#utilities/Regexes.ts"
  *
  *    (omit the `--global` flag to change the name in the current repository only)
  *
- * 2. Rebase interactively from (the parent of) the commit SHA, for example:
+ * 2. Rebase interactively from (the parent of) the commit SHA, for instance:
  *
  *    ```shell
  *    git rebase --interactive '7e0ff1ce^'
