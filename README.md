@@ -5,6 +5,37 @@ A linter to ensure that Git commit messages conform to certain standards and con
 > [!CAUTION]  
 > Comet v2 is currently in development with an expected release later in 2026.
 
+## Rules
+
+| Symbol                                       | Explanation                                                                        |
+|----------------------------------------------|------------------------------------------------------------------------------------|
+| ![Command-line](docs/assets/commandline.svg) | The rule is enabled by default in the `comet` CLI on the command-line.             |
+| ![GitHub Actions](docs/assets/github.svg)    | The rule is enabled by default in the `rainstormy/comet` action in GitHub Actions. |
+
+| Name                                                                       | Description                                                                                                                                                                                                                                     | Default                                                                                |
+|----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| [`noBlankSubjects`](docs/rules/NoBlankSubjects.md)                         | Rejects subjects without any alphanumeric characters.                                                                                                                                                                                           | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+| [`noExcessiveCommitsPerBranch`](docs/rules/NoExcessiveCommitsPerBranch.md) | Rejects branches with more than a configured number of undelivered commits, encouraging short-lived branches and [stacked pull requests](https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-stacked-pull-requests). | ![GitHub Actions](docs/assets/github.svg)                                              |
+| [`noExcessiveWhitespace`](docs/rules/NoExcessiveWhitespace.md)             | Rejects subjects with leading, trailing, or consecutive whitespace characters, and body lines with consecutive whitespace characters.                                                                                                           | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+| [`noMergeCommits`](docs/rules/NoMergeCommits.md)                           | Rejects commits with more than one parent commit, encouraging rebasing instead of merging to keep a branch up to date with the main branch.                                                                                                     | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+| [`noRepeatedSubjects`](docs/rules/NoRepeatedSubjects.md)                   | Rejects subjects equal to a previous subject in the current branch.                                                                                                                                                                             | ![GitHub Actions](docs/assets/github.svg)                                              |
+| [`noRestrictedTrailers`](docs/rules/NoRestrictedTrailers.md)               | Rejects configured [trailers](https://git-scm.com/docs/git-interpret-trailers) in the message body.                                                                                                                                             |                                                                                        |
+| [`noRevertReverts`](docs/rules/NoRevertReverts.md)                         | Rejects subjects with more than one revert marker, encouraging cherry-picking the original commit.                                                                                                                                              | ![GitHub Actions](docs/assets/github.svg)                                              |
+| [`noSingleWordSubjects`](docs/rules/NoSingleWordSubjects.md)               | Rejects subjects that contain only one word.                                                                                                                                                                                                    | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+| [`noSquashMarkers`](docs/rules/NoSquashMarkers.md)                         | Rejects subjects beginning with a squash marker like `amend!`, `fixup!`, and `squash!`, reminding you to squash temporary commits before merging pull requests.                                                                                 | ![GitHub Actions](docs/assets/github.svg)                                              |
+| [`noUnexpectedPunctuation`](docs/rules/NoUnexpectedPunctuation.md)         | Rejects subjects with unexpected trailing punctuation.                                                                                                                                                                                          | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+| [`useAuthorEmailPatterns`](docs/rules/UseAuthorEmailPatterns.md)           | Rejects commits where the author's email address does not match one of the configured regex patterns.                                                                                                                                           |                                                                                        |
+| [`useAuthorNamePatterns`](docs/rules/UseAuthorNamePatterns.md)             | Rejects commits where the author's name does not match one of the configured regex patterns.                                                                                                                                                    |                                                                                        |
+| [`useCapitalisedSubjects`](docs/rules/UseCapitalisedSubjects.md)           | Rejects subjects that start with a lowercase letter.                                                                                                                                                                                            | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+| [`useCommitterEmailPatterns`](docs/rules/UseCommitterEmailPatterns.md)     | Rejects commits where the committer's email address does not match one of the configured regex patterns.                                                                                                                                        |                                                                                        |
+| [`useCommitterNamePatterns`](docs/rules/UseCommitterNamePatterns.md)       | Rejects commits where the committer's name does not match one of the configured regex patterns.                                                                                                                                                 |                                                                                        |
+| [`useConciseSubjects`](docs/rules/UseConciseSubjects.md)                   | Rejects subjects longer than the configured character limit.                                                                                                                                                                                    | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+| [`useEmptyLineBeforeBody`](docs/rules/UseEmptyLineBeforeBody.md)           | Rejects commits whose message body is not separated from the subject (i.e. the first line) by exactly one empty line.                                                                                                                           | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+| [`useImperativeSubjects`](docs/rules/UseImperativeSubjects.md)             | Rejects subjects that do not start with a verb in the imperative mood.                                                                                                                                                                          | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+| [`useIssueLinks`](docs/rules/UseIssueLinks.md)                             | Rejects subjects without an issue link in the configured position.                                                                                                                                                                              |                                                                                        |
+| [`useLineWrapping`](docs/rules/UseLineWrapping.md)                         | Rejects body lines longer than the configured character limit.                                                                                                                                                                                  | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+| [`useSignedCommits`](docs/rules/UseSignedCommits.md)                       | Rejects commits without a cryptographic signature.                                                                                                                                                                                              | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+
 ## Command-line interface (CLI)
 
 The Comet CLI checks the commits on the current branch that have not been delivered to the default branch, i.e. the range `origin/HEAD..HEAD` for a remote named `origin`.
@@ -98,32 +129,6 @@ jobs:
           github-token: ${{ github.token }}
           config-path: .github/comet.jsonc
 ```
-
-## Rules
-
-| Key                                                                        |
-|----------------------------------------------------------------------------|
-| [`noBlankSubjects`](docs/rules/NoBlankSubjects.md)                         |
-| [`noExcessiveCommitsPerBranch`](docs/rules/NoExcessiveCommitsPerBranch.md) |
-| [`noExcessiveWhitespace`](docs/rules/NoExcessiveWhitespace.md)             |
-| [`noMergeCommits`](docs/rules/NoMergeCommits.md)                           |
-| [`noRepeatedSubjects`](docs/rules/NoRepeatedSubjects.md)                   |
-| [`noRestrictedTrailers`](docs/rules/NoRestrictedTrailers.md)               |
-| [`noRevertReverts`](docs/rules/NoRevertReverts.md)                         |
-| [`noSingleWordSubjects`](docs/rules/NoSingleWordSubjects.md)               |
-| [`noSquashMarkers`](docs/rules/NoSquashMarkers.md)                         |
-| [`noUnexpectedPunctuation`](docs/rules/NoUnexpectedPunctuation.md)         |
-| [`useAuthorEmailPatterns`](docs/rules/UseAuthorEmailPatterns.md)           |
-| [`useAuthorNamePatterns`](docs/rules/UseAuthorNamePatterns.md)             |
-| [`useCapitalisedSubjects`](docs/rules/UseCapitalisedSubjects.md)           |
-| [`useCommitterEmailPatterns`](docs/rules/UseCommitterEmailPatterns.md)     |
-| [`useCommitterNamePatterns`](docs/rules/UseCommitterNamePatterns.md)       |
-| [`useConciseSubjects`](docs/rules/UseConciseSubjects.md)                   |
-| [`useEmptyLineBeforeBody`](docs/rules/UseEmptyLineBeforeBody.md)           |
-| [`useImperativeSubjects`](docs/rules/UseImperativeSubjects.md)             |
-| [`useIssueLinks`](docs/rules/UseIssueLinks.md)                             |
-| [`useLineWrapping`](docs/rules/UseLineWrapping.md)                         |
-| [`useSignedCommits`](docs/rules/UseSignedCommits.md)                       |
 
 ## Configuration
 
