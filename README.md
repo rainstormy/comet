@@ -136,16 +136,14 @@ jobs:
           config-path: .github/comet.jsonc
 ```
 
-## Configuration
+## Configuration file
 
-Comet applies a reasonable default configuration of rules.
-
-To customise the configuration, create a `comet.json` or `comet.jsonc` file in the project root directory.
+To customise the configuration, create a `comet.json` (or `comet.jsonc`) file in the project root directory.
 Override the settings you want to change, for example:
 
 ```json
 {
-  "$schema": "https://unpkg.com/@rainstormy/comet@2.0.0-beta.1/schema.json",
+  "$schema": "https://unpkg.com/@rainstormy/comet@2.0.0-rc.0/schema.json",
   "rules": {
     "noMergeCommits": "error",
     "useConciseSubjects": {
@@ -157,15 +155,83 @@ Override the settings you want to change, for example:
 }
 ```
 
-Use `--config <path>` in the CLI or `config-path` in GitHub Actions to use a different configuration path.
+Use `--config <path>` in the CLI or `config-path` in GitHub Actions to select a different configuration path.
 
-A configuration file can inherit settings from another file with the `extends` property:
+### `$schema`
+
+Validate the configuration file and enable code completion with the official JSON schema:
+
+```json
+{
+  "$schema": "https://unpkg.com/@rainstormy/comet@2.0.0-rc.0/schema.json"
+}
+```
+
+### `extends`
+
+Inherit settings from another configuration file.
+
+The path is resolved relative to the configuration file declaring the `extends` field.
+Settings in the declaring configuration override inherited settings, except arrays which are combined; hence, empty arrays will not clear inherited entries.
+
+Example:
 
 ```json
 {
   "extends": "./comet.base.json",
   "rules": {
     "noSquashMarkers": "error"
+  }
+}
+```
+
+### `git.defaultBranch`
+
+Hardcode the 'from ref' of the checked commit range instead of computing it from `origin/HEAD`.
+
+The `--default-branch` CLI flag takes precedence over `git.defaultBranch`.
+
+Example (range of `origin/next..HEAD`):
+
+```json
+{
+  "git": {
+    "defaultBranch": "origin/next"
+  }
+}
+```
+
+### `tokens.issueLinks`
+
+Declare which words to recognise as issue links.
+
+- `prefixes` (array of strings): Issue number prefixes. For instance, `#` and `NEOWISE-` will recognise issue links like `#123` and `NEOWISE-456`. Default value: `[]`.
+- `wildcards` (array of strings): Literal labels such as `(no-issue)` and `[incident]`. Default value: `[]`.
+
+If both arrays are empty, no issue links are recognised.
+To require issue links in subjects, enable the [`useIssueLinks`](docs/rules/UseIssueLinks.md) rule.
+
+Example (GitHub-style issue links with Renovate-style critical security upgrades):
+
+```json
+{
+  "tokens": {
+    "issueLinks": {
+      "prefixes": ["#", "GH-"],
+      "wildcards": ["[SECURITY]"]
+    }
+  }
+}
+```
+
+Example (Jira-style issue links):
+
+```json
+{
+  "tokens": {
+    "issueLinks": {
+      "prefixes": ["NEOWISE-"]
+    }
   }
 }
 ```

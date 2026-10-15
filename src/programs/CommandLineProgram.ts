@@ -75,7 +75,7 @@ Use the official JSON schema to validate the configuration file and to enable
 code completion, for example:
 
 ${grey`{
-    "$schema": "./node_modules/@rainstormy/comet/schema.json",
+    "$schema": "https://unpkg.com/@rainstormy/comet@${getPackageVersion()}/schema.json",
     "rules": {
         "noMergeCommits": "error",
         "noSquashCommits": "error",
