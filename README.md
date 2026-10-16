@@ -5,6 +5,46 @@ A linter to ensure that Git commit messages conform to certain standards and con
 > [!CAUTION]  
 > Comet v2 is currently in development with an expected release later in 2026.
 
+## Why lint commit messages?
+
+A commit is a permanent, durable record of a change.
+Its diff shows the actual file changes while the commit message may include details about assumptions and constraints that are not apparent from the diff.
+
+Some effort in useful commit messages now will help you and your team in the future:
+
+- **Save investigation time.**
+  Knowing the motivation and circumstances behind a change helps you assess whether the change caused a regression or is safe to revert.
+
+- **Share knowledge.**
+  Capturing context and decisions gives the whole team access to information that might otherwise remain with the author.
+
+- **Find relevant changes.**
+  Consistent, predictable formatting makes commit messages easier for humans and agents to read and search.
+
+- **Support agile workflows.**
+  Teams can agree on policies that streamline code reviews by encouraging small, short-lived branches and fixup commits.
+
+- **Focus on code instead of conventions.**
+  Automated checks in local Git hooks and CI pipelines leave reviewers more time to focus on the change itself.
+
+For example, this commit message follows the default subject and body style encouraged by Comet and explains the motivation and constraints behind the change:
+
+```
+Retry timed-out requests before payment
+
+Transient network failures abort checkout before payment starts.
+Retry these requests up to three times so customers can continue without
+reloading the page.
+
+Leave payment submissions unchanged to avoid duplicate charges.
+```
+
+Further reading:
+
+- [Pro Git book: Commit guidelines](https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
+- [cbeams: How to Write a Git Commit Message](https://cbea.ms/git-commit)
+- [Martijn Hols: How to write a good git commit message](https://martijnhols.nl/blog/how-to-write-a-good-git-commit-message)
+
 ## Rules
 
 | Symbol                                       | Explanation                                                                        |
