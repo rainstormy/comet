@@ -5,6 +5,8 @@ A linter to ensure that Git commit messages conform to certain standards and con
 > [!CAUTION]  
 > Comet v2 is currently in development with an expected release later in 2026.
 
+![](docs/assets/comet-cli.webp)
+
 ## Why lint commit messages?
 
 A commit is a permanent, durable record of a change.
