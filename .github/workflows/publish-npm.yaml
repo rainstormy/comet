@@ -1,17 +1,17 @@
 # This workflow implements one of the final stages of the release pipeline.
 # It publishes the package to the npm registry.
 #
-# It is triggered automatically by pushing a Git tag on the form `v<major.minor.patch[-prerelease][+buildinfo]>` as done by `.github/workflows/publish-tags.yml`.
+# It is triggered automatically by pushing a Git tag on the form `v<major.minor.patch[-prerelease][+buildinfo]>` as done by `.github/workflows/publish-tags.yaml`.
 #
 # It can be triggered manually via the GitHub CLI:
 #
-#   gh workflow run publish-npm.yml --ref <tag-name>
+#   gh workflow run publish-npm.yaml --ref <tag-name>
 #   gh run watch
 #
 # It can also be triggered manually via the GitHub web interface:
-# https://github.com/rainstormy/comet/actions/workflows/publish-npm.yml
+# https://github.com/rainstormy/comet/actions/workflows/publish-npm.yaml
 #
-# CAUTION: The workflow filename `publish-npm.yml` is defined as the trusted publisher of the `@rainstormy/comet` package in the npm registry.
+# CAUTION: The workflow filename `publish-npm.yaml` is defined as the trusted publisher of the `@rainstormy/comet` package in the npm registry.
 
 name: Publish / npm
 
@@ -39,7 +39,7 @@ jobs:
       # https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
       # https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows#example-caller-workflow
       contents: read
-    uses: ./.github/workflows/integrity.yml
+    uses: ./.github/workflows/integrity.yaml
 
   npm-package:
     name: npm package

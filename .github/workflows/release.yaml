@@ -4,11 +4,11 @@
 #
 # It can be triggered manually on the `main` branch via the GitHub CLI:
 #
-#   gh workflow run release.yml --field version=<major.minor.patch[-prerelease][+buildinfo]>
+#   gh workflow run release.yaml --field version=<major.minor.patch[-prerelease][+buildinfo]>
 #   gh run watch
 #
 # It can also be triggered manually via the GitHub web interface:
-# https://github.com/rainstormy/comet/actions/workflows/release.yml
+# https://github.com/rainstormy/comet/actions/workflows/release.yaml
 
 name: Release
 
@@ -38,7 +38,7 @@ jobs:
       # https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
       # https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows#example-caller-workflow
       contents: read
-    uses: ./.github/workflows/integrity.yml
+    uses: ./.github/workflows/integrity.yaml
 
   release-branch:
     name: Release branch
