@@ -17,13 +17,16 @@ Git itself and GitHub use imperative verbs when they generate the following kind
 - Revert commits, e.g. `Revert "..."` and `Reapply "..."`.
 - Code review suggestions, e.g. `Update src/...`.
 
+Comet has a comprehensive, built-in list of British and American English verbs.
+The list is extensible by configuration.
+
 ## How to fix
 
 Change the subject to start with an imperative verb.
 
 ### Command-line interface (CLI)
 
-1. Rebase interactively from (the parent of) the commit SHA, for example:
+1. Rebase interactively from (the parent of) the commit SHA, for instance:
 
    ```shell
    git rebase --interactive '7e0ff1ce^'

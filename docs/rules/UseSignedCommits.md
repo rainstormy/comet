@@ -27,7 +27,7 @@ Sign the commit.
 
    (omit the `--global` flag to change the signature in the current repository only)
 
-3. Rebase interactively from (the parent of) the commit SHA, for example:
+3. Rebase interactively from (the parent of) the commit SHA, for instance:
 
    ```shell
    git rebase --interactive '7e0ff1ce^'

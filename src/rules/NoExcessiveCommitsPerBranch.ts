@@ -21,7 +21,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ### Command-line interface (CLI)
  *
  * 1. Identify the commit that marks the end of the first branch.
- *    Create a new branch from this commit, for example:
+ *    Create a new branch from this commit, for instance:
  *
  *    ```shell
  *    git switch --create <new-branch-name> '7e0ff1ce'

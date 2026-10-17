@@ -22,7 +22,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  *
  * To restore a reverted change:
  *
- * 1. Cherry-pick the original commit, for example:
+ * 1. Cherry-pick the original commit, for instance:
  *
  *    ```shell
  *    git cherry-pick 'cafebeef'
@@ -36,7 +36,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  *
  * If the nested revert commit already exists:
  *
- * 1. Rebase interactively from (the parent of) the nested revert's SHA, for example:
+ * 1. Rebase interactively from (the parent of) the nested revert's SHA, for instance:
  *
  *    ```shell
  *    git rebase --interactive '7e0ff1ce^'

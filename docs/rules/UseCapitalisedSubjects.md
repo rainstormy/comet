@@ -21,7 +21,7 @@ Capitalise the first proper word in the subject.
 
 ### Command-line interface (CLI)
 
-1. Rebase interactively from (the parent of) the commit SHA, for example:
+1. Rebase interactively from (the parent of) the commit SHA, for instance:
 
    ```shell
    git rebase --interactive '7e0ff1ce^'
