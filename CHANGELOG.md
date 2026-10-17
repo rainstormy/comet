@@ -5,8 +5,61 @@ This file documents all notable changes to this project.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- New command-line interface (CLI) to check commits locally: `comet`. Published to npm as [`@rainstormy/comet`](https://www.npmjs.com/package/@rainstormy/comet).
+- Shareable, extensible JSON configuration files for the CLI and GitHub Actions, including an official JSON schema.
+- New GitHub Action input: `config-path`.
+- New rule: `noBlankSubjects`. Enabled by default.
+- New rule: `noExcessiveCommitsPerBranch`. Enabled by default in GitHub Actions with a limit of 10 commits.
+- New rule: `useSignedCommits`. Enabled by default.
+- `useImperativeSubjects`: Warn about redundant whitelist entries in the configuration.
+- `useIssueLinks`: Warn about missing issue link token configuration.
+- Offending characters are now highlighted in commit messages that break the rules.
+
 ### Changed
-- **BREAKING:** Upgrade Node.js to 24.
+- **BREAKING:** New project name: Comet.
+- **BREAKING:** The `rainstormy/github-action-validate-commit-messages` action has been renamed to `rainstormy/comet`.
+- **BREAKING:** Existing rules have been renamed:
+  - `acknowledged-author-email-addresses` -> `useAuthorEmailPatterns`
+  - `acknowledged-author-names` -> `useAuthorNamePatterns`
+  - `acknowledged-committer-email-addresses` -> `useCommitterEmailPatterns`
+  - `acknowledged-committer-names` -> `useCommitterNamePatterns`
+  - `capitalised-subject-lines` -> `useCapitalisedSubjects`
+  - `empty-line-after-subject-lines` -> `useEmptyLineBeforeBody`
+  - `imperative-subject-lines` -> `useImperativeSubjects`
+  - `issue-references-in-subject-lines` -> `useIssueLinks`
+  - `limit-length-of-body-lines` -> `useLineWrapping`
+  - `limit-length-of-subject-lines` -> `useConciseSubjects`
+  - `multi-word-subject-lines` -> `noSingleWordSubjects`
+  - `no-co-authors` -> `noRestrictedTrailers`
+  - `no-merge-commits` -> `noMergeCommits`
+  - `no-revert-revert-commits` -> `noRevertReverts`
+  - `no-squash-commits` -> `noSquashMarkers`
+  - `no-trailing-punctuation-in-subject-lines` -> `noUnexpectedPunctuation`
+  - `no-unexpected-whitespace` -> `noExcessiveWhitespace`
+  - `unique-subject-lines` -> `noRepeatedSubjects`
+- Rule violations are now grouped by commit instead of by rule.
+- [Upgrade Node.js to 24](https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners).
+
+### Removed
+- **BREAKING:** Obsolete GitHub Action inputs (replaced by configuration files):
+  - `rules`
+  - `acknowledged-author-email-addresses--patterns`
+  - `acknowledged-author-names--patterns`
+  - `acknowledged-committer-email-addresses--patterns`
+  - `acknowledged-committer-names--patterns`
+  - `imperative-subject-lines--whitelist`
+  - `issue-references-in-subject-lines--allowed-positions`
+  - `issue-references-in-subject-lines--patterns`
+  - `limit-length-of-body-lines--max-characters`
+  - `limit-length-of-subject-lines--max-characters`
+  - `no-squash-commits--disallowed-prefixes`
+  - `no-trailing-punctuation-in-subject-lines--whitelist`
+- **BREAKING:** Major-only version tags such as `v1` and `v2` are no longer published. Pin the `rainstormy/comet` action to a commit SHA (recommended) or a full version tag (e.g. `v2.0.0`) instead.
+
+### Fixed
+- `noUnexpectedPunctuation`: Improve recognition of hyphenated words, apostrophes, and names containing punctuation.
+- `useImperativeSubjects`: Accept `adjectify`, `adjectivise`/`adjectivize`, `adventure`, `adverbialise`/`adverbialize`, `alight`, `ambulate`, `autobuild`, `autocompile`, `autosquash`, `autoupdate`, `blench`, `blubber`, `chafe`, `cherrypick`/`cherry-pick`, `chortle`, `coalesce`, `cohere`, `combobulate`, `commiserate`, `condole`, `dally`, `decompile`, `defocus`, `desolder`, `discombobulate`, `disfocus`, `dither`, `empathise`/`empathize`, `forcepush`/`force-push`, `hike`, `knead`, `languish`, `lint`, `meditate`, `opine`, `perambulate`, `pique`, `prebuild`, `precompile`, `prioritise`/`prioritize`, `provision`, `quibble`, `reambulate`, `recombobulate`, `recompile`, `reminisce`, `reposition`, `reseparate`, `resolder`, `restage`, `ruminate`, `skyrocket`, `snooze`, `solder`, `soothe` (corrected from `sooth`), `stroll`, `substantify`, `substantivise`/`substantivize`, `tarry`, `tinker`, `toddle`, `transpile`, `triage`, `unbundle`, `undulate`, `unsolder`, `unstage`, `vendor`, `version`, `vouch`, `waft`, `waltz`, `wheedle`, `wilt`, `winnow`, `yodel`.
 
 ## [1.1.9] - 2025-07-27
 ### Fixed
