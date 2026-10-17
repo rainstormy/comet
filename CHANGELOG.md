@@ -5,8 +5,62 @@ This file documents all notable changes to this project.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- New command-line interface (CLI) to check commits locally: `comet`. Published to npm as [`@rainstormy/comet`](https://www.npmjs.com/package/@rainstormy/comet).
+- Shareable, extensible JSON configuration files for the CLI and GitHub Actions, including an official JSON schema.
+- New GitHub Action input: `config-path`.
+- Default rulesets for a zero-configuration setup.
+- New rule: `noBlankSubjects`. Enabled by default.
+- New rule: `noExcessiveCommitsPerBranch`. Enabled by default in GitHub Actions with a limit of 10 commits.
+- New rule: `useSignedCommits`. Enabled by default.
+- `useImperativeSubjects`: Warn about redundant whitelist entries in the configuration.
+- `useIssueLinks`: Warn about missing issue link token configuration.
+- Offending characters are now highlighted in commit messages that break the rules.
+
 ### Changed
-- **BREAKING:** Upgrade Node.js to 24.
+- **BREAKING:** New project name: Comet.
+- **BREAKING:** The `rainstormy/github-action-validate-commit-messages` action has been renamed to `rainstormy/comet`.
+- **BREAKING:** Existing rules have been renamed and adapted to the default rulesets:
+  - `acknowledged-author-email-addresses` -> `useAuthorEmailPatterns`. Disabled by default.
+  - `acknowledged-author-names` -> `useAuthorNamePatterns`. Disabled by default.
+  - `acknowledged-committer-email-addresses` -> `useCommitterEmailPatterns`. Disabled by default.
+  - `acknowledged-committer-names` -> `useCommitterNamePatterns`. Disabled by default.
+  - `capitalised-subject-lines` -> `useCapitalisedSubjects`. Enabled by default.
+  - `empty-line-after-subject-lines` -> `useEmptyLineBeforeBody`. Enabled by default.
+  - `imperative-subject-lines` -> `useImperativeSubjects`. Enabled by default.
+  - `issue-references-in-subject-lines` -> `useIssueLinks`. Disabled by default.
+  - `limit-length-of-body-lines` -> `useLineWrapping`. Enabled by default with a character limit of 72 characters per line.
+  - `limit-length-of-subject-lines` -> `useConciseSubjects`. Enabled by default with a character limit of 50 characters.
+  - `multi-word-subject-lines` -> `noSingleWordSubjects`. Enabled by default.
+  - `no-co-authors` -> `noRestrictedTrailers`. Disabled by default.
+  - `no-merge-commits` -> `noMergeCommits`. Enabled by default.
+  - `no-revert-revert-commits` -> `noRevertReverts`. Enabled by default in GitHub Actions.
+  - `no-squash-commits` -> `noSquashMarkers`. Enabled by default in GitHub Actions.
+  - `no-trailing-punctuation-in-subject-lines` -> `noUnexpectedPunctuation`. Enabled by default.
+  - `no-unexpected-whitespace` -> `noExcessiveWhitespace`. Enabled by default.
+  - `unique-subject-lines` -> `noRepeatedSubjects`. Enabled by default in GitHub Actions.
+- Rule violations are now grouped by commit instead of by rule.
+- [Upgrade Node.js to 24](https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners).
+
+### Removed
+- **BREAKING:** Obsolete GitHub Action inputs (replaced by configuration files):
+  - `rules`. Replaced by the `rules` object in configuration files.
+  - `acknowledged-author-email-addresses--patterns`. Replaced by `rules.useAuthorEmailPatterns.options.patterns`.
+  - `acknowledged-author-names--patterns`. Replaced by `rules.useAuthorNamePatterns.options.patterns`.
+  - `acknowledged-committer-email-addresses--patterns`. Replaced by `rules.useCommitterEmailPatterns.options.patterns`.
+  - `acknowledged-committer-names--patterns`. Replaced by `rules.useCommitterNamePatterns.options.patterns`.
+  - `imperative-subject-lines--whitelist`. Replaced by `rules.useImperativeSubjects.options.whitelist`.
+  - `issue-references-in-subject-lines--allowed-positions`. Replaced by `rules.useIssueLinks.options.position`.
+  - `issue-references-in-subject-lines--patterns`. Replaced by `tokens.issueLinks.prefixes` and `tokens.issueLinks.wildcards`.
+  - `limit-length-of-body-lines--max-characters`. Replaced by `rules.useLineWrapping.options.maxLength`.
+  - `limit-length-of-subject-lines--max-characters`. Replaced by `rules.useConciseSubjects.options.maxLength`.
+  - `no-squash-commits--disallowed-prefixes`. No longer configurable.
+  - `no-trailing-punctuation-in-subject-lines--whitelist`. No longer configurable.
+- **BREAKING:** Major-only version tags such as `v1` and `v2` are no longer published. Pin the `rainstormy/comet` action to a commit SHA (recommended) or a full version tag (e.g. `v2.0.0`) instead.
+
+### Fixed
+- `noUnexpectedPunctuation`: Improve recognition of hyphenated words, apostrophes, and names containing punctuation.
+- `useImperativeSubjects`: Accept `adjectify`, `adjectivise`/`adjectivize`, `adventure`, `adverbialise`/`adverbialize`, `alight`, `ambulate`, `autobuild`, `autocompile`, `autosquash`, `autoupdate`, `blench`, `blubber`, `chafe`, `cherrypick`/`cherry-pick`, `chortle`, `coalesce`, `cohere`, `combobulate`, `commiserate`, `condole`, `dally`, `decompile`, `defocus`, `desolder`, `discombobulate`, `disfocus`, `dither`, `empathise`/`empathize`, `forcepush`/`force-push`, `hike`, `knead`, `languish`, `lint`, `meditate`, `opine`, `perambulate`, `pique`, `prebuild`, `precompile`, `prioritise`/`prioritize`, `provision`, `quibble`, `reambulate`, `recombobulate`, `recompile`, `reminisce`, `reposition`, `reseparate`, `resolder`, `restage`, `ruminate`, `skyrocket`, `snooze`, `solder`, `soothe` (corrected from `sooth`), `stroll`, `substantify`, `substantivise`/`substantivize`, `tarry`, `tinker`, `toddle`, `transpile`, `triage`, `unbundle`, `undulate`, `unsolder`, `unstage`, `vendor`, `version`, `vouch`, `waft`, `waltz`, `wheedle`, `wilt`, `winnow`, `yodel`.
 
 ## [1.1.9] - 2025-07-27
 ### Fixed
