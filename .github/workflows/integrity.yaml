@@ -5,11 +5,11 @@
 #
 # It can be triggered manually on any branch via the GitHub CLI:
 #
-#   gh workflow run integrity.yml [--ref <branch-name>]
+#   gh workflow run integrity.yaml [--ref <branch-name>]
 #   gh run watch
 #
 # It can also be triggered manually on any branch via the GitHub web interface:
-# https://github.com/rainstormy/comet/actions/workflows/integrity.yml
+# https://github.com/rainstormy/comet/actions/workflows/integrity.yaml
 
 name: Integrity
 

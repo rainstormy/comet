@@ -1,30 +1,24 @@
-# This workflow implements one of the final stages of the release pipeline.
-# It creates a draft GitHub release from a full semantic version tag in Git.
+# This workflow implements the continuous integration (CI) pipeline.
+# It verifies that pull requests meet certain standards in software quality and coding conventions.
 #
-# It is triggered automatically by pushing a Git tag on the form `v<major.minor.patch[-prerelease][+buildinfo]>` as done by `.github/workflows/publish-tags.yml`.
-#
-# It can be triggered manually via the GitHub CLI:
-#
-#   gh workflow run publish-github.yml --ref <tag-name>
-#   gh run watch
-#
-# It can also be triggered manually via the GitHub web interface:
-# https://github.com/rainstormy/comet/actions/workflows/publish-github.yml
+# It is triggered automatically by pull requests opened towards the `main` branch.
 
-name: Publish / GitHub
+name: CI
 
 on:
-  push:
-    tags:
-      # Single quotes make YAML interpret strings with special characters correctly.
-      # https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
-      - 'v[0-9]+.[0-9]+.[0-9]+*'
-  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - ready_for_review
+      - reopened
+      - synchronize
 
 # Cancel all previous runs of this workflow that are still in progress on the same branch.
 # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#concurrency
 concurrency:
-  group: publish-github-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 # All third-party actions are pinned to a specific commit SHA for security reasons.
@@ -32,15 +26,18 @@ concurrency:
 jobs:
   integrity:
     name: Integrity
+    # Skip draft pull requests to reduce costs.
+    if: github.event.pull_request.draft == false
     permissions:
       # To call reusable workflows in the same repository.
       # https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
       # https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows#example-caller-workflow
       contents: read
-    uses: ./.github/workflows/integrity.yml
+    uses: ./.github/workflows/integrity.yaml
 
-  github-release:
-    name: GitHub release
+  commit-messages:
+    name: Commit messages
+    # Skip verification of commit messages when the software integrity checks fail, as it will most likely require another commit to fix them.
     needs: integrity
     runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
@@ -48,6 +45,10 @@ jobs:
       # To check out the repository.
       # https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
       contents: read
+      #
+      # To review the commit messages in the pull request.
+      # https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#list-commits-on-a-pull-request
+      pull-requests: read
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -56,8 +57,9 @@ jobs:
           # https://github.com/actions/checkout#usage
           persist-credentials: false
         #
-      - name: Create a draft GitHub release
-        uses: rainstormy/release/github@eb87dc4ba5e9e89451adce4a3c62538e5ecef809 # v1.1.1
+      - name: Verify the commit messages
+        # Run the action on itself.
+        uses: ./
         with:
-          gh-auth-token: ${{ secrets.BOT_NIMBUS_GH_AUTH_TOKEN }}
-          version: ${{ github.ref_name }}
+          github-token: ${{ github.token }}
+          config-path: .github/comet.jsonc

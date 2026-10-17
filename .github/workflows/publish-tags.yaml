@@ -1,7 +1,7 @@
 # This workflow implements the second stage of the release pipeline.
 # It creates version tags in Git on the merge commit from the release branch.
 #
-# It is triggered automatically by merging the pull request from `.github/workflows/release.yml`.
+# It is triggered automatically by merging the pull request from `.github/workflows/release.yaml`.
 
 name: Publish / Tags
 
@@ -26,7 +26,7 @@ concurrency:
 jobs:
   tags:
     name: Tags
-    # Only create version tags for pull requests from `.github/workflows/release.yml`.
+    # Only create version tags for pull requests from `.github/workflows/release.yaml`.
     if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
@@ -35,7 +35,7 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          # Use a separate access token to allow the push tag event in this workflow to trigger `.github/workflows/publish-github.yml` and `.github/workflows/publish-npm.yml`.
+          # Use a separate access token to allow the push tag event in this workflow to trigger `.github/workflows/publish-github.yaml` and `.github/workflows/publish-npm.yaml`.
           # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
           token: ${{ secrets.BOT_NIMBUS_GH_AUTH_TOKEN }}
         #
