@@ -38,7 +38,7 @@ jobs:
     timeout-minutes: 2
     permissions:
       # To check out the repository.
-      # https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
+      # https://docs.github.com/en/rest/repos/contents?apiVersion=2026-03-10#get-repository-content
       contents: read
     steps:
       - name: Check out the repository

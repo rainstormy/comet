@@ -34,7 +34,7 @@ jobs:
     name: Integrity
     permissions:
       # To call reusable workflows in the same repository.
-      # https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
+      # https://docs.github.com/en/rest/repos/contents?apiVersion=2026-03-10#get-repository-content
       # https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows#example-caller-workflow
       contents: read
     uses: ./.github/workflows/integrity.yaml
@@ -46,7 +46,7 @@ jobs:
     timeout-minutes: 1
     permissions:
       # To check out the repository.
-      # https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
+      # https://docs.github.com/en/rest/repos/contents?apiVersion=2026-03-10#get-repository-content
       contents: read
     steps:
       - name: Check out the repository
