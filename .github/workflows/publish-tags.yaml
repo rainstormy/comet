@@ -3,7 +3,7 @@
 #
 # It is triggered automatically by merging the pull request from `.github/workflows/release.yaml`.
 
-name: Publish / Tags
+name: 'Publish: Git tag'
 
 on:
   pull_request:

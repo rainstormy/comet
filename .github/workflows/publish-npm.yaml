@@ -13,7 +13,7 @@
 #
 # CAUTION: The workflow filename `publish-npm.yaml` is defined as the trusted publisher of the `@rainstormy/comet` package in the npm registry.
 
-name: Publish / npm
+name: 'Publish: npm package'
 
 on:
   push:

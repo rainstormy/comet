@@ -10,7 +10,7 @@
 # It can also be triggered manually via the GitHub web interface:
 # https://github.com/rainstormy/comet/actions/workflows/release.yaml
 
-name: Release
+name: New release
 
 on:
   workflow_dispatch:

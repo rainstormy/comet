@@ -11,7 +11,7 @@
 # It can also be triggered manually via the GitHub web interface:
 # https://github.com/rainstormy/comet/actions/workflows/publish-github.yaml
 
-name: Publish / GitHub
+name: 'Publish: GitHub release'
 
 on:
   push:
