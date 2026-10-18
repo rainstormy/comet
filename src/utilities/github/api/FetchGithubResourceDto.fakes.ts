@@ -93,6 +93,6 @@ function expectedRequestHeaders(): Record<string, string> {
 	return {
 		accept: "application/vnd.github+json",
 		authorization: `Bearer ${env.__secretToken__}`,
-		"x-github-api-version": "2022-11-28",
+		"x-github-api-version": "2026-03-10",
 	}
 }

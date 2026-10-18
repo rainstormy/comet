@@ -4,7 +4,7 @@ import { githubCommitUserDto } from "#utilities/github/api/dtos/GithubCommitUser
 import { githubParentCommitDto } from "#utilities/github/api/dtos/GithubParentCommitDto.ts"
 
 /**
- * @see https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#list-commits-on-a-pull-request
+ * @see https://docs.github.com/en/rest/pulls/pulls?apiVersion=2026-03-10#list-commits-on-a-pull-request
  */
 export type GithubCommitDto = v.InferOutput<ReturnType<typeof githubCommitDto>>
 

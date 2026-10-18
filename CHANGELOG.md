@@ -41,6 +41,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), 
   - `unique-subject-lines` -> `noRepeatedSubjects`. Enabled by default in GitHub Actions.
 - Rule violations are now grouped by commit instead of by rule.
 - [Upgrade Node.js to 24](https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners).
+- Upgrade GitHub REST API version to 2026-03-10.
 
 ### Removed
 - **BREAKING:** Obsolete GitHub Action inputs (replaced by configuration files):
