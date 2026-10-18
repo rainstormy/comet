@@ -43,6 +43,7 @@ jobs:
 
   npm-package:
     name: npm package
+    if: github.event_name == 'workflow_dispatch' || github.event.deleted == false
     needs: integrity
     runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
