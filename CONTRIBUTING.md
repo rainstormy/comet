@@ -10,6 +10,7 @@ Consult `AGENTS.md` for a detailed description of the project.
 | `vpr check`               | Verifies that the source code is clean, type-safe, and well-formatted.                                   |
 | `vpr fmt`                 | Applies linting suggestions and reformats the source code.                                               |
 | `vpr install`             | Installs dependencies.                                                                                   |
+| `vpr readme <version>`    | Updates version references in the README examples to the given semantic version.                         |
 | `vpr test [...filenames]` | Runs the given unit test files or the entire test suite if no arguments are provided.                    |
 
 ## Get started
