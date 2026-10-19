@@ -1,0 +1,106 @@
+# This workflow implements a follow-up stage to the release pipeline.
+# It creates a pull request to update Comet version references in README examples.
+#
+# It is triggered automatically by pushing a Git tag in the form `v<major.minor.patch>` (stable releases only) to `main`, as done by `.github/workflows/publish-tags.yaml`.
+#
+# It can be triggered manually via the GitHub CLI:
+#
+#   gh workflow run publish-readme.yaml --ref main --field version=<tag-name>
+#   gh run watch
+#
+# It can also be triggered manually via the GitHub web interface:
+# https://github.com/rainstormy/comet/actions/workflows/publish-readme.yaml
+
+name: 'Publish: README examples'
+
+on:
+  push:
+    tags:
+      # Match stable releases only, as the README changes will be published to all users immediately.
+      # Single quotes make YAML interpret strings with special characters correctly.
+      # https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The semantic version number of the target release.
+        type: string
+        required: true
+
+run-name: ${{ inputs.version || github.ref_name }}
+
+# Cancel all previous runs of this workflow that are still in progress on the same branch.
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#concurrency
+concurrency:
+  group: publish-readme-${{ github.workflow }}-${{ inputs.version || github.ref_name }}
+  cancel-in-progress: true
+
+# All third-party actions are pinned to a specific commit SHA for security reasons.
+# https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions
+jobs:
+  readme:
+    name: README branch
+    if: github.event_name == 'workflow_dispatch' || github.event.deleted == false
+    runs-on: ubuntu-26.04-arm
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Include all tags and history on the main branch, required for `vpr readme`.
+          fetch-depth: 0
+          ref: main
+          # Use a separate access token with permission to commit and push.
+          token: ${{ secrets.BOT_NIMBUS_GH_AUTH_TOKEN }}
+        #
+      - name: Install dependencies
+        uses: voidzero-dev/setup-vp@313600b80b104eadebb9111787d37a2e83e014ca # v1.17.0
+        with:
+          node-version-file: package.json
+          version-file: pnpm-workspace.yaml
+          cache: true
+        #
+      - name: Update version references in the README examples
+        # language=sh
+        run: vpr readme "$TARGET_VERSION"
+        env:
+          TARGET_VERSION: ${{ inputs.version || github.ref_name }}
+        shell: bash
+        #
+      - name: Use Nimbus (Bot) in Git
+        uses: rainstormy/rainstorm-release/bot-nimbus@5aa67a14e95403e7db0a7a43f8e18c1cdd51ba5f # v1.0.0
+        with:
+          bot-nimbus-ssh-public-key: ${{ secrets.BOT_NIMBUS_SSH_PUBLIC_KEY }}
+          __bot-nimbus-ssh-private-key__: ${{ secrets.BOT_NIMBUS_SSH___THE___PRIVATE___KEY }}
+          ssh-key-fingerprints-github: ${{ secrets.SSH_KEY_FINGERPRINTS_GITHUB }}
+        #
+      - name: Open a pull request
+        # language=sh
+        run: |
+          if git diff --quiet -- README.md; then
+            echo 'No changes in the README examples.'
+            exit 0
+          fi
+
+          TARGET_VERSION="${VERSION#v}"
+          BRANCH="nimbus/update-readme-examples-to-$TARGET_VERSION"
+          TITLE="Update README examples to $TARGET_VERSION"
+
+          git switch --create "$BRANCH"
+          git add README.md
+          git commit --message "$TITLE"
+          git push --force-with-lease --set-upstream origin "$BRANCH"
+
+          if [[ "$(gh pr list --base 'main' --head "$BRANCH" --state open --json number --jq 'length')" == 0 ]]; then
+            gh pr create \
+              --base 'main' \
+              --head "$BRANCH" \
+              --title "$TITLE" \
+              --body 'This pull request was created automatically by GitHub Actions.'
+          fi
+        env:
+          # Grant the GitHub CLI (gh) permission to open pull requests.
+          GH_TOKEN: ${{ secrets.BOT_NIMBUS_GH_AUTH_TOKEN }}
+          VERSION: ${{ inputs.version || github.ref_name }}
+        shell: bash
