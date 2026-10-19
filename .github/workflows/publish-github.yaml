@@ -11,7 +11,7 @@
 # It can also be triggered manually via the GitHub web interface:
 # https://github.com/rainstormy/comet/actions/workflows/publish-github.yaml
 
-name: Publish / GitHub
+name: 'Publish: GitHub release'
 
 on:
   push:
@@ -41,11 +41,13 @@ jobs:
 
   github-release:
     name: GitHub release
+    if: github.event_name == 'workflow_dispatch' || github.event.deleted == false
     needs: integrity
     runs-on: ubuntu-26.04-arm
     timeout-minutes: 1
     permissions:
       # To check out the repository.
+      # https://github.com/actions/checkout#recommended-permissions
       # https://docs.github.com/en/rest/repos/contents?apiVersion=2026-03-10#get-repository-content
       contents: read
     steps:

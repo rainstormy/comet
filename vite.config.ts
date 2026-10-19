@@ -79,6 +79,7 @@ export default defineConfig({
 			comet: { command: "node src/main-cli.ts --config .github/comet.jsonc", cache: false },
 			fmt: { command: "vp check --fix" },
 			install: { command: "vp install --frozen-lockfile --ignore-scripts", cache: false },
+			readme: { command: "node tools/readme.script.ts", cache: false },
 			setup: { command: "node tools/setup.script.ts", cache: false },
 			test: { command: "vp test" },
 		},

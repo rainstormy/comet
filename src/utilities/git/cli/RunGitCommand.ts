@@ -4,6 +4,7 @@ import { GitCommandError } from "#utilities/git/cli/GitCommandError.ts"
 export type GitCommand =
 	| ["--no-pager", "log", ...Array<string>]
 	| ["fetch", ...Array<string>]
+	| ["merge-base", ...Array<string>]
 	| ["remote", ...Array<string>]
 	| ["rev-parse", ...Array<string>]
 

@@ -10,7 +10,7 @@
 # It can also be triggered manually via the GitHub web interface:
 # https://github.com/rainstormy/comet/actions/workflows/release.yaml
 
-name: Release
+name: New release
 
 on:
   workflow_dispatch:
@@ -43,7 +43,7 @@ jobs:
   release-branch:
     name: Release branch
     # A release must always be created from the `main` branch.
-    if: github.ref_name == github.event.repository.default_branch
+    if: github.ref_name == 'main'
     needs: integrity
     runs-on: ubuntu-26.04-arm
     timeout-minutes: 1

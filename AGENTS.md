@@ -71,7 +71,7 @@ Read only the relevant skill guides for the task at hand:
 - Always prefer `type` over `interface`, except in `d.ts` files.
 - Always prefer named `function` declarations over `const` arrow functions.
 - Always prefer generic `Array<Item>` over shorthand `Item[]` syntax.
-- Always specify types on top-level consts and all function parameters and return values.
+- Always specify types on all function parameters and return values.
 - Never use `any` and keep type casts with `as` to a minimum.
 
 ## Git workflow
