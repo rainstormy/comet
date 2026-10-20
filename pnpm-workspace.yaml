@@ -17,7 +17,7 @@ catalog:
 
   # This Valibot plugin generates JSON schemas from Valibot schemas.
   # https://valibot.dev/guides/json-schema
-  '@valibot/to-json-schema': 1.7.1
+  '@valibot/to-json-schema': 1.8.0
 
   # Ansis formats console output.
   # https://github.com/webdiscus/ansis
@@ -33,7 +33,7 @@ catalog:
 
   # Valibot provides type-safe data validation.
   # https://valibot.dev
-  valibot: 1.4.2
+  valibot: 1.5.0
 
   # Vite+ is a unified toolchain and task runner for Oxfmt (an opinionated code formatter), Oxlint (a TypeScript linter), tsdown (a bundler), Vite, and Vitest.
   # It is also a version manager of Node.js and pnpm.
