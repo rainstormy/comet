@@ -21,7 +21,7 @@ catalog:
 
   # Ansis formats console output.
   # https://github.com/webdiscus/ansis
-  ansis: 4.3.1
+  ansis: 4.4.0
 
   # This library removes comments from JSON content, allowing us to read `.jsonc` files.
   # https://github.com/sindresorhus/strip-json-comments
