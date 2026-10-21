@@ -13,7 +13,7 @@ catalog:
   # Type definitions for the Node.js standard library.
   # https://nodejs.org/docs/latest/api
   # https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/node
-  '@types/node': 24.13.3
+  '@types/node': 24.19.2
 
   # This Valibot plugin generates JSON schemas from Valibot schemas.
   # https://valibot.dev/guides/json-schema
