@@ -169,7 +169,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: rainstormy/comet@10ac994454c2a81e76a4ff48f3d015086e708674 # v2.0.0-rc.0
+      - uses: rainstormy/comet@493bd1ce2cdc68596cd79035c0a8c933c1243721 # v2.0.0
         with:
           github-token: ${{ github.token }}
           config-path: .github/comet.jsonc
@@ -182,7 +182,7 @@ Override the settings you want to change, for example:
 
 ```json
 {
-  "$schema": "https://unpkg.com/@rainstormy/comet@2.0.0-rc.0/schema.json",
+  "$schema": "https://unpkg.com/@rainstormy/comet@2.0.0/schema.json",
   "rules": {
     "noMergeCommits": "error",
     "useConciseSubjects": {
@@ -202,7 +202,7 @@ Validate the configuration file and enable code completion with the official JSO
 
 ```json
 {
-  "$schema": "https://unpkg.com/@rainstormy/comet@2.0.0-rc.0/schema.json"
+  "$schema": "https://unpkg.com/@rainstormy/comet@2.0.0/schema.json"
 }
 ```
 
