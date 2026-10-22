@@ -49,7 +49,7 @@ export async function commandLineProgram(args: Array<string>): Promise<ExitCode>
 		const defaultBranch = parsedArgs["--default-branch"]?.[0] ?? configuration.git.defaultBranch
 
 		const crudeCommits = await getGitBranchCrudeCommits(defaultBranch)
-		return await program(crudeCommits, configuration)
+		return await program(crudeCommits, configuration, { ruleLinkStyle: "hyperlink" })
 	} catch (error) {
 		assertError(error)
 		printCommandLineError(error.message)

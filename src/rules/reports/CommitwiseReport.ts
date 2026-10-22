@@ -9,7 +9,7 @@ import type { Concern, Concerns } from "#rules/concerns/Concern.ts"
 import type { SubjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import type { UserIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { normaliseTrailerKey } from "#rules/NoRestrictedTrailers.ts"
-import { ruleLink } from "#rules/reports/RuleLink.ts"
+import { type RuleLinkStyle, ruleLink } from "#rules/reports/RuleLink.ts"
 import type { CharacterRange } from "#types/CharacterRange.ts"
 import { ALPHABETICALLY, isNotEmptyString } from "#utilities/Arrays.ts"
 import { requireNotNullish } from "#utilities/Assertions.ts"
@@ -25,13 +25,16 @@ export function commitwiseReport(
 	concerns: Concerns,
 	commits: Commits,
 	configuration: Configuration,
+	ruleLinkStyle: RuleLinkStyle = "hyperlink",
 ): string {
 	if (concerns.length === 0) {
 		return ""
 	}
 
 	const formattedConcerns = concerns
-		.map((concern) => formatConcern(concern, getConcernedCommit(concern, commits), configuration))
+		.map((concern) =>
+			formatConcern(concern, getConcernedCommit(concern, commits), configuration, ruleLinkStyle),
+		)
 		.join("\n\n")
 
 	const concernedCommitCount = new Set(concerns.map(({ commitSha }) => commitSha)).size
@@ -47,19 +50,24 @@ function getConcernedCommit(concern: Concern, commits: Commits): Commit {
 	)
 }
 
-function formatConcern(concern: Concern, commit: Commit, configuration: Configuration): string {
+function formatConcern(
+	concern: Concern,
+	commit: Commit,
+	configuration: Configuration,
+	ruleLinkStyle: RuleLinkStyle,
+): string {
 	switch (concern.location) {
 		case "body-line": {
-			return formatBodyLineConcern(concern, commit, configuration)
+			return formatBodyLineConcern(concern, commit, configuration, ruleLinkStyle)
 		}
 		case "commit": {
-			return formatCommitConcern(concern, commit, configuration)
+			return formatCommitConcern(concern, commit, configuration, ruleLinkStyle)
 		}
 		case "subject": {
-			return formatSubjectConcern(concern, commit, configuration)
+			return formatSubjectConcern(concern, commit, configuration, ruleLinkStyle)
 		}
 		case "user-identity": {
-			return formatUserIdentityConcern(concern, commit, configuration)
+			return formatUserIdentityConcern(concern, commit, configuration, ruleLinkStyle)
 		}
 	}
 }
@@ -74,16 +82,17 @@ function formatCommitConcern(
 	concern: CommitConcern,
 	commit: Commit,
 	configuration: Configuration,
+	ruleLinkStyle: RuleLinkStyle,
 ): string {
 	const message = commitRuleMessage(concern, configuration)
 
 	const shortSha = getShortSha(commit)
 	const subject = getSubject(commit)
-	const rangeLine = indentString(
-		red`${RANGE_PREFIX + "─".repeat(subject.length)}`,
-		SHORT_SHA_LENGTH - RANGE_PREFIX.length + 1,
-	)
-	const messageLines = getMessageLines(message, SHORT_SHA_LENGTH - MESSAGE_PREFIX.length + 1)
+
+	const offset = SHORT_SHA_LENGTH - RANGE_PREFIX.length + 1
+
+	const rangeLine = indentString(red`${RANGE_PREFIX + "─".repeat(subject.length)}`, offset)
+	const messageLines = getMessageLines(message, offset, ruleLinkStyle)
 
 	return `${shortSha} ${subject}\n${rangeLine}\n${messageLines}`
 }
@@ -92,6 +101,7 @@ function formatSubjectConcern(
 	concern: SubjectConcern,
 	commit: Commit,
 	configuration: Configuration,
+	ruleLinkStyle: RuleLinkStyle,
 ): string {
 	const message = subjectRuleMessage(concern, commit, configuration)
 
@@ -110,8 +120,8 @@ function formatSubjectConcern(
 
 	const rangeLine = indentString(formatRange(concern.range, anchoredRight), offset)
 	const messageLines = anchoredRight
-		? getMessageLines(message, offset + longHalfLength - violationLength, true)
-		: getMessageLines(message, offset + shortHalfLength)
+		? getMessageLines(message, offset + longHalfLength - violationLength, ruleLinkStyle, true)
+		: getMessageLines(message, offset + shortHalfLength, ruleLinkStyle)
 
 	return `${shortSha} ${subject}\n${rangeLine}\n${messageLines}`
 }
@@ -120,6 +130,7 @@ function formatBodyLineConcern(
 	concern: BodyLineConcern,
 	commit: Commit,
 	configuration: Configuration,
+	ruleLinkStyle: RuleLinkStyle,
 ): string {
 	const message = bodyLineRuleMessage(concern, configuration)
 
@@ -150,8 +161,8 @@ function formatBodyLineConcern(
 	)}`
 
 	const messageLines = anchoredRight
-		? getMessageLines(message, rightMessageOffset, true)
-		: getMessageLines(message, rangeStart + shortHalfLength)
+		? getMessageLines(message, rightMessageOffset, ruleLinkStyle, true)
+		: getMessageLines(message, rangeStart + shortHalfLength, ruleLinkStyle)
 
 	const succeedingBodyLine = getBodyLine(commit.bodyLines, concern.lineNumber + 1, gutterWidth)
 	const blockTailLines = `${succeedingBodyLine}${indentString(grey`╰──`, gutterWidth)}`
@@ -186,6 +197,7 @@ function formatUserIdentityConcern(
 	concern: UserIdentityConcern,
 	commit: Commit,
 	configuration: Configuration,
+	ruleLinkStyle: RuleLinkStyle,
 ): string {
 	const message = userIdentityRuleMessage(concern, configuration)
 
@@ -199,7 +211,7 @@ function formatUserIdentityConcern(
 		red`${RANGE_PREFIX + "─".repeat(identityValue.length)}`,
 		identityOffset,
 	)
-	const messageLines = getMessageLines(message, identityOffset)
+	const messageLines = getMessageLines(message, identityOffset, ruleLinkStyle)
 
 	return `${shortSha} ${subject}\n${grey`${identityKey}`} ${identityValue}\n${rangeLine}\n${messageLines}`
 }
@@ -260,8 +272,13 @@ function formatRange(range: CharacterRange, anchoredRight: boolean): string {
 	//                    anchored right ─╯                                ╰─ anchored left
 }
 
-function getMessageLines(message: RuleMessage, offset: number, anchoredRight = false): string {
-	const sidenotes = `${ruleLink(message.rule)}${message.sidenote ? `\n\n${message.sidenote}` : ""}`
+function getMessageLines(
+	message: RuleMessage,
+	offset: number,
+	ruleLinkStyle: RuleLinkStyle,
+	anchoredRight = false,
+): string {
+	const sidenotes = `${ruleLink(message.rule, ruleLinkStyle)}${message.sidenote ? `\n\n${message.sidenote}` : ""}`
 
 	return anchoredRight
 		? indentString(red`${message.violation} ${MESSAGE_SUFFIX}\n${sidenotes}`, offset)
