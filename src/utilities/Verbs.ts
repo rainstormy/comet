@@ -285,6 +285,7 @@ export const SORTED_IMPERATIVE_VERBS: Array<string> = [
 	"autograph",
 	"autoindent",
 	"autojoin",
+	"autolink",
 	"automate",
 	"automerge",
 	"autoprefix",
