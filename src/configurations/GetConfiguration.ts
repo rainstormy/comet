@@ -67,16 +67,7 @@ function mapDtoToPartialGitConfiguration(
 function mapDtoToPartialTokenConfiguration(
 	dto: JsonConfigurationTokensDto,
 ): DeepPartial<TokenConfiguration> {
-	if (dto?.issueLinks === undefined) {
-		return {}
-	}
-
-	return {
-		issueLinks: {
-			prefixes: dto.issueLinks.prefixes ?? [],
-			wildcards: dto.issueLinks.wildcards ?? [],
-		},
-	}
+	return dto ?? {}
 }
 
 function mapDtoToPartialRuleConfiguration(
@@ -99,21 +90,19 @@ function mapDtoToPartialRuleConfiguration(
 function sanitiseConfiguration(
 	configuration: DeepPartial<Configuration>,
 ): DeepPartial<Configuration> {
-	const issueLinks = configuration.tokens?.issueLinks ?? null
+	const result: DeepPartial<Configuration> = {}
 
-	if (issueLinks === null) {
-		return configuration
+	if (configuration.git !== undefined) {
+		result.git = configuration.git
+	}
+	if (configuration.rules !== undefined) {
+		result.rules = configuration.rules
+	}
+	if (configuration.tokens !== undefined) {
+		result.tokens = sanitiseTokenConfiguration(configuration.tokens)
 	}
 
-	return {
-		...configuration,
-		tokens: sanitiseTokenConfiguration({
-			issueLinks: {
-				prefixes: issueLinks.prefixes ?? [],
-				wildcards: issueLinks.wildcards ?? [],
-			},
-		}),
-	}
+	return result
 }
 
 export async function getConfigurationPath(
