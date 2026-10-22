@@ -62,11 +62,6 @@ jobs:
           version-file: pnpm-workspace.yaml
           cache: true
         #
-      - name: Generate build artefacts
-        # language=sh
-        run: vpr build
-        shell: bash
-        #
       - name: Update release artefacts
         uses: rainstormy/updraft@23bb449c54a4e967c87a6943a1ef9a237eafdb99 # v1.2.0
         with:
@@ -74,6 +69,13 @@ jobs:
           files: package.json
           release-files: CHANGELOG.md
           release-version: ${{ inputs.version }}
+        #
+      - name: Generate build artefacts
+        # CAUTION: Generate build artefacts after updating the `version` field in `package.json`.
+        # This ensures that the `--version` CLI flag and hyperlinks to rule documentation use the new version.
+        # language=sh
+        run: vpr build
+        shell: bash
         #
       - name: Use Nimbus (Bot) in Git
         uses: rainstormy/rainstorm-release/bot-nimbus@5aa67a14e95403e7db0a7a43f8e18c1cdd51ba5f # v1.0.0
