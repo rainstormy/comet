@@ -5,6 +5,8 @@ This file documents all notable changes to this project.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.0.0] - 2026-10-22
 ### Added
 - New command-line interface (CLI) to check commits locally: `comet`. Published to npm as [`@rainstormy/comet`](https://www.npmjs.com/package/@rainstormy/comet).
 - Shareable, extensible JSON configuration files for the CLI and GitHub Actions, including an official JSON schema.
@@ -141,7 +143,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), 
 - New rule: `no-trailing-punctuation-in-subject-lines`.
 - New rule: `no-unexpected-whitespace`.
 
-[unreleased]: https://github.com/rainstormy/comet/compare/v1.1.9...HEAD
+[unreleased]: https://github.com/rainstormy/comet/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/rainstormy/comet/compare/v1.1.9...v2.0.0
 [1.1.9]: https://github.com/rainstormy/comet/compare/v1.1.8...v1.1.9
 [1.1.8]: https://github.com/rainstormy/comet/compare/v1.1.7...v1.1.8
 [1.1.7]: https://github.com/rainstormy/comet/compare/v1.1.6...v1.1.7
