@@ -41,12 +41,15 @@ const REVERT = String.raw`(?<revert>(?i:revert))(?=\s*")`
 // language=jsunicoderegexp
 const SEMVER = String.raw`(?<=\s)(?<semver>[0-9a-f]{7,}|v?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?)(?=[\s,]|"|$)`
 
+// language=jsunicoderegexp
+const SQUASH_MARKER = String.raw`(?i:amend!+|fixup!+|squash!+|!+amend\b|!+fixup\b|!+squash\b)`
+
 /**
  * Matches a squash marker literal with one or more leading or trailing exclamation marks, optionally preceded by whitespace.
  * The tokeniser ensures that squash tokens only appear at the start of the subject.
  */
 // language=jsunicoderegexp
-const SQUASH = String.raw`(?<squash>(?i:amend!+|fixup!+|squash!+|!+amend\b|!+fixup\b|!+squash\b))`
+const SQUASH = String.raw`(?<squash>${SQUASH_MARKER})`
 
 /**
  * Matches the key of a colon-separated key-value pair, optionally preceded and/or separated by whitespace, in one of the following formats:
@@ -88,7 +91,21 @@ const TRAILERLINE_REGEX = new RegExp(
 )
 
 export type TokeniserPatterns = {
+	conventional: string
 	issueLink: string
+}
+
+export function conventionalPattern(configuration: TokenConfiguration): string {
+	const types = regexEnum(configuration.conventionalCommits.types)
+
+	if (types === "") {
+		return ""
+	}
+
+	// Recognise one conventional prefix at the start of the subject, after optional whitespace and squash markers.
+	// The colon is always a part of the conventional token, but any whitespace after that is not.
+	// language=jsunicoderegexp
+	return String.raw`(?<=^(?:\s|${SQUASH_MARKER})*)(?<conventional>(?i:${types})(?:\([^()\s]+\))?!?:)`
 }
 
 export function issueLinkPattern(configuration: TokenConfiguration): string {
@@ -112,6 +129,7 @@ export function tokeniseSubject(crudeSubject: string, patterns: TokeniserPattern
 	const prioritisedPatterns: Array<string> = [
 		SQUASH,
 		REVERT,
+		patterns.conventional,
 		CODE,
 		HYPERLINK,
 		SEMVER,

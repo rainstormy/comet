@@ -5,6 +5,7 @@ import {
 	type Tokens,
 	code,
 	codeblock,
+	conventional,
 	hyperlink,
 	issuelink,
 	punctuation,
@@ -1062,5 +1063,192 @@ describe.each`
 	it("has no body lines", () => {
 		const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
 		expect(commit.bodyLines).toEqual([])
+	})
+})
+
+describe.each`
+	subject                                      | expectedTokens
+	${"feat: Add offline exports"}               | ${[conventional("feat:"), space(5), word("Add", 6), space(9), word("offline", 10), space(17), word("exports", 18)]}
+	${"fix!: Restore calendar sync"}             | ${[conventional("fix!:"), space(5), word("Restore", 6), space(13), word("calendar", 14), space(22), word("sync", 23)]}
+	${"chore(deps): Bump vite to 8.0.0"}         | ${[conventional("chore(deps):"), space(12), word("Bump", 13), space(17), word("vite", 18), space(22), word("to", 23), space(25), semver("8.0.0", 26)]}
+	${"FEAT(api)!: Add `contrast` #42"}          | ${[conventional("FEAT(api)!:"), space(11), word("Add", 12), space(15), code("`contrast`", 16), space(26), issuelink("#42", 27)]}
+	${" fixup! squash! fix: Quiet the inbox"}    | ${[space(), squash("fixup!", 1), space(7), squash("squash!", 8), space(15), conventional("fix:", 16), space(20), word("Quiet", 21), space(26), word("the", 27), space(30), word("inbox", 31)]}
+	${"docs: fix: Clarify pagination"}           | ${[conventional("docs:"), space(5), word("fix", 6), punctuation(":", 9), space(10), word("Clarify", 11), space(18), word("pagination", 19)]}
+	${"fix(api/client-v2)!: Rebuild thumbnails"} | ${[conventional("fix(api/client-v2)!:"), space(20), word("Rebuild", 21), space(28), word("thumbnails", 29)]}
+	${"test: "}                                  | ${[conventional("test:"), space(5)]}
+	${"\t feat:Streamline onboarding"}           | ${[whitespace("\t "), conventional("feat:", 2), word("Streamline", 7), space(17), word("onboarding", 18)]}
+	${"  fixup! fix: Tune chart labels"}         | ${[whitespace("  "), squash("fixup!", 2), space(8), conventional("fix:", 9), space(13), word("Tune", 14), space(18), word("chart", 19), space(24), word("labels", 25)]}
+	${"fixup!fix:Triage"}                        | ${[squash("fixup!"), conventional("fix:", 6), word("Triage", 10)]}
+	${"!!SQUASH\tfix!:Expire"}                   | ${[squash("!!SQUASH"), whitespace("\t", 8), conventional("fix!:", 9), word("Expire", 14)]}
+	${"fixup!!squash!feat:Notify"}               | ${[squash("fixup!!"), squash("squash!", 7), conventional("feat:", 14), word("Notify", 19)]}
+	${"docs:fix(#42):Annotate"}                  | ${[conventional("docs:"), word("fix", 5), issuelink("(#42):", 8), word("Annotate", 14)]}
+`(
+	"when the subject of $subject starts with a conventional prefix",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
+
+		it("extracts the leading prefix and preserves all token ranges", () => {
+			expect(props.expectedTokens).toContainToken("conventional")
+			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
+			expect(commit.subject).toEqual(props.expectedTokens)
+		})
+	},
+)
+
+describe.each`
+	subject                              | expectedTokens
+	${"docs:Publish"}                    | ${[conventional("docs:"), word("Publish", 5)]}
+	${"test:weather balloons"}           | ${[conventional("test:"), word("weather", 5), space(12), word("balloons", 13)]}
+	${"docs:"}                           | ${[conventional("docs:")]}
+	${"test:\tValidate checksums"}       | ${[conventional("test:"), whitespace("\t", 5), word("Validate", 6), space(14), word("checksums", 15)]}
+	${"docs(api)!:Remove old endpoints"} | ${[conventional("docs(api)!:"), word("Remove", 11), space(17), word("old", 18), space(21), word("endpoints", 22)]}
+`(
+	"when the subject of $subject starts with a conventional prefix that is not followed by a space",
+	(props: { subject: string; expectedTokens: Tokens }) => {
+		const crudeCommit = fakeCrudeCommit({ message: props.subject })
+
+		it("extracts the prefix without its following characters", () => {
+			expect(props.expectedTokens).toContainToken("conventional")
+			const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
+			expect(commit.subject).toEqual(props.expectedTokens)
+		})
+	},
+)
+
+describe.each`
+	subject
+	${"Note the docs: prefix"}
+	${"#42 feat: Add maps"}
+	${"`chore: Update the color palette`"}
+	${'Revert "test: Normalize phone numbers"'}
+	${"https://example.com/build:preview"}
+	${"fixup! #42 perf: Add previews"}
+	${"docs : Audit access logs"}
+	${"test(): Compare time zones"}
+	${"chore( ): Rotate credentials"}
+	${"build(a(b)): Pin compiler"}
+	${"test(api)!!: Stream events"}
+	${"perf!(api): Batch requests"}
+	${"defeat: Reorganize book covers"}
+	${"garden: Plant tulips"}
+	${"!ci: Publish artifacts"}
+	${"Note fix(#42): Archive old records"}
+	${"Note fix(`schema`): Trace"}
+	${"fixup! !fix: Rekey signatures"}
+	${'fixup! Revert "fix(api)!: Restore seating assignments"'}
+	${"fixup!fix(api)!!: docs: Correct generated examples"}
+`(
+	"when the subject of $subject does not have a conventional prefix",
+	(props: { subject: string }) => {
+		it("does not extract any prefixes", () => {
+			const commit = mapCrudeCommitToCommit(
+				fakeCrudeCommit({ message: props.subject }),
+				configuration,
+			)
+			expect(commit.subject).not.toContainToken("conventional")
+		})
+	},
+)
+
+describe.each`
+	body
+	${"feat: Stream camera previews"}
+	${"Talk about fix(api)!: prefixes in user locale preferences."}
+	${"`test: Reject malformed timestamps`"}
+	${"```text\nchore: Ship the release dashboard\n```"}
+	${"BREAKING CHANGE: Remove the v1 billing endpoint"}
+`("when the body contains conventional prefix text in $body", (props: { body: string }) => {
+	it("keeps body tokenisation unchanged", () => {
+		const crudeCommit = fakeCrudeCommit({
+			message: `Prepare the launch checklist\n\n${props.body}`,
+		})
+		const enabled = mapCrudeCommitToCommit(crudeCommit, configuration)
+		const disabled = mapCrudeCommitToCommit(
+			crudeCommit,
+			fakeTokenConfiguration({ conventionalCommits: { types: [] } }),
+		)
+		expect(enabled.bodyLines.flat()).not.toContainToken("conventional")
+		expect(enabled.bodyLines).toEqual(disabled.bodyLines)
+	})
+})
+
+describe("when conventional tokenisation accepts custom types", () => {
+	const customConventionalTypes = fakeTokenConfiguration({
+		conventionalCommits: { types: ["invoice", "release+"] },
+	})
+
+	describe.each`
+		subject                              | expectedTokens
+		${"invoice: Reconcile balances"}     | ${[conventional("invoice:"), space(8), word("Reconcile", 9), space(18), word("balances", 19)]}
+		${"release+!: Tag candidate builds"} | ${[conventional("release+!:"), space(10), word("Tag", 11), space(14), word("candidate", 15), space(24), word("builds", 25)]}
+	`(
+		"and the subject of $subject starts with a configured type",
+		(props: { subject: string; expectedTokens: Tokens }) => {
+			it("extracts the configured conventional prefix", () => {
+				const commit = mapCrudeCommitToCommit(
+					fakeCrudeCommit({ message: props.subject }),
+					customConventionalTypes,
+				)
+				expect(commit.subject).toEqual(props.expectedTokens)
+			})
+		},
+	)
+
+	describe.each`
+		subject                         | expectedTokens
+		${"releaseee: Rotate backups"}  | ${[word("releaseee"), punctuation(":", 9), space(10), word("Rotate", 11), space(17), word("backups", 18)]}
+		${"docs: Catalog audit events"} | ${[word("docs"), punctuation(":", 4), space(5), word("Catalog", 6), space(13), word("audit", 14), space(19), word("events", 20)]}
+	`(
+		"and the subject of $subject does not start with a configured type",
+		(props: { subject: string; expectedTokens: Tokens }) => {
+			it("does not extract a conventional prefix", () => {
+				const commit = mapCrudeCommitToCommit(
+					fakeCrudeCommit({ message: props.subject }),
+					customConventionalTypes,
+				)
+				expect(commit.subject).toEqual(props.expectedTokens)
+			})
+		},
+	)
+})
+
+describe("when conventional tokenisation is disabled", () => {
+	const noConventionalTypes = fakeTokenConfiguration({
+		conventionalCommits: { types: [] },
+	})
+
+	it("does not extract any conventional prefix", () => {
+		const commit = mapCrudeCommitToCommit(
+			fakeCrudeCommit({ message: "style: Prefer tabs" }),
+			noConventionalTypes,
+		)
+		expect(commit.subject).toEqual([
+			word("style"),
+			punctuation(":", 5),
+			space(6),
+			word("Prefer", 7),
+			space(13),
+			word("tabs", 14),
+		])
+	})
+})
+
+describe("when an empty conventional type is configured", () => {
+	const emptyConventionalType = fakeTokenConfiguration({
+		conventionalCommits: { types: [""] },
+	})
+
+	it("does not match an empty prefix", () => {
+		const commit = mapCrudeCommitToCommit(
+			fakeCrudeCommit({ message: ": Count bytes" }),
+			emptyConventionalType,
+		)
+		expect(commit.subject).toEqual([
+			punctuation(":"),
+			space(1),
+			word("Count", 2),
+			space(7),
+			word("bytes", 8),
+		])
 	})
 })

@@ -12,6 +12,7 @@ export type Tokens<Type extends TokenType = TokenType> = Array<Token<Type>>
 export type TokenType =
 	| "code"
 	| "codeblock"
+	| "conventional"
 	| "hyperlink"
 	| "issuelink"
 	| "punctuation"
@@ -28,6 +29,10 @@ export function code(value: string, rangeStart = 0): Token<"code"> {
 
 export function codeblock(value: string, rangeStart = 0): Token<"codeblock"> {
 	return tokenOf("codeblock", value, rangeStart)
+}
+
+export function conventional(value: string, rangeStart = 0): Token<"conventional"> {
+	return tokenOf("conventional", value, rangeStart)
 }
 
 export function hyperlink(value: string, rangeStart = 0): Token<"hyperlink"> {
