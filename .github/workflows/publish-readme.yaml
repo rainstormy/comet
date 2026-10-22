@@ -48,7 +48,7 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          # Include all tags and history on the main branch, required for `vpr readme`.
+          # Include all branches, tags, and history on the main branch, required for `vpr readme` and for `--force-with-lease` to overwrite an existing branch.
           fetch-depth: 0
           ref: main
           # Use a separate access token with permission to commit and push.
@@ -63,9 +63,9 @@ jobs:
         #
       - name: Update version references in the README examples
         # language=sh
-        run: vpr readme "$TARGET_VERSION"
+        run: vpr readme "$RAW_VERSION"
         env:
-          TARGET_VERSION: ${{ inputs.version || github.ref_name }}
+          RAW_VERSION: ${{ inputs.version || github.ref_name }}
         shell: bash
         #
       - name: Use Nimbus (Bot) in Git
@@ -83,9 +83,9 @@ jobs:
             exit 0
           fi
 
-          TARGET_VERSION="${VERSION#v}"
-          BRANCH="nimbus/update-readme-examples-to-$TARGET_VERSION"
-          TITLE="Update README examples to $TARGET_VERSION"
+          VERSION="${RAW_VERSION#v}"
+          BRANCH="nimbus/update-readme-examples-to-$VERSION"
+          TITLE="Update README examples to $VERSION"
 
           git switch --create "$BRANCH"
           git add README.md
@@ -102,5 +102,5 @@ jobs:
         env:
           # Grant the GitHub CLI (gh) permission to open pull requests.
           GH_TOKEN: ${{ secrets.BOT_NIMBUS_GH_AUTH_TOKEN }}
-          VERSION: ${{ inputs.version || github.ref_name }}
+          RAW_VERSION: ${{ inputs.version || github.ref_name }}
         shell: bash

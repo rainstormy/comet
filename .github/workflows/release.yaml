@@ -52,6 +52,8 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Include all branches, tags, and history, required for `--force-with-lease` to overwrite an existing branch.
+          fetch-depth: 0
           # Use a separate access token with permission to commit and push.
           token: ${{ secrets.BOT_NIMBUS_GH_AUTH_TOKEN }}
         #
@@ -62,11 +64,6 @@ jobs:
           version-file: pnpm-workspace.yaml
           cache: true
         #
-      - name: Generate build artefacts
-        # language=sh
-        run: vpr build
-        shell: bash
-        #
       - name: Update release artefacts
         uses: rainstormy/updraft@23bb449c54a4e967c87a6943a1ef9a237eafdb99 # v1.2.0
         with:
@@ -75,6 +72,13 @@ jobs:
           release-files: CHANGELOG.md
           release-version: ${{ inputs.version }}
         #
+      - name: Generate build artefacts
+        # CAUTION: Generate build artefacts after updating the `version` field in `package.json`.
+        # This ensures that the `--version` CLI flag and hyperlinks to rule documentation use the new version.
+        # language=sh
+        run: vpr build
+        shell: bash
+        #
       - name: Use Nimbus (Bot) in Git
         uses: rainstormy/rainstorm-release/bot-nimbus@5aa67a14e95403e7db0a7a43f8e18c1cdd51ba5f # v1.0.0
         with:
@@ -82,8 +86,32 @@ jobs:
           __bot-nimbus-ssh-private-key__: ${{ secrets.BOT_NIMBUS_SSH___THE___PRIVATE___KEY }}
           ssh-key-fingerprints-github: ${{ secrets.SSH_KEY_FINGERPRINTS_GITHUB }}
         #
-      - name: Create a release-triggering pull request in GitHub
-        uses: rainstormy/release/pr@eb87dc4ba5e9e89451adce4a3c62538e5ecef809 # v1.1.1
-        with:
-          gh-auth-token: ${{ secrets.BOT_NIMBUS_GH_AUTH_TOKEN }}
-          version: ${{ inputs.version }}
+      - name: Open a pull request
+        # language=sh
+        run: |
+          if git diff --quiet -- package.json; then
+            echo 'No changes in package.json.'
+            exit 1
+          fi
+
+          VERSION="${RAW_VERSION#v}"
+          BRANCH="release/$VERSION"
+          TITLE="Release $VERSION"
+
+          git switch --create "$BRANCH"
+          git add .
+          git commit --message "$TITLE"
+          git push --force-with-lease --set-upstream origin "$BRANCH"
+
+          if [[ "$(gh pr list --base 'main' --head "$BRANCH" --state open --json number --jq 'length')" == 0 ]]; then
+            gh pr create \
+              --base 'main' \
+              --head "$BRANCH" \
+              --title "$TITLE" \
+              --body 'This pull request was created automatically by GitHub Actions.'
+          fi
+        env:
+          # Grant the GitHub CLI (gh) permission to open pull requests.
+          GH_TOKEN: ${{ secrets.BOT_NIMBUS_GH_AUTH_TOKEN }}
+          RAW_VERSION: ${{ inputs.version }}
+        shell: bash
