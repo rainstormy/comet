@@ -222,17 +222,17 @@ describe("when there is 1 commit that raises concerns in the default configurati
 ${grey`98634c1`} fix!
         ${red`┬`}
         ${red`╰─ Change the first letter to uppercase.`}
-        ${red`   ${ruleLink("useCapitalisedSubjects")}`}
+        ${red`   ${ruleLink("useCapitalisedSubjects", "plain")}`}
 
 ${grey`98634c1`} fix!
         ${red`─┬─`}
          ${red`╰─ Use at least two words in the subject.`}
-         ${red`   ${ruleLink("noSingleWordSubjects")}`}
+         ${red`   ${ruleLink("noSingleWordSubjects", "plain")}`}
 
 ${grey`98634c1`} fix!
            ${red`┬`}
            ${red`╰─ Remove trailing punctuation.`}
-           ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
+           ${red`   ${ruleLink("noUnexpectedPunctuation", "plain")}`}
 
 Found 3 concerns in 1 commit.`.trim(),
 		)
@@ -272,7 +272,7 @@ ${grey`61a95da`} Document the tea set
 ${red`•`} ${grey`${bold`2`} │`} A  small note
     ${grey`· `} ${red`┬─`}
     ${grey`· `} ${red`╰─ Delete excessive whitespace.`}
-    ${grey`· `} ${red`   ${ruleLink("noExcessiveWhitespace")}`}
+    ${grey`· `} ${red`   ${ruleLink("noExcessiveWhitespace", "plain")}`}
     ${grey`╰──`}
 
 ${grey`d677c31`} Review the tea set
@@ -281,7 +281,7 @@ ${grey`d677c31`} Review the tea set
 ${red`•`} ${grey`${bold`2`} │`} This body line is intentionally longer than the default seventy-two character wrapping limit
     ${grey`· `}                                                                        ${red`──────────┬─────────`}
     ${grey`· `}                               ${red`Wrap message body lines at 72 characters or less. ─╯`}
-    ${grey`· `}                               ${red`${ruleLink("useLineWrapping")}`}
+    ${grey`· `}                               ${red`${ruleLink("useLineWrapping", "plain")}`}
     ${grey`╰──`}
 
 Found 2 concerns in 2 commits.`.trim(),
@@ -323,7 +323,7 @@ describe("when there are 3 commits that raise concerns in the default configurat
 ${grey`335aee6`} polish the tea set
         ${red`┬`}
         ${red`╰─ Change the first letter to uppercase.`}
-        ${red`   ${ruleLink("useCapitalisedSubjects")}`}
+        ${red`   ${ruleLink("useCapitalisedSubjects", "plain")}`}
 
 ${grey`6f8dafa`} Document the tea set
     ${grey`╭──`}
@@ -331,13 +331,13 @@ ${grey`6f8dafa`} Document the tea set
 ${red`•`} ${grey`${bold`2`} │`} A  small note
     ${grey`· `} ${red`┬─`}
     ${grey`· `} ${red`╰─ Delete excessive whitespace.`}
-    ${grey`· `} ${red`   ${ruleLink("noExcessiveWhitespace")}`}
+    ${grey`· `} ${red`   ${ruleLink("noExcessiveWhitespace", "plain")}`}
     ${grey`╰──`}
 
 ${grey`b58de17`} Sign the pantry inventory
       ${red`╭──────────────────────────`}
       ${red`╰─ Sign this commit cryptographically with your signing key.`}
-      ${red`   ${ruleLink("useSignedCommits")}`}
+      ${red`   ${ruleLink("useSignedCommits", "plain")}`}
 
 Found 3 concerns in 3 commits.`.trim(),
 		)
@@ -386,17 +386,17 @@ describe("when there are 6 commits where 4 of them raise concerns in the default
 ${grey`b676d38`} fixup! polish the tea set!
         ${red`──┬───`}
           ${red`╰─ Rebase interactively to combine this commit with its target commit.`}
-          ${red`   ${ruleLink("noSquashMarkers")}`}
+          ${red`   ${ruleLink("noSquashMarkers", "plain")}`}
 
 ${grey`b676d38`} fixup! polish the tea set!
                ${red`┬`}
                ${red`╰─ Change the first letter to uppercase.`}
-               ${red`   ${ruleLink("useCapitalisedSubjects")}`}
+               ${red`   ${ruleLink("useCapitalisedSubjects", "plain")}`}
 
 ${grey`b676d38`} fixup! polish the tea set!
                                  ${red`┬`}
    ${red`Remove trailing punctuation. ─╯`}
-   ${red`${ruleLink("noUnexpectedPunctuation")}`}
+   ${red`${ruleLink("noUnexpectedPunctuation", "plain")}`}
 
 ${grey`3cfe8b3`} Document the tea set
     ${grey`╭──`}
@@ -404,20 +404,20 @@ ${grey`3cfe8b3`} Document the tea set
 ${red`•`} ${grey`${bold`2`} │`} A  small note
     ${grey`· `} ${red`┬─`}
     ${grey`· `} ${red`╰─ Delete excessive whitespace.`}
-    ${grey`· `} ${red`   ${ruleLink("noExcessiveWhitespace")}`}
+    ${grey`· `} ${red`   ${ruleLink("noExcessiveWhitespace", "plain")}`}
     ${grey`╰──`}
 
 ${grey`41a0e1d`} Review the tea set
       ${red`╭───────────────────`}
       ${red`╰─ Sign this commit cryptographically with your signing key.`}
-      ${red`   ${ruleLink("useSignedCommits")}`}
+      ${red`   ${ruleLink("useSignedCommits", "plain")}`}
 
 ${grey`41a0e1d`} Review the tea set
     ${grey`╭──`}
 ${red`•`} ${grey`${bold`1`} │`} Well well well would you look at this.
     ${grey`· `}${red`┬`}
     ${grey`· `}${red`╰─ Separate the subject and message body with one blank line.`}
-    ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBody")}`}
+    ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBody", "plain")}`}
   ${grey`2 │ `}
     ${grey`╰──`}
 
@@ -427,14 +427,14 @@ ${grey`41a0e1d`} Review the tea set
 ${red`•`} ${grey`${bold`3`} │`} This body line is _also_ a bit longer than the default seventy-two character wrapping limit
     ${grey`· `}                                                                        ${red`─────────┬─────────`}
     ${grey`· `}                              ${red`Wrap message body lines at 72 characters or less. ─╯`}
-    ${grey`· `}                              ${red`${ruleLink("useLineWrapping")}`}
+    ${grey`· `}                              ${red`${ruleLink("useLineWrapping", "plain")}`}
   ${grey`4 │ We'll have to fix that, don't we?`}
     ${grey`╰──`}
 
 ${grey`7f811b2`} Merge the old tea ledger
       ${red`╭─────────────────────────`}
       ${red`╰─ Rebase the branch and drop the merge commits.`}
-      ${red`   ${ruleLink("noMergeCommits")}`}
+      ${red`   ${ruleLink("noMergeCommits", "plain")}`}
 
 Found 8 concerns in 4 commits.`.trim(),
 		)
@@ -743,7 +743,7 @@ ${grey`98634c1`} Authenticate the library cards
 ${red`•`} ${grey`${bold`2`} │`} Co-authored-by: Ada Lovelace <ada@example.com>
     ${grey`· `}${red`──────┬───────`}
     ${grey`· `}      ${red`╰─ Delete disallowed trailers.`}
-    ${grey`· `}      ${red`   ${ruleLink("noRestrictedTrailers")}`}
+    ${grey`· `}      ${red`   ${ruleLink("noRestrictedTrailers", "plain")}`}
     ${grey`· `}      ${red`   `}
     ${grey`· `}      ${red`   Disallowed trailers:`}
     ${grey`· `}      ${red`     ∙ Co-authored-by`}
@@ -795,7 +795,7 @@ ${grey`61a95da`} Map the paper trail
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
               ${red`╰─ Use an author name that matches an accepted pattern.`}
-              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
+              ${red`   ${ruleLink("useAuthorNamePatterns", "plain")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ Leonardo da Vinci`}
@@ -851,17 +851,17 @@ describe("when there are 4 commits where 3 of them raise concerns in the custom 
 ${grey`6f8dafa`} Add the cinnamon telemetry
       ${red`╭───────────────────────────`}
       ${red`╰─ Reduce the branch to 1 commit.`}
-      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch", "plain")}`}
 
 ${grey`b58de17`} Wire the oat milk alert
       ${red`╭────────────────────────`}
       ${red`╰─ Reduce the branch to 1 commit.`}
-      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch", "plain")}`}
 
 ${grey`9f1a1b2`} Test the emergency toaster
       ${red`╭───────────────────────────`}
       ${red`╰─ Reduce the branch to 1 commit.`}
-      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch", "plain")}`}
 
 Found 3 concerns in 3 commits.`.trim(),
 		)
@@ -917,27 +917,27 @@ describe("when there are 5 commits that raise concerns in the custom 'comet.json
 ${grey`3cfe8b3`} Calibrate the midnight bell
                               ${red`──┬──`}
                                 ${red`╰─ Shorten the subject to 22 characters or less.`}
-                                ${red`   ${ruleLink("useConciseSubjects")}`}
+                                ${red`   ${ruleLink("useConciseSubjects", "plain")}`}
 
 ${grey`41a0e1d`} Document the curious dial
                               ${red`─┬─`}
                                ${red`╰─ Shorten the subject to 22 characters or less.`}
-                               ${red`   ${ruleLink("useConciseSubjects")}`}
+                               ${red`   ${ruleLink("useConciseSubjects", "plain")}`}
 
 ${grey`7f811b2`} Rehearse the evacuation waltz
                               ${red`───┬───`}
                                  ${red`╰─ Shorten the subject to 22 characters or less.`}
-                                 ${red`   ${ruleLink("useConciseSubjects")}`}
+                                 ${red`   ${ruleLink("useConciseSubjects", "plain")}`}
 
 ${grey`a43a3f3`} Replace the ceremonial switch
                               ${red`───┬───`}
                                  ${red`╰─ Shorten the subject to 22 characters or less.`}
-                                 ${red`   ${ruleLink("useConciseSubjects")}`}
+                                 ${red`   ${ruleLink("useConciseSubjects", "plain")}`}
 
 ${grey`c0ffee1`} Untangle the improbable cables
                               ${red`───┬────`}
                                  ${red`╰─ Shorten the subject to 22 characters or less.`}
-                                 ${red`   ${ruleLink("useConciseSubjects")}`}
+                                 ${red`   ${ruleLink("useConciseSubjects", "plain")}`}
 
 Found 5 concerns in 5 commits.`.trim(),
 		)
@@ -1019,12 +1019,12 @@ describe("when there are 3 commits where 2 of them raise concerns in the custom 
 ${grey`6f8dafa`} Add the cinnamon telemetry
       ${red`╭───────────────────────────`}
       ${red`╰─ Reduce the branch to 1 commit.`}
-      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch", "plain")}`}
 
 ${grey`b58de17`} Wire the oat milk alert
       ${red`╭────────────────────────`}
       ${red`╰─ Reduce the branch to 1 commit.`}
-      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch", "plain")}`}
 
 Found 2 concerns in 2 commits.`.trim(),
 		)
@@ -1120,7 +1120,7 @@ ${grey`e6f1b4a`} Document the extremely important tea ceremony
 ${grey`╰─ authored by:`} anonymous
               ${red`╭──────────`}
               ${red`╰─ Use an author name that matches an accepted pattern.`}
-              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
+              ${red`   ${ruleLink("useAuthorNamePatterns", "plain")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ \\p{Lu}.*\\s.+`}
@@ -1130,7 +1130,7 @@ ${grey`╰─ authored by:`} anonymous
 ${grey`e6f1b4a`} Document the extremely important tea ceremony
                                  ${red`─────────┬──────────`}
                                           ${red`╰─ Shorten the subject to 25 characters or less.`}
-                                          ${red`   ${ruleLink("useConciseSubjects")}`}
+                                          ${red`   ${ruleLink("useConciseSubjects", "plain")}`}
 
 ${grey`f7a2c5b`} Review the tiny blueprint
     ${grey`╭──`}
@@ -1138,7 +1138,7 @@ ${grey`f7a2c5b`} Review the tiny blueprint
 ${red`•`} ${grey`${bold`2`} │`} A line that is deliberately much longer than twenty-four characters to fit the rendered concern annotation.
     ${grey`· `}                        ${red`─────────────────────────────────────────┬─────────────────────────────────────────`}
     ${grey`· `}              ${red`Wrap message body lines at 24 characters or less. ─╯`}
-    ${grey`· `}              ${red`${ruleLink("useLineWrapping")}`}
+    ${grey`· `}              ${red`${ruleLink("useLineWrapping", "plain")}`}
   ${grey`3 │ Short note.`}
     ${grey`╰──`}
 
@@ -1148,14 +1148,14 @@ ${grey`f7a2c5b`} Review the tiny blueprint
 ${red`•`} ${grey`${bold`4`} │`} Note with  spaces.
     ${grey`· `}         ${red`┬─`}
     ${grey`· `}         ${red`╰─ Delete excessive whitespace.`}
-    ${grey`· `}         ${red`   ${ruleLink("noExcessiveWhitespace")}`}
+    ${grey`· `}         ${red`   ${ruleLink("noExcessiveWhitespace", "plain")}`}
   ${grey`5 │ Final note.`}
     ${grey`╰──`}
 
 ${grey`a8b3d6c`} Merge the old tea ledger
       ${red`╭─────────────────────────`}
       ${red`╰─ Split the branch or reduce it to 2 commits or fewer.`}
-      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch", "plain")}`}
 
 Found 5 concerns in 3 commits.`.trim(),
 		)
@@ -1368,7 +1368,7 @@ ${grey`98634c1`} Refactor the signal lantern
 ${grey`╰─ committed by:`} 71091436+katanaturtle@users.noreply.github.com
                ${red`╭───────────────────────────────────────────────`}
                ${red`╰─ Use a committer email address that matches an accepted pattern.`}
-               ${red`   ${ruleLink("useCommitterEmailPatterns")}`}
+               ${red`   ${ruleLink("useCommitterEmailPatterns", "plain")}`}
                ${red`   `}
                ${red`   Accepted patterns:`}
                ${red`     ∙ .+@fastforward\\.com`}
@@ -1434,7 +1434,7 @@ ${grey`61a95da`} Patch the rain gauge
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
               ${red`╰─ Use an author name that matches an accepted pattern.`}
-              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
+              ${red`   ${ruleLink("useAuthorNamePatterns", "plain")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ Ada Lovelace`}
@@ -1442,7 +1442,7 @@ ${grey`╰─ authored by:`} Master Splinter
 ${grey`d677c31`} Tune the observatory clock
       ${red`╭───────────────────────────`}
       ${red`╰─ Reduce the branch to 1 commit.`}
-      ${red`   ${ruleLink("noExcessiveCommitsPerBranch")}`}
+      ${red`   ${ruleLink("noExcessiveCommitsPerBranch", "plain")}`}
 
 Found 2 concerns in 2 commits.`.trim(),
 		)
@@ -1515,7 +1515,7 @@ ${grey`6f8dafa`} Document the emergency lantern
 ${red`•`} ${grey`${bold`2`} │`} Reviewed-by: Grace Hopper <grace@example.com>
     ${grey`· `}${red`─────┬─────`}
     ${grey`· `}     ${red`╰─ Delete disallowed trailers.`}
-    ${grey`· `}     ${red`   ${ruleLink("noRestrictedTrailers")}`}
+    ${grey`· `}     ${red`   ${ruleLink("noRestrictedTrailers", "plain")}`}
     ${grey`· `}     ${red`   `}
     ${grey`· `}     ${red`   Disallowed trailers:`}
     ${grey`· `}     ${red`     ∙ Reviewed-by`}
@@ -1528,13 +1528,13 @@ ${grey`b58de17`} Calibrate the wind tunnel
 ${red`•`} ${grey`${bold`2`} │`} The flight path is deliberately long enough to outgrow the tiny configured wrapping limit.
     ${grey`· `}                                ${red`─────────────────────────────┬────────────────────────────`}
     ${grey`· `}          ${red`Wrap message body lines at 32 characters or less. ─╯`}
-    ${grey`· `}          ${red`${ruleLink("useLineWrapping")}`}
+    ${grey`· `}          ${red`${ruleLink("useLineWrapping", "plain")}`}
     ${grey`╰──`}
 
 ${grey`a43a3f3`} Archive the noisy bell!
                               ${red`┬`}
                               ${red`╰─ Remove trailing punctuation.`}
-                              ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
+                              ${red`   ${ruleLink("noUnexpectedPunctuation", "plain")}`}
 
 Found 3 concerns in 3 commits.`.trim(),
 		)
@@ -1598,7 +1598,7 @@ describe("when there are 5 commits where 1 of them raises concerns in the custom
 ${grey`7f811b2`} Revert "Revert "Disable the alarm""
         ${red`──────┬───────`}
               ${red`╰─ Cherry-pick the original commit instead of reverting it over.`}
-              ${red`   ${ruleLink("noRevertReverts")}`}
+              ${red`   ${ruleLink("noRevertReverts", "plain")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -1684,7 +1684,7 @@ ${grey`61a95da`} Map the paper trail
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
               ${red`╰─ Use an author name that matches an accepted pattern.`}
-              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
+              ${red`   ${ruleLink("useAuthorNamePatterns", "plain")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ Ada Lovelace`}
@@ -1693,7 +1693,7 @@ ${grey`b58de17`} Calibrate the wind tunnel
 ${grey`╰─ authored by:`} Master Splinter
               ${red`╭────────────────`}
               ${red`╰─ Use an author name that matches an accepted pattern.`}
-              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
+              ${red`   ${ruleLink("useAuthorNamePatterns", "plain")}`}
               ${red`   `}
               ${red`   Accepted patterns:`}
               ${red`     ∙ Ada Lovelace`}

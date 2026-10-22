@@ -24,7 +24,8 @@ export async function githubActionsProgram(): Promise<ExitCode> {
 			resolveConfiguration(),
 		])
 
-		return await program(crudeCommits, configuration)
+		// Logs of workflow runs in GitHub Actions do not support OSC 8 hyperlinks.
+		return await program(crudeCommits, configuration, { ruleLinkStyle: "plain" })
 	} catch (error) {
 		assertError(error)
 		printGithubActionsError(error.message)

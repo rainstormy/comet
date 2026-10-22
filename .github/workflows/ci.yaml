@@ -58,6 +58,18 @@ jobs:
           # https://github.com/actions/checkout#usage
           persist-credentials: false
         #
+      - name: Install dependencies
+        uses: voidzero-dev/setup-vp@68f39c78aaf39be468cabd2afb09c162574c84af # v1.21.2
+        with:
+          node-version-file: package.json
+          version-file: pnpm-workspace.yaml
+          cache: true
+        #
+      - name: Generate build artefacts
+        # language=sh
+        run: vpr build
+        shell: bash
+        #
       - name: Verify the commit messages
         # Run the action on itself.
         uses: ./
