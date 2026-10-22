@@ -60,6 +60,7 @@ jobs:
         with:
           node-version-file: package.json
           version-file: pnpm-workspace.yaml
+          cache: true
         #
       - name: Generate build artefacts
         # language=sh
