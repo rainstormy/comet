@@ -67,6 +67,7 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  *
  * It disregards the following kinds of tokens before the first word:
  *
+ * - Conventional Commits prefixes, e.g. `feat:` and `fix(api)!:`.
  * - Issue links, e.g. `#7` and `NEOWISE-2020`.
  * - Squash markers, e.g. `fixup!` and `squash!`.
  *
@@ -156,7 +157,8 @@ export function* useImperativeSubjects(
 			continue
 		}
 
-		const firstToken = commit.subject.find(isNotToken("issuelink", "squash", "whitespace")) ?? null
+		const firstToken =
+			commit.subject.find(isNotToken("conventional", "issuelink", "squash", "whitespace")) ?? null
 
 		if (firstToken !== null) {
 			const canonicalFirstWord = firstToken.value.toLowerCase()

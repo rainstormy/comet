@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), 
 ### Added
 - New token configuration to recognise prefixes of Conventional Commits: `tokens.conventionalCommits`.
 
+### Changed
+- `noBlankSubjects`, `noSingleWordSubjects`, `useCapitalisedSubjects`, `useConciseSubjects`, `useImperativeSubjects`, and `useIssueLinks` ignore prefixes of Conventional Commits configured in `tokens.conventionalCommits`.
+
 ### Fixed
 - Print hyperlinks to rule documentation in plain text in GitHub Actions.
 - `useImperativeSubjects`: Accept `autolink`.

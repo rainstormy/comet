@@ -40,13 +40,17 @@ const fakeCommit = fakeCommitFactory(
 )
 
 describe.each`
-	subject                                                      | expectedRangeAnywhere | expectedRangePrefix | expectedRangeSuffix
-	${"bugfix"}                                                  | ${[0, 1]}             | ${[0, 1]}           | ${[6, 7]}
-	${"Convince the office printer to print in colour"}          | ${[0, 1]}             | ${[0, 1]}           | ${[46, 47]}
-	${"accept `pseudocode:` as a valid keyword in the compiler"} | ${[0, 1]}             | ${[0, 1]}           | ${[55, 56]}
-	${" squash! "}                                               | ${[9, 10]}            | ${[9, 10]}          | ${[9, 10]}
-	${"fixup! Smoothen the rough edges"}                         | ${[7, 8]}             | ${[7, 8]}           | ${[31, 32]}
-	${"Read https://github.com/rainstormy/comet/pull/42"}        | ${[0, 1]}             | ${[0, 1]}           | ${[48, 49]}
+	subject                                                                | expectedRangeAnywhere | expectedRangePrefix | expectedRangeSuffix
+	${"bugfix"}                                                            | ${[0, 1]}             | ${[0, 1]}           | ${[6, 7]}
+	${"Convince the office printer to print in colour"}                    | ${[0, 1]}             | ${[0, 1]}           | ${[46, 47]}
+	${"accept `pseudocode:` as a valid keyword in the compiler"}           | ${[0, 1]}             | ${[0, 1]}           | ${[55, 56]}
+	${" squash! "}                                                         | ${[9, 10]}            | ${[9, 10]}          | ${[9, 10]}
+	${"fixup! Smoothen the rough edges"}                                   | ${[7, 8]}             | ${[7, 8]}           | ${[31, 32]}
+	${"Read https://github.com/rainstormy/comet/pull/42"}                  | ${[0, 1]}             | ${[0, 1]}           | ${[48, 49]}
+	${"feat: Teach the robot butler to fold laundry"}                      | ${[6, 7]}             | ${[6, 7]}           | ${[44, 45]}
+	${"fix(api)!: Stop the calendar sync from duplicating meetings"}       | ${[11, 12]}           | ${[11, 12]}         | ${[59, 60]}
+	${"fixup! docs: Brew the coffee strong enough for the migration team"} | ${[13, 14]}           | ${[13, 14]}         | ${[65, 66]}
+	${"release: Paint the eggs with suspicious enthusiasm"}                | ${[0, 1]}             | ${[0, 1]}           | ${[50, 51]}
 `(
 	"when the subject of $subject does not contain an issue link",
 	(props: {
@@ -148,14 +152,62 @@ describe.each`
 )
 
 describe.each`
-	subject                                                            | expectedRangePrefix
-	${"hotfix (GH-7)"}                                                 | ${[0, 1]}
-	${"Convince the office printer to print in colour #42"}            | ${[0, 1]}
-	${"keep the hamsters on the wheel GL-1024"}                        | ${[0, 1]}
-	${"one two #3 #4"}                                                 | ${[0, 1]}
-	${"construction complete (no-issue)"}                              | ${[0, 1]}
-	${"insufficient funds [incident]"}                                 | ${[0, 1]}
-	${"squash! the issue that explains why this code exists is GH-88"} | ${[8, 9]}
+	subject                                                                | expectedRangeSuffix
+	${"feat: #42 Teach the robot butler to fold laundry"}                  | ${[48, 49]}
+	${"fix(api)!: GH-7 hotfix"}                                            | ${[22, 23]}
+	${"feat: (no-issue) Rewrite the setup guide"}                          | ${[40, 41]}
+	${"fixup! feat: #42 Stop the calendar sync from duplicating meetings"} | ${[65, 66]}
+`(
+	"when the subject of $subject starts with an issue link after a Conventional Commits prefix",
+	(props: { subject: string; expectedRangeSuffix: CharacterRange }) => {
+		const commit = fakeCommit({ message: props.subject })
+
+		describe("and the rule is enabled with position 'anywhere'", () => {
+			const actualConcerns = mapCommitsToConcerns([commit], enabledAnywhere)
+
+			it("does not raise any concerns", () => {
+				expect(actualConcerns).toEqual<Concerns>([])
+			})
+		})
+
+		describe("and the rule is enabled with position 'prefix'", () => {
+			const actualConcerns = mapCommitsToConcerns([commit], enabledPrefix)
+
+			it("does not raise any concerns", () => {
+				expect(actualConcerns).toEqual<Concerns>([])
+			})
+		})
+
+		describe("and the rule is enabled with position 'suffix'", () => {
+			const actualConcerns = mapCommitsToConcerns([commit], enabledSuffix)
+
+			it("raises a concern about the end of the subject", () => {
+				expect(actualConcerns).toEqual<Concerns>([
+					subjectConcern(rule, commit.sha, { range: props.expectedRangeSuffix }),
+				])
+			})
+		})
+
+		describe("and the rule is disabled", () => {
+			const actualConcerns = mapCommitsToConcerns([commit], disabled)
+
+			it("does not raise any concerns", () => {
+				expect(actualConcerns).toEqual<Concerns>([])
+			})
+		})
+	},
+)
+
+describe.each`
+	subject                                                             | expectedRangePrefix
+	${"hotfix (GH-7)"}                                                  | ${[0, 1]}
+	${"Convince the office printer to print in colour #42"}             | ${[0, 1]}
+	${"keep the hamsters on the wheel GL-1024"}                         | ${[0, 1]}
+	${"one two #3 #4"}                                                  | ${[0, 1]}
+	${"construction complete (no-issue)"}                               | ${[0, 1]}
+	${"insufficient funds [incident]"}                                  | ${[0, 1]}
+	${"squash! the issue that explains why this code exists is GH-88"}  | ${[8, 9]}
+	${"feat: Brew the coffee strong enough for the migration team #42"} | ${[6, 7]}
 `(
 	"when the subject of $subject ends with an issue link",
 	(props: { subject: string; expectedRangePrefix: CharacterRange }) => {

@@ -54,6 +54,7 @@ import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
  *
  * The following kinds of tokens do _not_ count as alphanumeric characters:
  *
+ * - Conventional Commits prefixes, e.g. `feat:` and `fix(api)!:`.
  * - Issue links, e.g. `#7` and `NEOWISE-2020`.
  * - Revert markers, e.g. `Revert` in `Revert "..."`.
  * - Squash markers, e.g. `fixup!` and `squash!`.
@@ -135,7 +136,7 @@ export function* noBlankSubjects(
 		}
 
 		const firstBlankIndex =
-			commit.subject.findLastIndex(isToken("issuelink", "revert", "squash")) + 1
+			commit.subject.findLastIndex(isToken("conventional", "issuelink", "revert", "squash")) + 1
 
 		const blankEnd = tokenRangeEnd(commit.subject)
 		const blankStart =

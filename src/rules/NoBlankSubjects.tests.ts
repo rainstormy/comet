@@ -66,6 +66,8 @@ describe.each`
 	${" squash!  "}                              | ${[8, 10]}
 	${'amend! Revert " "'}                       | ${[13, 17]}
 	${'squash!fixup! revert " revert " GH-67 "'} | ${[37, 39]}
+	${"feat: "}                                  | ${[5, 6]}
+	${"fixup! fix(api)!: ..."}                   | ${[17, 21]}
 `(
 	"when the subject of $subject starts with insignificant tokens and is blank otherwise",
 	(props: { subject: string; expectedRange: CharacterRange }) => {

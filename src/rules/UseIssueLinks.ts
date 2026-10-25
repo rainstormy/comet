@@ -56,6 +56,11 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * - Revert commits, e.g. `Revert "..."`.
  * - Commits with dependency versions in the subject, e.g. `Bump Vite to 2.4.0-beta.1` and `Pin the Node.js image to 4af617c`.
  *
+ * It disregards the following kinds of tokens at the beginning of subjects:
+ *
+ * - Conventional Commits prefixes, e.g. `feat:` and `fix(api)!:`.
+ * - Squash markers, e.g. `fixup!` and `squash!`.
+ *
  * It only recognises issue links declared in `tokens.issueLinks`; ordinary hyperlinks and `Refs` trailers in the message body will not satisfy the rule.
  *
  * ## Options
@@ -153,7 +158,7 @@ export function* useIssueLinks(
 				continue
 			}
 
-			const firstToken = commit.subject.find(isNotToken("squash", "whitespace"))
+			const firstToken = commit.subject.find(isNotToken("conventional", "squash", "whitespace"))
 			const firstStart = firstToken?.range[0] ?? tokenRangeEnd(commit.subject)
 
 			yield subjectConcern(rule, commit.sha, { range: [firstStart, firstStart + 1] })
@@ -168,7 +173,7 @@ export function* useIssueLinks(
 				continue
 			}
 
-			const firstToken = commit.subject.find(isNotToken("squash", "whitespace"))
+			const firstToken = commit.subject.find(isNotToken("conventional", "squash", "whitespace"))
 
 			if (firstToken?.type !== "issuelink") {
 				const firstStart = firstToken?.range[0] ?? tokenRangeEnd(commit.subject)

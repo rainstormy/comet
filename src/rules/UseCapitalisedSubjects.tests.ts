@@ -33,6 +33,8 @@ describe.each`
 	${"   wip"}                                                      | ${[3, 4]}
 	${'revert "fix a nasty bug"'}                                    | ${[0, 1]}
 	${'squash!fixup! revert "Revert "Repair the soft ice machine""'} | ${[14, 15]}
+	${"feat: release robots"}                                        | ${[6, 7]}
+	${"fixup! fix(api)!: calm goats"}                                | ${[18, 19]}
 `(
 	"when the subject of $subject starts with a lowercase letter",
 	(props: { subject: string; expectedRange: CharacterRange }) => {
@@ -76,6 +78,8 @@ describe.each`
 	${"Let `SoftIceMachineAdapter` produce the goods that we need"}
 	${'Revert "release the robot butler"'}
 	${'fixup! Revert "Resolve a bug that thought it was a feature"'}
+	${"feat: Release rubber ducks"}
+	${"fixup! fix(api)!: Calm robots"}
 `("when the subject of $subject starts with an uppercase letter", (props: { subject: string }) => {
 	const commit = fakeCommit({ message: props.subject })
 

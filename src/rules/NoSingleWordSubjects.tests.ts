@@ -41,6 +41,8 @@ describe.each`
 	${"  amend!Hotfix"}                               | ${[8, 14]}
 	${"fixup! fixup! Restored"}                       | ${[14, 22]}
 	${" https://github.com/rainstormy/comet/pull/42"} | ${[1, 44]}
+	${"feat: Penguins"}                               | ${[6, 14]}
+	${"fixup! fix(api)!: `Robots`"}                   | ${[18, 26]}
 `(
 	"when the subject of $subject contains exactly one significant word",
 	(props: { subject: string; expectedRange: CharacterRange }) => {
