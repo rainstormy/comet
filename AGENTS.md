@@ -18,6 +18,7 @@ Always use `vpr` to install dependencies and run tasks. Never use npm, npx, pnpm
 - `vpr check`: Verifies that the code is clean, type-safe, and well-formatted. Mandatory before finishing.
 - `vpr test [...filenames]`: Runs the given unit test files or the entire test suite if no arguments are provided. Mandatory before finishing.
 - `vpr install`: Installs dependencies. Rarely needed for code changes.
+- `vpr build`: Generates build artefacts such as JSON schemas and documentation. Only needed when releasing. Never needed for code changes.
 
 ## Concepts
 
