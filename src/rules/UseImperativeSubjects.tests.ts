@@ -50,6 +50,8 @@ describe.each`
 	${"99 hot air balloons"}                          | ${[0, 2]}
 	${"fixup! squash! #987 1 2 3 this is a test"}     | ${[20, 21]}
 	${"https://github.com/rainstormy/comet/pull/42"}  | ${[0, 43]}
+	${"feat: Released robots"}                        | ${[6, 14]}
+	${"fixup! fix(api)!: Fixed sourdough starters"}   | ${[18, 23]}
 `(
 	"when the subject of $subject does not start with an imperative verb",
 	(props: { subject: string; expectedRange: CharacterRange }) => {
@@ -101,6 +103,8 @@ describe.each`
 	${"amend!Apply strawberry jam to make the code sweeter"}
 	${"Throw a tantrum;"}
 	${"Bump vite from 4.1.1 to 4.3.2"}
+	${"feat: Release robots"}
+	${"fixup! fix(api)!: Calm pigeons"}
 `("when the subject of $subject starts with an imperative verb", (props: { subject: string }) => {
 	const commit = fakeCommit({ message: props.subject })
 

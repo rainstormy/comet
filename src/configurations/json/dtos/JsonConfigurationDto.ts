@@ -13,6 +13,11 @@ export type JsonConfigurationTokensDto = JsonConfigurationDto["tokens"]
 export type JsonConfigurationRulesDto = JsonConfigurationDto["rules"]
 
 const TOKENS_DTO = v.strictObject({
+	conventionalCommits: v.exactOptional(
+		v.strictObject({
+			types: v.exactOptional(stringArray()),
+		}),
+	),
 	issueLinks: v.exactOptional(
 		v.strictObject({
 			prefixes: v.exactOptional(stringArray()),

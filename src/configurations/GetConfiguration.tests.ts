@@ -66,24 +66,42 @@ describe.each`
 	},
 )
 
-describe("a configuration file with GitHub-/GitLab-style issue link tokens", () => {
+describe("a configuration file with an empty configuration of issue links", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, {
+			tokens: { issueLinks: {} },
+		})
+	})
+
+	it("returns the empty configuration", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
+			tokens: { issueLinks: {} },
+			rules: {},
+		})
+	})
+})
+
+describe("a configuration file with issue links configured with empty arrays", () => {
 	beforeEach(() => {
 		mockJsonFile<JsonConfigurationDto>(path, {
 			tokens: {
 				issueLinks: {
-					prefixes: ["#", "GH-", "GL-"],
+					prefixes: [],
+					wildcards: [],
 				},
 			},
 		})
 	})
 
-	it("returns the configured tokens", async () => {
+	it("returns the empty arrays", async () => {
 		const configuration = await getConfiguration(path)
 		expect(configuration).toEqual<DeepPartial<Configuration>>({
 			git: {},
 			tokens: {
 				issueLinks: {
-					prefixes: ["#", "GH-", "GL-"],
+					prefixes: [],
 					wildcards: [],
 				},
 			},
@@ -92,7 +110,32 @@ describe("a configuration file with GitHub-/GitLab-style issue link tokens", () 
 	})
 })
 
-describe("a configuration file with Jira-style issue link tokens", () => {
+describe("a configuration file with GitHub-/GitLab-style issue links", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, {
+			tokens: {
+				issueLinks: {
+					prefixes: ["#", "GH-", "GL-"],
+				},
+			},
+		})
+	})
+
+	it("returns the configured tokens", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
+			tokens: {
+				issueLinks: {
+					prefixes: ["#", "GH-", "GL-"],
+				},
+			},
+			rules: {},
+		})
+	})
+})
+
+describe("a configuration file with Jira-style issue links", () => {
 	beforeEach(() => {
 		mockJsonFile<JsonConfigurationDto>(path, {
 			tokens: {
@@ -119,7 +162,7 @@ describe("a configuration file with Jira-style issue link tokens", () => {
 	})
 })
 
-describe("a configuration file with issue link tokens configured with whitespace and blank strings", () => {
+describe("a configuration file with issue links configured with whitespace and blank strings", () => {
 	beforeEach(() => {
 		mockJsonFile<JsonConfigurationDto>(path, {
 			tokens: {
@@ -139,6 +182,139 @@ describe("a configuration file with issue link tokens configured with whitespace
 				issueLinks: {
 					prefixes: ["comet:", "COMET:"],
 					wildcards: ["[SECURITY]", "[no-issue]"],
+				},
+			},
+			rules: {},
+		})
+	})
+})
+
+describe("a configuration file with an empty configuration of conventional commits", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, {
+			tokens: { conventionalCommits: {} },
+		})
+	})
+
+	it("returns the empty configuration", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
+			tokens: { conventionalCommits: {} },
+			rules: {},
+		})
+	})
+})
+
+describe("a configuration file with conventional commits configured with empty arrays", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, {
+			tokens: {
+				conventionalCommits: {
+					types: [],
+				},
+			},
+		})
+	})
+
+	it("returns the empty arrays", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
+			tokens: {
+				conventionalCommits: {
+					types: [],
+				},
+			},
+			rules: {},
+		})
+	})
+})
+
+describe("a configuration file with conventional commits configured with 2 types", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, {
+			tokens: { conventionalCommits: { types: ["feat", "fix"] } },
+		})
+	})
+
+	it("returns the configured types", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
+			tokens: { conventionalCommits: { types: ["feat", "fix"] } },
+			rules: {},
+		})
+	})
+})
+
+describe("a configuration file with conventional commits configured with 11 types", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, {
+			tokens: {
+				conventionalCommits: {
+					types: [
+						"build",
+						"chore",
+						"ci",
+						"docs",
+						"feat",
+						"fix",
+						"perf",
+						"refactor",
+						"revert",
+						"style",
+						"test",
+					],
+				},
+			},
+		})
+	})
+
+	it("returns the configured types", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
+			tokens: {
+				conventionalCommits: {
+					types: [
+						"build",
+						"chore",
+						"ci",
+						"docs",
+						"feat",
+						"fix",
+						"perf",
+						"refactor",
+						"revert",
+						"style",
+						"test",
+					],
+				},
+			},
+			rules: {},
+		})
+	})
+})
+
+describe("a configuration file with conventional commits configured with whitespace and blank strings", () => {
+	beforeEach(() => {
+		mockJsonFile<JsonConfigurationDto>(path, {
+			tokens: {
+				conventionalCommits: {
+					types: ["feat ", "docs", "", "  refactor ", "feat", " chore", "  "],
+				},
+			},
+		})
+	})
+
+	it("trims the tokens and omits blank strings", async () => {
+		const configuration = await getConfiguration(path)
+		expect(configuration).toEqual<DeepPartial<Configuration>>({
+			git: {},
+			tokens: {
+				conventionalCommits: {
+					types: ["feat", "docs", "refactor", "chore"],
 				},
 			},
 			rules: {},
@@ -401,6 +577,7 @@ describe("a complete configuration file", () => {
 				useSignedCommits: "error",
 			},
 			tokens: {
+				conventionalCommits: { types: ["feat", "fix"] },
 				issueLinks: {
 					prefixes: ["#", "GH-"],
 					wildcards: ["*", "[incident]"],
@@ -467,6 +644,7 @@ describe("a complete configuration file", () => {
 				useSignedCommits: { level: "error" },
 			},
 			tokens: {
+				conventionalCommits: { types: ["feat", "fix"] },
 				issueLinks: {
 					prefixes: ["#", "GH-"],
 					wildcards: ["*", "[incident]"],
@@ -941,7 +1119,6 @@ describe("a complex JSONC configuration file with line and block comments", () =
 			tokens: {
 				issueLinks: {
 					prefixes: ["UNICORN-"],
-					wildcards: [],
 				},
 			},
 		})

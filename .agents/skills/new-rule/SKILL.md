@@ -327,7 +327,7 @@ vpr test 'src/rules/NoTypos.tests.ts'
 ## Step 6: Write documentation
 
 The JSDoc comment immediately above the exported generator function is the source of the user-facing rule documentation.
-The `vpr build` task generates the corresponding Markdown file in `docs/rules/`, for example `docs/rules/NoTypos.md`.
+When a new Comet version is released, the corresponding Markdown file is generated in `docs/rules/`, for example `docs/rules/NoTypos.md`.
 Always make documentation changes in the `.ts` file that contains the rule implementation and JSDoc comment.
 
 Read the documentation of a similar existing rule for guidance, for example `src/rules/UseImperativeSubjects.ts` for a message rule or `src/rules/UseAuthorEmailPatterns.ts` for an identity rule.

@@ -3,6 +3,7 @@ import type { Tokens } from "#commits/Token.ts"
 import type { TokenConfiguration } from "#commits/TokenConfiguration.ts"
 import {
 	type TokeniserPatterns,
+	conventionalPattern,
 	issueLinkPattern,
 	tokeniseBodyLines,
 	tokeniseSubject,
@@ -33,6 +34,7 @@ export function mapCrudeCommitToCommit(
 	const [crudeSubject = "", ...crudeBodyLines] = crudeCommit.message.split("\n")
 
 	const patterns: TokeniserPatterns = {
+		conventional: conventionalPattern(configuration),
 		issueLink: issueLinkPattern(configuration),
 	}
 

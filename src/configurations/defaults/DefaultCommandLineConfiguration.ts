@@ -1,12 +1,11 @@
 import { DEFAULT_RULESET_CONFIGURATION } from "#configurations/defaults/DefaultRulesetConfiguration.ts"
+import { DEFAULT_TOKEN_CONFIGURATION } from "#configurations/defaults/DefaultTokenConfiguration.ts"
 import type { Configuration } from "#configurations/GetConfiguration.ts"
 import { deepMerge } from "#utilities/Objects.ts"
 
 export const DEFAULT_COMMAND_LINE_CONFIGURATION: Configuration = {
 	git: { defaultBranch: null },
-	tokens: {
-		issueLinks: { prefixes: [], wildcards: [] },
-	},
+	tokens: DEFAULT_TOKEN_CONFIGURATION,
 	rules: deepMerge(DEFAULT_RULESET_CONFIGURATION, {
 		noExcessiveCommitsPerBranch: { level: "off" },
 		noRepeatedSubjects: { level: "off" },

@@ -61,6 +61,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  *
  * The following kinds of tokens do _not_ count towards the character limit:
  *
+ * - Conventional Commits prefixes, e.g. `feat:` and `fix(api)!:`.
  * - Hyperlinks.
  * - Inline code phrases (enclosed in backticks).
  * - Issue links, e.g. `#7` and `NEOWISE-2020`.
@@ -144,7 +145,7 @@ export function* useConciseSubjects(
 			continue
 		}
 		const overflowRange = tokenOverflowRange(
-			commit.subject.filter(isNotToken("code", "hyperlink", "issuelink")),
+			commit.subject.filter(isNotToken("code", "conventional", "hyperlink", "issuelink")),
 			maxLength,
 		)
 

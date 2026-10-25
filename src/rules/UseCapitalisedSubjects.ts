@@ -58,6 +58,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  *
  * It disregards the following kinds of tokens before the first word:
  *
+ * - Conventional Commits prefixes, e.g. `feat:` and `fix(api)!:`.
  * - Inline code phrases (enclosed in backticks).
  * - Issue links, e.g. `#7` and `NEOWISE-2020`.
  * - Squash markers, e.g. `fixup!` and `squash!`.

@@ -41,6 +41,7 @@ describe.each`
 	${"shelve the broken cursor until the warm summer weather makes it shine again"}                                                                                             | ${[20, 75]}     | ${[50, 75]}     | ${[72, 75]}
 	${"Read https://github.com/rainstormy/comet/pull/42 the release notes before lunch while robots nap beside the sleepy console"}                                              | ${[63, 122]}    | ${[93, 122]}    | ${[115, 122]}
 	${"See https://docs.github.com/en/rest with https://developer.mozilla.org/en-US/docs/Web/JavaScript before lunch while robots nap beside the sleepy console after midnight"} | ${[106, 167]}   | ${[136, 167]}   | ${[158, 167]}
+	${"feat(api)!: Teach the robot butler to distinguish coffee from printer ink before serving the office"}                                                                     | ${[31, 99]}     | ${[61, 99]}     | ${[83, 99]}
 `(
 	"when the subject of $subject exceeds 72 characters",
 	(props: {
@@ -349,6 +350,9 @@ describe.each`
 	${"read first page of https://interesting.reads/a-very-long-page"}
 	${"read https://github.com/rainstormy/comet/pull/42 notes"}
 	${"Clone ssh://git@github.com/rainstormy/comet.git and notify mailto:noreply@github.com"}
+	${"feat: Add retry metrics"}
+	${"chore(deps): Bump vite to 8.0.0"}
+	${"fix(api)!: Fix the bug now"}
 `("when the subject of $subject does not exceed 20 characters", (props: { subject: string }) => {
 	const commit = fakeCommit({ message: props.subject })
 
