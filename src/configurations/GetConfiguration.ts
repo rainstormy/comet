@@ -1,5 +1,5 @@
 import { bold } from "ansis"
-import type { TokenConfiguration } from "#commits/TokenConfiguration.ts"
+import { type TokenConfiguration, sanitiseTokenConfiguration } from "#commits/TokenConfiguration.ts"
 import type {
 	JsonConfigurationGitDto,
 	JsonConfigurationRulesDto,
@@ -105,20 +105,14 @@ function sanitiseConfiguration(
 		return configuration
 	}
 
-	const prefixes = issueLinks.prefixes ?? []
-	const wildcards = issueLinks.wildcards ?? []
-
-	const normalisedPrefixes = prefixes.map((value) => value.trim()).filter(isNotEmptyString)
-	const normalisedWildcards = wildcards.map((value) => value.trim()).filter(isNotEmptyString)
-
 	return {
 		...configuration,
-		tokens: {
+		tokens: sanitiseTokenConfiguration({
 			issueLinks: {
-				prefixes: uniqueItems(normalisedPrefixes),
-				wildcards: uniqueItems(normalisedWildcards),
+				prefixes: issueLinks.prefixes ?? [],
+				wildcards: issueLinks.wildcards ?? [],
 			},
-		},
+		}),
 	}
 }
 
