@@ -12,6 +12,7 @@ export const DEFAULT_GITHUB_ACTIONS_CONFIGURATION: Configuration = {
 		useAuthorNamePatterns: { level: "off" },
 		useCommitterEmailPatterns: { level: "off" },
 		useCommitterNamePatterns: { level: "off" },
+		useConventionalCommits: { level: "off" },
 		useIssueLinks: { level: "off" },
 	}),
 }

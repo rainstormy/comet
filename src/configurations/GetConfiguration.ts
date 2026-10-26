@@ -142,6 +142,17 @@ export function formatConfigurationIssues(configuration: DeepPartial<Configurati
 }
 
 function* validateConfiguration(configuration: DeepPartial<Configuration>): Generator<string> {
+	if (configuration.rules?.useConventionalCommits?.level === "error") {
+		const conventionalCommits = configuration.tokens?.conventionalCommits
+		const types = conventionalCommits?.types ?? []
+
+		if (conventionalCommits === undefined) {
+			yield "'conventionalCommits' in 'tokens' should be defined when 'useConventionalCommits' is enabled"
+		} else if (types.length === 0) {
+			yield "'conventionalCommits' in 'tokens' should contain at least one non-blank type when 'useConventionalCommits' is enabled"
+		}
+	}
+
 	if (configuration.rules?.useImperativeSubjects?.level === "error") {
 		const whitelist = configuration.rules.useImperativeSubjects.options?.whitelist ?? []
 

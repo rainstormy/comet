@@ -16,6 +16,7 @@ export const DEFAULT_COMMAND_LINE_CONFIGURATION: Configuration = {
 		useAuthorNamePatterns: { level: "off" },
 		useCommitterEmailPatterns: { level: "off" },
 		useCommitterNamePatterns: { level: "off" },
+		useConventionalCommits: { level: "off" },
 		useIssueLinks: { level: "off" },
 	}),
 }
