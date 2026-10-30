@@ -1071,7 +1071,7 @@ describe.each`
 	${"feat: Add offline exports"}               | ${[conventional("feat:"), space(5), word("Add", 6), space(9), word("offline", 10), space(17), word("exports", 18)]}
 	${"fix!: Restore calendar sync"}             | ${[conventional("fix!:"), space(5), word("Restore", 6), space(13), word("calendar", 14), space(22), word("sync", 23)]}
 	${"chore(deps): Bump vite to 8.0.0"}         | ${[conventional("chore(deps):"), space(12), word("Bump", 13), space(17), word("vite", 18), space(22), word("to", 23), space(25), semver("8.0.0", 26)]}
-	${"FEAT(api)!: Add `contrast` #42"}          | ${[conventional("FEAT(api)!:"), space(11), word("Add", 12), space(15), code("`contrast`", 16), space(26), issuelink("#42", 27)]}
+	${"feat(api)!: Add `contrast` #42"}          | ${[conventional("feat(api)!:"), space(11), word("Add", 12), space(15), code("`contrast`", 16), space(26), issuelink("#42", 27)]}
 	${" fixup! squash! fix: Quiet the inbox"}    | ${[space(), squash("fixup!", 1), space(7), squash("squash!", 8), space(15), conventional("fix:", 16), space(20), word("Quiet", 21), space(26), word("the", 27), space(30), word("inbox", 31)]}
 	${"docs: fix: Clarify pagination"}           | ${[conventional("docs:"), space(5), word("fix", 6), punctuation(":", 9), space(10), word("Clarify", 11), space(18), word("pagination", 19)]}
 	${"fix(api/client-v2)!: Rebuild thumbnails"} | ${[conventional("fix(api/client-v2)!:"), space(20), word("Rebuild", 21), space(28), word("thumbnails", 29)]}
@@ -1137,6 +1137,9 @@ describe.each`
 	${"fixup! !fix: Rekey signatures"}
 	${'fixup! Revert "fix(api)!: Restore seating assignments"'}
 	${"fixup!fix(api)!!: docs: Correct generated examples"}
+	${"FEAT(api)!: Add `contrast` #42"}
+	${"Fix: Repair the notification badge"}
+	${"fixup! Docs: Trim the changelog"}
 `(
 	"when the subject of $subject does not have a conventional prefix",
 	(props: { subject: string }) => {

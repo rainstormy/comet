@@ -54,16 +54,18 @@ describe.each`
 )
 
 describe.each`
-	subject                                   | expectedRange
-	${"Release the robot butler"}             | ${[0, 1]}
-	${"feat(): Add a snooze button"}          | ${[0, 1]}
-	${"#42 feat: Export the monthly report"}  | ${[0, 1]}
-	${"Add feat: a calendar view"}            | ${[0, 1]}
-	${"printer: Add duplex printing"}         | ${[0, 1]}
-	${"`feat: Cache the weather forecast`"}   | ${[0, 1]}
-	${"Rotate the signing key before Friday"} | ${[0, 1]}
-	${"squash! Fix the calendar sync"}        | ${[8, 9]}
-	${"  fixup! Fix the email digest"}        | ${[9, 10]}
+	subject                                     | expectedRange
+	${"Release the robot butler"}               | ${[0, 1]}
+	${"feat(): Add a snooze button"}            | ${[0, 1]}
+	${"#42 feat: Export the monthly report"}    | ${[0, 1]}
+	${"Add feat: a calendar view"}              | ${[0, 1]}
+	${"printer: Add duplex printing"}           | ${[0, 1]}
+	${"`feat: Cache the weather forecast`"}     | ${[0, 1]}
+	${"Rotate the signing key before Friday"}   | ${[0, 1]}
+	${"squash! Fix the calendar sync"}          | ${[8, 9]}
+	${"  fixup! Fix the email digest"}          | ${[9, 10]}
+	${"FiX: Stop the nightly job from yelling"} | ${[0, 1]}
+	${"fixup! Feat: Pin the Node.js image"}     | ${[7, 8]}
 `(
 	"when the subject of $subject has no conventional prefix",
 	(props: { subject: string; expectedRange: CharacterRange }) => {
@@ -157,7 +159,6 @@ describe.each`
 	${"feat: Add a dark mode toggle"}
 	${"fix(api)!: Retire the coffee endpoint"}
 	${"chore(deps): Bump vite to 8.0.0"}
-	${"FiX: Stop the nightly job from yelling"}
 	${"fixup! squash! feat: Convince the printer to stop eating receipts"}
 	${"  feat: Add an export for sticky notes"}
 	${"docs: Explain fix: prefixes"}
