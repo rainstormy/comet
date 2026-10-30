@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), 
 
 ### Fixed
 - Print hyperlinks to rule documentation in plain text in GitHub Actions.
-- `useImperativeSubjects`: Accept `autolink`.
+- `useImperativeSubjects`: Accept `autolink`, `chug`, `containerise`/`containerize`, `delink`, `delist`, `malform`, `malfunction`, `misform`, `nebulise`/`nebulize`, `relink`, `relist`, `unlink`, `unlist`, `virtualise`/`virtualize`.
 
 ## [2.0.0] - 2026-10-22
 ### Added
