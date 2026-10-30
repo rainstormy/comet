@@ -41,6 +41,9 @@ const fakeCommit = fakeCommitFactory(
 
 describe.each`
 	subject                                                                | expectedRangeAnywhere | expectedRangePrefix | expectedRangeSuffix
+	${""}                                                                  | ${[0, 1]}             | ${[0, 1]}           | ${[0, 1]}
+	${" "}                                                                 | ${[1, 2]}             | ${[1, 2]}           | ${[1, 2]}
+	${"\t\t"}                                                              | ${[2, 3]}             | ${[2, 3]}           | ${[2, 3]}
 	${"bugfix"}                                                            | ${[0, 1]}             | ${[0, 1]}           | ${[6, 7]}
 	${"Convince the office printer to print in colour"}                    | ${[0, 1]}             | ${[0, 1]}           | ${[46, 47]}
 	${"accept `pseudocode:` as a valid keyword in the compiler"}           | ${[0, 1]}             | ${[0, 1]}           | ${[55, 56]}
