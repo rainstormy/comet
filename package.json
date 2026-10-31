@@ -37,6 +37,7 @@
 		"@types/node": "catalog:",
 		"@valibot/to-json-schema": "catalog:",
 		"ansis": "catalog:",
+		"lefthook": "catalog:",
 		"strip-json-comments": "catalog:",
 		"typescript": "catalog:",
 		"valibot": "catalog:",

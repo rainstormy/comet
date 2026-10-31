@@ -3,14 +3,17 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.beads" />
       <excludeFolder url="file://$MODULE_DIR$/.claude" />
       <excludeFolder url="file://$MODULE_DIR$/.codex" />
+      <excludeFolder url="file://$MODULE_DIR$/.cursor" />
       <excludeFolder url="file://$MODULE_DIR$/.gemini" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/.junie" />
       <excludeFolder url="file://$MODULE_DIR$/.opencode" />
       <excludeFolder url="file://$MODULE_DIR$/.run" />
-      <excludeFolder url="file://$MODULE_DIR$/.vite-hooks" />
+      <excludeFolder url="file://$MODULE_DIR$/.vscode" />
+      <excludeFolder url="file://$MODULE_DIR$/.zed" />
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludePattern pattern=".editorconfig" />
       <excludePattern pattern=".gitattributes" />

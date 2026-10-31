@@ -5,7 +5,6 @@
 ## Tooling configuration (e.g. agent harnesses and IDE settings)
 #  These files often contain personalised settings and sometimes also sensitive information.
 #  Keep them on your computer and add generic, shareable files to the `tools` directory instead.
-#  For agent-specific instructions, create a symlink to `AGENTS.md` and the `.agents` directory.
 .beads/
 .claude/
 .codex/
@@ -16,19 +15,12 @@
 .opencode/
 .omo/
 .run/
-.vite-hooks/
 .vscode/
 .zed/
-*.code-workspace
-*.iml
-!tools/idea/comet.iml
 *.local
 *.local.*
 *-local.*
 .mcp.json
-.ws-context
-CLAUDE.md
-GEMINI.md
 
 ## Temporary artefacts
 #  These files are automatically generated.

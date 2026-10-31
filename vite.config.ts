@@ -84,17 +84,6 @@ export default defineConfig({
 	},
 
 	/**
-	 * Configure lint-staged for the pre-commit hook.
-	 *
-	 * @see https://viteplus.dev/config/staged
-	 * @see https://github.com/lint-staged/lint-staged
-	 */
-	// language=sh
-	staged: {
-		"*.{json,jsonc,md,ts,yaml}": "vpr fmt",
-	},
-
-	/**
 	 * Configure Vitest.
 	 *
 	 * @see https://viteplus.dev/config/test

@@ -1,0 +1,66 @@
+# Define Git hooks.
+# https://lefthook.dev/configuration
+
+post-checkout:
+  commands:
+    install:
+      # Re-install dependencies if they have changed after checking out a branch or a commit.
+      # language=sh
+      run: |
+        # Detect dependency changes in `pnpm-lock.yaml`.
+        if ! git diff --quiet 'HEAD@{1}..' -- 'pnpm-lock.yaml'; then
+          vpr install
+        fi
+
+post-merge:
+  commands:
+    install:
+      # Re-install dependencies if they have changed after merging or pulling a branch.
+      # language=sh
+      run: |
+        # Detect dependency changes in `pnpm-lock.yaml`.
+        if ! git diff --quiet 'ORIG_HEAD..' -- 'pnpm-lock.yaml'; then
+          vpr install
+        fi
+
+post-rewrite:
+  commands:
+    install:
+      # Re-install dependencies if they have changed after rebasing onto another branch or commit.
+      # language=sh
+      run: |
+        read -r FIRST_REBASED_COMMIT_SHA _
+
+        # Detect dependency changes in `pnpm-lock.yaml`.
+        if ! git diff --quiet "$FIRST_REBASED_COMMIT_SHA^.." -- 'pnpm-lock.yaml'; then
+          vpr install
+        fi
+      use_stdin: true
+  only:
+    - rebase
+
+pre-commit:
+  commands:
+    fmt:
+      # Reformat files before committing changes.
+      # language=sh
+      run: vpr fmt
+      stage_fixed: true
+  skip:
+    - merge
+    - rebase
+
+pre-push:
+  commands:
+    check:
+      # Verify the software quality before allowing commits to be pushed.
+      # language=sh
+      run: |
+        # The source code must be sound and clean.
+        vpr check && \
+
+        # Unit tests must pass if they are affected by the commits being pushed.
+        vpr test --changed "$(git remote | head -n 1)/HEAD" && \
+
+        # Commit messages must be well-formed.
+        vpr comet

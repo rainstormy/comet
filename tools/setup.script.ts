@@ -11,8 +11,7 @@ async function installDependencies(): Promise<void> {
 }
 
 async function installGitHooks(): Promise<void> {
-	await copyDirectory("tools/hooks/", ".vite-hooks/")
-	await runCommand("vp", "hooks", "enable")
+	await runCommand("vp", "exec", "lefthook", "install", "--reset-hooks-path")
 }
 
 async function generateIntellijIdeaProject(): Promise<void> {
