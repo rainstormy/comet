@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises"
 import { resolve as resolvePath } from "node:path"
-import { runGitCommand } from "#utilities/git/cli/RunGitCommand.ts"
+import { runCommand } from "#utilities/commands/RunCommand.ts"
 import { trimPrefix } from "#utilities/Strings.ts"
 
 const args = process.argv.slice(2)
@@ -46,8 +46,8 @@ function isSemanticVersion(targetVersion: string): boolean {
 async function getCommitSha(tag: `v${string}`): Promise<string> {
 	try {
 		// Grab the commit SHA with `^{commit}` instead of the annotated tag SHA.
-		const commitSha = await runGitCommand(["rev-parse", "--verify", `refs/tags/${tag}^{commit}`])
-		await runGitCommand(["merge-base", "--is-ancestor", commitSha, "main"])
+		const commitSha = await runCommand("git", "rev-parse", "--verify", `refs/tags/${tag}^{commit}`)
+		await runCommand("git", "merge-base", "--is-ancestor", commitSha, "main")
 
 		return commitSha
 	} catch (error) {

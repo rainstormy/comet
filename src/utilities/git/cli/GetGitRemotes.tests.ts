@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest"
+import { mockCommand } from "#utilities/commands/RunCommand.fakes.ts"
 import { getGitRemotes } from "#utilities/git/cli/GetGitRemotes.ts"
-import { mockGitCommand } from "#utilities/git/cli/RunGitCommand.fakes.ts"
 
 describe("when there are no remotes", () => {
 	beforeEach(() => {
-		mockGitCommand("remote", { output: "" })
+		mockCommand("git remote", { output: "" })
 	})
 
 	it("returns an empty list", async () => {
@@ -20,7 +20,7 @@ describe.each`
 	${"upstream"}
 `("when there is 1 remote named $remote", (props: { remote: string }) => {
 	beforeEach(() => {
-		mockGitCommand("remote", { output: props.remote })
+		mockCommand("git remote", { output: props.remote })
 	})
 
 	it("returns a list with 1 remote", async () => {
@@ -31,7 +31,7 @@ describe.each`
 
 describe("when there are 2 remotes", () => {
 	beforeEach(() => {
-		mockGitCommand("remote", { output: "github\norigin" })
+		mockCommand("git remote", { output: "github\norigin" })
 	})
 
 	it("returns a list with 2 remotes", async () => {
@@ -42,7 +42,7 @@ describe("when there are 2 remotes", () => {
 
 describe("when there are 3 remotes", () => {
 	beforeEach(() => {
-		mockGitCommand("remote", { output: "github\norigin\nupstream" })
+		mockCommand("git remote", { output: "github\norigin\nupstream" })
 	})
 
 	it("returns a list with 3 remotes", async () => {
@@ -53,7 +53,7 @@ describe("when there are 3 remotes", () => {
 
 describe("when the 'git remote' command fails", () => {
 	beforeEach(() => {
-		mockGitCommand("remote", { exitCode: 1 })
+		mockCommand("git remote", { exitCode: 1 })
 	})
 
 	it("throws an error", async () => {

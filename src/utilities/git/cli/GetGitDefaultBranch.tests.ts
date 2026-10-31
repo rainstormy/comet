@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest"
+import { mockCommand } from "#utilities/commands/RunCommand.fakes.ts"
 import { getGitDefaultBranch } from "#utilities/git/cli/GetGitDefaultBranch.ts"
-import { mockGitCommand } from "#utilities/git/cli/RunGitCommand.fakes.ts"
 
 describe.each`
 	remote        | defaultBranch
@@ -14,8 +14,8 @@ describe.each`
 		const remoteDefaultBranch = `${props.remote}/${props.defaultBranch}`
 
 		beforeEach(() => {
-			mockGitCommand("remote", { output: props.remote })
-			mockGitCommand(`rev-parse --abbrev-ref ${props.remote}/HEAD`, {
+			mockCommand("git remote", { output: props.remote })
+			mockCommand(`git rev-parse --abbrev-ref ${props.remote}/HEAD`, {
 				output: remoteDefaultBranch,
 			})
 		})
@@ -31,8 +31,8 @@ describe("when there are 2 remotes including one named 'origin'", () => {
 	const originDefaultBranch = "origin/main"
 
 	beforeEach(() => {
-		mockGitCommand("remote", { output: "github\norigin" })
-		mockGitCommand("rev-parse --abbrev-ref origin/HEAD", {
+		mockCommand("git remote", { output: "github\norigin" })
+		mockCommand("git rev-parse --abbrev-ref origin/HEAD", {
 			output: originDefaultBranch,
 		})
 	})
@@ -47,8 +47,8 @@ describe("when there are 2 remotes and none named 'origin'", () => {
 	const remoteDefaultBranch = "gitlab/next"
 
 	beforeEach(() => {
-		mockGitCommand("remote", { output: "gitlab\nupstream" })
-		mockGitCommand("rev-parse --abbrev-ref gitlab/HEAD", {
+		mockCommand("git remote", { output: "gitlab\nupstream" })
+		mockCommand("git rev-parse --abbrev-ref gitlab/HEAD", {
 			output: remoteDefaultBranch,
 		})
 	})
@@ -63,8 +63,8 @@ describe("when there are 3 remotes including one named 'origin'", () => {
 	const originDefaultBranch = "origin/develop"
 
 	beforeEach(() => {
-		mockGitCommand("remote", { output: "github\norigin\nupstream" })
-		mockGitCommand("rev-parse --abbrev-ref origin/HEAD", {
+		mockCommand("git remote", { output: "github\norigin\nupstream" })
+		mockCommand("git rev-parse --abbrev-ref origin/HEAD", {
 			output: originDefaultBranch,
 		})
 	})
@@ -79,8 +79,8 @@ describe("when there are 3 remotes and none named 'origin'", () => {
 	const remoteDefaultBranch = "github/main"
 
 	beforeEach(() => {
-		mockGitCommand("remote", { output: "github\nupstream\ngitlab" })
-		mockGitCommand("rev-parse --abbrev-ref github/HEAD", {
+		mockCommand("git remote", { output: "github\nupstream\ngitlab" })
+		mockCommand("git rev-parse --abbrev-ref github/HEAD", {
 			output: remoteDefaultBranch,
 		})
 	})
@@ -93,13 +93,13 @@ describe("when there are 3 remotes and none named 'origin'", () => {
 
 describe("when the remote does not have a default branch", () => {
 	beforeEach(() => {
-		mockGitCommand("remote", { output: "origin" })
-		mockGitCommand("rev-parse --abbrev-ref origin/HEAD", { output: "" })
+		mockCommand("git remote", { output: "origin" })
+		mockCommand("git rev-parse --abbrev-ref origin/HEAD", { output: "" })
 	})
 
 	describe("and a branch named 'main' exists locally", () => {
 		beforeEach(() => {
-			mockGitCommand("rev-parse --verify --quiet main", {
+			mockCommand("git rev-parse --verify --quiet main", {
 				output: "d799201951a348548eb063b548289b1ad58d61fd",
 			})
 		})
@@ -112,12 +112,12 @@ describe("when the remote does not have a default branch", () => {
 
 	describe("and a branch named 'main' does not exist locally", () => {
 		beforeEach(() => {
-			mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
+			mockCommand("git rev-parse --verify --quiet main", { exitCode: 1 })
 		})
 
 		describe("and a branch named 'master' exists locally", () => {
 			beforeEach(() => {
-				mockGitCommand("rev-parse --verify --quiet master", {
+				mockCommand("git rev-parse --verify --quiet master", {
 					output: "bc26eb14f7314ece80f0a28d33d59535288dbad1",
 				})
 			})
@@ -130,7 +130,7 @@ describe("when the remote does not have a default branch", () => {
 
 		describe("and a branch named 'master' does not exist locally", () => {
 			beforeEach(() => {
-				mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
+				mockCommand("git rev-parse --verify --quiet master", { exitCode: 1 })
 			})
 
 			it("returns null", async () => {
@@ -143,12 +143,12 @@ describe("when the remote does not have a default branch", () => {
 
 describe("when there are no remotes", () => {
 	beforeEach(() => {
-		mockGitCommand("remote", { output: "" })
+		mockCommand("git remote", { output: "" })
 	})
 
 	describe("and a branch named 'main' exists locally", () => {
 		beforeEach(() => {
-			mockGitCommand("rev-parse --verify --quiet main", {
+			mockCommand("git rev-parse --verify --quiet main", {
 				output: "d799201951a348548eb063b548289b1ad58d61fd",
 			})
 		})
@@ -161,12 +161,12 @@ describe("when there are no remotes", () => {
 
 	describe("and a branch named 'main' does not exist locally", () => {
 		beforeEach(() => {
-			mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
+			mockCommand("git rev-parse --verify --quiet main", { exitCode: 1 })
 		})
 
 		describe("and a branch named 'master' exists locally", () => {
 			beforeEach(() => {
-				mockGitCommand("rev-parse --verify --quiet master", {
+				mockCommand("git rev-parse --verify --quiet master", {
 					output: "bc26eb14f7314ece80f0a28d33d59535288dbad1",
 				})
 			})
@@ -179,7 +179,7 @@ describe("when there are no remotes", () => {
 
 		describe("and a branch named 'master' does not exist locally", () => {
 			beforeEach(() => {
-				mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
+				mockCommand("git rev-parse --verify --quiet master", { exitCode: 1 })
 			})
 
 			it("returns null", async () => {
@@ -192,8 +192,8 @@ describe("when there are no remotes", () => {
 
 describe("when the 'git remote' command fails", () => {
 	beforeEach(() => {
-		mockGitCommand("remote", { exitCode: 1 })
-		mockGitCommand("rev-parse --verify --quiet main", {
+		mockCommand("git remote", { exitCode: 1 })
+		mockCommand("git rev-parse --verify --quiet main", {
 			output: "d799201951a348548eb063b548289b1ad58d61fd",
 		})
 	})
@@ -207,16 +207,16 @@ describe("when the 'git remote' command fails", () => {
 
 describe("when the 'git rev-parse' command fails", () => {
 	beforeEach(() => {
-		mockGitCommand("remote", { output: "origin" })
-		mockGitCommand("rev-parse --abbrev-ref origin/HEAD", { exitCode: 128 })
-		mockGitCommand("fetch", { output: "" })
+		mockCommand("git remote", { output: "origin" })
+		mockCommand("git rev-parse --abbrev-ref origin/HEAD", { exitCode: 128 })
+		mockCommand("git fetch", { output: "" })
 	})
 
 	describe("and the 'git rev-parse' command succeeds after 'git fetch'", () => {
 		const remoteDefaultBranch = "origin/main"
 
 		beforeEach(() => {
-			mockGitCommand("rev-parse --abbrev-ref origin/HEAD", { output: remoteDefaultBranch })
+			mockCommand("git rev-parse --abbrev-ref origin/HEAD", { output: remoteDefaultBranch })
 		})
 
 		it("returns the default branch of the remote", async () => {
@@ -227,12 +227,12 @@ describe("when the 'git rev-parse' command fails", () => {
 
 	describe("and the local branch does not have a remote-tracking branch", () => {
 		beforeEach(() => {
-			mockGitCommand("rev-parse --abbrev-ref --symbolic-full-name @{u}", { exitCode: 128 })
+			mockCommand("git rev-parse --abbrev-ref --symbolic-full-name @{u}", { exitCode: 128 })
 		})
 
 		describe("and a branch named 'main' exists locally", () => {
 			beforeEach(() => {
-				mockGitCommand("rev-parse --verify --quiet main", {
+				mockCommand("git rev-parse --verify --quiet main", {
 					output: "d799201951a348548eb063b548289b1ad58d61fd",
 				})
 			})
@@ -245,12 +245,12 @@ describe("when the 'git rev-parse' command fails", () => {
 
 		describe("and a branch named 'main' does not exist locally", () => {
 			beforeEach(() => {
-				mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
+				mockCommand("git rev-parse --verify --quiet main", { exitCode: 1 })
 			})
 
 			describe("and a branch named 'master' exists locally", () => {
 				beforeEach(() => {
-					mockGitCommand("rev-parse --verify --quiet master", {
+					mockCommand("git rev-parse --verify --quiet master", {
 						output: "bc26eb14f7314ece80f0a28d33d59535288dbad1",
 					})
 				})
@@ -263,7 +263,7 @@ describe("when the 'git rev-parse' command fails", () => {
 
 			describe("and a branch named 'master' does not exist locally", () => {
 				beforeEach(() => {
-					mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
+					mockCommand("git rev-parse --verify --quiet master", { exitCode: 1 })
 				})
 
 				it("returns null", async () => {

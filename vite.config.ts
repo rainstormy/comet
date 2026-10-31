@@ -31,8 +31,8 @@ export default defineConfig({
 			{
 				files: [
 					"src/main-*.ts",
+					"src/utilities/commands/RunCommand.ts",
 					"src/utilities/files/Files.ts",
-					"src/utilities/git/cli/RunGitCommand.ts",
 					"src/utilities/github/env/GithubEnv.ts",
 				],
 				rules: {

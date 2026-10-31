@@ -19,9 +19,9 @@ import {
 } from "#types/ExitCode.ts"
 import type { JsonValue } from "#types/JsonValue.ts"
 import { ALPHABETICALLY, NUMERICALLY } from "#utilities/Arrays.ts"
+import { mockCommand } from "#utilities/commands/RunCommand.fakes.ts"
 import { mockFile, mockJsonFile, mockNonexistingFile } from "#utilities/files/Files.fakes.ts"
 import { mockGitLog, mockSabotagedGitLog } from "#utilities/git/cli/GetGitLog.fakes.ts"
-import { mockGitCommand } from "#utilities/git/cli/RunGitCommand.fakes.ts"
 import {
 	printCommandLineError,
 	printCommandLineWarning,
@@ -144,9 +144,9 @@ describe("when the default branch cannot be determined", () => {
 	let exitCode: ExitCode
 
 	beforeEach(async () => {
-		mockGitCommand("remote", { output: "" })
-		mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
-		mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
+		mockCommand("git remote", { output: "" })
+		mockCommand("git rev-parse --verify --quiet main", { exitCode: 1 })
+		mockCommand("git rev-parse --verify --quiet master", { exitCode: 1 })
 		exitCode = await commandLineProgram([])
 	})
 
@@ -393,9 +393,9 @@ describe("when the 'git remote' command raises an error", () => {
 	let exitCode: ExitCode
 
 	beforeEach(async () => {
-		mockGitCommand("remote", { exitCode: 1 })
-		mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
-		mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
+		mockCommand("git remote", { exitCode: 1 })
+		mockCommand("git rev-parse --verify --quiet main", { exitCode: 1 })
+		mockCommand("git rev-parse --verify --quiet master", { exitCode: 1 })
 		exitCode = await commandLineProgram([])
 	})
 
@@ -415,12 +415,12 @@ describe("when the 'git rev-parse' command raises an error", () => {
 	let exitCode: ExitCode
 
 	beforeEach(async () => {
-		mockGitCommand("remote", { output: "origin" })
-		mockGitCommand("rev-parse --abbrev-ref origin/HEAD", { exitCode: 128 })
-		mockGitCommand("fetch", { output: "" })
-		mockGitCommand("rev-parse --abbrev-ref --symbolic-full-name @{u}", { exitCode: 128 })
-		mockGitCommand("rev-parse --verify --quiet main", { exitCode: 1 })
-		mockGitCommand("rev-parse --verify --quiet master", { exitCode: 1 })
+		mockCommand("git remote", { output: "origin" })
+		mockCommand("git rev-parse --abbrev-ref origin/HEAD", { exitCode: 128 })
+		mockCommand("git fetch", { output: "" })
+		mockCommand("git rev-parse --abbrev-ref --symbolic-full-name @{u}", { exitCode: 128 })
+		mockCommand("git rev-parse --verify --quiet main", { exitCode: 1 })
+		mockCommand("git rev-parse --verify --quiet master", { exitCode: 1 })
 		exitCode = await commandLineProgram([])
 	})
 
@@ -440,9 +440,9 @@ describe("when the 'git log' command raises an error", () => {
 	let exitCode: ExitCode
 
 	beforeEach(async () => {
-		mockGitCommand("remote", { output: "origin" })
-		mockGitCommand("rev-parse --abbrev-ref origin/HEAD", { output: "origin/main" })
-		mockGitCommand("--no-pager log --format=raw --no-color origin/main..HEAD", { exitCode: 31 })
+		mockCommand("git remote", { output: "origin" })
+		mockCommand("git rev-parse --abbrev-ref origin/HEAD", { output: "origin/main" })
+		mockCommand("git --no-pager log --format=raw --no-color origin/main..HEAD", { exitCode: 31 })
 		exitCode = await commandLineProgram([])
 	})
 
