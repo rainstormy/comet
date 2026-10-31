@@ -15,6 +15,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.vscode" />
       <excludeFolder url="file://$MODULE_DIR$/.zed" />
       <excludeFolder url="file://$MODULE_DIR$/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/rules" />
       <excludePattern pattern=".editorconfig" />
       <excludePattern pattern=".gitattributes" />
       <excludePattern pattern=".gitignore" />
