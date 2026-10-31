@@ -31,8 +31,8 @@ export default defineConfig({
 			{
 				files: [
 					"src/main-*.ts",
+					"src/utilities/commands/RunCommand.ts",
 					"src/utilities/files/Files.ts",
-					"src/utilities/git/cli/RunGitCommand.ts",
 					"src/utilities/github/env/GithubEnv.ts",
 				],
 				rules: {
@@ -81,17 +81,6 @@ export default defineConfig({
 			setup: { command: "node tools/setup.script.ts", cache: false },
 			test: { command: "vp test" },
 		},
-	},
-
-	/**
-	 * Configure lint-staged for the pre-commit hook.
-	 *
-	 * @see https://viteplus.dev/config/staged
-	 * @see https://github.com/lint-staged/lint-staged
-	 */
-	// language=sh
-	staged: {
-		"*.{json,jsonc,md,ts,yaml}": "vpr fmt",
 	},
 
 	/**

@@ -1,16 +1,12 @@
 import type { NonEmptyArray } from "#utilities/Arrays.ts"
+import { runCommand } from "#utilities/commands/RunCommand.ts"
 import type { GitLogCommitDto } from "#utilities/git/cli/dtos/GitLogCommitDto.ts"
-import { runGitCommand } from "#utilities/git/cli/RunGitCommand.ts"
 
 export async function getGitLog(fromRef: string, toRef: string): Promise<Array<GitLogCommitDto>> {
 	const range = `${fromRef}..${toRef}`
-	const output = await runGitCommand([
-		"--no-pager", // Print all output at once instead of using pagination.
-		"log",
-		"--format=raw",
-		"--no-color",
-		range,
-	])
+
+	// `--no-pager` prints all output at once instead of using pagination.
+	const output = await runCommand("git", "--no-pager", "log", "--format=raw", "--no-color", range)
 
 	if (output === "") {
 		return []

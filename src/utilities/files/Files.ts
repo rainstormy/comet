@@ -1,4 +1,4 @@
-import { access, constants, readFile } from "node:fs/promises"
+import { access, constants, cp, mkdir, readFile } from "node:fs/promises"
 import { dirname, extname, isAbsolute, normalize, relative, resolve } from "node:path"
 import process from "node:process"
 import stripJsonComments from "strip-json-comments"
@@ -39,4 +39,16 @@ export async function readJsonFile(path: string): Promise<JsonValue> {
 
 function stripCommentsFromJsonc(path: string, content: string): string {
 	return extname(path) === ".jsonc" ? stripJsonComments(content) : content
+}
+
+export async function copyDirectory(
+	relativeSourcePath: string,
+	relativeDestinationPath: string,
+): Promise<void> {
+	const projectDirectory = resolve(import.meta.dirname, "../../..")
+	const sourcePath = resolve(projectDirectory, relativeSourcePath)
+	const destinationPath = resolve(projectDirectory, relativeDestinationPath)
+
+	await mkdir(destinationPath, { recursive: true })
+	await cp(sourcePath, destinationPath, { recursive: true })
 }
