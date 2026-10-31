@@ -38,6 +38,7 @@ it.each`
 	${"useCommitterEmailPatterns"} | ${{ patterns: [] }}
 	${"useCommitterNamePatterns"}  | ${{ patterns: [] }}
 	${"useIssueLinks"}             | ${{ position: "anywhere" }}
+	${"useConventionalCommits"}    | ${{}}
 `(
 	"does not enable $disabledRuleKey'",
 	(props: { disabledRuleKey: RuleKey; expectedRuleOptions: object }) => {

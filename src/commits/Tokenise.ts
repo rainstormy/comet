@@ -105,7 +105,7 @@ export function conventionalPattern(configuration: TokenConfiguration): string {
 	// Recognise one conventional prefix at the start of the subject, after optional whitespace and squash markers.
 	// The colon is always a part of the conventional token, but any whitespace after that is not.
 	// language=jsunicoderegexp
-	return String.raw`(?<=^(?:\s|${SQUASH_MARKER})*)(?<conventional>(?i:${types})(?:\([^()\s]+\))?!?:)`
+	return String.raw`(?<=^(?:\s|${SQUASH_MARKER})*)(?<conventional>(?:${types})(?:\([^()\s]+\))?!?:)`
 }
 
 export function issueLinkPattern(configuration: TokenConfiguration): string {

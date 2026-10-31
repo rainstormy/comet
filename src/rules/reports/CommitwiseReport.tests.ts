@@ -1215,6 +1215,122 @@ Found 1 concern in 1 commit.`.trim(),
 	})
 })
 
+describe("when 'useConventionalCommits' has a concern about characters 0-1 of the subject", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: "5f5f474a323d9be9111c7726145023ba392be946",
+		message: "enlightens the paper lanterns",
+	})
+	const concern = subjectConcern("useConventionalCommits", commit.sha, { range: [0, 1] })
+
+	it("describes the rule violation in the subject", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey`5f5f474`} enlightens the paper lanterns
+        ${red`┬`}
+        ${red`╰─ Start the subject with a Conventional Commits prefix.`}
+        ${red`   ${ruleLink("useConventionalCommits")}`}
+        ${red`   `}
+        ${red`   Accepted types:`}
+        ${red`     ∙ build:`}
+        ${red`     ∙ chore:`}
+        ${red`     ∙ ci:`}
+        ${red`     ∙ docs:`}
+        ${red`     ∙ feat:`}
+        ${red`     ∙ fix:`}
+        ${red`     ∙ perf:`}
+        ${red`     ∙ refactor:`}
+        ${red`     ∙ revert:`}
+        ${red`     ∙ style:`}
+        ${red`     ∙ test:`}
+        ${red`   `}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when 'useConventionalCommits' has a concern about characters 7-8 of the subject", () => {
+	const configuration = fakeConfiguration(
+		{},
+		{ conventionalCommits: { types: ["robot", "release+"] } },
+	)
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: "dfb2c04d22c76401c13242a749d4e4640099a376",
+		message: "fixup! Interaction with the Fire Nation",
+	})
+	const concern = subjectConcern("useConventionalCommits", commit.sha, { range: [7, 8] })
+
+	it("describes the rule violation in the subject", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey`dfb2c04`} fixup! Interaction with the Fire Nation
+               ${red`┬`}
+               ${red`╰─ Start the subject with a Conventional Commits prefix.`}
+               ${red`   ${ruleLink("useConventionalCommits")}`}
+               ${red`   `}
+               ${red`   Accepted types:`}
+               ${red`     ∙ release+:`}
+               ${red`     ∙ robot:`}
+               ${red`   `}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when 'useConventionalCommits' has a concern about characters 4-5 of the subject", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+	const commit = fakeCommit({
+		sha: "4418c8ba60e583653b04c455242bd9c33ab88646",
+		message: "feat:invent smart rooftop",
+	})
+	const concern = subjectConcern("useConventionalCommits", commit.sha, { range: [4, 5] })
+
+	it("describes the rule violation in the subject", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey`4418c8b`} feat:invent smart rooftop
+            ${red`┬`}
+            ${red`╰─ Add a space after the colon.`}
+            ${red`   ${ruleLink("useConventionalCommits")}`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when 'useConventionalCommits' has a concern about characters 14-15 of the subject", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+	const commit = fakeCommit({
+		sha: "6abc9aeb42d1d75b8465ca9fe6517d38d246152a",
+		message: " squash! chore:Updated aviation firmware",
+	})
+	const concern = subjectConcern("useConventionalCommits", commit.sha, { range: [14, 15] })
+
+	it("describes the rule violation in the subject", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey`6abc9ae`}  squash! chore:Updated aviation firmware
+                      ${red`┬`}
+                      ${red`╰─ Add a space after the colon.`}
+                      ${red`   ${ruleLink("useConventionalCommits")}`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
 describe("when 'useEmptyLineBeforeBody' has a concern about the first body line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)

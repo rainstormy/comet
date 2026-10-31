@@ -1,6 +1,6 @@
 import { bold, gray as grey, red } from "ansis"
 import type { Commit, Commits } from "#commits/Commit.ts"
-import { type Tokens, tokenRangeEnd } from "#commits/Token.ts"
+import { type Tokens, isToken, tokenRangeEnd } from "#commits/Token.ts"
 import type { Configuration } from "#configurations/GetConfiguration.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import type { BodyLineConcern } from "#rules/concerns/BodyLineConcern.ts"
@@ -337,6 +337,23 @@ function subjectRuleMessage(
 			const options = getRuleOptions(rule, configuration)
 			const characterPhrase = formatCount(options.maxLength, "character", "characters or less")
 			return ruleMessage(`Shorten the subject to ${characterPhrase}.`)
+		}
+		case "useConventionalCommits": {
+			const conventionalToken = commit.subject.find(isToken("conventional"))
+
+			if (conventionalToken?.range[1] === concern.range[1]) {
+				return ruleMessage("Add a space after the colon.")
+			}
+
+			const types = configuration.tokens.conventionalCommits.types
+			return ruleMessage(
+				"Start the subject with a Conventional Commits prefix.",
+				formatList(
+					"Accepted types:",
+					types.map((type) => `${type}:`).toSorted(ALPHABETICALLY),
+					"\n",
+				),
+			)
 		}
 		case "useImperativeSubjects": {
 			return ruleMessage("Start the subject with a verb in the imperative mood.")

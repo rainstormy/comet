@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), 
 
 ## [Unreleased]
 ### Added
+- New rule: `useConventionalCommits`. Disabled by default.
 - New token configuration to recognise prefixes of Conventional Commits: `tokens.conventionalCommits`.
 
 ### Changed

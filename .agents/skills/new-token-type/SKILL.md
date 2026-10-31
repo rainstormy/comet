@@ -75,8 +75,7 @@ Expand `TokenConfiguration` in `src/commits/TokenConfiguration.ts` accordingly.
 Keep token settings in `TokenConfiguration`; do not add them to the ruleset configuration.
 Update the following places with sensible defaults:
 
-- `tokens` in `src/configurations/defaults/DefaultCommandLineConfiguration.ts`
-- `tokens` in `src/configurations/defaults/DefaultGithubActionsConfiguration.ts`
+- `DEFAULT_TOKEN_CONFIGURATION` in `src/configurations/defaults/DefaultTokenConfiguration.ts`.
 - `fakeTokenConfiguration` in `src/commits/TokenConfiguration.fakes.ts`
 
 Call the function from `mapCrudeCommitToCommit` in `src/commits/Commit.ts`.
@@ -148,11 +147,15 @@ Be sure to cover many different scenarios, for example (but not exhaustive):
 - position-sensitive behaviour, including valid and invalid positions (when applicable)
 - every relevant configuration branch, including the feature being disabled (when applicable)
 
-Prefer creative, realistic, lowkey funny commit messages over repetitive placeholder data.
-They should resemble a large variety of real-world commit messages to improve the general test coverage.
-For example:
+Treat variety and diversity of test data as a test coverage requirement, not just a stylistic preference.
+Across `describe.each` tables, use distinct, creative, lowkey funny, real-world commit messages and author names.
+Do not let one story or theme dominate through an entire test suite.
+Repeat a subject only when needed to test the same behaviour.
+
+Examples of good variety across themes, nouns, verbs, tokens, and letter casing:
 
 - `Release the robot butler`
+- `I've convinced the office printer to print in colour`
 - `made the console less dramatic`
 - `Revert "fix this confusing plate of spaghetti"`
 - `Compare the list of items to the objects downloaded from the server`

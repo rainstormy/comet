@@ -24,6 +24,7 @@ export const RULESET_CONFIGURATION_SCHEMA = v.strictObject({
 	useCommitterEmailPatterns: ruleConfiguration({ patterns: stringArray() }),
 	useCommitterNamePatterns: ruleConfiguration({ patterns: stringArray() }),
 	useConciseSubjects: ruleConfiguration({ maxLength: naturalNumber() }),
+	useConventionalCommits: EMPTY_RULE_CONFIGURATION,
 	useEmptyLineBeforeBody: EMPTY_RULE_CONFIGURATION,
 	useImperativeSubjects: ruleConfiguration({ whitelist: stringArray() }),
 	useIssueLinks: ruleConfiguration({

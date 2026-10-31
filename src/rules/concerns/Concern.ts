@@ -20,6 +20,7 @@ import { useCapitalisedSubjects } from "#rules/UseCapitalisedSubjects.ts"
 import { useCommitterEmailPatterns } from "#rules/UseCommitterEmailPatterns.ts"
 import { useCommitterNamePatterns } from "#rules/UseCommitterNamePatterns.ts"
 import { useConciseSubjects } from "#rules/UseConciseSubjects.ts"
+import { useConventionalCommits } from "#rules/UseConventionalCommits.ts"
 import { useEmptyLineBeforeBody } from "#rules/UseEmptyLineBeforeBody.ts"
 import { useImperativeSubjects } from "#rules/UseImperativeSubjects.ts"
 import { useIssueLinks } from "#rules/UseIssueLinks.ts"
@@ -49,6 +50,7 @@ export function mapCommitsToConcerns(commits: Commits, ruleset: RulesetConfigura
 		...useCommitterEmailPatterns(commits, ruleset),
 		...useCommitterNamePatterns(commits, ruleset),
 		...useConciseSubjects(commits, ruleset),
+		...useConventionalCommits(commits, ruleset),
 		...useEmptyLineBeforeBody(commits, ruleset),
 		...useImperativeSubjects(commits, ruleset),
 		...useIssueLinks(commits, ruleset),

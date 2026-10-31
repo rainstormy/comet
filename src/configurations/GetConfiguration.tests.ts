@@ -561,6 +561,7 @@ describe("a complete configuration file", () => {
 					level: "error",
 					options: { maxLength: 64 },
 				},
+				useConventionalCommits: "off",
 				useEmptyLineBeforeBody: "off",
 				useImperativeSubjects: {
 					level: "error",
@@ -628,6 +629,7 @@ describe("a complete configuration file", () => {
 					level: "error",
 					options: { maxLength: 64 },
 				},
+				useConventionalCommits: { level: "off" },
 				useEmptyLineBeforeBody: { level: "off" },
 				useImperativeSubjects: {
 					level: "error",

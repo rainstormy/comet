@@ -2367,12 +2367,12 @@ describe("when a configuration file in a custom sequence of configuration files 
 	})
 })
 
-describe("when 'useIssueLinks' is enabled without 'issueLinks'", () => {
+describe("when 'useConventionalCommits' is enabled without 'conventionalCommits'", () => {
 	let exitCode: ExitCode
 
 	beforeEach(async () => {
 		mockJsonFile("comet.json", {
-			rules: { useIssueLinks: "error" },
+			rules: { useConventionalCommits: "error" },
 		})
 		mockGitBranchCrudeCommits([])
 		exitCode = await commandLineProgram([])
@@ -2383,29 +2383,27 @@ describe("when 'useIssueLinks' is enabled without 'issueLinks'", () => {
 	})
 
 	it("prints a configuration warning", () => {
-		expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
-			`${bold`1 issue detected in the Comet configuration:`}\n- 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled\n`,
-		)
 		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+			`${bold`1 issue detected in the Comet configuration:`}\n- 'conventionalCommits' in 'tokens' should be defined when 'useConventionalCommits' is enabled\n`,
+		)
 		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
 
 describe.each`
-	prefixes     | wildcards
-	${[]}        | ${[]}
-	${[" ", ""]} | ${[]}
-	${[]}        | ${[""]}
-	${[""]}      | ${["", "  "]}
+	types
+	${[]}
+	${[" ", ""]}
 `(
-	"when 'useIssueLinks' is enabled with blank 'issueLinks' of $prefixes and $wildcards",
-	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+	"when 'useConventionalCommits' is enabled with blank 'conventionalCommits' of $types",
+	(props: { types: Array<string> }) => {
 		let exitCode: ExitCode
 
 		beforeEach(async () => {
 			mockJsonFile("comet.json", {
-				rules: { useIssueLinks: "error" },
-				tokens: { issueLinks: props },
+				rules: { useConventionalCommits: "error" },
+				tokens: { conventionalCommits: props },
 			})
 			mockGitBranchCrudeCommits([])
 			exitCode = await commandLineProgram([])
@@ -2417,7 +2415,7 @@ describe.each`
 
 		it("prints a configuration warning", () => {
 			expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
-				`${bold`1 issue detected in the Comet configuration:`}\n- 'issueLinks' in 'tokens' should contain at least one non-blank prefix or wildcard when 'useIssueLinks' is enabled\n`,
+				`${bold`1 issue detected in the Comet configuration:`}\n- 'conventionalCommits' in 'tokens' should contain at least one non-blank type when 'useConventionalCommits' is enabled\n`,
 			)
 			expect(printMessage).not.toHaveBeenCalled()
 			expect(printCommandLineError).not.toHaveBeenCalled()
@@ -2426,18 +2424,18 @@ describe.each`
 )
 
 describe.each`
-	prefixes    | wildcards
-	${["FUT-"]} | ${[]}
-	${[]}       | ${["[no-issue]"]}
+	types
+	${["feat"]}
+	${["feat", "fix"]}
 `(
-	"when 'useIssueLinks' is enabled with 'issueLinks' of $prefixes and $wildcards",
-	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+	"when 'useConventionalCommits' is enabled with 'conventionalCommits' of $types",
+	(props: { types: Array<string> }) => {
 		let exitCode: ExitCode
 
 		beforeEach(async () => {
 			mockJsonFile("comet.json", {
-				rules: { useIssueLinks: "error" },
-				tokens: { issueLinks: props },
+				rules: { useConventionalCommits: "error" },
+				tokens: { conventionalCommits: props },
 			})
 			mockGitBranchCrudeCommits([])
 			exitCode = await commandLineProgram([])
@@ -2455,12 +2453,13 @@ describe.each`
 	},
 )
 
-describe("when 'useIssueLinks' is disabled without 'issueLinks'", () => {
+describe("when 'useConventionalCommits' is disabled with blank 'conventionalCommits' types", () => {
 	let exitCode: ExitCode
 
 	beforeEach(async () => {
 		mockJsonFile("comet.json", {
-			rules: { useIssueLinks: "off" },
+			rules: { useConventionalCommits: "off" },
+			tokens: { conventionalCommits: { types: [] } },
 		})
 		mockGitBranchCrudeCommits([])
 		exitCode = await commandLineProgram([])
@@ -2575,7 +2574,117 @@ describe("when 'useImperativeSubjects' is disabled a whitelist that contains red
 	})
 })
 
-describe("when the configuration has multiple issues", () => {
+describe("when 'useIssueLinks' is enabled without 'issueLinks'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: { useIssueLinks: "error" },
+		})
+		mockGitBranchCrudeCommits([])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("prints a configuration warning", () => {
+		expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+			`${bold`1 issue detected in the Comet configuration:`}\n- 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled\n`,
+		)
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+	})
+})
+
+describe.each`
+	prefixes     | wildcards
+	${[]}        | ${[]}
+	${[" ", ""]} | ${[]}
+	${[]}        | ${[""]}
+	${[""]}      | ${["", "  "]}
+`(
+	"when 'useIssueLinks' is enabled with blank 'issueLinks' of $prefixes and $wildcards",
+	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: { useIssueLinks: "error" },
+				tokens: { issueLinks: props },
+			})
+			mockGitBranchCrudeCommits([])
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("prints a configuration warning", () => {
+			expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+				`${bold`1 issue detected in the Comet configuration:`}\n- 'issueLinks' in 'tokens' should contain at least one non-blank prefix or wildcard when 'useIssueLinks' is enabled\n`,
+			)
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe.each`
+	prefixes    | wildcards
+	${["FUT-"]} | ${[]}
+	${[]}       | ${["[no-issue]"]}
+`(
+	"when 'useIssueLinks' is enabled with 'issueLinks' of $prefixes and $wildcards",
+	(props: { prefixes: Array<string>; wildcards: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", {
+				rules: { useIssueLinks: "error" },
+				tokens: { issueLinks: props },
+			})
+			mockGitBranchCrudeCommits([])
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("remains silent", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe("when 'useIssueLinks' is disabled without 'issueLinks'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: { useIssueLinks: "off" },
+		})
+		mockGitBranchCrudeCommits([])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
+	})
+})
+
+describe("when the configuration has 2 issues", () => {
 	let exitCode: ExitCode
 
 	beforeEach(async () => {
@@ -2599,6 +2708,37 @@ describe("when the configuration has multiple issues", () => {
 	it("prints all configuration issues in a single warning", () => {
 		expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
 			`${bold`2 issues detected in the Comet configuration:`}\n- 'whitelist' of 'useImperativeSubjects' contains words that are already recognised as imperative verbs: release\n- 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled\n`,
+		)
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+	})
+})
+
+describe("when the configuration has 3 issues", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: {
+				useConventionalCommits: "error",
+				useImperativeSubjects: {
+					level: "error",
+					options: { whitelist: ["release"] },
+				},
+				useIssueLinks: "error",
+			},
+		})
+		mockGitBranchCrudeCommits([])
+		exitCode = await commandLineProgram([])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("prints all configuration issues in a single warning", () => {
+		expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+			`${bold`3 issues detected in the Comet configuration:`}\n- 'conventionalCommits' in 'tokens' should be defined when 'useConventionalCommits' is enabled\n- 'whitelist' of 'useImperativeSubjects' contains words that are already recognised as imperative verbs: release\n- 'issueLinks' in 'tokens' should be defined when 'useIssueLinks' is enabled\n`,
 		)
 		expect(printMessage).not.toHaveBeenCalled()
 		expect(printCommandLineError).not.toHaveBeenCalled()

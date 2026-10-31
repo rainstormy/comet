@@ -18,6 +18,7 @@ export type SubjectConcernRuleKey =
 	| "noUnexpectedPunctuation"
 	| "useCapitalisedSubjects"
 	| "useConciseSubjects"
+	| "useConventionalCommits"
 	| "useImperativeSubjects"
 	| "useIssueLinks"
 

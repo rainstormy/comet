@@ -17,6 +17,7 @@ export const DEFAULT_RULESET_CONFIGURATION: RulesetConfiguration = {
 	useCommitterEmailPatterns: { level: "error", options: { patterns: [] } },
 	useCommitterNamePatterns: { level: "error", options: { patterns: [] } },
 	useConciseSubjects: { level: "error", options: { maxLength: 50 } },
+	useConventionalCommits: { level: "error", options: {} },
 	useEmptyLineBeforeBody: { level: "error", options: {} },
 	useImperativeSubjects: { level: "error", options: { whitelist: [] } },
 	useIssueLinks: { level: "error", options: { position: "anywhere" } },

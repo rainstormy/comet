@@ -261,10 +261,15 @@ Be sure to cover many different tokens, for example (but not exhaustive):
 - inline code phrases and fenced code blocks
 - trailers
 
-Prefer creative, realistic, lowkey funny commit messages and author names over repetitive placeholder data.
-They should resemble a large variety of real-world commit messages to improve the general test coverage, for example:
+Treat variety and diversity of test data as a test coverage requirement, not just a stylistic preference.
+Across `describe.each` tables and multi-commit fixtures, use distinct, creative, lowkey funny, real-world commit messages and author names.
+Do not let one story or theme dominate through an entire test suite.
+Repeat a subject only when needed to test the same behaviour.
+
+Examples of good variety across themes, nouns, verbs, tokens, and letter casing:
 
 - `Release the robot butler`
+- `I've convinced the office printer to print in colour`
 - `made the console less dramatic`
 - `Revert "fix this confusing plate of spaghetti"`
 - `Compare the list of items to the objects downloaded from the server`
@@ -332,7 +337,7 @@ Always make documentation changes in the `.ts` file that contains the rule imple
 
 Read the documentation of a similar existing rule for guidance, for example `src/rules/UseImperativeSubjects.ts` for a message rule or `src/rules/UseAuthorEmailPatterns.ts` for an identity rule.
 
-Always begin with 'Rejects' and state the intent and scope of the rule as clarified in Step 1, including whether it validates subjects, body lines, identities, commits, or whole branches.
+Always begin with 'Rejects' and state, in a single line, the intent and scope of the rule as clarified in Step 1, including whether it validates subjects, body lines, identities, commits, or whole branches.
 
 Write the following sections in this order:
 

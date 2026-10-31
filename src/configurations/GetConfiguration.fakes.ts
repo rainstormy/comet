@@ -36,6 +36,7 @@ export function emptyRulesetConfiguration(
 		useCommitterEmailPatterns: { level: "off" },
 		useCommitterNamePatterns: { level: "off" },
 		useConciseSubjects: { level: "off" },
+		useConventionalCommits: { level: "off" },
 		useEmptyLineBeforeBody: { level: "off" },
 		useImperativeSubjects: { level: "off" },
 		useIssueLinks: { level: "off" },
