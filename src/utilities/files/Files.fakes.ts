@@ -40,6 +40,7 @@ vi.mock(import("#utilities/files/Files.ts"), () => ({
 			throw error
 		}
 	}),
+	copyDirectory: vi.fn(),
 }))
 
 const contentsByPath = new Map<string, string>()

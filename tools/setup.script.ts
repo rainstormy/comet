@@ -1,6 +1,5 @@
-import { cp as copyFiles, mkdir as createDirectory } from "node:fs/promises"
-import { resolve as resolvePath } from "node:path"
 import { runCommand } from "#utilities/commands/RunCommand.ts"
+import { copyDirectory } from "#utilities/files/Files.ts"
 
 // Run the commands sequentially to prevent their console outputs from interleaving with each other.
 await installDependencies()
@@ -18,16 +17,4 @@ async function installGitHooks(): Promise<void> {
 
 async function generateIntellijIdeaProject(): Promise<void> {
 	await copyDirectory("tools/idea/", ".idea/")
-}
-
-async function copyDirectory(
-	relativeSourcePath: string,
-	relativeDestinationPath: string,
-): Promise<void> {
-	const projectDirectory = resolvePath(import.meta.dirname, "..")
-	const sourcePath = resolvePath(projectDirectory, relativeSourcePath)
-	const destinationPath = resolvePath(projectDirectory, relativeDestinationPath)
-
-	await createDirectory(destinationPath, { recursive: true })
-	await copyFiles(sourcePath, destinationPath, { recursive: true })
 }
