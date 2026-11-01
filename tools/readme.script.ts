@@ -1,56 +1,34 @@
 import { readFile, writeFile } from "node:fs/promises"
 import { resolve as resolvePath } from "node:path"
-import { runCommand } from "#utilities/commands/RunCommand.ts"
-import { trimPrefix } from "#utilities/Strings.ts"
+import { getCommitSha } from "#utilities/git/cli/GetCommitSha.ts"
+import { extractSemanticVersion } from "#utilities/SemanticVersion.ts"
 
 const args = process.argv.slice(2)
-
 await updateReadme(args[0] ?? "")
 
 async function updateReadme(targetVersion: string): Promise<void> {
+	const readmePath = resolvePath(import.meta.dirname, "..", "README.md")
+
+	let content = await readFile(readmePath, "utf8")
+	content = await updateVersionReferences(content, targetVersion)
+
+	await writeFile(readmePath, content, "utf8")
+}
+
+async function updateVersionReferences(content: string, targetVersion: string): Promise<string> {
+	if (targetVersion === "") {
+		return content
+	}
+
 	const version = extractSemanticVersion(targetVersion)
 	const tag = `v${version}` as const
 	const commitSha = await getCommitSha(tag)
-
-	const projectDirectory = resolvePath(import.meta.dirname, "..")
-	const readmePath = resolvePath(projectDirectory, "README.md")
-
-	const readmeContent = await readFile(readmePath, "utf8")
 
 	const commitShaReference = /\b(?<prefix>rainstormy\/comet@)[0-9a-f]{40}\b/gu
 	const semverReference =
 		/\b(?<prefix>rainstormy\/comet@|(?<=rainstormy\/comet.*)v)(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[0-9a-z.-]*)?\b/gu
 
-	const updatedReadmeContent = readmeContent
+	return content
 		.replace(commitShaReference, `$<prefix>${commitSha}`)
 		.replace(semverReference, `$<prefix>${version}`)
-
-	await writeFile(readmePath, updatedReadmeContent, "utf8")
-}
-
-function extractSemanticVersion(targetVersion: string): string {
-	if (targetVersion === "") {
-		throw new Error("No semantic version number provided")
-	}
-	if (!isSemanticVersion(targetVersion)) {
-		throw new Error(`'${targetVersion}' is not a semantic version number`)
-	}
-	return trimPrefix(targetVersion, "v")
-}
-
-function isSemanticVersion(targetVersion: string): boolean {
-	const semver = /^v?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[0-9a-z.-]*)?$/u
-	return semver.test(targetVersion)
-}
-
-async function getCommitSha(tag: `v${string}`): Promise<string> {
-	try {
-		// Grab the commit SHA with `^{commit}` instead of the annotated tag SHA.
-		const commitSha = await runCommand("git", "rev-parse", "--verify", `refs/tags/${tag}^{commit}`)
-		await runCommand("git", "merge-base", "--is-ancestor", commitSha, "main")
-
-		return commitSha
-	} catch (error) {
-		throw new Error(`'${tag}' does not exist on the 'main' branch`, { cause: error })
-	}
 }
