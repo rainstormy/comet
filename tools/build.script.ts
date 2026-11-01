@@ -1,69 +1,27 @@
-import { mkdir, readFile, readdir, writeFile } from "node:fs/promises"
-import { basename, join as joinPath } from "node:path"
+import { mkdir, writeFile } from "node:fs/promises"
+import { join } from "node:path"
 import { toJsonSchema } from "@valibot/to-json-schema"
 import { JSON_CONFIGURATION_DTO } from "#configurations/json/dtos/JsonConfigurationDto.ts"
-import { decapitalise } from "#utilities/Strings.ts"
+import { type RuleSourceFile, readRuleSourceFiles } from "#utilities/files/RuleSourceFiles.ts"
+import { capitalise } from "#utilities/Strings.ts"
 
-await Promise.all([
-	generateJsonSchema({ destination: "dist/schema.json" }),
-	generateRuleDocs({ source: "src/rules/", destination: "docs/rules/" }),
-])
+await Promise.all([generateJsonSchema("dist/schema.json"), generateRuleDocs("docs/rules/")])
 
-async function generateJsonSchema(options: { destination: string }): Promise<void> {
+async function generateJsonSchema(destination: string): Promise<void> {
 	const output = JSON.stringify(toJsonSchema(JSON_CONFIGURATION_DTO))
-	await writeFile(options.destination, output, "utf8")
+	await writeFile(destination, output, "utf8")
 }
 
-async function generateRuleDocs(options: { source: string; destination: string }): Promise<void> {
-	await mkdir(options.destination, { recursive: true })
+async function generateRuleDocs(destination: string): Promise<void> {
+	await mkdir(destination, { recursive: true })
 
-	const sourceEntries = await readdir(options.source)
-	await Promise.all(
-		sourceEntries
-			.filter(isRuleSourceFile)
-			.map(async (filename) => generateRuleDoc(filename, options)),
-	)
+	const sources = await readRuleSourceFiles()
+	await Promise.all(sources.map(async (source) => generateRuleDoc(source, destination)))
 }
 
-function isRuleSourceFile(entry: string): boolean {
-	return (
-		(entry.startsWith("No") || entry.startsWith("Use")) &&
-		entry.endsWith(".ts") &&
-		!entry.endsWith(".tests.ts")
-	)
-}
-
-async function generateRuleDoc(
-	filename: string,
-	options: { source: string; destination: string },
-): Promise<void> {
-	const ruleName = basename(filename, ".ts")
-	const sourcePath = joinPath(options.source, filename)
-	const destinationPath = joinPath(options.destination, `${ruleName}.md`)
-
-	const sourceCode = await readFile(sourcePath, "utf8")
-
-	const docsStartIndex = sourceCode.indexOf("/**\n") + "/**\n".length
-	const docsEndIndex = sourceCode.indexOf("\n */\nexport function* ")
-
-	if (docsStartIndex === -1 || docsEndIndex === -1) {
-		throw new Error(`Missing rule docs in '${sourcePath}'`)
-	}
-
-	const sourceDocs = sourceCode.slice(docsStartIndex, docsEndIndex)
-	const transformedDocs = sourceDocs
-		.split("\n")
-		.map((line) => {
-			if (line.startsWith(" * ")) {
-				return line.slice(" * ".length)
-			}
-			if (line.startsWith(" *")) {
-				return line.slice(" *".length)
-			}
-			throw new Error(`Rule docs syntax error in '${sourcePath}':\n'${line}'`)
-		})
-		.join("\n")
-	const output = `# ${decapitalise(ruleName)}\n\n${transformedDocs}\n`
+async function generateRuleDoc(source: RuleSourceFile, destination: string): Promise<void> {
+	const destinationPath = join(destination, `${capitalise(source.name)}.md`)
+	const output = `# ${source.name}\n\n${source.docs}\n`
 
 	await writeFile(destinationPath, output, "utf8")
 }

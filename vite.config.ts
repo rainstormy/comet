@@ -16,7 +16,7 @@ export default defineConfig({
 	 * @see https://viteplus.dev/config/fmt
 	 * @see https://oxc.rs/docs/guide/usage/formatter/config.html
 	 */
-	fmt: defineOxfmtConfig({ ignorePatterns: ["dist/**/*", "**/*.md"] }),
+	fmt: defineOxfmtConfig({ ignorePatterns: ["dist/**/*", "**/*.md", "!README.md"] }),
 
 	/**
 	 * Configure Oxlint.
@@ -33,6 +33,7 @@ export default defineConfig({
 					"src/main-*.ts",
 					"src/utilities/commands/RunCommand.ts",
 					"src/utilities/files/Files.ts",
+					"src/utilities/files/RuleSourceFiles.ts",
 					"src/utilities/github/env/GithubEnv.ts",
 				],
 				rules: {
