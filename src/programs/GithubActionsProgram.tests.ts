@@ -748,7 +748,6 @@ ${red`•`} ${grey`${bold`2`} │`} Co-authored-by: Ada Lovelace <ada@example.co
     ${grey`· `}      ${red`   Disallowed trailers:`}
     ${grey`· `}      ${red`     ∙ Co-authored-by`}
     ${grey`· `}      ${red`     ∙ Reviewed-by`}
-    ${grey`· `}      ${red`   `}
     ${grey`╰──`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -1519,7 +1518,6 @@ ${red`•`} ${grey`${bold`2`} │`} Reviewed-by: Grace Hopper <grace@example.com
     ${grey`· `}     ${red`   `}
     ${grey`· `}     ${red`   Disallowed trailers:`}
     ${grey`· `}     ${red`     ∙ Reviewed-by`}
-    ${grey`· `}     ${red`   `}
     ${grey`╰──`}
 
 ${grey`b58de17`} Calibrate the wind tunnel
