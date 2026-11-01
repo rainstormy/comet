@@ -160,14 +160,18 @@ function formatBodyLineConcern(
 		rangeStart,
 	)}`
 
-	const messageLines = anchoredRight
-		? getMessageLines(message, rightMessageOffset, ruleLinkStyle, true)
-		: getMessageLines(message, rangeStart + shortHalfLength, ruleLinkStyle)
-
+	// The sidenote's trailing newline separates the message from a succeeding body line.
+	// It is trimmed from the plain message, because colour codes would otherwise follow the newline and survive trimming.
 	const succeedingBodyLine = getBodyLine(commit.bodyLines, concern.lineNumber + 1, gutterWidth)
+	const separatedMessage = succeedingBodyLine === "" ? trimSidenote(message) : message
+
+	const messageLines = anchoredRight
+		? getMessageLines(separatedMessage, rightMessageOffset, ruleLinkStyle, true)
+		: getMessageLines(separatedMessage, rangeStart + shortHalfLength, ruleLinkStyle)
+
 	const blockTailLines = `${succeedingBodyLine}${indentString(grey`╰──`, gutterWidth)}`
 
-	return `${shortSha} ${subject}\n${blockHeadLines}${concernedBodyLine}${rangeLine}\n${prefixStringLines(succeedingBodyLine === "" ? messageLines.trimEnd() : messageLines, concernGutter)}\n${blockTailLines}`
+	return `${shortSha} ${subject}\n${blockHeadLines}${concernedBodyLine}${rangeLine}\n${prefixStringLines(messageLines, concernGutter)}\n${blockTailLines}`
 }
 
 function getBodyLine(
@@ -292,6 +296,10 @@ type RuleMessage = {
 	rule: RuleKey
 	violation: string
 	sidenote: string
+}
+
+function trimSidenote(message: RuleMessage): RuleMessage {
+	return { ...message, sidenote: message.sidenote.trimEnd() }
 }
 
 function subjectRuleMessage(

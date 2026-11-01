@@ -488,7 +488,6 @@ ${red`•`} ${grey`${bold`6`} │`}   refs: #668182
     ${grey`· `}   ${red`     ∙ Refs`}
     ${grey`· `}   ${red`     ∙ Reviewed-by`}
     ${grey`· `}   ${red`     ∙ Signed-off-by`}
-    ${grey`· `}   ${red`   `}
     ${grey`╰──`}
 
 Found 1 concern in 1 commit.`.trim(),
