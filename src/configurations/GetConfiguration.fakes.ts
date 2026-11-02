@@ -21,6 +21,7 @@ export function emptyRulesetConfiguration(
 ): RulesetConfiguration {
 	return deepMerge(DEFAULT_RULESET_CONFIGURATION, {
 		noBlankSubjects: { level: "off" },
+		noCapitalisedSubjects: { level: "off" },
 		noExcessiveCommitsPerBranch: { level: "off" },
 		noExcessiveWhitespace: { level: "off" },
 		noMergeCommits: { level: "off" },

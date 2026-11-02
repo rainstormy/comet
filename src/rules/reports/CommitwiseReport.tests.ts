@@ -153,6 +153,54 @@ Found 1 concern in 1 commit.`.trim(),
 	})
 })
 
+describe("when 'noCapitalisedSubjects' has a concern about characters 0-1 of the subject", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: "20d0b7384aa153195aa2ce999fabbe7bc1837061",
+		message: "Majestic changes to be found here",
+	})
+	const concern = subjectConcern("noCapitalisedSubjects", commit.sha, { range: [0, 1] })
+
+	it("describes the rule violation in the subject", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey`20d0b73`} Majestic changes to be found here
+        ${red`┬`}
+        ${red`╰─ Change the first letter to lowercase.`}
+        ${red`   ${ruleLink("noCapitalisedSubjects")}`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when 'noCapitalisedSubjects' has a concern about characters 7-8 of the subject", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: "91d42dfb20efcecba61a8fa64098c72d3d4564c5",
+		message: "amend! Try harder next time",
+	})
+	const concern = subjectConcern("noCapitalisedSubjects", commit.sha, { range: [7, 8] })
+
+	it("describes the rule violation in the subject", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey`91d42df`} amend! Try harder next time
+               ${red`┬`}
+               ${red`╰─ Change the first letter to lowercase.`}
+               ${red`   ${ruleLink("noCapitalisedSubjects")}`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
 describe("when 'noExcessiveWhitespace' has a concern about characters 0-1 of the subject", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)

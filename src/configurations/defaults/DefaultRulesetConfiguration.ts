@@ -2,6 +2,7 @@ import type { RulesetConfiguration } from "#configurations/RulesetConfiguration.
 
 export const DEFAULT_RULESET_CONFIGURATION: RulesetConfiguration = {
 	noBlankSubjects: { level: "error", options: {} },
+	noCapitalisedSubjects: { level: "error", options: {} },
 	noExcessiveCommitsPerBranch: { level: "error", options: { maxCommits: 10 } },
 	noExcessiveWhitespace: { level: "error", options: {} },
 	noMergeCommits: { level: "error", options: {} },

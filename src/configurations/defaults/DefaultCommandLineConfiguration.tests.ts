@@ -28,6 +28,7 @@ it.each`
 
 it.each`
 	disabledRuleKey                  | expectedRuleOptions
+	${"noCapitalisedSubjects"}       | ${{}}
 	${"noExcessiveCommitsPerBranch"} | ${{ maxCommits: 10 }}
 	${"noRepeatedSubjects"}          | ${{}}
 	${"noRestrictedTrailers"}        | ${{ restrictedKeys: [] }}

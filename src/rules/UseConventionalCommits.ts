@@ -125,6 +125,10 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * ```
  * Revert "Move receipts into the monthly report"
  * ```
+ *
+ * ## Related rules
+ *
+ * - [`noCapitalisedSubjects`](./NoCapitalisedSubjects.md)
  */
 export function* useConventionalCommits(
 	commits: Commits,

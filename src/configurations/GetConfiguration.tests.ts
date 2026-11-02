@@ -519,6 +519,7 @@ describe("a complete configuration file", () => {
 			git: { defaultBranch: "github/main" },
 			rules: {
 				noBlankSubjects: "error",
+				noCapitalisedSubjects: "off",
 				noExcessiveCommitsPerBranch: {
 					level: "error",
 					options: { maxCommits: 7 },
@@ -593,6 +594,7 @@ describe("a complete configuration file", () => {
 			git: { defaultBranch: "github/main" },
 			rules: {
 				noBlankSubjects: { level: "error" },
+				noCapitalisedSubjects: { level: "off" },
 				noExcessiveCommitsPerBranch: {
 					level: "error",
 					options: { maxCommits: 7 },

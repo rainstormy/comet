@@ -7,6 +7,7 @@ export const DEFAULT_COMMAND_LINE_CONFIGURATION: Configuration = {
 	git: { defaultBranch: null },
 	tokens: DEFAULT_TOKEN_CONFIGURATION,
 	rules: deepMerge(DEFAULT_RULESET_CONFIGURATION, {
+		noCapitalisedSubjects: { level: "off" },
 		noExcessiveCommitsPerBranch: { level: "off" },
 		noRepeatedSubjects: { level: "off" },
 		noRestrictedTrailers: { level: "off" },
