@@ -30,6 +30,16 @@ export function prefixStringLines(value: string, prefix: string): string {
 	return prefix + value.replaceAll("\n", `\n${prefix}`)
 }
 
+export function startsWithLowercaseLetter(value: string): boolean {
+	const firstCharacter = value.trimStart()[0] ?? ""
+	return firstCharacter !== firstCharacter.toUpperCase()
+}
+
+export function startsWithUppercaseLetter(value: string): boolean {
+	const firstCharacter = value.trimStart()[0] ?? ""
+	return firstCharacter !== firstCharacter.toLowerCase()
+}
+
 export function trimPrefix(value: string, prefix: string): string {
 	return value.startsWith(prefix) ? value.slice(prefix.length) : value
 }

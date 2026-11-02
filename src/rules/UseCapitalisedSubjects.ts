@@ -1,8 +1,9 @@
 import type { Commits } from "#commits/Commit.ts"
-import { type Token, isToken } from "#commits/Token.ts"
+import { isToken } from "#commits/Token.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
+import { startsWithLowercaseLetter } from "#utilities/Strings.ts"
 
 /**
  * Rejects subjects that start with a lowercase letter.
@@ -63,6 +64,8 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * - Issue links, e.g. `#7` and `NEOWISE-2020`.
  * - Squash markers, e.g. `fixup!` and `squash!`.
  *
+ * `useCapitalisedSubjects` and [`noCapitalisedSubjects`](./NoCapitalisedSubjects.md) are mutually exclusive.
+ *
  * ## Options
  *
  * This rule has no configurable options.
@@ -115,6 +118,10 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * ```
  * 99 reasons to upgrade the framework
  * ```
+ *
+ * ## Related rules
+ *
+ * - [`noCapitalisedSubjects`](./NoCapitalisedSubjects.md)
  */
 export function* useCapitalisedSubjects(
 	commits: Commits,
@@ -130,14 +137,13 @@ export function* useCapitalisedSubjects(
 	for (const commit of commits) {
 		const firstToken = commit.subject.find(isToken("hyperlink", "punctuation", "revert", "word"))
 
-		if (firstToken && firstToken.type !== "hyperlink" && startsWithLowercaseLetter(firstToken)) {
+		if (
+			firstToken &&
+			firstToken.type !== "hyperlink" &&
+			startsWithLowercaseLetter(firstToken.value)
+		) {
 			const rangeStart = firstToken.range[0]
 			yield subjectConcern(rule, commit.sha, { range: [rangeStart, rangeStart + 1] })
 		}
 	}
-}
-
-function startsWithLowercaseLetter(token: Token): boolean {
-	const firstCharacter = token.value.trimStart()[0] ?? ""
-	return firstCharacter !== firstCharacter.toUpperCase()
 }

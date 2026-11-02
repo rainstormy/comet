@@ -2365,6 +2365,65 @@ describe("when a configuration file in a custom sequence of configuration files 
 	})
 })
 
+describe.each`
+	rules
+	${{ noCapitalisedSubjects: "error" }}
+	${{ noCapitalisedSubjects: "error", useCapitalisedSubjects: "error" }}
+	${{ noCapitalisedSubjects: { level: "error", options: {} }, useCapitalisedSubjects: { level: "error", options: {} } }}
+`(
+	"when 'noCapitalisedSubjects' is enabled alongside 'useCapitalisedSubjects' of $rules",
+	(props: { rules: object }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", { rules: props.rules })
+			mockGitBranchCrudeCommits([])
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("prints a configuration warning", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).toHaveBeenCalledExactlyOnceWith(
+				`${bold`1 issue detected in the Comet configuration:`}\n- 'noCapitalisedSubjects' and 'useCapitalisedSubjects' are mutually exclusive and should not be enabled at the same time\n`,
+			)
+			expect(printCommandLineError).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe.each`
+	rules
+	${{ noCapitalisedSubjects: "error", useCapitalisedSubjects: "off" }}
+	${{ noCapitalisedSubjects: { level: "error", options: {} }, useCapitalisedSubjects: { level: "off", options: {} } }}
+	${{ noCapitalisedSubjects: "off", useCapitalisedSubjects: "error" }}
+	${{ noCapitalisedSubjects: "off" }}
+	${{ useCapitalisedSubjects: "error" }}
+`(
+	"when 'noCapitalisedSubjects' and 'useCapitalisedSubjects' do not conflict in $rules",
+	(props: { rules: object }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", { rules: props.rules })
+			mockGitBranchCrudeCommits([])
+			exitCode = await commandLineProgram([])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("does not print any configuration warnings", () => {
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+		})
+	},
+)
+
 describe("when 'useConventionalCommits' is enabled without 'conventionalCommits'", () => {
 	let exitCode: ExitCode
 

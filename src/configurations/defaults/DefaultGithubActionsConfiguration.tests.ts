@@ -32,6 +32,7 @@ it.each`
 
 it.each`
 	disabledRuleKey                | expectedRuleOptions
+	${"noCapitalisedSubjects"}     | ${{}}
 	${"noRestrictedTrailers"}      | ${{ restrictedKeys: [] }}
 	${"useAuthorEmailPatterns"}    | ${{ patterns: [] }}
 	${"useAuthorNamePatterns"}     | ${{ patterns: [] }}

@@ -6,8 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), 
 
 ## [Unreleased]
 ### Added
+- New rule: `noCapitalisedSubjects`. Disabled by default.
 - New rule: `useConventionalCommits`. Disabled by default.
 - New token configuration to recognise prefixes of Conventional Commits: `tokens.conventionalCommits`.
+- `useCapitalisedSubjects`: Warn if it is enabled simultaneously with `noCapitalisedSubjects`.
 
 ### Changed
 - `noBlankSubjects`, `noSingleWordSubjects`, `useCapitalisedSubjects`, `useConciseSubjects`, `useImperativeSubjects`, and `useIssueLinks` ignore prefixes of Conventional Commits configured in `tokens.conventionalCommits`.

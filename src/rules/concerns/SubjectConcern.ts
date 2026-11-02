@@ -11,6 +11,7 @@ export type SubjectConcern = {
 
 export type SubjectConcernRuleKey =
 	| "noBlankSubjects"
+	| "noCapitalisedSubjects"
 	| "noExcessiveWhitespace"
 	| "noRevertReverts"
 	| "noSingleWordSubjects"

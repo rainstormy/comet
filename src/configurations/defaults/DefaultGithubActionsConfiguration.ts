@@ -7,6 +7,7 @@ export const DEFAULT_GITHUB_ACTIONS_CONFIGURATION: Configuration = {
 	git: { defaultBranch: null },
 	tokens: DEFAULT_TOKEN_CONFIGURATION,
 	rules: deepMerge(DEFAULT_RULESET_CONFIGURATION, {
+		noCapitalisedSubjects: { level: "off" },
 		noRestrictedTrailers: { level: "off" },
 		useAuthorEmailPatterns: { level: "off" },
 		useAuthorNamePatterns: { level: "off" },

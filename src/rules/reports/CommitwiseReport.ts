@@ -317,6 +317,9 @@ function subjectRuleMessage(
 		case "noBlankSubjects": {
 			return ruleMessage("Include a descriptive subject.")
 		}
+		case "noCapitalisedSubjects": {
+			return ruleMessage("Change the first letter to lowercase.")
+		}
 		case "noExcessiveWhitespace": {
 			const violation =
 				concern.range[0] === 0

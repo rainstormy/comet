@@ -142,6 +142,13 @@ export function formatConfigurationIssues(configuration: DeepPartial<Configurati
 }
 
 function* validateConfiguration(configuration: DeepPartial<Configuration>): Generator<string> {
+	if (
+		configuration.rules?.noCapitalisedSubjects?.level === "error" &&
+		configuration.rules.useCapitalisedSubjects?.level !== "off"
+	) {
+		yield "'noCapitalisedSubjects' and 'useCapitalisedSubjects' are mutually exclusive and should not be enabled at the same time"
+	}
+
 	if (configuration.rules?.useConventionalCommits?.level === "error") {
 		const conventionalCommits = configuration.tokens?.conventionalCommits
 		const types = conventionalCommits?.types ?? []
