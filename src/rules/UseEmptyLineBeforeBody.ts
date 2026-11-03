@@ -96,6 +96,10 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ```
  * Consolidate `BadgeFactory` with `BadgeService` and count to ten
  * ```
+ *
+ * ## Related rules
+ *
+ * - [noExcessiveBlankLines](./NoExcessiveBlankLines.md)
  */
 export function* useEmptyLineBeforeBody(
 	commits: Commits,

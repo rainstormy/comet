@@ -11,6 +11,7 @@ it("does not tokenise issue links", () => {
 it.each`
 	enabledRuleKey               | expectedRuleOptions
 	${"noBlankSubjects"}         | ${{}}
+	${"noExcessiveBlankLines"}   | ${{}}
 	${"noExcessiveWhitespace"}   | ${{}}
 	${"noMergeCommits"}          | ${{}}
 	${"noSingleWordSubjects"}    | ${{}}

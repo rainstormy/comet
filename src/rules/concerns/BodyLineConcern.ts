@@ -11,6 +11,7 @@ export type BodyLineConcern = {
 }
 
 export type BodyLineConcernRuleKey =
+	| "noExcessiveBlankLines"
 	| "noExcessiveWhitespace"
 	| "noRestrictedTrailers"
 	| "useEmptyLineBeforeBody"
