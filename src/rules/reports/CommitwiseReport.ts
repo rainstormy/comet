@@ -399,6 +399,9 @@ function bodyLineRuleMessage(concern: BodyLineConcern, configuration: Configurat
 	}
 
 	switch (rule) {
+		case "noExcessiveBlankLines": {
+			return ruleMessage("Delete excessive blank lines.")
+		}
 		case "noExcessiveWhitespace": {
 			return ruleMessage("Delete excessive whitespace.")
 		}

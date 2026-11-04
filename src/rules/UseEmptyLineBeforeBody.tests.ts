@@ -105,28 +105,23 @@ describe.each`
 )
 
 describe.each`
-	message                                                                                                                                                                                                                                                                                                                                                                                                         | expectedLineNumber
-	${"Bring it   on  \n\n\nThe code is prepared for anything."}                                                                                                                                                                                                                                                                                                                                                    | ${1}
-	${"Replace guesswork with a chart\n\n\n\nThe chart uses three excellent dots."}                                                                                                                                                                                                                                                                                                                                 | ${2}
-	${"Update src/main.ts\n \n \nCo-Authored-By: Everloving Easter Bunny <everloving.easter.bunny@example.com>"}                                                                                                                                                                                                                                                                                                    | ${1}
-	${"Bump @typescript-eslint/parser from 5.52.0 to 5.59.1\n\n\n\n\nBumps [@typescript-eslint/parser](https://github.com/typescript-eslint/typescript-eslint/tree/HEAD/packages/parser) from 5.52.0 to 5.59.1.\n- [Release notes](https://github.com/typescript-eslint/typescript-eslint/releases)\n- [Changelog](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/parser/CHANGELOG.md)"} | ${3}
-	${"transport the fragile and expensive goods\n\n\n\n   \n\nThis commit moves the goods from one place to another via the `RapidTransportService`."}                                                                                                                                                                                                                                                             | ${4}
-	${"Install Vite\n\n\n```shell\npnpm add --save-dev vite\n```\n\nThis commit also uses Vite as bundler."}                                                                                                                                                                                                                                                                                                        | ${1}
+	message
+	${"Bring it   on  \n\n\nThe code is prepared for anything."}
+	${"Replace guesswork with a chart\n\n\n\nThe chart uses three excellent dots."}
+	${"Update src/main.ts\n \n \nCo-Authored-By: Everloving Easter Bunny <everloving.easter.bunny@example.com>"}
+	${"Bump @typescript-eslint/parser from 5.52.0 to 5.59.1\n\n\n\n\nBumps [@typescript-eslint/parser](https://github.com/typescript-eslint/typescript-eslint/tree/HEAD/packages/parser) from 5.52.0 to 5.59.1.\n- [Release notes](https://github.com/typescript-eslint/typescript-eslint/releases)\n- [Changelog](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/parser/CHANGELOG.md)"}
+	${"transport the fragile and expensive goods\n\n\n\n   \n\nThis commit moves the goods from one place to another via the `RapidTransportService`."}
+	${"Install Vite\n\n\n```shell\npnpm add --save-dev vite\n```\n\nThis commit also uses Vite as bundler."}
 `(
 	"when the commit message $message has multiple blank lines before the body",
-	(props: { message: string; expectedLineNumber: number }) => {
+	(props: { message: string }) => {
 		const commit = fakeCommit({ message: props.message })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
 
-			it("raises a concern about the first non-blank body line", () => {
-				expect(actualConcerns).toEqual<Concerns>([
-					bodyLineConcern(rule, commit.sha, {
-						lineNumber: props.expectedLineNumber,
-						range: [0, 1],
-					}),
-				])
+			it("does not raise any concerns", () => {
+				expect(actualConcerns).toEqual<Concerns>([])
 			})
 		})
 
@@ -181,10 +176,9 @@ describe("when verifying a set of multiple commits and some commits do not have 
 	describe("and the rule is enabled", () => {
 		const actualConcerns = mapCommitsToConcerns(commits, enabled)
 
-		it("raises concerns about the commits with unexpected body lines", () => {
+		it("raises concerns about the commits without an empty line before the body", () => {
 			expect(actualConcerns).toEqual<Concerns>([
 				bodyLineConcern(rule, commits[1].sha, { lineNumber: 0, range: [0, 1] }),
-				bodyLineConcern(rule, commits[3].sha, { lineNumber: 1, range: [0, 1] }),
 			])
 		})
 	})

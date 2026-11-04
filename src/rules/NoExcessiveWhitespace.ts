@@ -93,6 +93,10 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * ```
  * Format `two  spaces` exactly
  * ```
+ *
+ * ## Related rules
+ *
+ * - [noExcessiveBlankLines](./NoExcessiveBlankLines.md)
  */
 export function* noExcessiveWhitespace(
 	commits: Commits,

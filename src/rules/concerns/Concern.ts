@@ -6,6 +6,7 @@ import type { SubjectConcern } from "#rules/concerns/SubjectConcern.ts"
 import type { UserIdentityConcern } from "#rules/concerns/UserIdentityConcern.ts"
 import { noBlankSubjects } from "#rules/NoBlankSubjects.ts"
 import { noCapitalisedSubjects } from "#rules/NoCapitalisedSubjects.ts"
+import { noExcessiveBlankLines } from "#rules/NoExcessiveBlankLines.ts"
 import { noExcessiveCommitsPerBranch } from "#rules/NoExcessiveCommitsPerBranch.ts"
 import { noExcessiveWhitespace } from "#rules/NoExcessiveWhitespace.ts"
 import { noMergeCommits } from "#rules/NoMergeCommits.ts"
@@ -37,6 +38,7 @@ export function mapCommitsToConcerns(commits: Commits, ruleset: RulesetConfigura
 	const allConcerns: Concerns = [
 		...noBlankSubjects(commits, ruleset),
 		...noCapitalisedSubjects(commits, ruleset),
+		...noExcessiveBlankLines(commits, ruleset),
 		...noExcessiveCommitsPerBranch(commits, ruleset),
 		...noExcessiveWhitespace(commits, ruleset),
 		...noMergeCommits(commits, ruleset),

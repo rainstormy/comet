@@ -10,6 +10,7 @@ const EMPTY_RULE_CONFIGURATION = ruleConfiguration({})
 export const RULESET_CONFIGURATION_SCHEMA = v.strictObject({
 	noBlankSubjects: EMPTY_RULE_CONFIGURATION,
 	noCapitalisedSubjects: EMPTY_RULE_CONFIGURATION,
+	noExcessiveBlankLines: EMPTY_RULE_CONFIGURATION,
 	noExcessiveCommitsPerBranch: ruleConfiguration({ maxCommits: naturalNumber() }),
 	noExcessiveWhitespace: EMPTY_RULE_CONFIGURATION,
 	noMergeCommits: EMPTY_RULE_CONFIGURATION,

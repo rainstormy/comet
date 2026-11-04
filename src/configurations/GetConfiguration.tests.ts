@@ -520,6 +520,7 @@ describe("a complete configuration file", () => {
 			rules: {
 				noBlankSubjects: "error",
 				noCapitalisedSubjects: "off",
+				noExcessiveBlankLines: "off",
 				noExcessiveCommitsPerBranch: {
 					level: "error",
 					options: { maxCommits: 7 },
@@ -595,6 +596,7 @@ describe("a complete configuration file", () => {
 			rules: {
 				noBlankSubjects: { level: "error" },
 				noCapitalisedSubjects: { level: "off" },
+				noExcessiveBlankLines: { level: "off" },
 				noExcessiveCommitsPerBranch: {
 					level: "error",
 					options: { maxCommits: 7 },

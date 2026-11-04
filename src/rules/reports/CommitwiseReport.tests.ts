@@ -75,6 +75,70 @@ Found 1 concern in 1 commit.`.trim(),
 	})
 })
 
+describe("when 'noExcessiveBlankLines' has a concern about an empty body line", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: "39fe114a6a676bc68799106b093369b10b801047",
+		message: "Teach the changelog to whisper\n\nThe noisy bits moved.\n\n\nThe quiet bits stayed.",
+	})
+	const concern = bodyLineConcern("noExcessiveBlankLines", commit.sha, {
+		lineNumber: 3,
+		range: [0, 1],
+	})
+
+	it("describes the rule violation in the body line", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey`39fe114`} Teach the changelog to whisper
+    ${grey`╭──`}
+  ${grey`3 │ `}
+${red`•`} ${grey`${bold`4`} │`} 
+    ${grey`· `}${red`┬`}
+    ${grey`· `}${red`╰─ Delete excessive blank lines.`}
+    ${grey`· `}${red`   ${ruleLink("noExcessiveBlankLines")}`}
+  ${grey`5 │ The quiet bits stayed.`}
+    ${grey`╰──`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when 'noExcessiveBlankLines' has a concern about a whitespace-only body line", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: "3aad7170af292825d0e0bf7f17e850f6e1df587d",
+		message: "Mow the lawn\n\nThe grass is short.\n   \n    \nThe sun is out.",
+	})
+	const concern = bodyLineConcern("noExcessiveBlankLines", commit.sha, {
+		lineNumber: 3,
+		range: [0, 4],
+	})
+
+	it("describes the rule violation in the body line", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey`3aad717`} Mow the lawn
+    ${grey`╭──`}
+  ${grey`3 │    `}
+${red`•`} ${grey`${bold`4`} │`}     
+    ${grey`· `}${red`─┬──`}
+    ${grey`· `} ${red`╰─ Delete excessive blank lines.`}
+    ${grey`· `} ${red`   ${ruleLink("noExcessiveBlankLines")}`}
+  ${grey`5 │ The sun is out.`}
+    ${grey`╰──`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
 describe("when 'noExcessiveCommitsPerBranch' has a concern about an excessive commit when the limit is 1", () => {
 	const configuration = fakeConfiguration({
 		noExcessiveCommitsPerBranch: { options: { maxCommits: 1 } },
