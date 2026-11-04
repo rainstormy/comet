@@ -709,7 +709,7 @@ describe("when there are 3 commits that raise no concerns in the custom 'comet.j
 	})
 })
 
-describe("when there is 1 commit that raises concerns in the custom 'comet.json' configuration", () => {
+describe("when there is 1 commit that raises 1 concern in the custom 'comet.json' configuration", () => {
 	let exitCode: ExitCode
 
 	beforeEach(async () => {
@@ -751,6 +751,54 @@ ${red`•`} ${grey`${bold`2`} │`} Co-authored-by: Ada Lovelace <ada@example.co
     ${grey`╰──`}
 
 Found 1 concern in 1 commit.`.trim(),
+		)
+		expect(printGithubActionsError).not.toHaveBeenCalled()
+		expect(printGithubActionsWarning).not.toHaveBeenCalled()
+	})
+})
+
+describe("when there is 1 commit that raises 2 concerns in the custom 'comet.json' configuration", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: {
+				noCapitalisedSubjects: "error",
+				useCapitalisedSubjects: "off",
+			},
+		})
+		mockGithubPullRequestCrudeCommits([
+			fakeCrudeCommit({
+				sha: "613001a016fc116a7b03e4278417c18272e94b62",
+				message: "Teach the lighthouse to whistle\n\n\nThe foghorn was retired.",
+			}),
+		])
+		exitCode = await githubActionsProgram()
+	})
+
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
+	})
+
+	it("prints a sorted commitwise report of all concerns", () => {
+		expect(printMessage).toHaveBeenCalledExactlyOnceWith(
+			`
+${grey`613001a`} Teach the lighthouse to whistle
+        ${red`┬`}
+        ${red`╰─ Change the first letter to lowercase.`}
+        ${red`   ${ruleLink("noCapitalisedSubjects", "plain")}`}
+
+${grey`613001a`} Teach the lighthouse to whistle
+    ${grey`╭──`}
+  ${grey`1 │ `}
+${red`•`} ${grey`${bold`2`} │`} 
+    ${grey`· `}${red`┬`}
+    ${grey`· `}${red`╰─ Separate the subject and message body with one blank line.`}
+    ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBody", "plain")}`}
+  ${grey`3 │ The foghorn was retired.`}
+    ${grey`╰──`}
+
+Found 2 concerns in 1 commit.`.trim(),
 		)
 		expect(printGithubActionsError).not.toHaveBeenCalled()
 		expect(printGithubActionsWarning).not.toHaveBeenCalled()
