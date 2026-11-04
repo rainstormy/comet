@@ -79,6 +79,7 @@ Read only the relevant skill guides for the task at hand:
 
 - Each commit should be atomic, self-contained, and easily revertible.
 - Keep changes and diffs small and focused.
+- Update the CHANGELOG when the changes are visible to the end user.
 - Rebase your branch onto `main` instead of merging `main` into your branch.
 - Comet enforces some of its commit message standards on itself:
   - Write concise subjects in commit messages. Add additional context in the commit message body.

@@ -24,6 +24,6 @@ indent_style = space
 trim_trailing_whitespace = false
 
 # YAML does not support tabs for indentation.
-[*.{yaml,yml}]
+[*.yaml]
 indent_size = 2
 indent_style = space
