@@ -793,8 +793,8 @@ ${grey`613001a`} Teach the lighthouse to whistle
   ${grey`1 │ `}
 ${red`•`} ${grey`${bold`2`} │`} 
     ${grey`· `}${red`┬`}
-    ${grey`· `}${red`╰─ Separate the subject and message body with one blank line.`}
-    ${grey`· `}${red`   ${ruleLink("useEmptyLineBeforeBody", "plain")}`}
+    ${grey`· `}${red`╰─ Delete excessive blank lines.`}
+    ${grey`· `}${red`   ${ruleLink("noExcessiveBlankLines", "plain")}`}
   ${grey`3 │ The foghorn was retired.`}
     ${grey`╰──`}
 

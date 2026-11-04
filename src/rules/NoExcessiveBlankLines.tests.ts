@@ -16,16 +16,24 @@ const enabled = emptyRulesetConfiguration({ [rule]: { level: "error" } })
 const fakeCommit = fakeCommitFactory()
 
 describe.each`
-	message                                                                                                          | expectedRanges
-	${"Teach the changelog to whisper\n\nThe noisy bits moved.\n\n\nThe quiet bits stayed."}                         | ${[{ lineNumber: 3, range: [0, 1] }]}
-	${"Install the doorbell\n\nIt rings.\n\n\n\n\nIt rings loudly."}                                                 | ${[{ lineNumber: 3, range: [0, 1] }]}
-	${"made the console less dramatic\n\nFirst paragraph.\n   \nSecond paragraph.\n\t\n \nThird paragraph."}         | ${[{ lineNumber: 5, range: [0, 1] }]}
-	${"Release the robot butler\n\nHe is polite.\n  \n    \nHe is punctual."}                                        | ${[{ lineNumber: 3, range: [0, 4] }]}
-	${"Bump Vite to 8.0.0\n\nThis is a major release.\n\n\nRefs: #42\nCo-authored-by: Killua <killua@godspeed.net>"} | ${[{ lineNumber: 3, range: [0, 1] }]}
-	${"squash! Paint the eggs\n\nBlue.\n\n\nGreen.\n\n\nRed."}                                                       | ${[{ lineNumber: 3, range: [0, 1] }, { lineNumber: 6, range: [0, 1] }]}
-	${'Revert "Add the espresso switch"\n\nIt kept brewing.\n\n\n\nThis reverts commit 7e0ff1ce.'}                   | ${[{ lineNumber: 3, range: [0, 1] }]}
-	${"Tidy the bookshelf\n\nAlphabetical.\n\n\n"}                                                                   | ${[{ lineNumber: 3, range: [0, 1] }]}
-	${"Mix the paint\n\nRed.\n\n\nBlue.\n\n```\n\n\n```\n\n\nPurple."}                                               | ${[{ lineNumber: 3, range: [0, 1] }, { lineNumber: 11, range: [0, 1] }]}
+	message                                                                                                             | expectedRanges
+	${"Teach the changelog to whisper\n\nThe noisy bits moved.\n\n\nThe quiet bits stayed."}                            | ${[{ lineNumber: 3, range: [0, 1] }]}
+	${"Install the doorbell\n\nIt rings.\n\n\n\n\nIt rings loudly."}                                                    | ${[{ lineNumber: 3, range: [0, 1] }]}
+	${"made the console less dramatic\n\nFirst paragraph.\n   \nSecond paragraph.\n\t\n \nThird paragraph."}            | ${[{ lineNumber: 5, range: [0, 1] }]}
+	${"Release the robot butler\n\nHe is polite.\n  \n    \nHe is punctual."}                                           | ${[{ lineNumber: 3, range: [0, 4] }]}
+	${"Bump Vite to 8.0.0\n\nThis is a major release.\n\n\nRefs: #42\nCo-authored-by: Killua <killua@godspeed.net>"}    | ${[{ lineNumber: 3, range: [0, 1] }]}
+	${"squash! Paint the eggs\n\nBlue.\n\n\nGreen.\n\n\nRed."}                                                          | ${[{ lineNumber: 3, range: [0, 1] }, { lineNumber: 6, range: [0, 1] }]}
+	${'Revert "Add the espresso switch"\n\nIt kept brewing.\n\n\n\nThis reverts commit 7e0ff1ce.'}                      | ${[{ lineNumber: 3, range: [0, 1] }]}
+	${"Tidy the bookshelf\n\nAlphabetical.\n\n\n"}                                                                      | ${[{ lineNumber: 3, range: [0, 1] }]}
+	${"Mix the paint\n\nRed.\n\n\nBlue.\n\n```\n\n\n```\n\n\nPurple."}                                                  | ${[{ lineNumber: 3, range: [0, 1] }, { lineNumber: 11, range: [0, 1] }]}
+	${"Replace guesswork with a chart\n\n\nThe chart uses three excellent dots."}                                       | ${[{ lineNumber: 1, range: [0, 1] }]}
+	${"Bring it on\n\n \n  \nThe code is prepared for anything."}                                                       | ${[{ lineNumber: 1, range: [0, 1] }]}
+	${"Update src/main.ts\n \n \nCo-Authored-By: Everloving Easter Bunny <everloving.easter.bunny@example.com>"}        | ${[{ lineNumber: 1, range: [0, 1] }]}
+	${"Bump Vite to 8.0.0\n\n\n\n\nBumps Vite."}                                                                        | ${[{ lineNumber: 1, range: [0, 1] }]}
+	${"transport the fragile and expensive goods\n\n\n\n   \n\nThis commit moves the goods from one place to another."} | ${[{ lineNumber: 1, range: [0, 1] }]}
+	${"Hold the line\n\n\n\n"}                                                                                          | ${[{ lineNumber: 1, range: [0, 1] }]}
+	${"  \n\n\n\n   "}                                                                                                  | ${[{ lineNumber: 1, range: [0, 1] }]}
+	${"Install Vite\n\n\n```shell\npnpm add --save-dev vite\n```\n\nThis commit also uses Vite as bundler."}            | ${[{ lineNumber: 1, range: [0, 1] }]}
 `(
 	"when the commit message of $message has consecutive blank lines in the body",
 	(props: {
@@ -64,10 +72,6 @@ describe.each`
 	${"fix a longstanding bug\n\nIt was a matter of time.\n\nCustomers complained.\n"}
 	${"Tune the jukebox\n\nOne.\n \nTwo.\n\t\nThree."}
 	${"Update the pantry\n\nNeed tiny adapters.\n\nRefs: #7\nCo-authored-by: Gon <gon@hunters.com>"}
-	${"Replace guesswork with a chart\n\n\nThe chart uses three excellent dots."}
-	${"Bring it on\n\n \n  \nThe code is prepared for anything."}
-	${"Hold the line\n\n\n\n"}
-	${"  \n\n\n\n   "}
 	${"Install Vite\n\n```shell\npnpm add --save-dev vite\n\n\npnpm exec vite\n```\n\nVite is installed."}
 	${"Document the formats\n\n````\n```\n\n\n\n```\n````"}
 	${"Ship the cake\n\n```\n\n   \n\n"}

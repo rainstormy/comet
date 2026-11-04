@@ -13,7 +13,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * ## How to fix
  *
- * Delete the excessive blank lines (empty or whitespace-only) in the message body so that at most one blank line remains between paragraphs.
+ * Delete the offending blank lines in the message body.
  *
  * ### Command-line interface (CLI)
  *
@@ -29,7 +29,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *    reword 7e0ff1ce Welcome to my convenience store
  *    ```
  *
- * 3. In the commit message editor, delete the excessive blank lines in the message body.
+ * 3. In the commit message editor, delete the offending blank lines (empty or whitespace-only) in the message body.
  *    Then save and close the editor to complete the rebase.
  *
  * 4. Force-push the rewritten branch to the remote repository:
@@ -41,13 +41,13 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * ### JetBrains IDEs (IntelliJ IDEA, WebStorm, etc.)
  *
  * 1. In the Git tool window, right-click the commit and select **Edit Commit Message...**.
- *    Delete the excessive blank lines in the message body.
+ *    Delete the offending blank lines (empty or whitespace-only) in the message body.
  *
  * 2. Select **Git** > **Push...** > **Force Push** to force-push the rewritten branch to the remote repository.
  *
  * ## Remarks
  *
- * It disregards blank lines in fenced code blocks as well as blank lines between the subject and the first non-blank body line.
+ * It disregards blank lines in fenced code blocks.
  *
  * ## Options
  *
@@ -117,24 +117,11 @@ export function* noExcessiveBlankLines(
 	}
 
 	for (const commit of commits) {
-		let hasNonBlankLine = false
 		let consecutiveBlankLineCount = 0
 
 		for (const [lineNumber, bodyLine] of commit.bodyLines.entries()) {
 			const isBlankLine = bodyLine.every(isToken("whitespace"))
-
-			if (!isBlankLine) {
-				hasNonBlankLine = true
-				consecutiveBlankLineCount = 0
-				continue
-			}
-
-			// `useEmptyLineBeforeBody` is responsible for leading blank lines.
-			if (!hasNonBlankLine) {
-				continue
-			}
-
-			consecutiveBlankLineCount += 1
+			consecutiveBlankLineCount = isBlankLine ? consecutiveBlankLineCount + 1 : 0
 
 			if (consecutiveBlankLineCount === 2) {
 				yield bodyLineConcern(rule, commit.sha, {
