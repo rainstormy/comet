@@ -19,7 +19,7 @@
 	"author": "Steffen Diswal",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/rainstormy/comet.git"
+		"url": "git+https://github.com/rainstormy/comet.git"
 	},
 	"bin": {
 		"comet": "main-cli.mjs"
@@ -38,6 +38,7 @@
 		"@valibot/to-json-schema": "catalog:",
 		"ansis": "catalog:",
 		"lefthook": "catalog:",
+		"publint": "catalog:",
 		"strip-json-comments": "catalog:",
 		"typescript": "catalog:",
 		"valibot": "catalog:",
