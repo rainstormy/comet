@@ -240,6 +240,39 @@ Example (range of `origin/next..HEAD`):
 }
 ```
 
+### `tokens.conventionalCommits`
+
+Declare which [Conventional Commits](https://www.conventionalcommits.org) types to recognise at the start of subjects.
+
+- `types` (array of case-insensitive strings): Literal type names. Default value: `[]`.
+
+Prefixes consist of a type, an optional non-empty scope in parentheses, an optional `!`, and a colon followed by a space, e.g. `feat:`, `chore(deps):`, and `fix(api)!:`.
+Scopes cannot contain whitespace or parentheses.
+
+Example:
+
+```json
+{
+  "tokens": {
+    "conventionalCommits": {
+      "types": [
+        "build",
+        "chore",
+        "ci",
+        "docs",
+        "feat",
+        "fix",
+        "perf",
+        "refactor",
+        "revert",
+        "style",
+        "test"
+      ]
+    }
+  }
+}
+```
+
 ### `tokens.issueLinks`
 
 Declare which words to recognise as issue links.
