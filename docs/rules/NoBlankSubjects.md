@@ -48,6 +48,7 @@ Change the subject to contain at least one alphanumeric character.
 
 The following kinds of tokens do _not_ count as alphanumeric characters:
 
+- Conventional Commits prefixes, e.g. `feat:` and `fix(api)!:`.
 - Issue links, e.g. `#7` and `NEOWISE-2020`.
 - Revert markers, e.g. `Revert` in `Revert "..."`.
 - Squash markers, e.g. `fixup!` and `squash!`.

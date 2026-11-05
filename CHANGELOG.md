@@ -5,6 +5,8 @@ This file documents all notable changes to this project.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.1.0] - 2026-11-05
 ### Added
 - New rule: `noCapitalisedSubjects`. Disabled by default.
 - New rule: `noExcessiveBlankLines`. Enabled by default.
@@ -157,7 +159,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), 
 - New rule: `no-trailing-punctuation-in-subject-lines`.
 - New rule: `no-unexpected-whitespace`.
 
-[unreleased]: https://github.com/rainstormy/comet/compare/v2.0.0...HEAD
+[unreleased]: https://github.com/rainstormy/comet/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/rainstormy/comet/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/rainstormy/comet/compare/v1.1.9...v2.0.0
 [1.1.9]: https://github.com/rainstormy/comet/compare/v1.1.8...v1.1.9
 [1.1.8]: https://github.com/rainstormy/comet/compare/v1.1.7...v1.1.8

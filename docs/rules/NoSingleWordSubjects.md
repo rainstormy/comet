@@ -50,6 +50,7 @@ Revert commits, e.g. `Revert "..."`, are always accepted.
 
 The following kinds of tokens do _not_ count as words:
 
+- Conventional Commits prefixes, e.g. `feat:` and `fix(api)!:`.
 - Issue links, e.g. `#7` and `NEOWISE-2020`.
 - Squash markers, e.g. `fixup!` and `squash!`.
 

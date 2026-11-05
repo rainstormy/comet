@@ -51,6 +51,11 @@ The following kinds of commits are always accepted:
 - Revert commits, e.g. `Revert "..."`.
 - Commits with dependency versions in the subject, e.g. `Bump Vite to 2.4.0-beta.1` and `Pin the Node.js image to 4af617c`.
 
+It disregards the following kinds of tokens at the beginning of subjects:
+
+- Conventional Commits prefixes, e.g. `feat:` and `fix(api)!:`.
+- Squash markers, e.g. `fixup!` and `squash!`.
+
 It only recognises issue links declared in `tokens.issueLinks`; ordinary hyperlinks and `Refs` trailers in the message body will not satisfy the rule.
 
 ## Options

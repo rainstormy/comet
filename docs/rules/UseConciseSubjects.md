@@ -56,6 +56,7 @@ The following kinds of commits are always accepted:
 
 The following kinds of tokens do _not_ count towards the character limit:
 
+- Conventional Commits prefixes, e.g. `feat:` and `fix(api)!:`.
 - Hyperlinks.
 - Inline code phrases (enclosed in backticks).
 - Issue links, e.g. `#7` and `NEOWISE-2020`.
