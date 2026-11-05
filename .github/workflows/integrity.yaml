@@ -81,7 +81,5 @@ jobs:
         run: vpr test
         shell: bash
         #
-      - name: Verify the build (tsdown)
-        # language=sh
-        run: vpr build
-        shell: bash
+      - name: Verify the build (tsdown, publint)
+        uses: ./.github/actions/build
