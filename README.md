@@ -54,6 +54,8 @@ Further reading:
 | Name                                                                       | Description                                                                                                                                                                                                                                     | Default                                                                                |
 | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | [`noBlankSubjects`](docs/rules/NoBlankSubjects.md)                         | Rejects subjects without any alphanumeric characters.                                                                                                                                                                                           | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+| [`noCapitalisedSubjects`](docs/rules/NoCapitalisedSubjects.md)             | Rejects subjects that start with an uppercase letter.                                                                                                                                                                                           |                                                                                        |
+| [`noExcessiveBlankLines`](docs/rules/NoExcessiveBlankLines.md)             | Rejects message bodies with consecutive blank lines.                                                                                                                                                                                            | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
 | [`noExcessiveCommitsPerBranch`](docs/rules/NoExcessiveCommitsPerBranch.md) | Rejects branches with more than a configured number of undelivered commits, encouraging short-lived branches and [stacked pull requests](https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-stacked-pull-requests). | ![GitHub Actions](docs/assets/github.svg)                                              |
 | [`noExcessiveWhitespace`](docs/rules/NoExcessiveWhitespace.md)             | Rejects subjects with leading, trailing, or consecutive whitespace characters, and body lines with consecutive whitespace characters.                                                                                                           | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
 | [`noMergeCommits`](docs/rules/NoMergeCommits.md)                           | Rejects commits with more than one parent commit, encouraging rebasing instead of merging to keep a branch up to date with the main branch.                                                                                                     | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
@@ -69,7 +71,8 @@ Further reading:
 | [`useCommitterEmailPatterns`](docs/rules/UseCommitterEmailPatterns.md)     | Rejects commits where the committer's email address does not match one of the configured regex patterns.                                                                                                                                        |                                                                                        |
 | [`useCommitterNamePatterns`](docs/rules/UseCommitterNamePatterns.md)       | Rejects commits where the committer's name does not match one of the configured regex patterns.                                                                                                                                                 |                                                                                        |
 | [`useConciseSubjects`](docs/rules/UseConciseSubjects.md)                   | Rejects subjects longer than the configured character limit.                                                                                                                                                                                    | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
-| [`useEmptyLineBeforeBody`](docs/rules/UseEmptyLineBeforeBody.md)           | Rejects commits whose message body is not separated from the subject (i.e. the first line) by exactly one empty line.                                                                                                                           | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
+| [`useConventionalCommits`](docs/rules/UseConventionalCommits.md)           | Rejects subjects without a [Conventional Commits](https://www.conventionalcommits.org) prefix.                                                                                                                                                  |                                                                                        |
+| [`useEmptyLineBeforeBody`](docs/rules/UseEmptyLineBeforeBody.md)           | Rejects commits whose message body is not separated from the subject (i.e. the first line) by an empty line.                                                                                                                                    | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
 | [`useImperativeSubjects`](docs/rules/UseImperativeSubjects.md)             | Rejects subjects that do not start with a verb in the imperative mood.                                                                                                                                                                          | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
 | [`useIssueLinks`](docs/rules/UseIssueLinks.md)                             | Rejects subjects without an issue link in the configured position.                                                                                                                                                                              |                                                                                        |
 | [`useLineWrapping`](docs/rules/UseLineWrapping.md)                         | Rejects body lines longer than the configured character limit.                                                                                                                                                                                  | ![GitHub Actions](docs/assets/github.svg) ![Command-line](docs/assets/commandline.svg) |
@@ -169,7 +172,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: rainstormy/comet@493bd1ce2cdc68596cd79035c0a8c933c1243721 # v2.0.0
+      - uses: rainstormy/comet@ff79cb03eed8317c9d5b73829eb948aed2c646b3 # v2.1.0
         with:
           github-token: ${{ github.token }}
           config-path: .github/comet.jsonc
@@ -182,7 +185,7 @@ Override the settings you want to change, for example:
 
 ```json
 {
-  "$schema": "https://unpkg.com/@rainstormy/comet@2.0.0/schema.json",
+  "$schema": "https://unpkg.com/@rainstormy/comet@2.1.0/schema.json",
   "rules": {
     "noMergeCommits": "error",
     "useConciseSubjects": {
@@ -202,7 +205,7 @@ Validate the configuration file and enable code completion with the official JSO
 
 ```json
 {
-  "$schema": "https://unpkg.com/@rainstormy/comet@2.0.0/schema.json"
+  "$schema": "https://unpkg.com/@rainstormy/comet@2.1.0/schema.json"
 }
 ```
 
