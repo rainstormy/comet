@@ -87,3 +87,7 @@ Explain the fallback
 ```
 Format `two  spaces` exactly
 ```
+
+## Related rules
+
+- [noExcessiveBlankLines](./NoExcessiveBlankLines.md)

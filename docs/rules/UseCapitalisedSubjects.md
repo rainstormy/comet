@@ -53,9 +53,12 @@ Capitalise the first proper word in the subject.
 
 It disregards the following kinds of tokens before the first word:
 
+- Conventional Commits prefixes, e.g. `feat:` and `fix(api)!:`.
 - Inline code phrases (enclosed in backticks).
 - Issue links, e.g. `#7` and `NEOWISE-2020`.
 - Squash markers, e.g. `fixup!` and `squash!`.
+
+`useCapitalisedSubjects` and [`noCapitalisedSubjects`](./NoCapitalisedSubjects.md) are mutually exclusive.
 
 ## Options
 
@@ -109,3 +112,7 @@ fixup! Release the robot butler
 ```
 99 reasons to upgrade the framework
 ```
+
+## Related rules
+
+- [`noCapitalisedSubjects`](./NoCapitalisedSubjects.md)
