@@ -73,14 +73,7 @@ jobs:
           cache: true
         #
       - name: Generate build artefacts
-        # language=sh
-        run: vpr build
-        shell: bash
-        #
-      - name: Move build artefacts to the project root directory
-        # language=sh
-        run: mv --force dist/* ./
-        shell: bash
+        uses: ./.github/actions/build
         #
       - name: Publish the package to npm
         # language=sh

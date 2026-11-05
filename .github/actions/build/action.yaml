@@ -1,0 +1,20 @@
+name: Build
+description: Generates build artefacts and verifies the package manifest.
+
+runs:
+  using: composite
+  steps:
+    - name: Generate build artefacts (tsdown)
+      # language=sh
+      run: vpr build
+      shell: bash
+      #
+    - name: Move build artefacts to the project root directory
+      # language=sh
+      run: mv --force dist/* ./
+      shell: bash
+      #
+    - name: Verify the package manifest (publint)
+      # language=sh
+      run: vpr publint
+      shell: bash
