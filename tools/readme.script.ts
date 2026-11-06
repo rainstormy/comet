@@ -70,5 +70,5 @@ function formatRuleTableRow(source: RuleSourceFile): string {
 		defaultSymbols.push("![Command-line](docs/assets/commandline.svg)")
 	}
 
-	return `| [\`${source.name}\`](docs/rules/${capitalise(source.name)}.md) | ${description} | ${defaultSymbols.join(" ")} |`
+	return `| [${source.name}](docs/rules/${capitalise(source.name)}.md) | ${description} | ${defaultSymbols.join(" ")} |`
 }

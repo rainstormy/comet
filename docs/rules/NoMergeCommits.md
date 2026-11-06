@@ -78,7 +78,7 @@ This rule has no configurable options.
 
 The following examples display the `parent` headers of the commit before the commit message.
 
-### Rejected
+### Rejected ⛔️
 
 ```
 parent: 19fe6c7e563dc0a343fd4a8e1f5651de03cb0a90
@@ -95,7 +95,7 @@ parent: 22d4a421bea4a8adbbe0e73ba7f58584d6d70366
 Cthulhu visited my branch today
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 initial commit

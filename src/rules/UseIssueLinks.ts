@@ -97,7 +97,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * }
  * ```
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * #42 Convince the office printer to print in colour
@@ -117,7 +117,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * Read https://github.com/rainstormy/comet/pull/42
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Convince the office printer to print in colour #42

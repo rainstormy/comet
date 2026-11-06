@@ -81,7 +81,7 @@ Token configuration:
 }
 ```
 
-### Rejected
+### Rejected ⛔️
 
 ```
 Refresh the monthly sales dashboard
@@ -99,7 +99,7 @@ feat:Add offline export queues
 docs(): clarified the data retention period
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 feat: #42 Add a dark mode toggle
@@ -123,4 +123,4 @@ Revert "Move receipts into the monthly report"
 
 ## Related rules
 
-- [`noCapitalisedSubjects`](./NoCapitalisedSubjects.md)
+- [noCapitalisedSubjects](./NoCapitalisedSubjects.md)

@@ -73,7 +73,7 @@ This rule has no configurable options.
 
 ## Examples
 
-### Rejected
+### Rejected ⛔️
 
 ```
 bugfix
@@ -91,7 +91,7 @@ fixup! Test
 `Unscheduled maintenance`
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Fix validation

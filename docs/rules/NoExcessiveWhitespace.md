@@ -63,7 +63,7 @@ This rule has no configurable options.
 
 ## Examples
 
-### Rejected
+### Rejected ⛔️
 
 ```
  Recalibrate the espresso machine
@@ -75,7 +75,7 @@ Keep  waffles in  sync
 Move sauce  left and bolts   right
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Release the robot butler

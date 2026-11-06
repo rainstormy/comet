@@ -66,7 +66,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * ## Examples
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * Teach the changelog to whisper
@@ -77,7 +77,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * The quiet bits stayed where they were.
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Teach the changelog to whisper

@@ -58,7 +58,7 @@ It disregards the following kinds of tokens before the first word:
 - Issue links, e.g. `#7` and `NEOWISE-2020`.
 - Squash markers, e.g. `fixup!` and `squash!`.
 
-`useCapitalisedSubjects` and [`noCapitalisedSubjects`](./NoCapitalisedSubjects.md) are mutually exclusive.
+useCapitalisedSubjects and [noCapitalisedSubjects](./NoCapitalisedSubjects.md) are mutually exclusive.
 
 ## Options
 
@@ -77,7 +77,7 @@ This rule has no configurable options.
 
 ## Examples
 
-### Rejected
+### Rejected ⛔️
 
 ```
 fix this confusing plate of spaghetti
@@ -95,7 +95,7 @@ GH-12 organise the bookshelf
 revert "Fix a nasty bug"
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Formatting.
@@ -115,4 +115,4 @@ fixup! Release the robot butler
 
 ## Related rules
 
-- [`noCapitalisedSubjects`](./NoCapitalisedSubjects.md)
+- [noCapitalisedSubjects](./NoCapitalisedSubjects.md)

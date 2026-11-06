@@ -86,7 +86,7 @@ Rule configuration:
 "maxLength": 50
 ```
 
-### Rejected
+### Rejected ⛔️
 
 ```
 Compare the list of items to the objects downloaded from the server
@@ -100,7 +100,7 @@ Shelve the broken cursor until the warm summer weather makes it shine again
 Upgrade dependency @opentelemetry/exporter-metrics-otlp-http to the newest version
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Add retry metrics

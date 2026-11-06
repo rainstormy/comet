@@ -99,7 +99,7 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  * "whitelist": ["chatify"]
  * ```
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * did some refactoring
@@ -117,7 +117,7 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  * The retry policy works
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Add a new feature

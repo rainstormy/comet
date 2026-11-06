@@ -67,7 +67,7 @@ Rule configuration:
 "restrictedKeys": ["Co-authored-by", "Signed-off-by"]
 ```
 
-### Rejected
+### Rejected ⛔️
 
 ```
 Update src/main.ts
@@ -86,7 +86,7 @@ SIGNED-OFF-BY: Hamato Yoshi <hamato@nycsewers.com>
 Relates-to: snack table
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Credit the careful reviewers

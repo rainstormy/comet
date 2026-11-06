@@ -69,7 +69,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  *
  * ## Examples
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  *  Recalibrate the espresso machine
@@ -81,7 +81,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * Move sauce  left and bolts   right
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Release the robot butler

@@ -86,7 +86,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * }
  * ```
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * Refresh the monthly sales dashboard
@@ -104,7 +104,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * docs(): clarified the data retention period
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * feat: #42 Add a dark mode toggle
@@ -128,7 +128,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  *
  * ## Related rules
  *
- * - [`noCapitalisedSubjects`](./NoCapitalisedSubjects.md)
+ * - [noCapitalisedSubjects](./NoCapitalisedSubjects.md)
  */
 export function* useConventionalCommits(
 	commits: Commits,

@@ -80,7 +80,7 @@ This rule has no configurable options.
 
 ## Examples
 
-### Rejected
+### Rejected ⛔️
 
 1. ```
    GL-27 Make some toast
@@ -94,7 +94,7 @@ This rule has no configurable options.
    GL-27 Make some toast
    ```
 
-### Accepted
+### Accepted ✅
 
 1. ```
    Label the mystery switch

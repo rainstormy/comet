@@ -80,13 +80,13 @@ This rule has no configurable options.
 
 The following examples display the `gpgsig` header of the commit rather than the commit message.
 
-### Rejected
+### Rejected ⛔️
 
 ```
 gpgsig:
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 gpgsig: -----BEGIN SSH SIGNATURE-----

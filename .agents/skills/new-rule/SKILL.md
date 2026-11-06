@@ -349,7 +349,7 @@ Write the following sections in this order:
 4. `## Options`: For rules with options, use an unordered list to document each option's name, type or allowed set of values (in parentheses), meaning, relevant empty-value behaviour, and default value on the form 'Default value: `<value>`'.
    For rules without options, state 'This rule has no configurable options'.
    Always include a valid JSON configuration example with `rules`, the rule key (e.g. `noTypos`), `level` (set to `error`), and `options` using the defaults from `DEFAULT_RULESET_CONFIGURATION`.
-5. `## Examples`: Group examples under `### Rejected` and `### Accepted`, up to 5 examples in each group, illustrating the main violation, the correction, and useful exceptions.
+5. `## Examples`: Group examples under `### Rejected ⛔️` and `### Accepted ✅`, up to 5 examples in each group, illustrating the main violation, the correction, and useful exceptions.
    State any rule or token configuration that the examples depend on, especially when it differs from the defaults.
 6. `## Related rules` (when applicable): Link to relevant rule documentation with relative Markdown links such as `[useLineWrapping](./UseLineWrapping.md)`.
 
@@ -423,17 +423,21 @@ For example:
  *
  * ## Examples
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * Fix the parsr typo
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Fix the parser typo
  * ```
+ *
+ * ### Related rules
+ *
+ * - [useGrammarCheck](./UseGrammarCheck.md)
  */
 export function* noTypos(commits: Commits, ruleset: RulesetConfiguration): Generator<Concern> { /* ... */ }
 ````

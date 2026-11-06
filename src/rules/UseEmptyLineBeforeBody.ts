@@ -69,14 +69,14 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * ## Examples
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * Refactor the taxi module
  * The roof sign now flashes politely.
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Teach the changelog to whisper

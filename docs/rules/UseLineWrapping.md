@@ -77,7 +77,7 @@ Rule configuration:
 "maxLength": 72
 ```
 
-### Rejected
+### Rejected ⛔️
 
 ```
 Prepare the launch checklist
@@ -91,7 +91,7 @@ Document the adapter notes
 Document the `RapidTransportService` adapter while the migration crew checks every quiet corner before midnight.
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Prepare the launch checklist

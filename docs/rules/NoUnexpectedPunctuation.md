@@ -72,7 +72,7 @@ This rule has no configurable options.
 
 ## Examples
 
-### Rejected
+### Rejected ⛔️
 
 ```
 Make the program act like a clown.
@@ -90,7 +90,7 @@ Hide a cheerful easter egg :joy:
 Queue the parcel] GL-20
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Rewire the pantry (after lunch)
