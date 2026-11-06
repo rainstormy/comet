@@ -434,6 +434,10 @@ For example:
  * ```
  * Fix the parser typo
  * ```
+ *
+ * ### Related rules
+ *
+ * - [useGrammarCheck](./UseGrammarCheck.md)
  */
 export function* noTypos(commits: Commits, ruleset: RulesetConfiguration): Generator<Concern> { /* ... */ }
 ````

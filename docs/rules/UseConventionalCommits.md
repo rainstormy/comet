@@ -123,4 +123,4 @@ Revert "Move receipts into the monthly report"
 
 ## Related rules
 
-- [`noCapitalisedSubjects`](./NoCapitalisedSubjects.md)
+- [noCapitalisedSubjects](./NoCapitalisedSubjects.md)

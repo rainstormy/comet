@@ -128,7 +128,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  *
  * ## Related rules
  *
- * - [`noCapitalisedSubjects`](./NoCapitalisedSubjects.md)
+ * - [noCapitalisedSubjects](./NoCapitalisedSubjects.md)
  */
 export function* useConventionalCommits(
 	commits: Commits,

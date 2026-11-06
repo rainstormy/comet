@@ -59,7 +59,7 @@ It disregards the following kinds of tokens before the first word:
 - Issue links, e.g. `#7` and `NEOWISE-2020`.
 - Squash markers, e.g. `fixup!` and `squash!`.
 
-`noCapitalisedSubjects` and [`useCapitalisedSubjects`](./UseCapitalisedSubjects.md) are mutually exclusive.
+noCapitalisedSubjects and [useCapitalisedSubjects](./UseCapitalisedSubjects.md) are mutually exclusive.
 
 ## Options
 
@@ -120,4 +120,4 @@ Revert "release the robot butler"
 
 ## Related rules
 
-- [`useCapitalisedSubjects`](./UseCapitalisedSubjects.md)
+- [useCapitalisedSubjects](./UseCapitalisedSubjects.md)

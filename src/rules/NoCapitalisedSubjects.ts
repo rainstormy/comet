@@ -65,7 +65,7 @@ import { startsWithUppercaseLetter } from "#utilities/Strings.ts"
  * - Issue links, e.g. `#7` and `NEOWISE-2020`.
  * - Squash markers, e.g. `fixup!` and `squash!`.
  *
- * `noCapitalisedSubjects` and [`useCapitalisedSubjects`](./UseCapitalisedSubjects.md) are mutually exclusive.
+ * noCapitalisedSubjects and [useCapitalisedSubjects](./UseCapitalisedSubjects.md) are mutually exclusive.
  *
  * ## Options
  *
@@ -126,7 +126,7 @@ import { startsWithUppercaseLetter } from "#utilities/Strings.ts"
  *
  * ## Related rules
  *
- * - [`useCapitalisedSubjects`](./UseCapitalisedSubjects.md)
+ * - [useCapitalisedSubjects](./UseCapitalisedSubjects.md)
  */
 export function* noCapitalisedSubjects(
 	commits: Commits,
