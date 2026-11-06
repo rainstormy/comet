@@ -86,7 +86,7 @@ import { regexUnion } from "#utilities/Regexes.ts"
  *
  * The following examples display the `author` header of the commit rather than the commit message.
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * author: santa claus <email>
@@ -100,7 +100,7 @@ import { regexUnion } from "#utilities/Regexes.ts"
  * author: dependabot <email>
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * author: The Little Mermaid <email>

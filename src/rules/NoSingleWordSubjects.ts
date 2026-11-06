@@ -78,7 +78,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  *
  * ## Examples
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * bugfix
@@ -96,7 +96,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * `Unscheduled maintenance`
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Fix validation

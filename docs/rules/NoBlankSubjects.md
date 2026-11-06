@@ -70,7 +70,7 @@ This rule has no configurable options.
 
 ## Examples
 
-### Rejected
+### Rejected ⛔️
 
 ```
 ...
@@ -88,7 +88,7 @@ fixup! -
 #4 Revert " "
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 bugfix

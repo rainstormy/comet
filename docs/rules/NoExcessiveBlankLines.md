@@ -61,7 +61,7 @@ This rule has no configurable options.
 
 ## Examples
 
-### Rejected
+### Rejected ⛔️
 
 ```
 Teach the changelog to whisper
@@ -72,7 +72,7 @@ The noisy bits moved to the release notes.
 The quiet bits stayed where they were.
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Teach the changelog to whisper

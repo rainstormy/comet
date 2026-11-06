@@ -72,7 +72,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * "maxCommits": 3
  * ```
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * 1. ```
  *    Create new bakery dashboard
@@ -90,7 +90,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *    Test emergency toaster
  *    ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * 1. ```
  *    Replace guesswork with a tiny chart

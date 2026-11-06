@@ -84,7 +84,7 @@ import { startsWithUppercaseLetter } from "#utilities/Strings.ts"
  *
  * ## Examples
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * Fix this confusing plate of spaghetti
@@ -102,7 +102,7 @@ import { startsWithUppercaseLetter } from "#utilities/Strings.ts"
  * WIP
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * refactor the taxi module

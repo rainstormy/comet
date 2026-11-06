@@ -77,7 +77,7 @@ This rule has no configurable options.
 
 ## Examples
 
-### Rejected
+### Rejected ⛔️
 
 ```
 fix this confusing plate of spaghetti
@@ -95,7 +95,7 @@ GH-12 organise the bookshelf
 revert "Fix a nasty bug"
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Formatting.

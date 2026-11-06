@@ -64,14 +64,14 @@ This rule has no configurable options.
 
 ## Examples
 
-### Rejected
+### Rejected ⛔️
 
 ```
 Refactor the taxi module
 The roof sign now flashes politely.
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Teach the changelog to whisper

@@ -76,7 +76,7 @@ import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
  *
  * ## Examples
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * ...
@@ -94,7 +94,7 @@ import { nonEmptyRangeOf } from "#types/CharacterRange.ts"
  * #4 Revert " "
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * bugfix

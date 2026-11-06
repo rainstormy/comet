@@ -82,7 +82,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * "maxLength": 72
  * ```
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * Prepare the launch checklist
@@ -96,7 +96,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * Document the `RapidTransportService` adapter while the migration crew checks every quiet corner before midnight.
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Prepare the launch checklist

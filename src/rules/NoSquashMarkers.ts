@@ -71,7 +71,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  *
  * ## Examples
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * amend!
@@ -85,7 +85,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  * fixup! fixup! added some extra love to the code
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Refactor the taxi module

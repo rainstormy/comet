@@ -92,7 +92,7 @@ This rule has no configurable options.
 
 ## Examples
 
-### Rejected
+### Rejected ⛔️
 
 ```
 Revert "Revert "Fix the nasty bug""
@@ -106,7 +106,7 @@ Revert "Revert "Revert "Repair the soft ice machine"""
 fixup! Revert "Revert "Add an amazing feature""
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Revert "Repair the soft ice machine"

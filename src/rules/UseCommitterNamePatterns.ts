@@ -86,7 +86,7 @@ import { regexUnion } from "#utilities/Regexes.ts"
  *
  * The following examples display the `committer` header of the commit rather than the commit message.
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * committer: master splinter <email>
@@ -100,7 +100,7 @@ import { regexUnion } from "#utilities/Regexes.ts"
  * committer: github <email>
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * committer: Leonardo da Vinci <email>

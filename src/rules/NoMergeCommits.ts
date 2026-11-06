@@ -82,7 +82,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * The following examples display the `parent` headers of the commit before the commit message.
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * parent: 19fe6c7e563dc0a343fd4a8e1f5651de03cb0a90
@@ -99,7 +99,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * Cthulhu visited my branch today
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * initial commit

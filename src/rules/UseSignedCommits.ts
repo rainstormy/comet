@@ -84,13 +84,13 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * The following examples display the `gpgsig` header of the commit rather than the commit message.
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * gpgsig:
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * gpgsig: -----BEGIN SSH SIGNATURE-----

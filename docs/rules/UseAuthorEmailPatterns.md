@@ -81,7 +81,7 @@ Rule configuration:
 
 The following examples display the `author` header of the commit rather than the commit message.
 
-### Rejected
+### Rejected ⛔️
 
 ```
 author: name <hello@fictivecompany.com>
@@ -91,7 +91,7 @@ author: name <hello@fictivecompany.com>
 author: name <claus@santasworkshop.com>
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 author: name <146315497+rainstormybot-nimbus@users.noreply.github.com>

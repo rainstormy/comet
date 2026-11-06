@@ -91,7 +91,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * "maxLength": 50
  * ```
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * Compare the list of items to the objects downloaded from the server
@@ -105,7 +105,7 @@ import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
  * Upgrade dependency @opentelemetry/exporter-metrics-otlp-http to the newest version
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Add retry metrics

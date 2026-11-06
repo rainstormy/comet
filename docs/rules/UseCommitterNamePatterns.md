@@ -81,7 +81,7 @@ Rule configuration:
 
 The following examples display the `committer` header of the commit rather than the commit message.
 
-### Rejected
+### Rejected ⛔️
 
 ```
 committer: master splinter <email>
@@ -95,7 +95,7 @@ committer: Leonardo <email>
 committer: github <email>
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 committer: Leonardo da Vinci <email>

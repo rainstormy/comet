@@ -85,7 +85,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * ## Examples
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * 1. ```
  *    GL-27 Make some toast
@@ -99,7 +99,7 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *    GL-27 Make some toast
  *    ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * 1. ```
  *    Label the mystery switch

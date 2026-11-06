@@ -92,7 +92,7 @@ Token configuration:
 }
 ```
 
-### Rejected
+### Rejected ⛔️
 
 ```
 #42 Convince the office printer to print in colour
@@ -112,7 +112,7 @@ Replace GH-42 the hamster wheel with a turbine
 Read https://github.com/rainstormy/comet/pull/42
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Convince the office printer to print in colour #42

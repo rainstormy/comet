@@ -98,7 +98,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  *
  * ## Examples
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * Revert "Revert "Fix the nasty bug""
@@ -112,7 +112,7 @@ import { rangeBetween } from "#types/CharacterRange.ts"
  * fixup! Revert "Revert "Add an amazing feature""
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Revert "Repair the soft ice machine"

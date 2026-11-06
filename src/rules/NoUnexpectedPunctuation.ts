@@ -82,7 +82,7 @@ const TRAILING_EMOJI_SHORTCODE_REGEX = /:\w+:$/u
  *
  * ## Examples
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * Make the program act like a clown.
@@ -100,7 +100,7 @@ const TRAILING_EMOJI_SHORTCODE_REGEX = /:\w+:$/u
  * Queue the parcel] GL-20
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Rewire the pantry (after lunch)

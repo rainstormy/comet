@@ -73,7 +73,7 @@ import { isNotEmptyString } from "#utilities/Arrays.ts"
  * "restrictedKeys": ["Co-authored-by", "Signed-off-by"]
  * ```
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * Update src/main.ts
@@ -92,7 +92,7 @@ import { isNotEmptyString } from "#utilities/Arrays.ts"
  * Relates-to: snack table
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Credit the careful reviewers

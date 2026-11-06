@@ -83,7 +83,7 @@ import { startsWithLowercaseLetter } from "#utilities/Strings.ts"
  *
  * ## Examples
  *
- * ### Rejected
+ * ### Rejected ⛔️
  *
  * ```
  * fix this confusing plate of spaghetti
@@ -101,7 +101,7 @@ import { startsWithLowercaseLetter } from "#utilities/Strings.ts"
  * revert "Fix a nasty bug"
  * ```
  *
- * ### Accepted
+ * ### Accepted ✅
  *
  * ```
  * Formatting.

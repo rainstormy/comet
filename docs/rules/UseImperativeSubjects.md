@@ -92,7 +92,7 @@ Rule configuration:
 "whitelist": ["chatify"]
 ```
 
-### Rejected
+### Rejected ⛔️
 
 ```
 did some refactoring
@@ -110,7 +110,7 @@ formatting
 The retry policy works
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Add a new feature

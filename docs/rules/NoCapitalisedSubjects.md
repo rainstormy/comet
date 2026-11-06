@@ -78,7 +78,7 @@ This rule has no configurable options.
 
 ## Examples
 
-### Rejected
+### Rejected ⛔️
 
 ```
 Fix this confusing plate of spaghetti
@@ -96,7 +96,7 @@ GH-12 Organise the bookshelf
 WIP
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 refactor the taxi module

@@ -65,7 +65,7 @@ This rule has no configurable options.
 
 ## Examples
 
-### Rejected
+### Rejected ⛔️
 
 ```
 amend!
@@ -79,7 +79,7 @@ squash! Reheat the leftovers
 fixup! fixup! added some extra love to the code
 ```
 
-### Accepted
+### Accepted ✅
 
 ```
 Refactor the taxi module
