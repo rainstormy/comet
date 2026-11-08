@@ -36,8 +36,8 @@ async function updateVersionReferences(content: string, targetVersion: string): 
 		/\b(?<prefix>rainstormy\/comet@|(?<=rainstormy\/comet.*)v)(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[0-9a-z.-]*)?\b/gu
 
 	return content
-		.replace(commitShaReference, `$<prefix>${commitSha}`)
-		.replace(semverReference, `$<prefix>${version}`)
+		.replaceAll(commitShaReference, `$<prefix>${commitSha}`)
+		.replaceAll(semverReference, `$<prefix>${version}`)
 }
 
 async function updateRulesTable(content: string): Promise<string> {
