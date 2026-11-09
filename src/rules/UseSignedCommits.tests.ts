@@ -68,6 +68,33 @@ describe.each`
 	},
 )
 
+describe.each`
+	subject
+	${"Teach the coffee machine to stop judging mugs"}
+	${"shipping a tiny fix before lunch"}
+`(
+	"when the commit has not been created yet and has a subject of $subject",
+	(props: { subject: string }) => {
+		const commit = fakeCommit({ message: props.subject, signature: null })
+
+		describe("and the rule is enabled", () => {
+			const actualConcerns = mapCommitsToConcerns([commit], enabled)
+
+			it("does not raise any concerns", () => {
+				expect(actualConcerns).toEqual<Concerns>([])
+			})
+		})
+
+		describe("and the rule is disabled", () => {
+			const actualConcerns = mapCommitsToConcerns([commit], disabled)
+
+			it("does not raise any concerns", () => {
+				expect(actualConcerns).toEqual<Concerns>([])
+			})
+		})
+	},
+)
+
 describe("when verifying a set of multiple commits and some commits lack a signature", () => {
 	const commits: Vector<Commit, 7> = [
 		fakeCommit({

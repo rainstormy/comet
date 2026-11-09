@@ -65,6 +65,8 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  *
  * Any non-empty signature is accepted, including invalid ones.
  *
+ * This rule does not apply to commits that have not been created yet, e.g. when checking a commit message in a `commit-msg` Git hook with `--message-file`, because Git signs the commit after the hook has finished.
+ *
  * ## Options
  *
  * This rule has no configurable options.
@@ -117,7 +119,7 @@ export function* useSignedCommits(
 	}
 
 	for (const commit of commits) {
-		if (!commit.hasSignature) {
+		if (commit.hasSignature === false) {
 			yield commitConcern(rule, commit.sha)
 		}
 	}

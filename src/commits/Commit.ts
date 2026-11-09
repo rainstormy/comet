@@ -20,7 +20,10 @@ export type Commit = {
 	committerName: string
 	committerEmail: string
 	isMergeCommit: boolean
-	hasSignature: boolean
+	/**
+	 * `null` if it is unknown whether the commit has a signature because it has not been created yet.
+	 */
+	hasSignature: boolean | null
 	subject: Tokens
 	bodyLines: Array<Tokens>
 }
@@ -41,7 +44,7 @@ export function mapCrudeCommitToCommit(
 	return {
 		sha: crudeCommit.sha,
 		isMergeCommit: crudeCommit.parents.length > 1,
-		hasSignature: crudeCommit.signature !== "",
+		hasSignature: crudeCommit.signature !== null ? crudeCommit.signature !== "" : null,
 		authorName: crudeCommit.authorName,
 		authorEmail: crudeCommit.authorEmail,
 		committerName: crudeCommit.committerName,

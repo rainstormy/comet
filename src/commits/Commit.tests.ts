@@ -137,3 +137,12 @@ describe("when the commit signature is empty", () => {
 		expect(commit.hasSignature).toBe(false)
 	})
 })
+
+describe("when the commit signature is unknown", () => {
+	const crudeCommit = fakeCrudeCommit({ signature: null })
+
+	it("has an unknown signature", () => {
+		const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
+		expect(commit.hasSignature).toBeNull()
+	})
+})

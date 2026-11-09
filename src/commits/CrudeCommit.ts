@@ -11,7 +11,11 @@ export type CrudeCommit = {
 	committerName: string
 	committerEmail: string
 	message: string
-	signature: string
+	/**
+	 * The cryptographic signature of the commit, an empty string if the commit is unsigned,
+	 * or `null` if the signature is unknown because the commit has not been created yet.
+	 */
+	signature: string | null
 }
 
 export type CrudeCommits = Array<CrudeCommit>
