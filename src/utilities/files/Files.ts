@@ -37,6 +37,15 @@ export async function readJsonFile(path: string): Promise<JsonValue> {
 	}
 }
 
+export async function readTextFile(path: string): Promise<string> {
+	try {
+		return await readFile(path, "utf8")
+	} catch (error) {
+		assertError(error)
+		throw new Error(`Failed to read '${path}': ${error.message}`, { cause: error })
+	}
+}
+
 function stripCommentsFromJsonc(path: string, content: string): string {
 	return extname(path) === ".jsonc" ? stripJsonComments(content) : content
 }

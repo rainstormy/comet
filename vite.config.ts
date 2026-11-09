@@ -37,6 +37,7 @@ export default defineConfig({
 					"src/utilities/commands/RunCommand.ts",
 					"src/utilities/files/Files.ts",
 					"src/utilities/files/RuleSourceFiles.ts",
+					"src/utilities/git/env/GitHookEnv.ts",
 					"src/utilities/github/env/GithubEnv.ts",
 				],
 				rules: {

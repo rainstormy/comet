@@ -40,6 +40,15 @@ vi.mock(import("#utilities/files/Files.ts"), () => ({
 			throw error
 		}
 	}),
+	readTextFile: vi.fn(async (path: string): Promise<string> => {
+		const content = contentsByPath.get(path) ?? null
+
+		if (content === null) {
+			throw new Error(`Failed to read '${path}': File not found`)
+		}
+
+		return content
+	}),
 	copyDirectory: vi.fn(),
 }))
 

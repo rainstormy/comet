@@ -4,6 +4,7 @@
 
 import { expect } from "vitest"
 import { mockGitBranchCrudeCommits } from "#commits/git/GetGitBranchCrudeCommits.fakes.ts"
+import { mockGitPendingCrudeCommits } from "#commits/git/GetGitPendingCrudeCommits.fakes.ts"
 import { mockGithubPullRequestCrudeCommits } from "#commits/github/GetGithubPullRequestCrudeCommits.fakes.ts"
 import { mockCommands } from "#utilities/commands/RunCommand.fakes.ts"
 import { mockFiles } from "#utilities/files/Files.fakes.ts"
@@ -15,6 +16,7 @@ mockCommands()
 mockFetch()
 mockFiles()
 mockGitBranchCrudeCommits()
+mockGitPendingCrudeCommits()
 mockGithubPullRequestCrudeCommits()
 mockLogger()
 
