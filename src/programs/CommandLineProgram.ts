@@ -1,5 +1,6 @@
 import { blue, bold, green, gray as grey, magenta, red } from "ansis"
 import { getGitBranchCrudeCommits } from "#commits/git/GetGitBranchCrudeCommits.ts"
+import { getGitPendingCrudeCommits } from "#commits/git/GetGitPendingCrudeCommits.ts"
 import { DEFAULT_COMMAND_LINE_CONFIGURATION } from "#configurations/defaults/DefaultCommandLineConfiguration.ts"
 import {
 	type Configuration,
@@ -8,6 +9,7 @@ import {
 	getConfigurationPath,
 } from "#configurations/GetConfiguration.ts"
 import { program } from "#programs/Program.ts"
+import type { Concern } from "#rules/concerns/Concern.ts"
 import {
 	EXIT_CODE_GENERAL_ERROR,
 	EXIT_CODE_INVALID_CONFIGURATION,
@@ -16,6 +18,7 @@ import {
 } from "#types/ExitCode.ts"
 import { defineOptions, parseArgs } from "#utilities/Args.ts"
 import { assertError } from "#utilities/Assertions.ts"
+import { resolveAbsolutePath } from "#utilities/files/Files.ts"
 import {
 	printCommandLineError,
 	printCommandLineWarning,
@@ -27,6 +30,7 @@ import { getPackageVersion } from "#utilities/package/Package.ts"
 export const COMMAND_LINE_OPTION_SCHEMA = defineOptions({
 	"--config": { args: { min: 1 } },
 	"--default-branch": { args: { min: 1, max: 1 } },
+	"--message-file": { args: { min: 1, max: 1 } },
 	"--skip-missing-configs": { args: { min: 0, max: 0 } },
 })
 
@@ -44,12 +48,16 @@ export async function commandLineProgram(args: Array<string>): Promise<ExitCode>
 		const parsedArgs = parseArgs(COMMAND_LINE_OPTION_SCHEMA, args)
 		const configPaths = parsedArgs["--config"] ?? []
 		const skipMissingConfigPaths = parsedArgs["--skip-missing-configs"] !== undefined
+		const messageFilePath = parsedArgs["--message-file"]?.[0] ?? null
 
 		const configuration = await resolveConfiguration(configPaths, skipMissingConfigPaths)
-		const defaultBranch = parsedArgs["--default-branch"]?.[0] ?? configuration.git.defaultBranch
 
-		const crudeCommits = await getGitBranchCrudeCommits(defaultBranch)
-		return await program(crudeCommits, configuration, { ruleLinkStyle: "hyperlink" })
+		if (messageFilePath !== null) {
+			return await checkPendingCommit(messageFilePath, configuration)
+		}
+
+		const defaultBranch = parsedArgs["--default-branch"]?.[0] ?? configuration.git.defaultBranch
+		return await checkBranchCommits(defaultBranch, configuration)
 	} catch (error) {
 		assertError(error)
 		printCommandLineError(error.message)
@@ -66,6 +74,9 @@ standards and conventions declared by a customisable set of rules.
 It checks the commits on the current branch that have not been delivered to the
 default branch, i.e. the range ${magenta`origin/HEAD..HEAD`} for a remote named ${magenta`origin`}.
 If no remote exists, it checks the local range ${magenta`main..HEAD`} or ${magenta`master..HEAD`}.
+
+Use ${magenta`--message-file <path>`} to check the commit that is about to be created
+instead, e.g. in a ${magenta`commit-msg`} Git hook.
 
 It does not modify any commits.
 
@@ -114,6 +125,16 @@ ${bold`Options:`}
   ${blue.bold`--help`}, ${blue.bold`-h`}
       Display this help screen and exit.
 
+  ${blue`${bold`--message-file`} <path>`}
+      Check the message of the commit that is about to be created instead of
+      the commits on the current branch, e.g. ${magenta`--message-file "$1"`} in a
+      ${magenta`commit-msg`} Git hook where Git passes the path of the message file.
+
+      It cleans up the message like Git does, e.g. by removing comments.
+      It checks the commit in isolation, so rules that compare it to other
+      commits do not apply, and neither does ${magenta`useSignedCommits`}, as Git signs
+      the commit afterwards. ${magenta`--default-branch`} has no effect.
+
   ${blue.bold`--skip-missing-configs`}
       Ignore missing paths provided in ${magenta`--config`} instead of failing.
 
@@ -140,4 +161,48 @@ async function resolveConfiguration(
 	}
 
 	return deepMerge(defaultConfiguration, jsonConfiguration)
+}
+
+async function checkPendingCommit(
+	messageFilePath: string,
+	configuration: Configuration,
+): Promise<ExitCode> {
+	const crudeCommits = await getGitPendingCrudeCommits(messageFilePath)
+
+	return program(crudeCommits, configuration, {
+		ruleLinkStyle: "hyperlink",
+		getAdvice: (concerns) =>
+			concerns.some(isMessageConcern) ? getEditAdvice(messageFilePath) : null,
+	})
+}
+
+/**
+ * Editing the message resolves concerns about the subject and the body lines,
+ * but not concerns about the commit as a whole (e.g. merge commits) or the identities of the author and the committer.
+ */
+function isMessageConcern(concern: Concern): boolean {
+	return concern.location === "subject" || concern.location === "body-line"
+}
+
+/**
+ * Git keeps the message file after the `commit-msg` hook has rejected the commit.
+ * The hook cannot see the options of the `git commit` command (e.g. `--amend`, `--all`, `--verbose`, or paths), so the user must repeat them.
+ * The hook runs in the root directory of the repository, so resolve the path to make the advice work from any directory.
+ */
+function getEditAdvice(messageFilePath: string): string {
+	const absolutePath = resolveAbsolutePath(messageFilePath)
+	const quotedPath = `'${absolutePath.replaceAll("'", String.raw`'\''`)}'`
+
+	return [
+		`To edit the commit message, repeat the ${magenta`git commit`} command with the same options`,
+		`(e.g. ${magenta`--amend`} or ${magenta`--all`}) and add ${magenta`--edit --file=${quotedPath}`}`,
+	].join("\n")
+}
+
+async function checkBranchCommits(
+	defaultBranch: string | null,
+	configuration: Configuration,
+): Promise<ExitCode> {
+	const crudeCommits = await getGitBranchCrudeCommits(defaultBranch)
+	return program(crudeCommits, configuration, { ruleLinkStyle: "hyperlink" })
 }

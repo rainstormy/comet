@@ -23,6 +23,10 @@ export function normalisePath(path: string, relativeTo?: string): string {
 	return normalize(relative(process.cwd(), resolvedPath))
 }
 
+export function resolveAbsolutePath(path: string): string {
+	return resolve(path)
+}
+
 export async function readJsonFile(path: string): Promise<JsonValue> {
 	try {
 		const content = await readFile(path, "utf8")

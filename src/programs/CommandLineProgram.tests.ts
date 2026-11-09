@@ -1,7 +1,16 @@
-import ansis, { bold, gray as grey, red } from "ansis"
-import { beforeEach, describe, expect, it } from "vitest"
+import ansis, { bold, gray as grey, magenta, red } from "ansis"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 import { fakeCrudeCommit } from "#commits/CrudeCommit.fakes.ts"
 import { mockGitBranchCrudeCommits } from "#commits/git/GetGitBranchCrudeCommits.fakes.ts"
+import { getGitBranchCrudeCommits } from "#commits/git/GetGitBranchCrudeCommits.ts"
+import {
+	mockGitPendingCommit,
+	mockGitPendingCrudeCommits,
+} from "#commits/git/GetGitPendingCrudeCommits.fakes.ts"
+import {
+	PENDING_COMMIT_SHA,
+	getGitPendingCrudeCommits,
+} from "#commits/git/GetGitPendingCrudeCommits.ts"
 import {
 	COMMAND_LINE_OPTION_SCHEMA,
 	commandLineProgram,
@@ -110,16 +119,19 @@ describe.each`
 )
 
 describe.each`
-	invalidArgs                                      | expectedError
-	${["-c"]}                                        | ${"Unknown option '-c'"}
-	${["--check"]}                                   | ${"Unknown option '--check'"}
-	${["--skip-commits"]}                            | ${"Unknown option '--skip-commits'"}
-	${["--config"]}                                  | ${"'--config' requires at least 1 argument, but got 0"}
-	${["--config", "--config"]}                      | ${"'--config' requires at least 1 argument, but got 0"}
-	${["--config", "--skip-missing-configs"]}        | ${"'--config' requires at least 1 argument, but got 0"}
-	${["--default-branch"]}                          | ${"'--default-branch' requires exactly 1 argument, but got 0"}
-	${["--default-branch", "main", "origin/master"]} | ${"'--default-branch' requires exactly 1 argument, but got 2"}
-	${["--skip-missing-configs", "unexpected"]}      | ${"'--skip-missing-configs' requires exactly 0 arguments, but got 1"}
+	invalidArgs                                       | expectedError
+	${["-c"]}                                         | ${"Unknown option '-c'"}
+	${["--check"]}                                    | ${"Unknown option '--check'"}
+	${["--skip-commits"]}                             | ${"Unknown option '--skip-commits'"}
+	${["--config"]}                                   | ${"'--config' requires at least 1 argument, but got 0"}
+	${["--config", "--config"]}                       | ${"'--config' requires at least 1 argument, but got 0"}
+	${["--config", "--skip-missing-configs"]}         | ${"'--config' requires at least 1 argument, but got 0"}
+	${["--default-branch"]}                           | ${"'--default-branch' requires exactly 1 argument, but got 0"}
+	${["--default-branch", "main", "origin/master"]}  | ${"'--default-branch' requires exactly 1 argument, but got 2"}
+	${["--message-file"]}                             | ${"'--message-file' requires exactly 1 argument, but got 0"}
+	${["--message-file", ".git/COMMIT_EDITMSG", "x"]} | ${"'--message-file' requires exactly 1 argument, but got 2"}
+	${["--message-file", "--config", "comet.json"]}   | ${"'--message-file' requires exactly 1 argument, but got 0"}
+	${["--skip-missing-configs", "unexpected"]}       | ${"'--skip-missing-configs' requires exactly 0 arguments, but got 1"}
 `(
 	"when the args are $invalidArgs",
 	(props: { invalidArgs: Array<string>; expectedError: string }) => {
@@ -2849,3 +2861,325 @@ describe("when the configuration has 3 issues", () => {
 		expect(printCommandLineError).not.toHaveBeenCalled()
 	})
 })
+
+describe.each`
+	args
+	${["--message-file", ".git/COMMIT_EDITMSG"]}
+	${["--message-file", ".git/COMMIT_EDITMSG", "--default-branch", "origin/next"]}
+	${["--default-branch", "origin/next", "--message-file", ".git/COMMIT_EDITMSG"]}
+`(
+	"when the args are $args and the pending commit raises no concerns in the default configuration",
+	(props: { args: Array<string> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockGitPendingCrudeCommits([
+				fakeCrudeCommit({
+					sha: PENDING_COMMIT_SHA,
+					message: "Release the robot butler",
+					signature: null,
+				}),
+			])
+			exitCode = await commandLineProgram(props.args)
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("checks the pending commit from the message file", () => {
+			expect(getGitPendingCrudeCommits).toHaveBeenCalledExactlyOnceWith(".git/COMMIT_EDITMSG")
+		})
+
+		it("does not check the commits on the current branch", () => {
+			expect(getGitBranchCrudeCommits).not.toHaveBeenCalled()
+		})
+
+		it("remains silent", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe("when '--message-file' points to a message file that leads Git to abort the commit", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockGitPendingCrudeCommits([])
+		exitCode = await commandLineProgram(["--message-file", ".git/COMMIT_EDITMSG"])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
+	})
+})
+
+describe.each`
+	messageFilePath                                             | expectedQuotedPath
+	${".git/COMMIT_EDITMSG"}                                    | ${"'/home/splinter/dojo/.git/COMMIT_EDITMSG'"}
+	${".git/MERGE_MSG"}                                         | ${"'/home/splinter/dojo/.git/MERGE_MSG'"}
+	${"/home/splinter/dojo/.git/worktrees/kata/COMMIT_EDITMSG"} | ${"'/home/splinter/dojo/.git/worktrees/kata/COMMIT_EDITMSG'"}
+	${"messages/it's a draft.txt"}                              | ${String.raw`'/home/splinter/dojo/messages/it'\''s a draft.txt'`}
+`(
+	"when '--message-file' points to $messageFilePath with a commit message that raises concerns in the default configuration",
+	(props: { messageFilePath: string; expectedQuotedPath: string }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockGitPendingCrudeCommits([
+				fakeCrudeCommit({ sha: PENDING_COMMIT_SHA, message: "fix!", signature: null }),
+			])
+			exitCode = await commandLineProgram(["--message-file", props.messageFilePath])
+		})
+
+		it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
+		})
+
+		it("prints a sorted commitwise report of all concerns, followed by advice on how to edit the commit message", () => {
+			expect(printMessage).toHaveBeenCalledExactlyOnceWith(
+				`
+${grey`0000000`} fix!
+        ${red`┬`}
+        ${red`╰─ Change the first letter to uppercase.`}
+        ${red`   ${ruleLink("useCapitalisedSubjects")}`}
+
+${grey`0000000`} fix!
+        ${red`─┬─`}
+         ${red`╰─ Use at least two words in the subject.`}
+         ${red`   ${ruleLink("noSingleWordSubjects")}`}
+
+${grey`0000000`} fix!
+           ${red`┬`}
+           ${red`╰─ Remove trailing punctuation.`}
+           ${red`   ${ruleLink("noUnexpectedPunctuation")}`}
+
+Found 3 concerns in 1 commit.
+
+${editAdvice(props.expectedQuotedPath)}`.trim(),
+			)
+			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe("when '--message-file' points to a commit message that raises concerns in the custom configuration from 'configs/strict-comet.json'", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("configs/strict-comet.json", {
+			rules: { useConciseSubjects: { level: "error", options: { maxLength: 20 } } },
+		})
+		mockGitPendingCrudeCommits([
+			fakeCrudeCommit({
+				sha: PENDING_COMMIT_SHA,
+				message: "Release the robot butler",
+				signature: null,
+			}),
+		])
+		exitCode = await commandLineProgram([
+			"--config",
+			"configs/strict-comet.json",
+			"--message-file",
+			".git/COMMIT_EDITMSG",
+		])
+	})
+
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
+	})
+
+	it("prints a commitwise report of the concerns, followed by advice on how to edit the commit message", () => {
+		expect(printMessage).toHaveBeenCalledExactlyOnceWith(
+			`
+${grey`0000000`} Release the robot butler
+                            ${red`─┬──`}
+                             ${red`╰─ Shorten the subject to 20 characters or less.`}
+                             ${red`   ${ruleLink("useConciseSubjects")}`}
+
+Found 1 concern in 1 commit.
+
+${editAdvice("'/home/splinter/dojo/.git/COMMIT_EDITMSG'")}`.trim(),
+		)
+	})
+})
+
+describe("when '--message-file' points to the message of a merge commit that raises concerns in the default configuration", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockGitPendingCrudeCommits([
+			fakeCrudeCommit({
+				sha: PENDING_COMMIT_SHA,
+				parents: [fakeCommitSha(), fakeCommitSha()],
+				message: "Merge branch 'feature' into main",
+				signature: null,
+			}),
+		])
+		exitCode = await commandLineProgram(["--message-file", ".git/MERGE_MSG"])
+	})
+
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
+	})
+
+	it("prints a commitwise report of the concerns without advice on how to edit the commit message, as it would not resolve the concerns", () => {
+		expect(printMessage).toHaveBeenCalledExactlyOnceWith(
+			`
+${grey`0000000`} Merge branch 'feature' into main
+      ${red`╭─────────────────────────────────`}
+      ${red`╰─ Rebase the branch and drop the merge commits.`}
+      ${red`   ${ruleLink("noMergeCommits")}`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when '--message-file' points to a commit message from an author who raises concerns in the custom 'comet.json' configuration", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		mockJsonFile("comet.json", {
+			rules: {
+				useAuthorNamePatterns: {
+					level: "error",
+					options: { patterns: [String.raw`\p{Lu}.*\s.+`] },
+				},
+			},
+		})
+		mockGitPendingCrudeCommits([
+			fakeCrudeCommit({
+				sha: PENDING_COMMIT_SHA,
+				authorName: "splinter",
+				message: "Release the robot butler",
+				signature: null,
+			}),
+		])
+		exitCode = await commandLineProgram(["--message-file", ".git/COMMIT_EDITMSG"])
+	})
+
+	it(`exits with ${EXIT_CODE_RULE_VIOLATION}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_RULE_VIOLATION)
+	})
+
+	it("does not print advice on how to edit the commit message, as it would not resolve the concerns", () => {
+		expect(printMessage).toHaveBeenCalledExactlyOnceWith(
+			expect.not.stringContaining("To edit the commit message"),
+		)
+	})
+})
+
+describe.each`
+	rules
+	${{ noRepeatedSubjects: "error" }}
+	${{ noExcessiveCommitsPerBranch: { level: "error", options: { maxCommits: 1 } } }}
+	${{ useSignedCommits: "error" }}
+`(
+	"when '--message-file' points to a commit message that would raise concerns in the context of the current branch with the rules $rules",
+	(props: { rules: Record<string, JsonValue> }) => {
+		let exitCode: ExitCode
+
+		beforeEach(async () => {
+			mockJsonFile("comet.json", { rules: props.rules })
+			mockGitBranchCrudeCommits([
+				fakeCrudeCommit({ message: "Release the robot butler" }),
+				fakeCrudeCommit({ message: "Feed the robot butler" }),
+			])
+			mockGitPendingCrudeCommits([
+				fakeCrudeCommit({
+					sha: PENDING_COMMIT_SHA,
+					message: "Release the robot butler",
+					signature: null,
+				}),
+			])
+			exitCode = await commandLineProgram(["--message-file", ".git/COMMIT_EDITMSG"])
+		})
+
+		it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+			expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+		})
+
+		it("remains silent", () => {
+			expect(printMessage).not.toHaveBeenCalled()
+			expect(printCommandLineError).not.toHaveBeenCalled()
+			expect(printCommandLineWarning).not.toHaveBeenCalled()
+		})
+	},
+)
+
+describe("when '--message-file' points to an edited message file with comments and excessive whitespace in the default configuration", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		vi.stubEnv("GIT_EDITOR", "vim")
+		mockFile(
+			".git/COMMIT_EDITMSG",
+			[
+				"Release the robot butler  ",
+				"",
+				"",
+				"",
+				"It greets the guests politely.  ",
+				"",
+				"# Please enter the commit message for your changes. Lines starting",
+				"# with '#' will be ignored, and an empty message aborts the commit.",
+				"# ------------------------ >8 ------------------------",
+				"# Do not modify or remove the line above.",
+				"# Everything below it will be ignored.",
+				"diff --git a/README.md b/README.md",
+				"+This line is far too long to fit within the line wrapping limit of 72 characters.",
+				"",
+			].join("\n"),
+		)
+		mockGitPendingCommit()
+		exitCode = await commandLineProgram(["--message-file", ".git/COMMIT_EDITMSG"])
+	})
+
+	it(`exits with ${EXIT_CODE_SUCCESS}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_SUCCESS)
+	})
+
+	it("remains silent", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).not.toHaveBeenCalled()
+		expect(printCommandLineWarning).not.toHaveBeenCalled()
+	})
+})
+
+describe("when '--message-file' points to a non-existing file", () => {
+	let exitCode: ExitCode
+
+	beforeEach(async () => {
+		vi.stubEnv("GIT_EDITOR", ":")
+		mockGitPendingCommit()
+		exitCode = await commandLineProgram(["--message-file", ".git/COMMIT_EDITMSG"])
+	})
+
+	it(`exits with ${EXIT_CODE_GENERAL_ERROR}`, () => {
+		expect(exitCode).toBe(EXIT_CODE_GENERAL_ERROR)
+	})
+
+	it("prints an error message", () => {
+		expect(printMessage).not.toHaveBeenCalled()
+		expect(printCommandLineError).toHaveBeenCalledExactlyOnceWith(
+			"Failed to read '.git/COMMIT_EDITMSG': File not found",
+		)
+	})
+})
+
+function editAdvice(quotedPath: string): string {
+	return [
+		`To edit the commit message, repeat the ${magenta`git commit`} command with the same options`,
+		`(e.g. ${magenta`--amend`} or ${magenta`--all`}) and add ${magenta`--edit --file=${quotedPath}`}`,
+	].join("\n")
+}

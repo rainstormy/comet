@@ -24,6 +24,9 @@ vi.mock(import("#utilities/files/Files.ts"), () => ({
 
 		return normalisedSegments.join("/")
 	}),
+	resolveAbsolutePath: vi.fn((path: string): string =>
+		path.startsWith("/") ? path : `${FAKE_WORKING_DIRECTORY}/${trimPrefix(path, "./")}`,
+	),
 	readJsonFile: vi.fn(async (path: string): Promise<JsonValue> => {
 		const content = contentsByPath.get(path) ?? null
 
@@ -51,6 +54,8 @@ vi.mock(import("#utilities/files/Files.ts"), () => ({
 	}),
 	copyDirectory: vi.fn(),
 }))
+
+export const FAKE_WORKING_DIRECTORY = "/home/splinter/dojo"
 
 const contentsByPath = new Map<string, string>()
 
