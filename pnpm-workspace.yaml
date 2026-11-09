@@ -46,7 +46,7 @@ catalog:
   # Vite+ is a unified toolchain and task runner for Oxfmt (an opinionated code formatter), Oxlint (a TypeScript linter), tsdown (a bundler), Vite, and Vitest.
   # It is also a version manager of Node.js and pnpm.
   # https://viteplus.dev
-  vite-plus: 1.5.0
+  vite-plus: 1.5.1
 
   # Vitest is a unit testing framework.
   # It is also provided by Vite+, but IDE tooling (such as the test runner in IntelliJ IDEA) currently expects the Vitest CLI to exist on the PATH.
@@ -58,7 +58,17 @@ overrides:
   vitest: 'catalog:'
 
 # Let some packages bypass the minimum release age requirement to allow urgent security upgrades to be installed despite being less than 3 days old.
-minimumReleaseAgeExclude: []
+minimumReleaseAgeExclude:
+  - '@voidzero-dev/vite-plus-core@1.5.1'
+  - '@voidzero-dev/vite-plus-darwin-arm64@1.5.1'
+  - '@voidzero-dev/vite-plus-darwin-x64@1.5.1'
+  - '@voidzero-dev/vite-plus-linux-arm64-gnu@1.5.1'
+  - '@voidzero-dev/vite-plus-linux-arm64-musl@1.5.1'
+  - '@voidzero-dev/vite-plus-linux-x64-gnu@1.5.1'
+  - '@voidzero-dev/vite-plus-linux-x64-musl@1.5.1'
+  - '@voidzero-dev/vite-plus-win32-arm64-msvc@1.5.1'
+  - '@voidzero-dev/vite-plus-win32-x64-msvc@1.5.1'
+  - vite-plus@1.5.1
 
 # Disallow all script execution during package installation.
 allowBuilds:
