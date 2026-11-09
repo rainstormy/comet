@@ -26,7 +26,10 @@ export default defineConfig({
 	 */
 	lint: defineOxlintConfig({
 		ignorePatterns: ["dist/**/*"],
-		options: { typeCheck: false },
+		options: {
+			denyWarnings: false,
+			typeCheck: false,
+		},
 		overrides: [
 			{
 				files: [
@@ -74,9 +77,9 @@ export default defineConfig({
 		// language=sh
 		tasks: {
 			build: { command: "vp pack && node tools/build.script.ts" },
-			check: { command: "vp lint --type-check" },
+			check: { command: "vp lint --type-check --deny-warnings" },
 			comet: { command: "node src/main-cli.ts --config .github/comet.jsonc", cache: false },
-			fmt: { command: "vp check --fix" },
+			fmt: { command: "vp check --quiet --fix" },
 			install: { command: "vp install --frozen-lockfile --ignore-scripts", cache: false },
 			publint: { command: "publint --strict" },
 			readme: { command: "node tools/readme.script.ts", cache: false },
