@@ -68,6 +68,8 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * - Revert commits, e.g. `Revert "..."`.
  * - Commits with squash markers, e.g. `fixup!` and `squash!`.
  *
+ * This rule does not apply when checking a single commit in isolation with `--message-file`, e.g. in a `commit-msg` Git hook.
+ *
  * ## Options
  *
  * This rule has no configurable options.

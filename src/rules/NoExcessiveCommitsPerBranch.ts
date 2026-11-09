@@ -47,6 +47,8 @@ import type { Concern } from "#rules/concerns/Concern.ts"
  * - Merge commits, i.e. commits with more than one parent.
  * - Commits with squash markers, e.g. `fixup!` and `squash!`.
  *
+ * This rule does not apply when checking a single commit in isolation with `--message-file`, e.g. in a `commit-msg` Git hook.
+ *
  * ## Options
  *
  * - `maxCommits` (positive integer): Maximum number of commits allowed per branch. Default value: `10`.

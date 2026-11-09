@@ -83,6 +83,8 @@ Further reading:
 The Comet CLI checks the commits on the current branch that have not been delivered to the default branch, i.e. the range `origin/HEAD..HEAD` for a remote named `origin`.
 If no remote exists, it checks the local range `main..HEAD` or `master..HEAD`.
 
+Use `--message-file <path>` to check the commit that is about to be created instead, e.g. in a [`commit-msg` Git hook](#usage-in-git-hooks).
+
 It does not modify any commits.
 
 ### Usage with Node.js
@@ -99,6 +101,7 @@ If `node_modules/.bin/` is linked to your `PATH`, you can run Comet directly:
 comet \
   [--config <path>] \
   [--default-branch <branch>] \
+  [--message-file <path>] \
   [--skip-missing-configs]
 ```
 
@@ -124,7 +127,7 @@ Or with Vite+:
 vpr lint-commits
 ```
 
-You can also run this task in a `pre-push` Git hook to block pushes that contain poorly formatted commit messages.
+You can also run Comet in [Git hooks](#usage-in-git-hooks) to block commits and pushes with poorly formatted commit messages.
 
 ### Usage with Deno
 
@@ -138,10 +141,113 @@ deno run \
   npm:@rainstormy/comet \
   [--config <path>] \
   [--default-branch <branch>] \
+  [--message-file <path>] \
   [--skip-missing-configs]
 ```
 
 If you use a custom configuration file or `extends`, add its path to `--allow-read`.
+If you use `--message-file`, add the path of the message file to `--allow-read` as well, e.g. `.git` for `.git/COMMIT_EDITMSG`.
+
+### Usage in Git hooks
+
+Comet fits into two kinds of [Git hooks](https://git-scm.com/docs/githooks):
+
+- **`commit-msg`** with `comet --message-file "$1"` checks the commit that is about to be created.
+  Git passes the path of the message file as the first argument to the hook.
+  If the message breaks the rules, Git does not create the commit, but keeps the message file.
+  To edit the message, repeat the `git commit` command with the same options (e.g. `--amend` or `--all`) and add `--edit --file=<path>`.
+- **`pre-push`** with `comet` checks all commits on the current branch that have not been delivered to the default branch.
+
+A `pre-commit` Git hook runs before the commit message exists, so it cannot check the message.
+Use the `commit-msg` stage instead if you manage your hooks with a tool named [pre-commit](https://pre-commit.com).
+
+In a `commit-msg` hook, Comet:
+
+- Cleans up the message in the same way as Git does before creating the commit, e.g. by removing comments and trailing whitespace according to the `commit.cleanup` and `core.commentChar` settings.
+- Accepts empty messages, as Git aborts the commit in that case.
+- Checks the commit in isolation, because the hook cannot tell if the commit amends an existing commit.
+  [noExcessiveCommitsPerBranch](docs/rules/NoExcessiveCommitsPerBranch.md) and [noRepeatedSubjects](docs/rules/NoRepeatedSubjects.md) only apply to the commits on the current branch.
+- Skips [useSignedCommits](docs/rules/UseSignedCommits.md), as Git signs the commit after the hook has finished.
+- Rejects merge commits from `git merge` and `git pull` if [noMergeCommits](docs/rules/NoMergeCommits.md) is enabled (which it is by default).
+  Run `git merge --abort` and rebase the branch instead, e.g. with `git pull --rebase`.
+
+The hook cannot see the options of the `git commit` command, which leads to a few limitations:
+
+- Comet follows the `commit.cleanup` setting, but not the `--cleanup=<mode>` option.
+- Comet accepts empty messages, even if you allow them with `--allow-empty-message`.
+- Comet detects whether Git has opened an editor by the `GIT_EDITOR=:` environment variable that Git sets when it does not open an editor.
+  If you set `GIT_EDITOR=:` yourself, e.g. to skip the editor in `GIT_EDITOR=: git commit --amend`, Comet checks the comments that Git removes afterwards.
+  Use `git commit --amend --no-edit` or `GIT_EDITOR=true` instead.
+
+Git does not run the `commit-msg` hook in some cases, e.g. `git commit --no-verify`, `git cherry-pick`, `git revert`, and most actions in `git rebase --interactive` except `reword`.
+Combine it with a `pre-push` hook or [GitHub Actions](#github-actions) to catch those commits as well.
+
+#### Husky
+
+Create `.husky/commit-msg` and `.husky/pre-push` after setting up [Husky](https://typicode.github.io/husky) with `npx husky init`:
+
+```shell
+# .husky/commit-msg
+comet --message-file "$1"
+```
+
+```shell
+# .husky/pre-push
+comet
+```
+
+#### Lefthook
+
+Declare the hooks in `lefthook.yml` with [Lefthook](https://lefthook.dev).
+Lefthook does not add `node_modules/.bin/` to your `PATH`, so run Comet through your package manager (e.g. `npx --no --`, `pnpm exec`, or `yarn`):
+
+```yaml
+commit-msg:
+  commands:
+    comet:
+      run: npx --no -- comet --message-file "{1}"
+
+pre-push:
+  commands:
+    comet:
+      run: npx --no -- comet
+```
+
+#### simple-git-hooks
+
+Declare the hooks in `package.json` with [simple-git-hooks](https://github.com/toplenboren/simple-git-hooks) and run `npx simple-git-hooks` to install them:
+
+```json
+{
+  "simple-git-hooks": {
+    "commit-msg": "npx --no -- comet --message-file \"$1\"",
+    "pre-push": "npx --no -- comet"
+  }
+}
+```
+
+#### pre-commit and prek
+
+Declare a local hook in `.pre-commit-config.yaml` with [pre-commit](https://pre-commit.com) or [prek](https://github.com/j178/prek):
+
+```yaml
+default_install_hook_types: [pre-commit, commit-msg]
+
+repos:
+  - repo: local
+    hooks:
+      - id: comet
+        name: Comet
+        language: node
+        additional_dependencies: ["@rainstormy/comet@2.1.0"]
+        entry: comet --message-file
+        stages: [commit-msg]
+```
+
+The tool appends the path of the message file to `entry`, so keep `--message-file` at the end, e.g. `comet --config .github/comet.json --message-file`.
+
+Run `pre-commit install` (or `prek install`) to install the hooks.
+`default_install_hook_types` makes it install the `commit-msg` hook alongside the default `pre-commit` hook.
 
 ## GitHub Actions
 
