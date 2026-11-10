@@ -1,0 +1,4 @@
+interface:
+  display_name: 'New Comet CLI option'
+  short_description: 'Add or modify a command-line option'
+  default_prompt: 'Use the $new-cli-option skill to add or modify an option of the Comet CLI, including argument parsing, help text, documentation, and tests.'
