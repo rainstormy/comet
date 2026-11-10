@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), 
 
 ## [Unreleased]
 
+## [2.1.1] - 2026-11-10
 ### Fixed
 - `useImperativeSubjects`: Accept `autoapprove`, `autoassign`, `autoclose`, `autodetect`, `autodiscover`, `autogenerate`, `autoincrement`, `autoinstall`, `autolabel`, `autoload`, `autoreload`, `autorun`, `autotag`, `bucket`, `canonicalise`/`canonicalize`, `checkpoint`, `componentise`/`componentize`, `concat`, `cordon`, `curtain`, `decrypt`, `defang`, `deindex`, `denest`, `deobfuscate`, `depersonalise`/`depersonalize`, `deregister`, `descope`, `desugar`, `detokenise`/`detokenize`, `downscale`, `exfiltrate`, `garbage`, `hardwire`, `hotswap`, `hyperlink`, `imbue`, `linkify`, `monomorphise`/`monomorphize`, `multiplex`, `parenthesise`/`parenthesize`, `polymorphise`/`polymorphize`, `precompute`, `predefine`, `preinitialise`/`preinitialize`, `prewarm`, `pseudonymise`/`pseudonymize`, `rasterise`/`rasterize`, `reauthenticate`, `reauthorise`/`reauthorize`, `rebalance`, `recategorise`/`recategorize`, `rechunk`, `reclassify`, `recode`, `recolor`/`recolour`, `recombine`, `recompute`, `recurse`, `redeclare`, `refetch`, `rehash`, `rehome`, `reimport`, `reindex`, `reinitialise`/`reinitialize`, `reinvent`, `rejig`, `rekey`, `relaunch`, `renormalise`/`renormalize`, `renumber`, `renumerate`, `reparent`, `repartition`, `replatform`, `repopulate`, `reprioritise`/`reprioritize`, `rescan`, `resequence`, `reshard`, `restack`, `restream`, `resync`, `retheme`, `retokenise`/`retokenize`, `retrain`, `retrofit`, `reupload`, `reverify`, `shard`, `sideload`, `spec`, `squelch`, `tabify`, `tarball`, `timebox`, `tombstone`, `transclude`, `transliterate`, `uncache`, `uncolor`/`uncolour`, `uncurry`, `undeprecate`, `undock`, `unfollow`, `unhide`, `unhighlight`, `uninline`, `unnest`, `unquote`, `unredact`, `unreserve`, `unrestrict`, `unshard`, `unshare`, `unthrottle`, `unwire`, `upcast`, `upscale`, `vectorise`/`vectorize`, `vendorise`.
 
@@ -162,7 +163,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0), 
 - New rule: `no-trailing-punctuation-in-subject-lines`.
 - New rule: `no-unexpected-whitespace`.
 
-[unreleased]: https://github.com/rainstormy/comet/compare/v2.1.0...HEAD
+[unreleased]: https://github.com/rainstormy/comet/compare/v2.1.1...HEAD
+[2.1.1]: https://github.com/rainstormy/comet/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/rainstormy/comet/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/rainstormy/comet/compare/v1.1.9...v2.0.0
 [1.1.9]: https://github.com/rainstormy/comet/compare/v1.1.8...v1.1.9
