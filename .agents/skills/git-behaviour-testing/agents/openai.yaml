@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Git behaviour testing'
+  short_description: 'Verify behaviour against the real Git client'
+  default_prompt: 'Use the $git-behaviour-testing skill to verify Comet against the real Git client with differential tests in throwaway repositories.'
