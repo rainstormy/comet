@@ -2058,7 +2058,7 @@ describe("when 'useSignedCommits' has a concern about the commit", () => {
 	const commit = fakeCommit({
 		sha: "9b9e2ab8f3248152474f41f728f1221d5bf55a16",
 		message: "Sign the pantry inventory app",
-		signature: "",
+		signatures: [],
 	})
 	const concern = commitConcern("useSignedCommits", commit.sha)
 
@@ -2083,7 +2083,7 @@ describe("when 'useSignedCommits' has a concern about the commit with a long sub
 	const commit = fakeCommit({
 		sha: "42cefd126a47bfd368d774047a711519eadc2d05",
 		message: "fixup! GH-692 it's raining gold everywhere we go",
-		signature: "",
+		signatures: [],
 	})
 	const concern = commitConcern("useSignedCommits", commit.sha)
 

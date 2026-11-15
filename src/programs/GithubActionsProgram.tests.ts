@@ -307,7 +307,7 @@ describe("when there are 3 commits that raise concerns in the default configurat
 			fakeCrudeCommit({
 				sha: "b58de17b4d44256ffaa44a1068d743288fc6beda",
 				message: "Sign the pantry inventory",
-				signature: "",
+				signatures: [],
 			}),
 		])
 		exitCode = await githubActionsProgram()
@@ -364,7 +364,7 @@ describe("when there are 6 commits where 4 of them raise concerns in the default
 				sha: "41a0e1d9c151ac41962836e4f02b2b47d39ffd61",
 				message:
 					"Review the tea set\nWell well well would you look at this.\n\nThis body line is _also_ a bit longer than the default seventy-two character wrapping limit\nWe'll have to fix that, don't we?",
-				signature: "",
+				signatures: [],
 			}),
 			fakeCrudeCommit({
 				sha: "7f811b212b8e79d85a3cab7acb276942c565fb4a",

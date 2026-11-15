@@ -518,7 +518,7 @@ describe.each`
 
 	it("preserves the signature", async () => {
 		const [commit] = await getGitBranchCrudeCommits()
-		expect(commit?.signature).toBe(signature)
+		expect(commit?.signatures).toEqual([signature])
 	})
 })
 
@@ -527,9 +527,9 @@ describe("when the commit does not have a signature", () => {
 		mockGitLog([{}])
 	})
 
-	it("omits the signature", async () => {
+	it("omits the signatures", async () => {
 		const [commit] = await getGitBranchCrudeCommits()
-		expect(commit?.signature).toBe("")
+		expect(commit?.signatures).toEqual([])
 	})
 })
 

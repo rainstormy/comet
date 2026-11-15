@@ -21,7 +21,7 @@ describe.each`
 `(
 	"when the commit does not have a signature and has a subject of $subject",
 	(props: { subject: string }) => {
-		const commit = fakeCommit({ message: props.subject, signature: "" })
+		const commit = fakeCommit({ message: props.subject, signatures: [] })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
@@ -48,7 +48,7 @@ describe.each`
 `(
 	"when the commit has a signature and has a subject of $subject",
 	(props: { signature: string; subject: string }) => {
-		const commit = fakeCommit({ message: props.subject, signature: props.signature })
+		const commit = fakeCommit({ message: props.subject, signatures: [props.signature] })
 
 		describe("and the rule is enabled", () => {
 			const actualConcerns = mapCommitsToConcerns([commit], enabled)
@@ -71,21 +71,24 @@ describe.each`
 describe("when verifying a set of multiple commits and some commits lack a signature", () => {
 	const commits: Vector<Commit, 7> = [
 		fakeCommit({
-			signature:
+			signatures: [
 				"-----BEGIN SSH SIGNATURE-----\nYzhmNjMwODktYzA3MS00YzM5LWEyYzAtNTYyYjNjMmExMjJi\n-----END SSH SIGNATURE-----",
+			],
 		}),
-		fakeCommit({ signature: "" }),
-		fakeCommit({ signature: "" }),
+		fakeCommit({ signatures: [] }),
+		fakeCommit({ signatures: [] }),
 		fakeCommit({
-			signature:
+			signatures: [
 				"-----BEGIN SSH SIGNATURE-----\nN2YwNDUwYzktYzRhNi00YzNiLWFiMzMtYWEyYjg3MThjMDc0\n-----END SSH SIGNATURE-----",
+			],
 		}),
-		fakeCommit({ signature: "" }),
+		fakeCommit({ signatures: [] }),
 		fakeCommit({
-			signature:
+			signatures: [
 				"-----BEGIN PGP SIGNATURE-----\n\nZmMzMDA1ZjItYzdlNy00NzliLThmOTYtNjk1NWZkMzA0MGNjNmFhYTA2YzUtOWQ1Yi00YmViLWI0MzMtNzJjYmU3ZjA3OGVl\n-----END PGP SIGNATURE-----",
+			],
 		}),
-		fakeCommit({ signature: "" }),
+		fakeCommit({ signatures: [] }),
 	]
 
 	describe("and the rule is enabled", () => {
@@ -113,20 +116,24 @@ describe("when verifying a set of multiple commits and some commits lack a signa
 describe("when verifying a set of multiple commits and all commits have signatures", () => {
 	const commits: Vector<Commit, 4> = [
 		fakeCommit({
-			signature:
+			signatures: [
 				"-----BEGIN SSH SIGNATURE-----\nOTFhZDVjOGUtMWQxYS00NTY4LWFmNDgtOWU4Y2U2MzU5NGE2\n-----END SSH SIGNATURE-----",
+			],
 		}),
 		fakeCommit({
-			signature:
+			signatures: [
 				"-----BEGIN PGP SIGNATURE-----\n\nODk5ZTUwYTAtZDIwNi00ODY2LWEyMGItOGY0NGEwYjlmZDNmMDFkOTQzOGEtNjZiNy00MTk2LTlkYzYtMTc2MDg4MTZkMjgw\n-----END PGP SIGNATURE-----",
+			],
 		}),
 		fakeCommit({
-			signature:
+			signatures: [
 				"-----BEGIN SSH SIGNATURE-----\nMmZjYWYxMDktNWUzYS00ZmNiLWFjNTQtMmUzYzA1ODQwMGY4\n-----END SSH SIGNATURE-----",
+			],
 		}),
 		fakeCommit({
-			signature:
+			signatures: [
 				"-----BEGIN PGP SIGNATURE-----\n\nODVlYmM5MjgtMDA3NC00MjNhLTlkYTQtYWZjNThkNTJhNzU2NjY4MThlZmYtMTFhYi00ODBmLThlOWEtYzAwNGE5MmMwNjVj\n-----END PGP SIGNATURE-----",
+			],
 		}),
 	]
 

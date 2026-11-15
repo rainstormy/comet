@@ -114,13 +114,14 @@ describe.each`
 	})
 })
 
-describe("when the commit signature is non-empty", () => {
+describe("when the commit has a signature", () => {
 	const crudeCommit = fakeCrudeCommit({
-		signature:
+		signatures: [
 			"-----BEGIN SSH SIGNATURE-----\n" +
-			"MzEwM2JkMTMtNmJiMy00N2YxLWEyNTUtOWMxZmFmYTAyMGZlNDI3MWYyMmEtMjU4MS00YTky\n" +
-			"LWFhNTEtMjI5YjRiZWIxYzMxNTZiMzAwYmMtYmU5ZC00NjUxLWFmODAtY2U3N2I2NmZmNDIy\n" +
-			"-----END SSH SIGNATURE-----",
+				"MzEwM2JkMTMtNmJiMy00N2YxLWEyNTUtOWMxZmFmYTAyMGZlNDI3MWYyMmEtMjU4MS00YTky\n" +
+				"LWFhNTEtMjI5YjRiZWIxYzMxNTZiMzAwYmMtYmU5ZC00NjUxLWFmODAtY2U3N2I2NmZmNDIy\n" +
+				"-----END SSH SIGNATURE-----",
+		],
 	})
 
 	it("has a signature", () => {
@@ -129,8 +130,26 @@ describe("when the commit signature is non-empty", () => {
 	})
 })
 
-describe("when the commit signature is empty", () => {
-	const crudeCommit = fakeCrudeCommit({ signature: "" })
+describe("when the commit has signatures for both SHA-1 and SHA-256", () => {
+	const crudeCommit = fakeCrudeCommit({
+		signatures: [
+			"-----BEGIN SSH SIGNATURE-----\n" +
+				"YTc0ZWQ5NjEtM2RjMi00YjA0LWE4NGQtOWY3ZDQ5NjM2NWJh\n" +
+				"-----END SSH SIGNATURE-----",
+			"-----BEGIN SSH SIGNATURE-----\n" +
+				"OGE0NjE0ZGQtNjJiNC00ZWMxLWI1ZDEtOWYxNmE4NzA0YmQz\n" +
+				"-----END SSH SIGNATURE-----",
+		],
+	})
+
+	it("has a signature", () => {
+		const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
+		expect(commit.hasSignature).toBe(true)
+	})
+})
+
+describe("when the commit has no signatures", () => {
+	const crudeCommit = fakeCrudeCommit({ signatures: [] })
 
 	it("does not have a signature", () => {
 		const commit = mapCrudeCommitToCommit(crudeCommit, configuration)
