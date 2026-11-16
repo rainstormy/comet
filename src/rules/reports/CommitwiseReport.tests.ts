@@ -75,6 +75,27 @@ Found 1 concern in 1 commit.`.trim(),
 	})
 })
 
+describe("when 'noBlankSubjects' has a concern about a pending commit without a SHA", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({ sha: null, message: "" })
+	const concern = subjectConcern("noBlankSubjects", commit.sha, { range: [0, 1] })
+
+	it("labels the commit as pending", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey.italic`pending`} 
+        ${red`┬`}
+        ${red`╰─ Include a descriptive subject.`}
+        ${red`   ${ruleLink("noBlankSubjects")}`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
 describe("when 'noExcessiveBlankLines' has a concern about an empty body line", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
@@ -132,6 +153,38 @@ ${red`•`} ${grey`${bold`4`} │`}
     ${grey`· `} ${red`╰─ Delete excessive blank lines.`}
     ${grey`· `} ${red`   ${ruleLink("noExcessiveBlankLines")}`}
   ${grey`5 │ The sun is out.`}
+    ${grey`╰──`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when 'noExcessiveBlankLines' has a concern about an empty body line of a pending commit", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: null,
+		message: "Teach the changelog to whisper\n\nThe noisy bits moved.\n\n\nThe quiet bits stayed.",
+	})
+	const concern = bodyLineConcern("noExcessiveBlankLines", commit.sha, {
+		lineNumber: 3,
+		range: [0, 1],
+	})
+
+	it("describes the rule violation in the body line", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey.italic`pending`} Teach the changelog to whisper
+    ${grey`╭──`}
+  ${grey`3 │ `}
+${red`•`} ${grey`${bold`4`} │`} 
+    ${grey`· `}${red`┬`}
+    ${grey`· `}${red`╰─ Delete excessive blank lines.`}
+    ${grey`· `}${red`   ${ruleLink("noExcessiveBlankLines")}`}
+  ${grey`5 │ The quiet bits stayed.`}
     ${grey`╰──`}
 
 Found 1 concern in 1 commit.`.trim(),
@@ -467,6 +520,31 @@ describe("when 'noMergeCommits' has a concern about the commit with a long subje
 			`
 ${grey`71516e1`} amend! Merge branch 'feature/new-coffee-machine' into feature/office-overhaul
       ${red`╭──────────────────────────────────────────────────────────────────────────────`}
+      ${red`╰─ Rebase the branch and drop the merge commits.`}
+      ${red`   ${ruleLink("noMergeCommits")}`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when 'noMergeCommits' has a concern about a pending commit", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: null,
+		parents: [fakeCommitSha(), fakeCommitSha()],
+		message: "Merge branch 'main' into bugfix/dance-party-playlist",
+	})
+	const concern = commitConcern("noMergeCommits", commit.sha)
+
+	it("labels the commit as pending in place of the commit SHA", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey.italic`pending`} Merge branch 'main' into bugfix/dance-party-playlist
+      ${red`╭─────────────────────────────────────────────────────`}
       ${red`╰─ Rebase the branch and drop the merge commits.`}
       ${red`   ${ruleLink("noMergeCommits")}`}
 
@@ -1018,6 +1096,41 @@ Found 1 concern in 1 commit.`.trim(),
 	})
 })
 
+describe("when 'useAuthorNamePatterns' has a concern about the author's name of a pending commit", () => {
+	const configuration = fakeConfiguration({
+		useAuthorNamePatterns: {
+			options: { patterns: [String.raw`\p{Lu}.*\s.+`] },
+		},
+	})
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: null,
+		authorName: "splinter",
+		message: "Make the changelog less mysterious",
+	})
+	const concern = userIdentityConcern("useAuthorNamePatterns", commit.sha, {
+		field: "author:name",
+	})
+
+	it("describes the rule violation in the author's name", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey.italic`pending`} Make the changelog less mysterious
+${grey`╰─ authored by:`} splinter
+              ${red`╭─────────`}
+              ${red`╰─ Use an author name that matches an accepted pattern.`}
+              ${red`   ${ruleLink("useAuthorNamePatterns")}`}
+              ${red`   `}
+              ${red`   Accepted patterns:`}
+              ${red`     ∙ ${String.raw`\p{Lu}.*\s.+`}`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
 describe("when 'useCapitalisedSubjects' has a concern about characters 0-1 of the subject", () => {
 	const configuration = fakeConfiguration()
 	const fakeCommit = fakeCommitFactory(configuration.tokens)
@@ -1060,6 +1173,27 @@ ${grey`92d6b11`} fixup! resolve a bug that thought it was a feature
                ${red`┬`}
                ${red`╰─ Change the first letter to uppercase.`}
                ${red`   ${ruleLink("useCapitalisedSubjects")}`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when 'useCapitalisedSubjects' has a concern about characters 0-1 of the subject of a pending commit", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({ sha: null, message: "release the robot butler" })
+	const concern = subjectConcern("useCapitalisedSubjects", commit.sha, { range: [0, 1] })
+
+	it("describes the rule violation in the subject", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey.italic`pending`} release the robot butler
+        ${red`┬`}
+        ${red`╰─ Change the first letter to uppercase.`}
+        ${red`   ${ruleLink("useCapitalisedSubjects")}`}
 
 Found 1 concern in 1 commit.`.trim(),
 		)
@@ -2093,6 +2227,31 @@ describe("when 'useSignedCommits' has a concern about the commit with a long sub
 			`
 ${grey`42cefd1`} fixup! GH-692 it's raining gold everywhere we go
       ${red`╭─────────────────────────────────────────────────`}
+      ${red`╰─ Sign this commit cryptographically with your signing key.`}
+      ${red`   ${ruleLink("useSignedCommits")}`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when 'useSignedCommits' has a concern about a pending commit", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: null,
+		message: "Sign the pantry inventory app",
+		signatures: [],
+	})
+	const concern = commitConcern("useSignedCommits", commit.sha)
+
+	it("describes the rule violation in the commit", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey.italic`pending`} Sign the pantry inventory app
+      ${red`╭──────────────────────────────`}
       ${red`╰─ Sign this commit cryptographically with your signing key.`}
       ${red`   ${ruleLink("useSignedCommits")}`}
 

@@ -14,7 +14,7 @@ import type { CommitSha } from "#types/CommitSha.ts"
  * A platform-agnostic representation of a commit with refined data.
  */
 export type Commit = {
-	sha: CommitSha
+	sha: CommitSha | null
 	authorName: string
 	authorEmail: string
 	committerName: string

@@ -73,6 +73,7 @@ function formatConcern(
 }
 
 const SHORT_SHA_LENGTH = 7
+const PENDING_SHA_LABEL = "pending" // Happens to be 7 letters like `SHORT_SHA_LENGTH`.
 
 const RANGE_PREFIX = "╭─"
 const MESSAGE_PREFIX = "╰─"
@@ -221,7 +222,9 @@ function formatUserIdentityConcern(
 }
 
 function getShortSha(commit: Commit): string {
-	return grey`${commit.sha.slice(0, SHORT_SHA_LENGTH)}`
+	return commit.sha !== null
+		? grey`${commit.sha.slice(0, SHORT_SHA_LENGTH)}`
+		: grey.italic`${PENDING_SHA_LABEL}`
 }
 
 function getSubject(commit: Commit): string {

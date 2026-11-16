@@ -3,9 +3,9 @@ import type { CommitSha } from "#types/CommitSha.ts"
 
 export type BodyLineConcern = {
 	location: "body-line"
-	key: `${CommitSha}:L${number}:C${CharacterRange[0]}-${CharacterRange[1]}:${BodyLineConcernRuleKey}`
+	key: `${CommitSha | "pending"}:L${number}:C${CharacterRange[0]}-${CharacterRange[1]}:${BodyLineConcernRuleKey}`
 	rule: BodyLineConcernRuleKey
-	commitSha: CommitSha
+	commitSha: CommitSha | null
 	lineNumber: number
 	range: CharacterRange
 }
@@ -19,12 +19,12 @@ export type BodyLineConcernRuleKey =
 
 export function bodyLineConcern(
 	rule: BodyLineConcernRuleKey,
-	commitSha: CommitSha,
+	commitSha: CommitSha | null,
 	props: Pick<BodyLineConcern, "lineNumber" | "range">,
 ): BodyLineConcern {
 	return {
 		location: "body-line",
-		key: `${commitSha}:L${props.lineNumber}:C${props.range[0]}-${props.range[1]}:${rule}`,
+		key: `${commitSha ?? "pending"}:L${props.lineNumber}:C${props.range[0]}-${props.range[1]}:${rule}`,
 		rule,
 		commitSha,
 		...props,
@@ -33,7 +33,7 @@ export function bodyLineConcern(
 
 export function bodyLineConcerns(
 	rule: BodyLineConcernRuleKey,
-	commitSha: CommitSha,
+	commitSha: CommitSha | null,
 	props: Array<Pick<BodyLineConcern, "lineNumber" | "range">>,
 ): Array<BodyLineConcern> {
 	return props.map((range) => bodyLineConcern(rule, commitSha, range))

@@ -3,9 +3,9 @@ import type { CommitSha } from "#types/CommitSha.ts"
 
 export type SubjectConcern = {
 	location: "subject"
-	key: `${CommitSha}:C${CharacterRange[0]}-${CharacterRange[1]}:${SubjectConcernRuleKey}`
+	key: `${CommitSha | "pending"}:C${CharacterRange[0]}-${CharacterRange[1]}:${SubjectConcernRuleKey}`
 	rule: SubjectConcernRuleKey
-	commitSha: CommitSha
+	commitSha: CommitSha | null
 	range: CharacterRange
 }
 
@@ -25,12 +25,12 @@ export type SubjectConcernRuleKey =
 
 export function subjectConcern(
 	rule: SubjectConcernRuleKey,
-	commitSha: CommitSha,
+	commitSha: CommitSha | null,
 	props: Pick<SubjectConcern, "range">,
 ): SubjectConcern {
 	return {
 		location: "subject",
-		key: `${commitSha}:C${props.range[0]}-${props.range[1]}:${rule}`,
+		key: `${commitSha ?? "pending"}:C${props.range[0]}-${props.range[1]}:${rule}`,
 		rule,
 		commitSha,
 		...props,
@@ -39,7 +39,7 @@ export function subjectConcern(
 
 export function subjectConcerns(
 	rule: SubjectConcernRuleKey,
-	commitSha: CommitSha,
+	commitSha: CommitSha | null,
 	ranges: Array<CharacterRange>,
 ): Array<SubjectConcern> {
 	return ranges.map((range) => subjectConcern(rule, commitSha, { range }))

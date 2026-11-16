@@ -2,9 +2,9 @@ import type { CommitSha } from "#types/CommitSha.ts"
 
 export type UserIdentityConcern = {
 	location: "user-identity"
-	key: `${CommitSha}:B:${UserIdentityConcernField}:${UserIdentityConcernRuleKey}`
+	key: `${CommitSha | "pending"}:B:${UserIdentityConcernField}:${UserIdentityConcernRuleKey}`
 	rule: UserIdentityConcernRuleKey
-	commitSha: CommitSha
+	commitSha: CommitSha | null
 	field: UserIdentityConcernField
 }
 
@@ -22,12 +22,12 @@ export type UserIdentityConcernRuleKey =
 
 export function userIdentityConcern(
 	rule: UserIdentityConcernRuleKey,
-	commitSha: CommitSha,
+	commitSha: CommitSha | null,
 	props: Pick<UserIdentityConcern, "field">,
 ): UserIdentityConcern {
 	return {
 		location: "user-identity",
-		key: `${commitSha}:B:${props.field}:${rule}`,
+		key: `${commitSha ?? "pending"}:B:${props.field}:${rule}`,
 		rule,
 		commitSha,
 		...props,
