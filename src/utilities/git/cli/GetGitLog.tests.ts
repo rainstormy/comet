@@ -52,6 +52,7 @@ committer Leonardo da Vinci <71091436+katanaturtle@users.noreply.github.com> 176
 					"Leonardo da Vinci <71091436+katanaturtle@users.noreply.github.com> 1766222736 -0500",
 				],
 				gpgsig: [],
+				"gpgsig-sha256": [],
 				message: ["init"],
 			},
 		])
@@ -83,6 +84,7 @@ committer Master Splinter <sensei@ninja-academy.com> 1769801867 -0500
 				author: ["Raph <theraffaelloexperience@tmnt.com> 1769800893 -0500"],
 				committer: ["Master Splinter <sensei@ninja-academy.com> 1769801867 -0500"],
 				gpgsig: [],
+				"gpgsig-sha256": [],
 				message: ["fixup! fighting the foot clan"],
 			},
 		])
@@ -118,6 +120,7 @@ committer Donatello <42069849+gogogadget@users.noreply.github.com> 1771411407 -0
 				author: ["April O'Neil <april@secondtimearound.com> 1771411236 -0500"],
 				committer: ["Donatello <42069849+gogogadget@users.noreply.github.com> 1771411407 -0500"],
 				gpgsig: [],
+				"gpgsig-sha256": [],
 				message: ["Deliver unlimited power with technological genius"],
 			},
 		])
@@ -159,6 +162,7 @@ committer Casey "Goongala" Jones <case@pizza-party.com> 1784831778 -0500
 				],
 				committer: ['Casey "Goongala" Jones <case@pizza-party.com> 1784831778 -0500'],
 				gpgsig: [],
+				"gpgsig-sha256": [],
 				message: [
 					"Let's gather all mutants for a massive pizza party!!\n\nUnder parental supervision, of course ;)",
 				],
@@ -205,6 +209,7 @@ gpgsig -----BEGIN SSH SIGNATURE-----
 						"jQkODBmOWFlNmNlOTU4GU=\n" +
 						"-----END SSH SIGNATURE-----",
 				],
+				"gpgsig-sha256": [],
 				message: ["Teach them the ancient signature move"],
 			},
 		])
@@ -303,6 +308,7 @@ gpgsig -----BEGIN PGP SIGNATURE-----
 						"=ODMt\n" +
 						"-----END PGP SIGNATURE-----\n",
 				],
+				"gpgsig-sha256": [],
 				message: [
 					"Merge pull request #440 from renovate/battle-shell-7.x\n\nUpgrade the Battle Shell to 7.3.1",
 				],
@@ -333,6 +339,7 @@ gpgsig -----BEGIN PGP SIGNATURE-----
 						"=NjRk\n" +
 						"-----END PGP SIGNATURE-----\n",
 				],
+				"gpgsig-sha256": [],
 				message: ["Upgrade the Battle Shell to 7.3.1"],
 			},
 		])
@@ -433,6 +440,7 @@ gpgsig -----BEGIN SSH SIGNATURE-----
 						"=wN2M\n" +
 						"-----END PGP SIGNATURE-----\n",
 				],
+				"gpgsig-sha256": [],
 				message: ["A visit from Outer Space"],
 			},
 			{
@@ -444,6 +452,7 @@ gpgsig -----BEGIN SSH SIGNATURE-----
 				],
 				committer: ["Donatello <42069849+gogogadget@users.noreply.github.com> 1809068484 -0500"],
 				gpgsig: [],
+				"gpgsig-sha256": [],
 				message: ["stealth: be one with the shadows\n\nmutant chain reaction\nin the underground"],
 			},
 			{
@@ -453,6 +462,7 @@ gpgsig -----BEGIN SSH SIGNATURE-----
 				author: ["Oroku Saki <shredderhimself@thefoot.com> 1723364474 -0400"],
 				committer: ["Karai <02968712+misssaki@users.noreply.github.com> 1723469209 -0400"],
 				gpgsig: [],
+				"gpgsig-sha256": [],
 				message: ["squash! the defects"],
 			},
 			{
@@ -469,6 +479,7 @@ gpgsig -----BEGIN SSH SIGNATURE-----
 						"QwYjUwNTAtM/QxNy00M2Y=\n" +
 						"-----END SSH SIGNATURE-----",
 				],
+				"gpgsig-sha256": [],
 				message: ["FAST FORWARD! #2105\n\nback, back, back to the sewers"],
 			},
 		])

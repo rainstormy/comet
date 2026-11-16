@@ -17,6 +17,8 @@ export async function getGithubPullRequestCrudeCommits(): Promise<CrudeCommits> 
 }
 
 function mapDtoToCrudeCommit(dto: GithubCommitDto): CrudeCommit {
+	const signature = dto.commit.verification?.signature ?? ""
+
 	return {
 		sha: dto.sha,
 		authorName: dto.commit.author?.name ?? "",
@@ -25,6 +27,6 @@ function mapDtoToCrudeCommit(dto: GithubCommitDto): CrudeCommit {
 		committerEmail: dto.commit.committer?.email ?? "",
 		parents: dto.parents.map((parentDto) => parentDto.sha),
 		message: dto.commit.message,
-		signature: dto.commit.verification?.signature ?? "",
+		signatures: signature !== "" ? [signature] : [],
 	}
 }

@@ -509,7 +509,7 @@ describe.each`
 	signature
 	${"-----BEGIN SSH SIGNATURE-----\nNjI1ZTMxMzctODU1ZS00YmVmLWI0MTMtY2Q4MmI4YjZlYzE0\n-----END SSH SIGNATURE-----"}
 	${"-----BEGIN PGP SIGNATURE-----\n\nNGU2NWQ0YzctN2I0OC00YWExLWE2NmUtZjg3MTZmNGY2MWJhODM4NTI1ZTEtZWY4OS00YjVjLTgwMWItOTgxNTBmOGJiOTZk\n-----END PGP SIGNATURE-----"}
-`("when the commit has a signature of $signature", (props: { signature: string }) => {
+`("when the commit has a SHA-1 signature of $signature", (props: { signature: string }) => {
 	const signature = props.signature
 
 	beforeEach(() => {
@@ -518,7 +518,40 @@ describe.each`
 
 	it("preserves the signature", async () => {
 		const [commit] = await getGitBranchCrudeCommits()
-		expect(commit?.signature).toBe(signature)
+		expect(commit?.signatures).toEqual([signature])
+	})
+})
+
+describe.each`
+	signature
+	${"-----BEGIN SSH SIGNATURE-----\nZDQ5YjE3NmQtOWE4Ny00ZDU0LWJmYzUtNmQ2ZGQ3MmQ2NzQx\n-----END SSH SIGNATURE-----"}
+	${"-----BEGIN PGP SIGNATURE-----\n\nMmY1YzA3YjYtNTk4ZS00ZjVmLTg1ZGYtNjUyNjg4Yjk0YjZkYTNmYmM0NjAtOWQ1Yy00YjM4LWJmMDMtMWJlNjk5MjBmODQ2\n-----END PGP SIGNATURE-----"}
+`("when the commit has a SHA-256 signature of $signature", (props: { signature: string }) => {
+	const signature = props.signature
+
+	beforeEach(() => {
+		mockGitLog([{ "gpgsig-sha256": [signature] }])
+	})
+
+	it("preserves the signature", async () => {
+		const [commit] = await getGitBranchCrudeCommits()
+		expect(commit?.signatures).toEqual([signature])
+	})
+})
+
+describe("when the commit has both SHA-1 and SHA-256 signatures", () => {
+	const sha1Signature =
+		"-----BEGIN SSH SIGNATURE-----\nYTc0ZWQ5NjEtM2RjMi00YjA0LWE4NGQtOWY3ZDQ5NjM2NWJh\n-----END SSH SIGNATURE-----"
+	const sha256Signature =
+		"-----BEGIN SSH SIGNATURE-----\nOGE0NjE0ZGQtNjJiNC00ZWMxLWI1ZDEtOWYxNmE4NzA0YmQz\n-----END SSH SIGNATURE-----"
+
+	beforeEach(() => {
+		mockGitLog([{ gpgsig: [sha1Signature], "gpgsig-sha256": [sha256Signature] }])
+	})
+
+	it("preserves both signatures", async () => {
+		const [commit] = await getGitBranchCrudeCommits()
+		expect(commit?.signatures).toEqual([sha1Signature, sha256Signature])
 	})
 })
 
@@ -527,9 +560,9 @@ describe("when the commit does not have a signature", () => {
 		mockGitLog([{}])
 	})
 
-	it("omits the signature", async () => {
+	it("omits the signatures", async () => {
 		const [commit] = await getGitBranchCrudeCommits()
-		expect(commit?.signature).toBe("")
+		expect(commit?.signatures).toEqual([])
 	})
 })
 

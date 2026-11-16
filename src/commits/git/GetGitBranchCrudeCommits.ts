@@ -1,5 +1,6 @@
 import type { CrudeCommit, CrudeCommits } from "#commits/CrudeCommit.ts"
 import type { CommitSha } from "#types/CommitSha.ts"
+import { isNotEmptyString } from "#utilities/Arrays.ts"
 import type { GitLogCommitDto } from "#utilities/git/cli/dtos/GitLogCommitDto.ts"
 import { getGitDefaultBranch } from "#utilities/git/cli/GetGitDefaultBranch.ts"
 import { getGitLog } from "#utilities/git/cli/GetGitLog.ts"
@@ -20,8 +21,8 @@ export async function getGitBranchCrudeCommits(
 }
 
 function mapDtoToCrudeCommit(dto: GitLogCommitDto): CrudeCommit {
-	const [authorName, authorEmail] = parseUser(dto.author.at(0))
-	const [committerName, committerEmail] = parseUser(dto.committer.at(0))
+	const [authorName, authorEmail] = parseUser(dto.author[0])
+	const [committerName, committerEmail] = parseUser(dto.committer[0])
 
 	return {
 		sha: dto.commit[0] as CommitSha,
@@ -31,7 +32,7 @@ function mapDtoToCrudeCommit(dto: GitLogCommitDto): CrudeCommit {
 		committerName,
 		committerEmail,
 		message: dto.message[0],
-		signature: dto.gpgsig[0] ?? "",
+		signatures: [dto.gpgsig[0] ?? "", dto["gpgsig-sha256"][0] ?? ""].filter(isNotEmptyString),
 	}
 }
 

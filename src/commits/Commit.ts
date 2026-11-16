@@ -41,7 +41,7 @@ export function mapCrudeCommitToCommit(
 	return {
 		sha: crudeCommit.sha,
 		isMergeCommit: crudeCommit.parents.length > 1,
-		hasSignature: crudeCommit.signature !== "",
+		hasSignature: crudeCommit.signatures.length > 0,
 		authorName: crudeCommit.authorName,
 		authorEmail: crudeCommit.authorEmail,
 		committerName: crudeCommit.committerName,

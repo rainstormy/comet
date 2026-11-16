@@ -600,7 +600,7 @@ describe.each`
 
 	it("preserves the signature", async () => {
 		const [commit] = await getGithubPullRequestCrudeCommits()
-		expect(commit?.signature).toBe(signature)
+		expect(commit?.signatures).toEqual([signature])
 	})
 })
 
@@ -609,9 +609,9 @@ describe("when the commit does not have a signature", () => {
 		mockGithubPullRequestCommitDtos([{ commit: { verification: { signature: null } } }])
 	})
 
-	it("omits the signature", async () => {
+	it("omits the signatures", async () => {
 		const [commit] = await getGithubPullRequestCrudeCommits()
-		expect(commit?.signature).toBe("")
+		expect(commit?.signatures).toEqual([])
 	})
 })
 
@@ -620,9 +620,9 @@ describe("when the commit verification object is absent", () => {
 		mockGithubPullRequestCommitDtos([{ commit: {} }])
 	})
 
-	it("omits the signature", async () => {
+	it("omits the signatures", async () => {
 		const [commit] = await getGithubPullRequestCrudeCommits()
-		expect(commit?.signature).toBe("")
+		expect(commit?.signatures).toEqual([])
 	})
 })
 
