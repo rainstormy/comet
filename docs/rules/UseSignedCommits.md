@@ -78,7 +78,7 @@ This rule has no configurable options.
 
 ## Examples
 
-The following examples display the `gpgsig` header of the commit rather than the commit message.
+The following examples display the `gpgsig` or `gpgsig-sha256` header of the commit rather than the commit message.
 
 ### Rejected ⛔️
 
@@ -89,14 +89,20 @@ gpgsig:
 ### Accepted ✅
 
 ```
+gpgsig: -----BEGIN PGP SIGNATURE-----
+
+ NGU2NWQ0YzctN2I0OC00YWExLWE2NmUtZjg3MTZmNGY2MWJhODM4NTI1ZTEtZWY4OS00YjVjLTgwMWItOTgxNTBmOGJiOTZk
+ -----END PGP SIGNATURE-----
+```
+
+```
 gpgsig: -----BEGIN SSH SIGNATURE-----
  NjI1ZTMxMzctODU1ZS00YmVmLWI0MTMtY2Q4MmI4YjZlYzE0
  -----END SSH SIGNATURE-----
 ```
 
 ```
-gpgsig: -----BEGIN PGP SIGNATURE-----
-
- NGU2NWQ0YzctN2I0OC00YWExLWE2NmUtZjg3MTZmNGY2MWJhODM4NTI1ZTEtZWY4OS00YjVjLTgwMWItOTgxNTBmOGJiOTZk
- -----END PGP SIGNATURE-----
+gpgsig-sha256: -----BEGIN SSH SIGNATURE-----
+ NWYwYzJhOTEtM2Q3ZS00YjY4LThlMTQtYTlkMmM2ZjA3YjNl
+ -----END SSH SIGNATURE-----
 ```
