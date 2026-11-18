@@ -2,9 +2,9 @@ import type { CommitSha } from "#types/CommitSha.ts"
 
 export type CommitConcern = {
 	location: "commit"
-	key: `${CommitSha}:A:${CommitConcernRuleKey}`
+	key: `${CommitSha | "pending"}:A:${CommitConcernRuleKey}`
 	rule: CommitConcernRuleKey
-	commitSha: CommitSha
+	commitSha: CommitSha | null
 }
 
 export type CommitConcernRuleKey =
@@ -13,6 +13,9 @@ export type CommitConcernRuleKey =
 	| "noRepeatedSubjects"
 	| "useSignedCommits"
 
-export function commitConcern(rule: CommitConcernRuleKey, commitSha: CommitSha): CommitConcern {
-	return { location: "commit", key: `${commitSha}:A:${rule}`, rule, commitSha }
+export function commitConcern(
+	rule: CommitConcernRuleKey,
+	commitSha: CommitSha | null,
+): CommitConcern {
+	return { location: "commit", key: `${commitSha ?? "pending"}:A:${rule}`, rule, commitSha }
 }

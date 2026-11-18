@@ -4,7 +4,7 @@ import type { CommitSha } from "#types/CommitSha.ts"
  * A platform-agnostic representation of a commit with unprocessed data.
  */
 export type CrudeCommit = {
-	sha: CommitSha
+	sha: CommitSha | null
 	parents: Array<CommitSha>
 	authorName: string
 	authorEmail: string
