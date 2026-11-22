@@ -602,7 +602,6 @@ export const SORTED_IMPERATIVE_VERBS: Array<string> = [
 	"camouflage",
 	"camp",
 	"campaign",
-	"can",
 	"cancel",
 	"cane",
 	"cannonade",
@@ -1444,7 +1443,6 @@ export const SORTED_IMPERATIVE_VERBS: Array<string> = [
 	"divide",
 	"divorce",
 	"divulge",
-	"do",
 	"dock",
 	"dockerise",
 	"dockerize",
@@ -4960,7 +4958,6 @@ export const SORTED_IMPERATIVE_VERBS: Array<string> = [
 	"widen",
 	"wield",
 	"wiggle",
-	"will",
 	"wilt",
 	"win",
 	"wince",
@@ -5018,4 +5015,22 @@ export const SORTED_IMPERATIVE_VERBS: Array<string> = [
 
 export function isImperativeVerb(word: string): boolean {
 	return binarySearchIndexOf(SORTED_IMPERATIVE_VERBS, word) !== -1
+}
+
+export const SORTED_MODAL_VERBS: Array<string> = [
+	"can",
+	"could",
+	"do",
+	"may",
+	"might",
+	"must",
+	"ought",
+	"shall",
+	"should",
+	"will",
+	"would",
+]
+
+export function isModalVerb(word: string): boolean {
+	return binarySearchIndexOf(SORTED_MODAL_VERBS, word) !== -1
 }

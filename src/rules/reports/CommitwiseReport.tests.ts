@@ -1686,6 +1686,110 @@ Found 1 concern in 1 commit.`.trim(),
 	})
 })
 
+describe("when 'useImperativeSubjects' has a concern about a modal verb in characters 0-6 of the subject", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: "506809412792ec42f86367c178085ee010b058b7",
+		message: "Should retry the flaky pigeon requests",
+	})
+	const concern = subjectConcern("useImperativeSubjects", commit.sha, { range: [0, 6] })
+
+	it("describes the rule violation in the subject", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey`5068094`} Should retry the flaky pigeon requests
+        ${red`──┬───`}
+          ${red`╰─ Start the subject with a verb in the imperative mood.`}
+          ${red`   ${ruleLink("useImperativeSubjects")}`}
+          ${red`   `}
+          ${red`   Modal verbs like 'can', 'should', and 'do not' are not allowed.`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when 'useImperativeSubjects' has a concern about a modal verb in characters 7-13 of the subject", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: "8ebbc757f0530d1c60ba6e652e4539442c0e9f15",
+		message: "GH-31: Do not feed the build server after midnight",
+	})
+	const concern = subjectConcern("useImperativeSubjects", commit.sha, { range: [7, 13] })
+
+	it("describes the rule violation in the subject", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey`8ebbc75`} GH-31: Do not feed the build server after midnight
+               ${red`──┬───`}
+                 ${red`╰─ Start the subject with a verb in the imperative mood.`}
+                 ${red`   ${ruleLink("useImperativeSubjects")}`}
+                 ${red`   `}
+                 ${red`   Modal verbs like 'can', 'should', and 'do not' are not allowed.`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when 'useImperativeSubjects' has a concern about a modal verb in characters 0-3 of the subject", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: "c46b43d67b655e73c2bd70c96ba49faae62923b3",
+		message: "Can the legacy toaster driver",
+	})
+	const concern = subjectConcern("useImperativeSubjects", commit.sha, { range: [0, 3] })
+
+	it("describes the rule violation in the subject", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey`c46b43d`} Can the legacy toaster driver
+        ${red`─┬─`}
+         ${red`╰─ Start the subject with a verb in the imperative mood.`}
+         ${red`   ${ruleLink("useImperativeSubjects")}`}
+         ${red`   `}
+         ${red`   Modal verbs like 'can', 'should', and 'do not' are not allowed.`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
+describe("when 'useImperativeSubjects' has a concern about a modal verb in characters 0-5 of the subject", () => {
+	const configuration = fakeConfiguration()
+	const fakeCommit = fakeCommitFactory(configuration.tokens)
+
+	const commit = fakeCommit({
+		sha: "dabe6c29c7e9998af1a73710f1675e4ba52c5ae8",
+		message: "Would wake the sleeping deployment pipeline",
+	})
+	const concern = subjectConcern("useImperativeSubjects", commit.sha, { range: [0, 5] })
+
+	it("describes the rule violation in the subject", () => {
+		const actualOutput = commitwiseReport([concern], [commit], configuration)
+		expect(actualOutput).toBe(
+			`
+${grey`dabe6c2`} Would wake the sleeping deployment pipeline
+        ${red`──┬──`}
+          ${red`╰─ Start the subject with a verb in the imperative mood.`}
+          ${red`   ${ruleLink("useImperativeSubjects")}`}
+          ${red`   `}
+          ${red`   Modal verbs like 'can', 'should', and 'do not' are not allowed.`}
+
+Found 1 concern in 1 commit.`.trim(),
+		)
+	})
+})
+
 describe("when 'useIssueLinks' with position 'anywhere' has a concern about characters 0-1 of the subject", () => {
 	const configuration = fakeConfiguration({
 		useIssueLinks: { options: { position: "anywhere" } },

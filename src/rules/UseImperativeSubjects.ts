@@ -1,5 +1,5 @@
 import type { Commits } from "#commits/Commit.ts"
-import { isNotToken, isToken } from "#commits/Token.ts"
+import { isNotToken } from "#commits/Token.ts"
 import type { RuleKey, RulesetConfiguration } from "#configurations/RulesetConfiguration.ts"
 import type { Concern } from "#rules/concerns/Concern.ts"
 import { subjectConcern } from "#rules/concerns/SubjectConcern.ts"
@@ -74,6 +74,8 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  * The first word must be an imperative verb from the built-in list or the `whitelist`.
  * If Comet does not recognise a verb, add it to the `whitelist`.
  *
+ * The phrase `do not` and modal verbs like `can`, `may`, `must`, `should`, and `will` are rejected unless added to the `whitelist`.
+ *
  * ## Options
  *
  * - `whitelist` (array of case-insensitive strings): Custom words to accept in addition to the built-in list of verbs. Default value: `[]`.
@@ -117,6 +119,14 @@ import { isImperativeVerb } from "#utilities/Verbs.ts"
  * The retry policy works
  * ```
  *
+ * ```
+ * Should retry failed requests
+ * ```
+ *
+ * ```
+ * Do not crash on empty input
+ * ```
+ *
  * ### Accepted ✅
  *
  * ```
@@ -153,21 +163,32 @@ export function* useImperativeSubjects(
 	)
 
 	for (const commit of commits) {
-		if (commit.subject.some(isToken("revert"))) {
-			continue
-		}
-
 		const firstToken =
 			commit.subject.find(isNotToken("conventional", "issuelink", "squash", "whitespace")) ?? null
 
-		if (firstToken !== null) {
-			const canonicalFirstWord = firstToken.value.toLowerCase()
+		if (firstToken === null || firstToken.type === "revert") {
+			continue
+		}
 
-			if (
-				firstToken.type !== "word" ||
-				!(whitelist.has(canonicalFirstWord) || isImperativeVerb(canonicalFirstWord))
-			) {
+		const canonicalFirstWord = firstToken.value.toLowerCase()
+
+		if (
+			firstToken.type !== "word" ||
+			!(whitelist.has(canonicalFirstWord) || isImperativeVerb(canonicalFirstWord))
+		) {
+			if (canonicalFirstWord !== "do") {
 				yield subjectConcern(rule, commit.sha, { range: firstToken.range })
+			} else {
+				const nextToken = commit.subject.find(
+					(token) => token.range[0] >= firstToken.range[1] && token.type !== "whitespace",
+				)
+
+				// Accept 'do', but reject 'do not' unless whitelisted.
+				if (nextToken?.value.toLowerCase() === "not" && !whitelist.has("do not")) {
+					yield subjectConcern(rule, commit.sha, {
+						range: [firstToken.range[0], nextToken.range[1]],
+					})
+				}
 			}
 		}
 	}
