@@ -24,6 +24,13 @@ const enabledWhitelist = emptyRulesetConfiguration({
 	},
 })
 
+const enabledModalVerbWhitelist = emptyRulesetConfiguration({
+	[rule]: {
+		level: "error",
+		options: { whitelist: ["Should", "won't", "does", "do not"] },
+	},
+})
+
 const fakeCommit = fakeCommitFactory()
 
 describe.each`
@@ -52,6 +59,16 @@ describe.each`
 	${"https://github.com/rainstormy/comet/pull/42"}  | ${[0, 43]}
 	${"feat: Released robots"}                        | ${[6, 14]}
 	${"fixup! fix(api)!: Fixed sourdough starters"}   | ${[18, 23]}
+	${"Can the legacy printer driver"}                | ${[0, 3]}
+	${"should retry failed uploads"}                  | ${[0, 6]}
+	${"  Will hatch the quarterly roadmap"}           | ${[2, 6]}
+	${"Must not forget the umbrella"}                 | ${[0, 4]}
+	${"fixup! GH-8 Won't panic on empty input"}       | ${[12, 17]}
+	${"Do not feed the build server after midnight"}  | ${[0, 6]}
+	${"squash! do  NOT compile on Tuesdays"}          | ${[8, 15]}
+	${"feat: DO NOT water the office plants"}         | ${[6, 12]}
+	${"Does not compile on Tuesdays"}                 | ${[0, 4]}
+	${"Would you mind reviewing this?"}               | ${[0, 5]}
 `(
 	"when the subject of $subject does not start with an imperative verb",
 	(props: { subject: string; expectedRange: CharacterRange }) => {
@@ -105,6 +122,9 @@ describe.each`
 	${"Bump vite from 4.1.1 to 4.3.2"}
 	${"feat: Release robots"}
 	${"fixup! fix(api)!: Calm pigeons"}
+	${"Do nothing until the kettle whistles"}
+	${"Do notes about the release"}
+	${"squash! Do  the groundwork"}
 `("when the subject of $subject starts with an imperative verb", (props: { subject: string }) => {
 	const commit = fakeCommit({ message: props.subject })
 
@@ -167,6 +187,78 @@ describe.each`
 
 			it("does not raise any concerns", () => {
 				expect(actualConcerns).toEqual<Concerns>([])
+			})
+		})
+	},
+)
+
+describe.each`
+	subject                                          | expectedRange
+	${"should we rename the coffee machine?"}        | ${[0, 6]}
+	${"squash! Won't leak secrets into the logs"}    | ${[8, 13]}
+	${"Does not compile on Tuesdays"}                | ${[0, 4]}
+	${"Do not feed the build server after midnight"} | ${[0, 6]}
+	${"DO NOT water the office plants"}              | ${[0, 6]}
+	${"feat: Do not crash on empty input"}           | ${[6, 12]}
+	${"fixup! do  NOT panic at the disco"}           | ${[7, 14]}
+`(
+	"when the subject of $subject starts with a whitelisted word or the phrase `do not`",
+	(props: { subject: string; expectedRange: CharacterRange }) => {
+		const commit = fakeCommit({ message: props.subject })
+
+		describe("and the rule is enabled with a custom whitelist", () => {
+			const actualConcerns = mapCommitsToConcerns([commit], enabledModalVerbWhitelist)
+
+			it("does not raise any concerns", () => {
+				expect(actualConcerns).toEqual<Concerns>([])
+			})
+		})
+
+		describe("and the rule is enabled without a whitelist", () => {
+			const actualConcerns = mapCommitsToConcerns([commit], enabled)
+
+			it("raises a concern about the first word", () => {
+				expect(actualConcerns).toEqual<Concerns>([
+					subjectConcern(rule, commit.sha, { range: props.expectedRange }),
+				])
+			})
+		})
+
+		describe("and the rule is disabled", () => {
+			const actualConcerns = mapCommitsToConcerns([commit], disabled)
+
+			it("does not raise any concerns", () => {
+				expect(actualConcerns).toEqual<Concerns>([])
+			})
+		})
+	},
+)
+
+describe.each`
+	subject                                   | expectedRange
+	${"Did not mean to commit this"}          | ${[0, 3]}
+	${"Doing not so well today"}              | ${[0, 5]}
+	${"Don't crash on empty input"}           | ${[0, 5]}
+	${"don't panic at the disco"}             | ${[0, 5]}
+	${"Doesn't compile on Mondays"}           | ${[0, 7]}
+	${"feat: Doesn't flush the cache"}        | ${[6, 13]}
+	${"Could not reproduce the crash"}        | ${[0, 5]}
+	${"Will not hold the release"}            | ${[0, 4]}
+	${"Shouldn't leak secrets into the logs"} | ${[0, 9]}
+	${"fixup! Must not forget the umbrella"}  | ${[7, 11]}
+	${"feat: Cannot decide on a name"}        | ${[6, 12]}
+`(
+	"when the subject of $subject starts with a word other than the phrase `do not`",
+	(props: { subject: string; expectedRange: CharacterRange }) => {
+		const commit = fakeCommit({ message: props.subject })
+
+		describe("and the rule is enabled with a custom whitelist", () => {
+			const actualConcerns = mapCommitsToConcerns([commit], enabledModalVerbWhitelist)
+
+			it("raises a concern about the first word", () => {
+				expect(actualConcerns).toEqual<Concerns>([
+					subjectConcern(rule, commit.sha, { range: props.expectedRange }),
+				])
 			})
 		})
 	},

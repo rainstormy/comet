@@ -20,6 +20,7 @@ import {
 	pluralise,
 	prefixStringLines,
 } from "#utilities/Strings.ts"
+import { isModalVerb } from "#utilities/Verbs.ts"
 
 export function commitwiseReport(
 	concerns: Concerns,
@@ -370,7 +371,14 @@ function subjectRuleMessage(
 			)
 		}
 		case "useImperativeSubjects": {
-			return ruleMessage("Start the subject with a verb in the imperative mood.")
+			const firstWord = commit.subject.find(isToken("word"))?.value ?? ""
+
+			return ruleMessage(
+				"Start the subject with a verb in the imperative mood.",
+				isModalVerb(firstWord.toLowerCase())
+					? "Modal verbs like 'can', 'should', and 'do not' are not allowed."
+					: "",
+			)
 		}
 		case "useIssueLinks": {
 			const options = getRuleOptions(rule, configuration)
